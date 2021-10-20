@@ -1,0 +1,200 @@
+import React, { useState, useContext } from 'react';
+import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
+import { Context as AuthContext } from '../context/AuthContext';
+
+const SignupScreen = ({ navigation }) => {
+    const { state, signup } = useContext(AuthContext);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [dateBirth, setDateBirth] = useState('');
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    //console.log(state);
+
+    return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
+        >
+            <View style={styles.inputContainer}>
+                <TextInput
+                    placeholder="First Name"
+                    value={firstName}
+                    onChangeText={text => setFirstName(text)}
+                    style={styles.input}
+                    autoCorrect={false}
+                />
+                <TextInput
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChangeText={text => setLastName(text)}
+                    style={styles.input}
+                    autoCorrect={false}
+                />
+                <TextInputMask
+                    placeholder="MM/DD/YYYY"
+                    type={'datetime'}
+                    style={styles.input}
+                    options={{ format: 'MM/DD/YYYY' }}
+                    value={dateBirth}
+                    onChangeText={date => setDateBirth(date)}
+                />
+                <TextInput
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <TextInput
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={text => setUsername(text)}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <TextInput
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    secureTextEntry={true}
+                />
+                {state.errorMessage
+                    ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+                    : null}
+            </View>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    onPress={() => signup({ email, username, password })}
+                    style={[styles.button, styles.buttonOutline]}
+                >
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                </TouchableOpacity>
+                <View style={styles.loginContainer}>
+                    <Text style={styles.already}>Already have an account?</Text>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Login')}
+                    >
+                        <Text style={styles.logInNow}>Log in</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </KeyboardAvoidingView>
+    );
+};
+
+SignupScreen.navigationOptions = () => {
+    return {
+        headerShown: false
+    };
+};
+
+export default SignupScreen;
+
+
+
+//-----     Styles     -----/
+//--------------------------/
+const styles = StyleSheet.create({
+    container: {
+        flex: 1, //this ensures that the container (view) fills up max vertical space
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#DEDBD5',
+    },
+    inputContainer: {
+        width: '80%'
+    },
+    input: {
+        backgroundColor: 'white',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        marginTop: 5
+    },
+    buttonContainer: {
+        width: '60%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30
+    },
+    button: {
+        backgroundColor: '#0782F9',
+        width: '100%',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center'
+    },
+    buttonOutline: {
+        backgroundColor: 'white',
+        marginTop: 5,
+        borderColor: '#0782F9',
+        borderWidth: 2
+    },
+    buttonText: {
+        color: '#0782F9',
+        fontWeight: '700',
+        fontSize: 16
+    },
+    errorMessage: {
+        fontSize: 16,
+        color: 'red',
+        paddingVertical: 10,
+        marginTop: 30,
+        marginHorizontal: 10
+    },
+    loginContainer: {
+        paddingVertical: 10,
+        marginTop: 30,
+        justifyContent: 'space-evenly',
+        width: '110%',
+        flexDirection: 'row',
+    },
+    already: {
+        fontSize: 16,
+        color: 'gray',
+    },
+    logInNow: {
+        fontSize: 16,
+        color: '#0782F9',
+    }
+});
+
+/*
+
+                <View>
+                    <RadioButton
+                    value="male"
+                    status={ genderSelect === 'male' ? 'checked' : 'unchecked' }
+                    onChangeGender={() => setGenderSelect('male')}
+                    />
+                </View>
+                <View>
+                    <RadioButton
+                    value="female"
+                    status={ genderSelect === 'female' ? 'checked' : 'unchecked' }
+                    onChangeGender={() => setGenderSelect('female')}
+                    />
+                </View>
+
+
+                <RadioButton.Group onChangeGender={gender => setGenderSelect(gender)} value={genderSelect}>
+                    <View>
+                        <Text>First</Text>
+                        <RadioButton genderSelect="first" />
+                    </View>
+                    <View>
+                        <Text>Second</Text>
+                        <RadioButton genderSelect="second" />
+                    </View>
+                </RadioButton.Group>
+
+*/
