@@ -7,12 +7,19 @@ const authReducer = (state, action) => {
     switch (action.type) {
         case 'add_error':
             return { ...state, errorMessage: action.payload }
-        case 'signup':
-            return { errorMessage: '', token: action.payload }
+        //  case 'login':
+        //      return { errorMessage: '', token: action.payload }
+        case 'clear_error_message':
+            return { ...state, errorMessage: '' };
         default:
             return state;
     };
 };
+
+//clear error message
+const clearErrorMessage = dispatch => () => {
+    dispatch({ type: 'clear_error_message' })
+}
 
 //signup action function
 const signup = (dispatch) => async ({ email, username, password }) => {
@@ -20,37 +27,48 @@ const signup = (dispatch) => async ({ email, username, password }) => {
         const response = await pelleumPublic.post('/public/auth/users', { email, username, password });
         console.log("\n", response.status);
         console.log("\n", response.data);
-        //console.log(response.data.email, response.data.is_active, response.data.is_verified, response.data.user_id, response.data.username)
-        await AsyncStorage.setItem('token', response.data.token);
-        dispatch({ type: 'signup', payload: response.data.token });
+        navigate('Login')
     } catch (err) {
+        dispatch({ type: 'add_error', payload: err.response.data.detail });
         console.log("\n", err.response.status);
         console.log("\n", err.response.data);
-        dispatch({ type: 'add_error', payload: err.response.data.detail });
-        //console.log("The error is: \n\n", err);
-        //console.log("The error status code is: \n\n", err.response.status)
-        //console.log("The error headers are:\n\n", err.response.headers)
     };
 };
 
 //login action function
-const login = (dispatch) => {
-    return ({ username, password }) => {
-        //try to log in
-        //handle success by updating state
-        //handle failure by showing error message
+const login = (dispatch) => async ({ username, password }) => {
+
+    var qs = require('query-string');
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+
+    try {
+        const response = await pelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
+        console.log("\n", response.status);
+        console.log("\n", response.data);
+        //await AsyncStorage.setItem('token', response.data.access_token);
+        //dispatch({ type: 'login', payload: response.data.access_token });
+        navigate('mainFlow')
+    } catch (err) {
+        dispatch({ type: 'add_error', payload: err.response.data.detail });
+        console.log("\n", err.response.status);
+        console.log("\n", err.response.data);
     };
 };
 
 //logout action function
 const logout = (dispatch) => {
     return ({ username, password }) => {
-        //try to slog out
+        //try to log out
     };
 };
 
 export const { Provider, Context } = createDataContext(
     authReducer,
-    { signup, login, logout },
+    { signup, login, logout, clearErrorMessage },
     { token: null, errorMessage: '' }
 );

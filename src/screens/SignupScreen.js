@@ -2,9 +2,10 @@ import React, { useState, useContext } from 'react';
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { Context as AuthContext } from '../context/AuthContext';
+import { NavigationEvents } from 'react-navigation';
 
 const SignupScreen = ({ navigation }) => {
-    const { state, signup } = useContext(AuthContext);
+    const { state, signup, clearErrorMessage } = useContext(AuthContext);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [dateBirth, setDateBirth] = useState('');
@@ -19,6 +20,8 @@ const SignupScreen = ({ navigation }) => {
             style={styles.container}
             behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
         >
+            <NavigationEvents onWillFocus={clearErrorMessage} />
+            <Text style={styles.titleText}>Create a Pelleum account!</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder="First Name"
@@ -78,12 +81,12 @@ const SignupScreen = ({ navigation }) => {
                 >
                     <Text style={styles.buttonText}>Sign Up</Text>
                 </TouchableOpacity>
-                <View style={styles.loginContainer}>
-                    <Text style={styles.already}>Already have an account?</Text>
+                <View style={styles.signupContainer}>
+                    <Text style={styles.dontHave}>Already have an account?</Text>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Login')}
                     >
-                        <Text style={styles.logInNow}>Log in</Text>
+                        <Text style={styles.signUpNow}>Log in</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -151,50 +154,26 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginHorizontal: 10
     },
-    loginContainer: {
+    signupContainer: {
         paddingVertical: 10,
         marginTop: 30,
         justifyContent: 'space-evenly',
         width: '110%',
         flexDirection: 'row',
     },
-    already: {
+    dontHave: {
         fontSize: 16,
         color: 'gray',
     },
-    logInNow: {
+    signUpNow: {
         fontSize: 16,
         color: '#0782F9',
+    },
+    titleText: {
+        fontSize: 22,
+        color: '#5d5e61',
+        padding: 5,
+        alignSelf: 'center',
+        marginBottom: 15
     }
 });
-
-/*
-
-                <View>
-                    <RadioButton
-                    value="male"
-                    status={ genderSelect === 'male' ? 'checked' : 'unchecked' }
-                    onChangeGender={() => setGenderSelect('male')}
-                    />
-                </View>
-                <View>
-                    <RadioButton
-                    value="female"
-                    status={ genderSelect === 'female' ? 'checked' : 'unchecked' }
-                    onChangeGender={() => setGenderSelect('female')}
-                    />
-                </View>
-
-
-                <RadioButton.Group onChangeGender={gender => setGenderSelect(gender)} value={genderSelect}>
-                    <View>
-                        <Text>First</Text>
-                        <RadioButton genderSelect="first" />
-                    </View>
-                    <View>
-                        <Text>Second</Text>
-                        <RadioButton genderSelect="second" />
-                    </View>
-                </RadioButton.Group>
-
-*/

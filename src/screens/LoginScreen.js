@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
+import { Context as AuthContext } from '../context/AuthContext';
+import { NavigationEvents } from 'react-navigation';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
+    const { state, login, clearErrorMessage } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    //console.log(state);
 
     return (
         <KeyboardAvoidingView
             style={styles.container}
             behavior="padding"       //ensures text fields do not get blocked by keyboard
         >
+            <NavigationEvents onWillFocus={clearErrorMessage} />
+            <Text style={styles.titleText}>Log into your Pelleum account!</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder="Username"
@@ -28,17 +35,35 @@ const LoginScreen = () => {
                     autoCorrect={false}
                     secureTextEntry={true}
                 />
+                {state.errorMessage
+                    ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+                    : null}
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                    //onPress= {() => { }}
+                    onPress={() => login({ username, password })}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Log In</Text>
                 </TouchableOpacity>
+                <View style={styles.loginContainer}>
+                    <Text style={styles.already}>Don't have an account?</Text>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Signup')}
+                    >
+                        <Text style={styles.logInNow}>Sign up</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </KeyboardAvoidingView>
     );
+};
+
+LoginScreen.navigationOptions = () => {
+    return {
+        headerShown: false,
+        headerLeft: () => null
+    };
 };
 
 export default LoginScreen;
@@ -81,6 +106,35 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '700',
         fontSize: 16
+    },
+    errorMessage: {
+        fontSize: 16,
+        color: 'red',
+        paddingVertical: 10,
+        marginTop: 30,
+        marginHorizontal: 10
+    },
+    loginContainer: {
+        paddingVertical: 10,
+        marginTop: 30,
+        justifyContent: 'space-evenly',
+        width: '110%',
+        flexDirection: 'row',
+    },
+    already: {
+        fontSize: 16,
+        color: 'gray',
+    },
+    logInNow: {
+        fontSize: 16,
+        color: '#0782F9',
+    },
+    titleText: {
+        fontSize: 22,
+        color: '#5d5e61',
+        padding: 5,
+        alignSelf: 'center',
+        marginBottom: 15
     }
 });
 
