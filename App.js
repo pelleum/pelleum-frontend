@@ -16,11 +16,13 @@ import BlogScreen from './src/screens/BlogScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import PortfolioInsightScreen from './src/screens/PortfolioInsightScreen';
 import PostDetailScreen from './src/screens/PostDetailScreen';
-import AccountSettingsScreen from './src/screens/AccountSettingsScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import { Provider as AuthProvider} from './src/context/AuthContext'; //renaming Provider as AuthProvider in App.js
 import { setNavigator } from './src/navigationRef';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 
 const switchNavigator = createSwitchNavigator({
+	AuthLoad: AuthLoadingScreen,
 	loginFlow: createStackNavigator({
 		Signup: SignupScreen,
 		Login: LoginScreen
@@ -35,7 +37,6 @@ const switchNavigator = createSwitchNavigator({
 			feedThesisFlow: createStackNavigator({
 				Thesis: ThesisDetailScreen,
 				Portfolio: PortfolioInsightScreen,
-				Account: AccountSettingsScreen
 			})
 		}),
 		//search results in a list of filtered theses (by asset) or usernames
@@ -48,6 +49,7 @@ const switchNavigator = createSwitchNavigator({
 		}),
 		profileFlow: createStackNavigator({
 			Profile: ProfileScreen,
+			Settings: SettingsScreen,
 			feedPostFlow: createStackNavigator({
 				Post: PostDetailScreen,
 				Portfolio: PortfolioInsightScreen
@@ -58,6 +60,8 @@ const switchNavigator = createSwitchNavigator({
 			})
 		}),
 	})
+}, {
+	initialRouteName: 'AuthLoad'
 });
 
 const App = createAppContainer(switchNavigator);

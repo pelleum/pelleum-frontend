@@ -13,6 +13,12 @@ const PostDetailScreen = ({ navigation }) => {
     );
 };
 
+PostDetailScreen.navigationOptions = () => {
+    return {
+        headerShown: false,
+    };
+};
+
 export default PostDetailScreen;
 
 const styles = StyleSheet.create({});

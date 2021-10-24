@@ -14,8 +14,8 @@ const ProfileScreen = ({ navigation }) => {
                 onPress = {() => navigation.navigate('feedThesisFlow')}
             />
             <Button 
-                title="Go to Account Settings" 
-                onPress = {() => navigation.navigate('Account')}
+                title="Go to Settings" 
+                onPress = {() => navigation.navigate('Settings')}
             />
         </View>
     );
