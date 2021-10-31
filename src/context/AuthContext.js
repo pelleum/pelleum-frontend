@@ -61,7 +61,7 @@ const clearErrorMessage = dispatch => () => {
             const response = await pelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
             console.log("\n", response.status);
             console.log("\n", response.data);
-            console.log("\n this is my token:\n", response.data.access_token)
+            console.log("\n this is my token:\n", response.data.access_token);
             await AsyncStorage.setItem('token', response.data.access_token);
             dispatch({ type: 'login', payload: response.data.access_token });
             navigate('mainFlow')
