@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
-import SwitchSelector from "react-native-switch-selector";
 import { Box, Center, VStack, NativeBaseProvider } from "native-base";
 
 const FeedScreen = ({ navigation }) => {
-    const options = [
-        { label: "Bull", value: "bullFilter" },
-        { label: "Bear", value: "bearFilter" }
-    ];
-
     const manyPostsResponse = {
         "records": {
             "posts": [
@@ -77,28 +71,8 @@ const FeedScreen = ({ navigation }) => {
         }
     };
 
-    let postArray = manyPostsResponse.records.posts;
-
-    //console.log(postArray)
-
     return (
         <View style={styles.mainContainer}>
-            <View style={styles.switchSelectorContainer}>
-                <SwitchSelector
-                    //https://github.com/App2Sales/react-native-switch-selector
-                    options={options}
-                    initial={0}
-                    onPress={value => console.log({ value })}
-                    height={40}
-                    buttonColor={"#0782F9"}
-                    borderColor={"#0782F9"}
-                    selectedColor={'white'}
-                    textColor={"#0782F9"}
-                    fontSize={16}
-                    bold={true}
-                    hasPadding
-                />
-            </View>
             <FlatList
                 data={manyPostsResponse.records.posts}
                 keyExtractor={item => item.post_id.toString()}
@@ -130,28 +104,12 @@ const FeedScreen = ({ navigation }) => {
     );
 };
 
-FeedScreen.navigationOptions = () => {
-    return {
-        //headerShown: false,
-        //headerLeft: () => null
-    };
-};
-
 export default FeedScreen;
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1, //this ensures that the container (view) fills up max vertical space
-        justifyContent: 'flex-start',
         alignItems: 'center',
-        //borderWidth: 0.5,
-        //borderColor: 'red'
-    },
-    switchSelectorContainer: {
-        width: '85%',
-        height: '12%',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     feedPost: {
         marginTop: 20,
@@ -211,8 +169,6 @@ const styles = StyleSheet.create({
     },
     topPostBox: {
         width: 335,
-        //borderWidth: 0.5,
-        //borderColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-between',
     }

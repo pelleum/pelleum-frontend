@@ -20,6 +20,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import { Provider as AuthProvider } from './src/context/AuthContext'; //renaming Provider as AuthProvider in App.js
 import { setNavigator } from './src/navigationRef';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import createPostScreen from './src/screens/createPostScreen';
 
 const switchNavigator = createSwitchNavigator({
 	AuthLoad: AuthLoadingScreen,
@@ -41,18 +42,23 @@ const switchNavigator = createSwitchNavigator({
 				})
 			}),
 			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => (<Foundation name="home" size={24} color="black" />),
-				tabBarLabel:() => {return null}
+				tabBarIcon: ({ tintColor }) => (<Foundation name="home" size={25} color={tintColor} />)
 			}
 		},
-		//search results in a list of filtered theses (by asset) or usernames
 		searchFlow: {
 			screen: createStackNavigator({
 				Search: SearchScreen
 			}),
 			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => (<FontAwesome name="search" size={24} color="black" />),
-				tabBarLabel:() => {return null}
+				tabBarIcon: ({ tintColor }) => (<FontAwesome name="search" size={25} color={tintColor} />)
+			}
+		},
+		createFlow: {
+			screen: createStackNavigator({
+				Create: createPostScreen
+			}),
+			navigationOptions: {
+				tabBarIcon: ({ tintColor }) => (<FontAwesome name="plus-square" size={25} color={tintColor} />)
 			}
 		},
 		educationFlow: {
@@ -61,8 +67,7 @@ const switchNavigator = createSwitchNavigator({
 				Blog: BlogScreen
 			}),
 			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => (<Ionicons name="book" size={24} color="black" />),
-				tabBarLabel:() => {return null}
+				tabBarIcon: ({ tintColor }) => (<Ionicons name="book" size={25} color={tintColor} />)
 			}
 		},
 		profileFlow: {
@@ -79,14 +84,22 @@ const switchNavigator = createSwitchNavigator({
 				})
 			}),
 			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => (<Ionicons name="ios-person" size={24} color="black" />),
-				tabBarLabel:() => {return null}
+				tabBarIcon: ({ tintColor }) => (<Ionicons name="ios-person" size={25} color={tintColor} />)
 			}
 		}
-	})
-}, {
-	initialRouteName: 'AuthLoad'
-});
+	},
+		{
+			tabBarOptions: {
+				inactiveTintColorL: '#858585',
+				activeTintColor: '#000000',
+				activeBackgroundColor: '#ebecf0',
+				showLabel: false
+			}
+		})
+},
+	{
+		initialRouteName: 'AuthLoad'
+	});
 
 const App = createAppContainer(switchNavigator);
 
