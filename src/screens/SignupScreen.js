@@ -18,7 +18,7 @@ const SignupScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
+            //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
         >
             <NavigationEvents onWillFocus={clearErrorMessage} />
             <Text style={styles.titleText}>Create a Pelleum account!</Text>

@@ -20,7 +20,9 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import { Provider as AuthProvider } from './src/context/AuthContext'; //renaming Provider as AuthProvider in App.js
 import { setNavigator } from './src/navigationRef';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import createScreen from './src/screens/createScreen';
 import createPostScreen from './src/screens/createPostScreen';
+import createThesisScreen from './src/screens/createThesisScreen';
 
 const switchNavigator = createSwitchNavigator({
 	AuthLoad: AuthLoadingScreen,
@@ -35,10 +37,6 @@ const switchNavigator = createSwitchNavigator({
 				feedPostFlow: createStackNavigator({
 					Post: PostDetailScreen,
 					Portfolio: PortfolioInsightScreen
-				}),
-				feedThesisFlow: createStackNavigator({
-					Thesis: ThesisDetailScreen,
-					Portfolio: PortfolioInsightScreen
 				})
 			}),
 			navigationOptions: {
@@ -47,7 +45,11 @@ const switchNavigator = createSwitchNavigator({
 		},
 		searchFlow: {
 			screen: createStackNavigator({
-				Search: SearchScreen
+				Search: SearchScreen,
+				searchThesisFlow: createStackNavigator({
+					Thesis: ThesisDetailScreen,
+					Portfolio: PortfolioInsightScreen
+				})
 			}),
 			navigationOptions: {
 				tabBarIcon: ({ tintColor }) => (<FontAwesome name="search" size={25} color={tintColor} />)
@@ -55,7 +57,10 @@ const switchNavigator = createSwitchNavigator({
 		},
 		createFlow: {
 			screen: createStackNavigator({
-				Create: createPostScreen
+				Create: createScreen,
+				createPost: createPostScreen,
+				createThesis: createThesisScreen
+
 			}),
 			navigationOptions: {
 				tabBarIcon: ({ tintColor }) => (<FontAwesome name="plus-square" size={25} color={tintColor} />)
@@ -76,10 +81,6 @@ const switchNavigator = createSwitchNavigator({
 				Settings: SettingsScreen,
 				feedPostFlow: createStackNavigator({
 					Post: PostDetailScreen,
-					Portfolio: PortfolioInsightScreen
-				}),
-				feedThesisFlow: createStackNavigator({
-					Thesis: ThesisDetailScreen,
 					Portfolio: PortfolioInsightScreen
 				})
 			}),

@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior="padding"       //ensures text fields do not get blocked by keyboard
+            //behavior="padding"       //ensures text fields do not get blocked by keyboard
         >
             <NavigationEvents onWillFocus={clearErrorMessage} />
             <Text style={styles.titleText}>Log into your Pelleum account!</Text>
