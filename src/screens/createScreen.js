@@ -1,63 +1,80 @@
-import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import React, { useState } from "react";
+import {
+	Text,
+	StyleSheet,
+	TextInput,
+	Image,
+	TouchableOpacity,
+	Keyboard,
+	TouchableWithoutFeedback,
+	View,
+} from "react-native";
+import { HStack, VStack, NativeBaseProvider } from "native-base";
+import DismissKeyboard from "../components/DismissKeyboard";
 
-const createScreen = ({ navigation }) => {
-    return (
-        <View style={styles.container}>
-            <Text>What is a feed post?</Text>
-            <TouchableOpacity 
-                style={styles.createPostButton}
-                onPress={() => {navigation.navigate('createPost')}}
-            >
-                <Text style={styles.createPostText}>Create a Feed Post</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-                style={styles.createThesisButton} 
-                onPress={() => {navigation.navigate('createThesis')}}
-            >
-                <Text style={styles.createThesisText}>Create a Thesis</Text>
-            </TouchableOpacity>
-            <Text>What is a thesis?</Text>
-        </View>
-    );
+const CreatePostScreen = () => {
+	const [post, setPost] = useState("");
+
+	return (
+		<DismissKeyboard>
+			<View style={styles.mainContainer}>
+				<NativeBaseProvider>
+					<VStack>
+						<HStack alignItems="center" justifyContent="space-between">
+							<Image
+								style={styles.image}
+								source={require("../../assets/forest.jpg")}
+							/>
+							<TouchableOpacity
+								style={styles.button}
+								onPress={() => {
+									console.log("This button worked.");
+								}}
+							>
+								<Text style={styles.buttonText}>Share</Text>
+							</TouchableOpacity>
+						</HStack>
+						<TextInput
+							placeholder="What's your valuable insight?"
+							multiline={true}
+							numberOfLines={20}
+							style={styles.textArea}
+							value={post}
+							onChangeText={(newValue) => setPost(newValue)}
+						/>
+					</VStack>
+				</NativeBaseProvider>
+			</View>
+		</DismissKeyboard>
+	);
 };
 
-export default createScreen;
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1, //this ensures that the container (view) fills up max vertical space
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    createPostButton: {
-        backgroundColor: '#0782F9',
-        width: '60%',
-        padding: 15,
-        borderRadius: 10,
-        borderWidth: 2,
-        marginVertical: 10,
-        borderColor: '#0782F9',
-        alignItems: 'center'
-    },
-    createThesisButton: {
-        backgroundColor: 'white',
-        width: '60%',
-        padding: 15,
-        borderRadius: 10,
-        borderWidth: 2,
-        marginVertical: 10,
-        borderColor: '#0782F9',
-        alignItems: 'center'
-    },
-    createPostText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-    createThesisText: {
-        color: '#0782F9',
-        fontSize: 16,
-        fontWeight: 'bold'
-    }
+	mainContainer: {
+		flex: 1,
+	},
+	textArea: {
+		height: 200,
+		marginHorizontal: 15,
+	},
+	image: {
+		width: 44,
+		height: 44,
+		borderRadius: 44 / 2,
+		margin: 15,
+	},
+	button: {
+		backgroundColor: "#0782F9",
+		borderRadius: 30,
+		height: 35,
+		width: 80,
+		margin: 15,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	buttonText: {
+		color: "white",
+	},
 });
+
+export default CreatePostScreen;

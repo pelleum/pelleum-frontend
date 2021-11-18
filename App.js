@@ -20,9 +20,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import { Provider as AuthProvider } from './src/context/AuthContext'; //renaming Provider as AuthProvider in App.js
 import { setNavigator } from './src/navigationRef';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
-import createScreen from './src/screens/createScreen';
-import createPostScreen from './src/screens/createPostScreen';
-import createThesisScreen from './src/screens/createThesisScreen';
+import CreateScreen from './src/screens/CreateScreen';
 
 const switchNavigator = createSwitchNavigator({
 	AuthLoad: AuthLoadingScreen,
@@ -57,10 +55,7 @@ const switchNavigator = createSwitchNavigator({
 		},
 		createFlow: {
 			screen: createStackNavigator({
-				Create: createScreen,
-				createPost: createPostScreen,
-				createThesis: createThesisScreen
-
+				Create: CreateScreen
 			}),
 			navigationOptions: {
 				tabBarIcon: ({ tintColor }) => (<FontAwesome name="plus-square" size={25} color={tintColor} />)
