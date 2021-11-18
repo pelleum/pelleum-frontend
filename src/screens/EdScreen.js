@@ -1,7 +1,6 @@
-import React from 'react'
-import { StyleSheet, View, FlatList, Text, TouchableOpacity, Image } from 'react-native'
-import BlogScreen from './BlogScreen';
-import { Box, Center, VStack, NativeBaseProvider } from "native-base"
+import React from 'react';
+import { StyleSheet, View, FlatList, Text, TouchableOpacity, Image } from 'react-native';
+import { Box, Center, VStack, NativeBaseProvider } from "native-base";
 
 const EdScreen = ({ navigation }) => {
     //need to add the full text of each blog to the object array below, then render it in the BlogScreen
