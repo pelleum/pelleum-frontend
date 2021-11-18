@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import { fontWeight } from 'styled-system';
 
 const ProfileScreen = ({ navigation }) => {
     const assetsOwned = [
@@ -9,19 +8,20 @@ const ProfileScreen = ({ navigation }) => {
         { assetSymbol: "AAPL", contribution: "$2,568.72", currentValue: "$5,651.18" },
         { assetSymbol: "COIN", contribution: "$1,225.99", currentValue: "$992.79" },
         { assetSymbol: "GOOGL", contribution: "$4,850.19", currentValue: "$7,125.35" },
-        { assetSymbol: "VOO", contribution: "$14,041.45", currentValue: "$22,378.63" }
+        { assetSymbol: "VdOO", contribution: "$14,041.45", currentValue: "$22,378.63" },
+        //{ assetSymbol: "VOddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
+        //{ assetSymbol: "VOdddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
+        //{ assetSymbol: "VOddsdO", contribution: "$14,041.45", currentValue: "$22,378.63" }
     ];
     return (
-        <ScrollView style={styles.mainContainer}>
+        <View style={styles.mainContainer}>
             <NativeBaseProvider>
-                <Center>
-                    <Text style={styles.usernameText}>@user0123</Text>
-                    <Box style={styles.assetTableBox}>
-                        <FlatList
-                            nestedScrollEnabled
-                            data={assetsOwned}
-                            keyExtractor={item => item.assetSymbol}
-                            renderItem={({ item }) => (
+                <FlatList
+                    data={assetsOwned}
+                    keyExtractor={item => item.assetSymbol}
+                    renderItem={({ item }) => (
+                        <Center>
+                            <Box style={styles.assetTableBox}>
                                 <Box style={styles.assetRowBox}>
                                     <VStack>
                                         <Text style={styles.assetText}>{item.assetSymbol}</Text>
@@ -38,19 +38,28 @@ const ProfileScreen = ({ navigation }) => {
                                         </HStack>
                                     </VStack>
                                 </Box>
-                            )}
-                        >
-                        </FlatList>
-                    </Box>
-                    <TouchableOpacity
-                        style={styles.settingsButton}
-                        onPress={() => {navigation.navigate('Settings')}}
-                    >
-                        <Text style={styles.settingsText}>Settings</Text>
-                    </TouchableOpacity>
-                </Center>
+                            </Box>
+                        </Center>
+                    )}
+                    ListHeaderComponent={
+                        <Center>
+                            <Text style={styles.usernameText}>@user0123</Text>
+                        </Center>
+                    }
+                    ListFooterComponent={
+                        <Center>
+                            <TouchableOpacity
+                                style={styles.settingsButton}
+                                onPress={() => { navigation.navigate('Settings') }}
+                            >
+                                <Text style={styles.settingsText}>Settings</Text>
+                            </TouchableOpacity>
+                        </Center>
+                    }
+                >
+                </FlatList>
             </NativeBaseProvider>
-        </ScrollView>
+        </View>
     );
 };
 
@@ -71,8 +80,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#dedfe3",
         borderRadius: 5,
-        width: 365,
-        marginTop: 25,
+        width: '98%',
         overflow: "hidden"
     },
     assetRowBox: {

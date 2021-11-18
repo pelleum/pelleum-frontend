@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
 	textArea: {
 		height: 200,
 		marginHorizontal: 15,
+		borderBottomWidth: 0.5,
+		borderBottomColor: "#0782F9"
 	},
 	image: {
 		width: 44,
