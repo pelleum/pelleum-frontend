@@ -1,3 +1,4 @@
+// installed libraries
 import React, { useState } from "react";
 import {
 	Text,
@@ -5,15 +6,25 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity,
-	Keyboard,
-	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
+import SwitchSelector from "react-native-switch-selector";
+
+
+// local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
+import { MaterialIcons } from '@expo/vector-icons';
+import colorScheme from "../components/ColorScheme";
 
 const CreatePostScreen = () => {
 	const [post, setPost] = useState("");
+	const options = [
+		{ label: "Post", value: "post" },
+		{ label: "Thesis", value: "thesis" },
+	];
+
+    
 
 	return (
 		<DismissKeyboard>
@@ -26,7 +37,7 @@ const CreatePostScreen = () => {
 								source={require("../../assets/forest.jpg")}
 							/>
 							<TouchableOpacity
-								style={styles.button}
+								style={styles.shareButton}
 								onPress={() => {
 									console.log("This button worked.");
 								}}
@@ -42,6 +53,31 @@ const CreatePostScreen = () => {
 							value={post}
 							onChangeText={(newValue) => setPost(newValue)}
 						/>
+						<HStack style={styles.hStack} alignItems="center">
+							<View style={styles.switchSelectorContainer}>
+								<SwitchSelector
+									options={options}
+									initial={0}
+									onPress={(value) => console.log({ value })}
+									height={40}
+									buttonColor={"#00A8FC"}
+									borderColor={"#00A8FC"}
+									selectedColor={"white"}
+									textColor={"#00A8FC"}
+									fontSize={16}
+									hasPadding
+								/>
+							</View>
+							<TouchableOpacity
+								style={styles.iconButton}
+								onPress={() => {
+									console.log("This button worked.");
+                                    console.log(colorScheme)
+								}}
+							>
+                                <MaterialIcons name="add-link" size={40} color="#00A8FC" />
+							</TouchableOpacity>
+						</HStack>
 					</VStack>
 				</NativeBaseProvider>
 			</View>
@@ -54,10 +90,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	textArea: {
-		height: 200,
+		height: 250,
 		marginHorizontal: 15,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#0782F9"
+		borderBottomColor: "#00A8FC",
 	},
 	image: {
 		width: 44,
@@ -65,8 +101,8 @@ const styles = StyleSheet.create({
 		borderRadius: 44 / 2,
 		margin: 15,
 	},
-	button: {
-		backgroundColor: "#0782F9",
+	shareButton: {
+		backgroundColor: "#00A8FC",
 		borderRadius: 30,
 		height: 35,
 		width: 80,
@@ -77,6 +113,19 @@ const styles = StyleSheet.create({
 	buttonText: {
 		color: "white",
 	},
+    iconButton: {
+        marginLeft: 5
+    },
+	switchSelectorContainer: {
+		width: "30%",
+		height: 45,
+		alignSelf: "flex-start",
+		justifyContent: "center",
+		marginLeft: 15,
+	},
+    hStack: {
+        marginTop: 5,
+    }
 });
 
 export default CreatePostScreen;

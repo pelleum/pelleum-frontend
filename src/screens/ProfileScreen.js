@@ -1,158 +1,206 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import React from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	FlatList,
+	TouchableOpacity,
+	Image,
+} from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
+import { Feather } from "@expo/vector-icons";
 
 const ProfileScreen = ({ navigation }) => {
-    const assetsOwned = [
-        { assetSymbol: "TSLA", contribution: "$8,533.06", currentValue: "$19,215.48" },
-        { assetSymbol: "AAPL", contribution: "$2,568.72", currentValue: "$5,651.18" },
-        { assetSymbol: "COIN", contribution: "$1,225.99", currentValue: "$992.79" },
-        { assetSymbol: "GOOGL", contribution: "$4,850.19", currentValue: "$7,125.35" },
-        { assetSymbol: "VdOO", contribution: "$14,041.45", currentValue: "$22,378.63" },
-        //{ assetSymbol: "VOddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
-        //{ assetSymbol: "VOdddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
-        //{ assetSymbol: "VOddsdO", contribution: "$14,041.45", currentValue: "$22,378.63" }
-    ];
-    return (
-        <View style={styles.mainContainer}>
-            <NativeBaseProvider>
-                <FlatList
-                    data={assetsOwned}
-                    keyExtractor={item => item.assetSymbol}
-                    renderItem={({ item }) => (
-                        <Center>
-                            <Box style={styles.assetTableBox}>
-                                <Box style={styles.assetRowBox}>
-                                    <VStack>
-                                        <Text style={styles.assetText}>{item.assetSymbol}</Text>
-                                        <Text style={styles.thesisText}>Thesis</Text>
-                                    </VStack>
-                                    <VStack>
-                                        <HStack>
-                                            <Text style={styles.valueText}>Contribution:</Text>
-                                            <Text style={styles.valueNumbers}>{item.contribution}</Text>
-                                        </HStack>
-                                        <HStack>
-                                            <Text style={styles.valueText}>Current Value:</Text>
-                                            <Text style={styles.valueNumbers}>{item.currentValue}</Text>
-                                        </HStack>
-                                    </VStack>
-                                </Box>
-                            </Box>
-                        </Center>
-                    )}
-                    ListHeaderComponent={
-                        <Center>
-                            <Text style={styles.usernameText}>@user0123</Text>
-                        </Center>
-                    }
-                    ListFooterComponent={
-                        <Center>
-                            <TouchableOpacity
-                                style={styles.settingsButton}
-                                onPress={() => { navigation.navigate('Settings') }}
-                            >
-                                <Text style={styles.settingsText}>Settings</Text>
-                            </TouchableOpacity>
-                        </Center>
-                    }
-                >
-                </FlatList>
-            </NativeBaseProvider>
-        </View>
-    );
+	const assetsOwned = [
+		{
+			assetSymbol: "TSLA",
+			contribution: "$8,533.06",
+			currentValue: "$19,215.48",
+		},
+		{
+			assetSymbol: "AAPL",
+			contribution: "$2,568.72",
+			currentValue: "$5,651.18",
+		},
+		{ assetSymbol: "COIN", contribution: "$1,225.99", currentValue: "$992.79" },
+		{
+			assetSymbol: "GOOGL",
+			contribution: "$4,850.19",
+			currentValue: "$7,125.35",
+		},
+		{
+			assetSymbol: "VdOO",
+			contribution: "$14,041.45",
+			currentValue: "$22,378.63",
+		},
+		//{ assetSymbol: "VOddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
+		//{ assetSymbol: "VOdddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
+		//{ assetSymbol: "VOddsdO", contribution: "$14,041.45", currentValue: "$22,378.63" }
+	];
+	return (
+		<View style={styles.mainContainer}>
+			<NativeBaseProvider>
+				<VStack>
+					<HStack alignItems="center" justifyContent="space-between">
+						<Image
+							style={styles.image}
+							source={require("../../assets/forest.jpg")}
+						/>
+						<TouchableOpacity
+							style={styles.settingsButton}
+							onPress={() => {
+								navigation.navigate("Settings");
+							}}
+						>
+							<Feather name="settings" size={40} color="#00A8FC" />
+						</TouchableOpacity>
+					</HStack>
+					<FlatList
+						data={assetsOwned}
+						keyExtractor={(item) => item.assetSymbol}
+						renderItem={({ item }) => (
+							<Center>
+								<Box style={styles.assetTableBox}>
+									<Box style={styles.assetRowBox}>
+										<VStack>
+											<TouchableOpacity
+												style={styles.assetButton}
+												onPress={() => {
+													console.log("Asset button worked.");
+												}}
+											>
+                                                <Text style={styles.assetButtonText}>{item.assetSymbol}</Text>
+											</TouchableOpacity>
+											<TouchableOpacity
+												style={styles.thesisButton}
+												onPress={() => {
+													console.log("Thesis button worked.");
+												}}
+											>
+                                                <Text style={styles.thesisButtonText}>Thesis</Text>
+											</TouchableOpacity>
+										</VStack>
+										<VStack>
+											<HStack>
+												<Text style={styles.valueText}>Contribution:</Text>
+												<Text style={styles.valueNumbers}>
+													{item.contribution}
+												</Text>
+											</HStack>
+											<HStack>
+												<Text style={styles.valueText}>Current Value:</Text>
+												<Text style={styles.valueNumbers}>
+													{item.currentValue}
+												</Text>
+											</HStack>
+										</VStack>
+									</Box>
+								</Box>
+							</Center>
+						)}
+						ListHeaderComponent={
+							<Text style={styles.listHeaderText}>Assets</Text>
+						}
+					></FlatList>
+				</VStack>
+			</NativeBaseProvider>
+		</View>
+	);
 };
 
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-    },
-    usernameText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginTop: 10,
-        padding: 15,
-    },
-    assetTableBox: {
-        backgroundColor: '#ebecf0',
-        borderWidth: 1,
-        borderColor: "#dedfe3",
-        borderRadius: 5,
-        width: '98%',
-        overflow: "hidden"
-    },
-    assetRowBox: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+	mainContainer: {
+		flex: 1,
+	},
+	listHeaderText: {
+		fontWeight: "bold",
+		fontSize: 16,
+		marginTop: 10,
+		padding: 15,
+	},
+	assetTableBox: {
+		backgroundColor: "#ebecf0",
+		borderWidth: 1,
+		borderColor: "#dedfe3",
+		borderRadius: 5,
+		width: "98%",
+		overflow: "hidden",
+	},
+	assetRowBox: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		borderWidth: 0.5,
+		borderColor: "#dedfe3",
+		paddingVertical: 8,
+		overflow: "hidden",
+	},
+	assetButton: {
+        overflow: "hidden",
         borderWidth: 0.5,
-        borderColor: "#dedfe3",
-        paddingVertical: 8,
-        overflow: "hidden"
-    },
-    assetText: {
-        color: '#026bd4',
-        borderWidth: 0.5,
+		backgroundColor: "white",
+		borderColor: "#00A8FC",
+		borderRadius: 15,
         backgroundColor: "white",
-        borderColor: "#026bd4",
-        borderRadius: 15,
-        width: 75,
-        padding: 5,
+		borderRadius: 30,
         marginLeft: 5,
         marginVertical: 3,
-        textAlign: 'center',
+		height: 30,
+		width: 75,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+    assetButtonText: {
         fontSize: 15,
-        fontWeight: 'bold',
-        overflow: 'hidden'
+        color: "#00A8FC",
+        fontWeight: "bold"
     },
-    thesisText: {
-        color: 'white',
+	thesisButton: {
+		overflow: "hidden",
         borderWidth: 0.5,
-        backgroundColor: "#026bd4",
-        borderColor: "white",
-        borderRadius: 15,
-        width: 75,
-        padding: 5,
+		backgroundColor: "#00A8FC",
+		borderColor: "white",
+		borderRadius: 15,
+        backgroundColor: "#00A8FC",
+		borderRadius: 30,
         marginLeft: 5,
         marginVertical: 3,
-        textAlign: 'center',
+		height: 30,
+		width: 75,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+    thesisButtonText: {
         fontSize: 15,
-        fontWeight: 'bold',
-        overflow: 'hidden'
+        color: "white",
+        fontWeight: "bold"
     },
-    valueText: {
-        width: 105,
-        color: '#575757',
-        fontSize: 15,
-        paddingVertical: 5,
-        marginVertical: 3
-    },
-    valueNumbers: {
-        width: 130,
-        textAlign: 'right',
-        fontSize: 15,
-        marginRight: 5,
-        marginVertical: 3,
-        paddingVertical: 5
-    },
-    settingsButton: {
-        borderWidth: 0.5,
-        backgroundColor: "#026bd4",
-        borderColor: "white",
-        borderRadius: 15,
-        width: '75%',
-        padding: 10,
-        marginVertical: 10,
-        alignItems: 'center',
-        overflow: 'hidden'
-    },
-    settingsText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 16,
-    }
+	valueText: {
+		width: 105,
+		color: "#575757",
+		fontSize: 15,
+		paddingVertical: 5,
+		marginVertical: 3,
+	},
+	valueNumbers: {
+		width: 130,
+		textAlign: "right",
+		fontSize: 15,
+		marginRight: 5,
+		marginVertical: 3,
+		paddingVertical: 5,
+	},
+	settingsButton: {
+		marginRight: 15,
+	},
+	image: {
+		width: 60,
+		height: 60,
+		borderRadius: 60 / 2,
+		margin: 15,
+	},
 });
 
 /*
