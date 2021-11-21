@@ -18,33 +18,11 @@ const SignupScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
+        //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
         >
             <NavigationEvents onWillFocus={clearErrorMessage} />
             <Text style={styles.titleText}>Create a Pelleum account!</Text>
             <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="First Name"
-                    value={firstName}
-                    onChangeText={text => setFirstName(text)}
-                    style={styles.input}
-                    autoCorrect={false}
-                />
-                <TextInput
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChangeText={text => setLastName(text)}
-                    style={styles.input}
-                    autoCorrect={false}
-                />
-                <TextInputMask
-                    placeholder="MM/DD/YYYY"
-                    type={'datetime'}
-                    style={styles.input}
-                    options={{ format: 'MM/DD/YYYY' }}
-                    value={dateBirth}
-                    onChangeText={date => setDateBirth(date)}
-                />
                 <TextInput
                     placeholder="Email"
                     value={email}
@@ -69,6 +47,14 @@ const SignupScreen = ({ navigation }) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={true}
+                />
+                <TextInputMask
+                    placeholder="MM/DD/YYYY"
+                    type={'datetime'}
+                    style={styles.input}
+                    options={{ format: 'MM/DD/YYYY' }}
+                    value={dateBirth}
+                    onChangeText={date => setDateBirth(date)}
                 />
                 {state.errorMessage
                     ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>

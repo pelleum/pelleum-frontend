@@ -9,6 +9,12 @@ const PortfolioInsightScreen = () => {
     );
 };
 
+PortfolioInsightScreen.navigationOptions = () => {
+    return {
+        headerShown: false,
+    };
+};
+
 export default PortfolioInsightScreen;
 
 const styles = StyleSheet.create({});

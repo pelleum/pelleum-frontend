@@ -85,7 +85,6 @@ const EdScreen = ({ navigation }) => {
 				renderItem={({ item }) => (
 					<NativeBaseProvider>
 						<TouchableOpacity
-							style={styles.readMoreButton}
 							onPress={() => {
 								navigation.navigate("Blog", {
 									imageSource: item.imageLocation,
@@ -100,7 +99,7 @@ const EdScreen = ({ navigation }) => {
 									<Image
 										style={{ width: dimensions.width, height: imageHeight }}
 										source={item.imageLocation}
-										//resizeMode={"contain"}
+									//resizeMode={"contain"}
 									/>
 									<Text style={styles.titleText}>{item.title}</Text>
 									<Text style={styles.previewText}>{item.preview}</Text>
@@ -119,25 +118,18 @@ export default EdScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
+		shadowOffset: { width: 5, height: 3 },
+		shadowColor: '#bdbbbb',
+		shadowOpacity: 1,
+		elevation: 3,
+		// background color must be set
+		backgroundColor: "#0000" // invisible color
 	},
 	blogPostBox: {
 		backgroundColor: "#ebecf0",
-		borderWidth: 1,
-		borderColor: "#dedfe3",
 		borderRadius: 15,
-		marginTop: 5,
 		overflow: "hidden",
-        // shadowColor: "#000",   Shaddow isn't working for some reason
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 2,
-        // },
-        // shadowOpacity: 0.25,
-        // shadowRadius: 3.5,
-        // elevation: 5
-	},
-	image: {
-		width: 200,
+		marginTop: 9
 	},
 	titleText: {
 		fontWeight: "bold",
@@ -149,12 +141,5 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		marginVertical: 5,
 		paddingHorizontal: 5,
-	},
-	readMoreButton: {
-		padding: 10,
-		alignSelf: "center",
-	},
-	readMoreText: {
-		color: "blue",
-	},
+	}
 });

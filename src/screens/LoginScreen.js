@@ -8,8 +8,6 @@ const LoginScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    //console.log(state);
-
     return (
         <KeyboardAvoidingView
             style={styles.container}
