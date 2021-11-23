@@ -3,80 +3,84 @@ import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Te
 import { TextInputMask } from 'react-native-masked-text';
 import { Context as AuthContext } from '../context/AuthContext';
 import { NavigationEvents } from 'react-navigation';
+import DismissKeyboard from "../components/DismissKeyboard";
+import colorScheme from "../components/ColorScheme";
 
 const SignupScreen = ({ navigation }) => {
     const { state, signup, clearErrorMessage } = useContext(AuthContext);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [dateBirth, setDateBirth] = useState('');
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    //console.log(state);
-
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-        //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
-        >
-            <NavigationEvents onWillFocus={clearErrorMessage} />
-            <Text style={styles.titleText}>Create a Pelleum account!</Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                <TextInput
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={text => setUsername(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                <TextInput
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={text => setPassword(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    secureTextEntry={true}
-                />
-                <TextInputMask
-                    placeholder="MM/DD/YYYY"
-                    type={'datetime'}
-                    style={styles.input}
-                    options={{ format: 'MM/DD/YYYY' }}
-                    value={dateBirth}
-                    onChangeText={date => setDateBirth(date)}
-                />
-                {state.errorMessage
-                    ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
-                    : null}
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={() => signup({ email, username, password })}
-                    style={[styles.button, styles.buttonOutline]}
-                >
-                    <Text style={styles.buttonText}>Sign Up</Text>
-                </TouchableOpacity>
-                <View style={styles.signupContainer}>
-                    <Text style={styles.dontHave}>Already have an account?</Text>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Login')}
-                    >
-                        <Text style={styles.signUpNow}>Log in</Text>
-                    </TouchableOpacity>
+        <DismissKeyboard>
+            <KeyboardAvoidingView
+                style={styles.container}
+            //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
+            >
+                <NavigationEvents onWillFocus={clearErrorMessage} />
+                <Text style={styles.titleText}>Create a Pelleum account!</Text>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Email"
+                        placeholderTextColor="#c7c7c7"
+                        value={email}
+                        onChangeText={text => setEmail(text)}
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                    <TextInput
+                        placeholder="Username"
+                        placeholderTextColor="#c7c7c7"
+                        value={username}
+                        onChangeText={text => setUsername(text)}
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                    <TextInput
+                        placeholder="Password"
+                        placeholderTextColor="#c7c7c7"
+                        value={password}
+                        onChangeText={text => setPassword(text)}
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={true}
+                    />
+                    <TextInputMask
+                        placeholder="MM/DD/YYYY"
+                        placeholderTextColor="#c7c7c7"
+                        type={'datetime'}
+                        style={styles.input}
+                        options={{ format: 'MM/DD/YYYY' }}
+                        value={dateBirth}
+                        onChangeText={date => setDateBirth(date)}
+                    />
+                    {state.errorMessage
+                        ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+                        : null}
                 </View>
-            </View>
-        </KeyboardAvoidingView>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => signup({ email, username, password })}
+                        style={[styles.button, styles.buttonOutline]}
+                    >
+                        <Text style={styles.buttonText}>Sign Up</Text>
+                    </TouchableOpacity>
+                    <View style={styles.signupContainer}>
+                        <Text style={styles.dontHave}>Already have an account?</Text>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Login')}
+                        >
+                            <Text style={styles.signUpNow}>Log in</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </KeyboardAvoidingView>
+        </DismissKeyboard>
     );
 };
 

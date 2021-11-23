@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
 import { Context as AuthContext } from '../context/AuthContext';
 import { NavigationEvents } from 'react-navigation';
+import DismissKeyboard from "../components/DismissKeyboard";
+import colorScheme from "../components/ColorScheme";
 
 const LoginScreen = ({ navigation }) => {
     const { state, login, clearErrorMessage } = useContext(AuthContext);
@@ -9,51 +11,55 @@ const LoginScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
+        <DismissKeyboard>
+            <KeyboardAvoidingView
+                style={styles.container}
             //behavior="padding"       //ensures text fields do not get blocked by keyboard
-        >
-            <NavigationEvents onWillFocus={clearErrorMessage} />
-            <Text style={styles.titleText}>Log into your Pelleum account!</Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={text => setUsername(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                <TextInput
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={text => setPassword(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    secureTextEntry={true}
-                />
-                {state.errorMessage
-                    ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
-                    : null}
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={() => login({ username, password })}
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}>Log In</Text>
-                </TouchableOpacity>
-                <View style={styles.loginContainer}>
-                    <Text style={styles.already}>Don't have an account?</Text>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Signup')}
-                    >
-                        <Text style={styles.logInNow}>Sign up</Text>
-                    </TouchableOpacity>
+            >
+                <NavigationEvents onWillFocus={clearErrorMessage} />
+                <Text style={styles.titleText}>Log into your Pelleum account!</Text>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Username"
+                        placeholderTextColor="#c7c7c7"
+                        value={username}
+                        onChangeText={text => setUsername(text)}
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                    <TextInput
+                        placeholder="Password"
+                        placeholderTextColor="#c7c7c7"
+                        value={password}
+                        onChangeText={text => setPassword(text)}
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={true}
+                    />
+                    {state.errorMessage
+                        ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+                        : null}
                 </View>
-            </View>
-        </KeyboardAvoidingView>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => login({ username, password })}
+                        style={styles.button}
+                    >
+                        <Text style={styles.buttonText}>Log In</Text>
+                    </TouchableOpacity>
+                    <View style={styles.loginContainer}>
+                        <Text style={styles.already}>Don't have an account?</Text>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Signup')}
+                        >
+                            <Text style={styles.logInNow}>Sign up</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </KeyboardAvoidingView>
+        </DismissKeyboard>
     );
 };
 
