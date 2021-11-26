@@ -11,10 +11,9 @@ import {
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
 
-
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import colorScheme from "../components/ColorScheme";
 
 const CreatePostScreen = () => {
@@ -23,8 +22,6 @@ const CreatePostScreen = () => {
 		{ label: "Post", value: "post" },
 		{ label: "Thesis", value: "thesis" },
 	];
-
-    
 
 	return (
 		<DismissKeyboard>
@@ -72,10 +69,10 @@ const CreatePostScreen = () => {
 								style={styles.iconButton}
 								onPress={() => {
 									console.log("This button worked.");
-                                    console.log(colorScheme)
+									console.log(colorScheme);
 								}}
 							>
-                                <MaterialIcons name="add-link" size={40} color="#00A8FC" />
+								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
 							</TouchableOpacity>
 						</HStack>
 					</VStack>
@@ -113,9 +110,9 @@ const styles = StyleSheet.create({
 	buttonText: {
 		color: "white",
 	},
-    iconButton: {
-        marginLeft: 5
-    },
+	iconButton: {
+		marginLeft: 5,
+	},
 	switchSelectorContainer: {
 		width: "30%",
 		height: 45,
@@ -123,9 +120,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginLeft: 15,
 	},
-    hStack: {
-        marginTop: 5,
-    }
+	hStack: {
+		marginTop: 5,
+	},
 });
 
 export default CreatePostScreen;
