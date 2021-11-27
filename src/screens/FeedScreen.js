@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { Box, Center, VStack, NativeBaseProvider } from "native-base";
 import PelleumPublic from "../api/PelleumPublic";
@@ -6,27 +6,32 @@ import { MaterialIcons, FontAwesome, Ionicons, Fontisto, SimpleLineIcons } from 
 import colorScheme from "../components/ColorScheme";
 
 const FeedScreen = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [posts, setPosts] = useState([]);
-    // 1. State is initialiized to empty list
-    // 2. Make API call, and get latest posts
+
+    // 1. State is initialized to empty list
+    // 2. On first render, make API call and get latest posts
     // 3. When a user pulls down, make another API call and update list with latest posts
 
-    const onRefresh = async () => {
-        console.log('\nRefresh worked!');
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        console.log('\nFeed refresh worked!');
         let response;
         try {
             response = await PelleumPublic.get('/public/posts/retrieve/many');
             setPosts(response.data.records.posts)
             console.log("\n", response.status);
+            setRefreshing(false);
         } catch (err) {
             console.log("\n", err);
             console.log("\n", err.response.status);
             console.log("\n", err.response.data);
+            setRefreshing(false);
         };
-    };
+    }, [refreshing]);
 
     useEffect(() => {
-        console.log("\nFirst render!")
+        console.log("\nFirst feed render!")
         onRefresh()
     }, []);
 
@@ -111,8 +116,8 @@ const FeedScreen = ({ navigation }) => {
                 refreshControl={< RefreshControl
                     enabled={true}
                     colors={["#9Bd35A", "#689F38"]}
-                    //refreshing={console.log('loading worked')}
                     onRefresh={onRefresh} />}
+                    refreshing={refreshing}
             >
             </FlatList >
         </View >

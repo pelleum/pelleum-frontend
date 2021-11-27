@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -9,100 +9,121 @@ import {
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import { Feather } from "@expo/vector-icons";
+import PelleumPublic from "../api/PelleumPublic";
 
 const ProfileScreen = ({ navigation }) => {
-	const assetsOwned = [
-		{
-			assetSymbol: "TSLA",
-			contribution: "$8,533.06",
-			currentValue: "$19,215.48",
-		},
-		{
-			assetSymbol: "AAPL",
-			contribution: "$2,568.72",
-			currentValue: "$5,651.18",
-		},
-		{ assetSymbol: "COIN", contribution: "$1,225.99", currentValue: "$992.79" },
-		{
-			assetSymbol: "GOOGL",
-			contribution: "$4,850.19",
-			currentValue: "$7,125.35",
-		},
-		{
-			assetSymbol: "VdOO",
-			contribution: "$14,041.45",
-			currentValue: "$22,378.63",
-		},
-		//{ assetSymbol: "VOddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
-		//{ assetSymbol: "VOdddO", contribution: "$14,041.45", currentValue: "$22,378.63" },
-		//{ assetSymbol: "VOddsdO", contribution: "$14,041.45", currentValue: "$22,378.63" }
-	];
+	const [assetList, setAssetList] = useState([]);
+
+	// 1. State is initialized to empty list
+	// 2. On first render, make API call and get latest list of assets
+
+	const getCurrentUser = async () => {
+		let response;
+		try {
+			response = await PelleumPublic.get('/public/auth/users');
+			userData = response.data;
+		} catch (err) {
+			console.log("\n", err);
+			console.log("\n", err.response.status);
+			console.log("\n", err.response.data);
+		};
+		return userData;
+	};
+
+	const onRefresh = async (userData) => {
+		console.log('\nProfile Asset List Refresh worked!');
+		let response;
+		try {
+			response = await PelleumPublic.get(`/public/portfolio/${userData.user_id.toString()}`);
+			setAssetList(response.data.records)
+		} catch (err) {
+			console.log("\n", err);
+			console.log("\n", err.response.status);
+			console.log("\n", err.response.data);
+		};
+	};
+
+	const firstRender = async () => {
+		console.log("\nFirst profile render!");
+		const userData = await getCurrentUser();
+		await onRefresh(userData);
+	};
+
+	useEffect(() => {
+		firstRender();
+	}, []);
+
 	return (
 		<View style={styles.mainContainer}>
 			<NativeBaseProvider>
-				<VStack>
-					<HStack alignItems="center" justifyContent="space-between">
-						<Image
-							style={styles.image}
-							source={require("../../assets/forest.jpg")}
-						/>
-						<TouchableOpacity
-							style={styles.settingsButton}
-							onPress={() => {
-								navigation.navigate("Settings");
-							}}
-						>
-							<Feather name="settings" size={40} color="#00A8FC" />
-						</TouchableOpacity>
-					</HStack>
-					<FlatList
-						data={assetsOwned}
-						keyExtractor={(item) => item.assetSymbol}
-						renderItem={({ item }) => (
-							<Center>
-								<Box style={styles.assetTableBox}>
-									<Box style={styles.assetRowBox}>
-										<VStack>
-											<TouchableOpacity
-												style={styles.assetButton}
-												onPress={() => {
-													console.log("Asset button worked.");
-												}}
-											>
-                                                <Text style={styles.assetButtonText}>{item.assetSymbol}</Text>
-											</TouchableOpacity>
-											<TouchableOpacity
-												style={styles.thesisButton}
-												onPress={() => {
-													console.log("Thesis button worked.");
-												}}
-											>
-                                                <Text style={styles.thesisButtonText}>Thesis</Text>
-											</TouchableOpacity>
-										</VStack>
-										<VStack>
-											<HStack>
-												<Text style={styles.valueText}>Contribution:</Text>
-												<Text style={styles.valueNumbers}>
-													{item.contribution}
-												</Text>
-											</HStack>
-											<HStack>
-												<Text style={styles.valueText}>Current Value:</Text>
-												<Text style={styles.valueNumbers}>
-													{item.currentValue}
-												</Text>
-											</HStack>
-										</VStack>
-									</Box>
+				<FlatList
+					data={assetList}
+					keyExtractor={(item) => item.asset_symbol}
+					renderItem={({ item }) => (
+						<Center>
+							<Box style={styles.assetTableBox}>
+								<Box style={styles.assetRowBox}>
+									<VStack>
+										<TouchableOpacity
+											style={styles.assetButton}
+											onPress={() => {
+												console.log("Asset button worked.");
+											}}
+										>
+											<Text style={styles.assetButtonText}>{item.asset_symbol}</Text>
+										</TouchableOpacity>
+										<TouchableOpacity
+											style={styles.thesisButton}
+											onPress={() => {
+												console.log("Thesis button worked.");
+											}}
+										>
+											<Text style={styles.thesisButtonText}>Thesis</Text>
+										</TouchableOpacity>
+									</VStack>
+									<VStack>
+										<HStack>
+											<Text style={styles.valueText}>Shares Owned:</Text>
+											<Text style={styles.valueNumbers}>
+												{item.quantity}
+											</Text>
+										</HStack>
+										<HStack>
+											<Text style={styles.valueText}>Avg Buy Price:</Text>
+											<Text style={styles.valueNumbers}>
+												${item.average_buy_price.toFixed(2)}
+											</Text>
+										</HStack>
+									</VStack>
 								</Box>
-							</Center>
-						)}
-						ListHeaderComponent={
+							</Box>
+						</Center>
+					)}
+					ListHeaderComponent={
+						<View>
+							<HStack alignItems="center" justifyContent="space-between">
+								<Image
+									style={styles.image}
+									source={require("../../assets/forest.jpg")}
+								/>
+								<TouchableOpacity
+									style={styles.settingsButton}
+									onPress={() => {
+										navigation.navigate("Settings");
+									}}
+								>
+									<Feather name="settings" size={30} color="#00A8FC" />
+								</TouchableOpacity>
+							</HStack>
 							<Text style={styles.listHeaderText}>Assets</Text>
-						}
-					></FlatList>
-				</VStack>
+						</View>
+					}
+					ListFooterComponent={
+						<View alignItems={'center'} paddingVertical={20}>
+							<Text>We can add more stuff here.</Text>
+						</View>
+					}
+				></FlatList>
 			</NativeBaseProvider>
 		</View>
 	);
@@ -138,45 +159,45 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	assetButton: {
-        overflow: "hidden",
-        borderWidth: 0.5,
+		overflow: "hidden",
+		borderWidth: 0.5,
 		backgroundColor: "white",
 		borderColor: "#00A8FC",
 		borderRadius: 15,
-        backgroundColor: "white",
+		backgroundColor: "white",
 		borderRadius: 30,
-        marginLeft: 5,
-        marginVertical: 3,
+		marginLeft: 5,
+		marginVertical: 3,
 		height: 30,
 		width: 75,
 		justifyContent: "center",
 		alignItems: "center",
 	},
-    assetButtonText: {
-        fontSize: 15,
-        color: "#00A8FC",
-        fontWeight: "bold"
-    },
+	assetButtonText: {
+		fontSize: 15,
+		color: "#00A8FC",
+		fontWeight: "bold"
+	},
 	thesisButton: {
 		overflow: "hidden",
-        borderWidth: 0.5,
+		borderWidth: 0.5,
 		backgroundColor: "#00A8FC",
 		borderColor: "white",
 		borderRadius: 15,
-        backgroundColor: "#00A8FC",
+		backgroundColor: "#00A8FC",
 		borderRadius: 30,
-        marginLeft: 5,
-        marginVertical: 3,
+		marginLeft: 5,
+		marginVertical: 3,
 		height: 30,
 		width: 75,
 		justifyContent: "center",
 		alignItems: "center",
 	},
-    thesisButtonText: {
-        fontSize: 15,
-        color: "white",
-        fontWeight: "bold"
-    },
+	thesisButtonText: {
+		fontSize: 15,
+		color: "white",
+		fontWeight: "bold"
+	},
 	valueText: {
 		width: 105,
 		color: "#575757",
@@ -193,7 +214,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 	},
 	settingsButton: {
-		marginRight: 15,
+		padding: 15,
 	},
 	image: {
 		width: 60,
@@ -204,17 +225,27 @@ const styles = StyleSheet.create({
 });
 
 /*
-            <Text>Profile Screen</Text>
-            <Button
-                title="Go to Post Detail"
-                onPress = {() => navigation.navigate('feedPostFlow')}
-            />
-            <Button
-                title="Go to Thesis Detail"
-                onPress = {() => navigation.navigate('feedThesisFlow')}
-            />
-            <Button
-                title="Go to Settings"
-                onPress = {() => navigation.navigate('Settings')}
-            />
+	const assetsOwned = [
+		{
+			assetSymbol: "TSLA",
+			contribution: "$8,533.06",
+			currentValue: "$19,215.48",
+		},
+		{
+			assetSymbol: "AAPL",
+			contribution: "$2,568.72",
+			currentValue: "$5,651.18",
+		},
+		{ assetSymbol: "COIN", contribution: "$1,225.99", currentValue: "$992.79" },
+		{
+			assetSymbol: "GOOGL",
+			contribution: "$4,850.19",
+			currentValue: "$7,125.35",
+		},
+		{
+			assetSymbol: "VOO",
+			contribution: "$14,041.45",
+			currentValue: "$22,378.63",
+		}
+	];
 */
