@@ -86,7 +86,7 @@ const EdScreen = ({ navigation }) => {
 					<NativeBaseProvider>
 						<TouchableOpacity
 							onPress={() => {
-								navigation.navigate("Blog", {
+								navigation.navigate("BlogPost", {
 									imageSource: item.imageLocation,
 									blogDate: item.date,
 									blogTitle: item.title,

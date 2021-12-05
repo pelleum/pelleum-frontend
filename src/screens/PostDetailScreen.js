@@ -7,7 +7,7 @@ const PostDetailScreen = ({ navigation }) => {
             <Text>PostDetailScreen</Text>
             <Button 
                 title="Go to Portfolio Insight" 
-                onPress = {() => navigation.navigate('Portfolio')}
+                onPress = {() => navigation.navigate('PortfolioInsight')}
             />
         </View>
     );

@@ -7,7 +7,7 @@ const ThesisDetailScreen = ({ navigation }) => {
             <Text>Thesis Detail Screen</Text>
             <Button 
                 title="Go to Portfolio Insight" 
-                onPress = {() => navigation.navigate('Portfolio')}
+                onPress = {() => navigation.navigate('PortfolioInsight')}
             />
         </View>
     );
