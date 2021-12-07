@@ -23,10 +23,10 @@ const authReducer = (state, action) => {
 //**********************************//
 const tryLocalLogin = dispatch => async () => {
     const token = await AsyncStorage.getItem('token');
-    if (!token || token === null) navigate('loginFlow');
+    if (!token || token === null) navigate('Login');
     if (token) {
         dispatch({ type: 'login', payload: token });
-        navigate('mainFlow');
+        navigate('AppFlow');
     };
 };
 //**********************************//
@@ -74,7 +74,7 @@ const login = (dispatch) => async ({ username, password }) => {
         console.log("\n", response.status);  
         await AsyncStorage.setItem('token', response.data.access_token);
         dispatch({ type: 'login', payload: response.data.access_token });
-        navigate('mainFlow')
+        navigate('AppFlow')
     } catch (err) {
         dispatch({ type: 'add_error', payload: err.response.data.detail });
         console.log("\n", err.response.status);
@@ -88,7 +88,7 @@ const login = (dispatch) => async ({ username, password }) => {
 const logout = dispatch => async () => {
     await AsyncStorage.removeItem('token');
     dispatch({ type: 'logout' });
-    navigate('loginFlow');
+    navigate('AuthFlow');
 };
 //************************************//
 

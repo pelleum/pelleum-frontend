@@ -21,17 +21,18 @@ import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext"; //renaming Provider as AuthProvider in App.js
 import { setNavigator } from "./src/navigationRef";
-import AuthLoadingScreen from "./src/screens/AuthLoadingScreen";
 import CreateScreen from "./src/screens/CreateScreen";
+import AuthLoadingScreen from "./src/screens/AuthLoadingScreen";
 
-// // Login and Sign Up Flow
-// const AuthStack = createNativeStackNavigator();
-// const AuthStackScreen = () => (
-//     <AuthStack.Navigator>
-//         <AuthStack.Screen name="Login" component={LoginScreen} />
-//         <AuthStack.Screen name="SignUp" component={SignupScreen} />
-//     </AuthStack.Navigator>
-// );
+// Authentication Flow
+const AuthStack = createNativeStackNavigator();
+const AuthFlow = () => (
+	<AuthStack.Navigator>
+		{/* <AuthStack.Screen name="AuthLoading" component={AuthLoadingScreen} /> */}
+		<AuthStack.Screen name="Login" component={LoginScreen} />
+		<AuthStack.Screen name="SignUp" component={SignupScreen} />
+	</AuthStack.Navigator>
+);
 
 // Feed Flow
 const FeedStack = createNativeStackNavigator();
@@ -74,27 +75,10 @@ const ProfileFlow = () => (
 	</ProfileStack.Navigator>
 );
 
-// const ProfileDrawer = createDrawerNavigator();
-// const ProfileDrawerScreen = () => (
-// 	<ProfileDrawer.Navigator drawerPosition="right">
-// 		<ProfileDrawer.Screen 
-// 			name="Profile" 
-// 			component={ProfileFlow} 
-// 		/>
-// 		<ProfileDrawer.Screen
-// 			name="Settings"
-// 			component={SettingsScreen}
-// 			options={{
-// 				gestureEnabled: false,
-// 			}}
-// 		/>
-// 	</ProfileDrawer.Navigator>
-// );
-
 const AppTabs = createBottomTabNavigator();
-const AppTabsScreen = () => (
+const AppFlow = () => (
 	<AppTabs.Navigator
-		screenOptions={{ 
+		screenOptions={{
 			tabBarShowLabel: false,
 			tabBarInactiveTintColor: '#858585',
 			tabBarActiveTintColor: '#000000',
@@ -144,60 +128,35 @@ const AppTabsScreen = () => (
 	</AppTabs.Navigator>
 );
 
-// const RootStack = createNativeStackNavigator();
-// const RootStackScreen = () => {
-//     const [isLoading, setIsLoading] = React.useState(true);
-//     const [user, setUser] = React.useState(null);
-//     React.useEffect(() => {
-//         setTimeout(() => {
-//             setIsLoading(!isLoading);
-//             setUser({}); // If we have token, set user to user object, so it's always accessible?
-//         }, 500);
-//     }, []);
-
-// 	return (
-//         <RootStack.Navigator
-//             headerMode="none"
-//             screenOptions={{ animationEnabled: false }}
-//             mode="modal"
-//         >
-//             {isLoading ? (
-//                 <RootStack.Screen name="Loading" component={AuthLoadingScreen} />
-//             ) : user ? (
-//                 <RootStack.Screen name="AppTabs" component={AppTabsScreen} />
-//             ) : (
-//                 <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
-//             )}
-//             <RootStack.Screen
-//                 name="Create"
-//                 component={CreateScreen}
-//                 options={{ animationEnabled: true }}
-//             />
-//         </RootStack.Navigator>
-//     );
-// };
-
 const RootStack = createNativeStackNavigator();
-const RootStackScreen = () => {
-
+const RootStackFlow = () => {
 	return (
 		<RootStack.Navigator>
-		<RootStack.Screen 
-			name="AppTabs" 
-			component={AppTabsScreen} 
-			options={{
-				headerShown: false,
-			}}
-		/>
+			<RootStack.Screen
+				name="AuthStack"
+				component={AuthFlow}
+				options={{
+					headerShown: false,
+				}}
+			/>
+			<RootStack.Screen
+				name="AppTabs"
+				component={AppFlow}
+				options={{
+					headerShown: false,
+				}}
+			/>
 		</RootStack.Navigator>
 	);
 };
 
 export default () => {
 	return (
-		<NavigationContainer>
-			<RootStackScreen />
-		</NavigationContainer>
+		<AuthProvider>
+			<NavigationContainer>
+				<RootStackFlow />
+			</NavigationContainer>
+		</AuthProvider>
 	);
 };
 
@@ -334,3 +293,72 @@ export default () => {
 };
 
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const RootStack = createNativeStackNavigator();
+// const RootStackFlow = () => {
+//     const [isLoading, setIsLoading] = React.useState(true);
+//     const [user, setUser] = React.useState(null);
+//     React.useEffect(() => {
+//         setTimeout(() => {
+//             setIsLoading(!isLoading);
+//             setUser({}); // If we have token, set user to user object, so it's always accessible?
+//         }, 500);
+//     }, []);
+
+// 	return (
+//         <RootStack.Navigator
+//             headerMode="none"
+//             screenOptions={{ animationEnabled: false }}
+//             mode="modal"
+//         >
+//             {isLoading ? (
+//                 <RootStack.Screen name="Loading" component={AuthLoadingScreen} />
+//             ) : user ? (
+//                 <RootStack.Screen name="AppTabs" component={AppFlow} />
+//             ) : (
+//                 <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
+//             )}
+//             <RootStack.Screen
+//                 name="Create"
+//                 component={CreateScreen}
+//                 options={{ animationEnabled: true }}
+//             />
+//         </RootStack.Navigator>
+//     );
+// };
+
+
+
+
+
+
+
+// const ProfileDrawer = createDrawerNavigator();
+// const ProfileDrawerScreen = () => (
+// 	<ProfileDrawer.Navigator drawerPosition="right">
+// 		<ProfileDrawer.Screen 
+// 			name="Profile" 
+// 			component={ProfileFlow} 
+// 		/>
+// 		<ProfileDrawer.Screen
+// 			name="Settings"
+// 			component={SettingsScreen}
+// 			options={{
+// 				gestureEnabled: false,
+// 			}}
+// 		/>
+// 	</ProfileDrawer.Navigator>
+// );
