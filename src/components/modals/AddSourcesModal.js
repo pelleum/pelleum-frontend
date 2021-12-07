@@ -7,6 +7,7 @@ import {
 	Pressable,
 	View,
 	TextInput,
+	KeyboardAvoidingView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
@@ -61,61 +62,61 @@ const AddSourcesModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 				makeModalDisappear();
 			}}
 		>
-			<View style={styles.centeredView}>
-				<View style={styles.modalView}>
-					<Text>
-						Add sources to substantiate your investment thesis. Sources are
-						great way to share some of the information that led to your current
-						thinking on investments.
-					</Text>
-					<Pressable
-						onPress={() => {
-							makeModalDisappear();
-						}}
-					>
-						<Feather name="x-circle" size={30} color="black" />
-					</Pressable>
-					<TextInput
-						placeholder="https://www.examplesource1.com"
-						placeholderTextColor="#c7c7c7"
-						value={urls["source1"]}
-						onChangeText={(newValue) => handleChangeText(newValue, 1)}
-						style={styles.titleInput}
-						maxLength={256}
-						autoCorrect={true}
-					/>
-					<TextInput
-						placeholder="https://www.examplesource2.com"
-						placeholderTextColor="#c7c7c7"
-						value={urls["source2"]}
-						onChangeText={(newValue) => handleChangeText(newValue, 2)}
-						style={styles.titleInput}
-						maxLength={256}
-						autoCorrect={true}
-					/>
-					<TextInput
-						placeholder="https://www.examplesource3.com"
-						placeholderTextColor="#c7c7c7"
-						value={urls["source3"]}
-						onChangeText={(newValue) => handleChangeText(newValue, 3)}
-						style={styles.titleInput}
-						maxLength={256}
-						autoCorrect={true}
-					/>
-					<Pressable
-						style={
-							disableStatus ? styles.addButtonDisabled : styles.addButtonEnabled
-						}
-						disabled={disableStatus}
-						onPress={() => {
-							makeModalDisappear();
-							console.log("Add button pressed");
-						}}
-					>
-						<Text style={styles.textStyle}>Add</Text>
-					</Pressable>
-				</View>
-			</View>
+				<KeyboardAvoidingView behavior={"padding"} style={styles.centeredView}>
+					<View style={styles.modalView}>
+						<Text>
+							Add sources to substantiate your investment thesis. Sources are
+							great way to share some of the information that led to your current
+							thinking on investments.
+						</Text>
+						<Pressable
+							onPress={() => {
+								makeModalDisappear();
+							}}
+						>
+							<Feather name="x-circle" size={30} color="black" />
+						</Pressable>
+						<TextInput
+							placeholder="https://www.examplesource1.com"
+							placeholderTextColor="#c7c7c7"
+							value={urls["source1"]}
+							onChangeText={(newValue) => handleChangeText(newValue, 1)}
+							style={styles.titleInput}
+							maxLength={256}
+							autoCorrect={true}
+						/>
+						<TextInput
+							placeholder="https://www.examplesource2.com"
+							placeholderTextColor="#c7c7c7"
+							value={urls["source2"]}
+							onChangeText={(newValue) => handleChangeText(newValue, 2)}
+							style={styles.titleInput}
+							maxLength={256}
+							autoCorrect={true}
+						/>
+						<TextInput
+							placeholder="https://www.examplesource3.com"
+							placeholderTextColor="#c7c7c7"
+							value={urls["source3"]}
+							onChangeText={(newValue) => handleChangeText(newValue, 3)}
+							style={styles.titleInput}
+							maxLength={256}
+							autoCorrect={true}
+						/>
+						<Pressable
+							style={
+								disableStatus ? styles.addButtonDisabled : styles.addButtonEnabled
+							}
+							disabled={disableStatus}
+							onPress={() => {
+								makeModalDisappear();
+								console.log("Add button pressed");
+							}}
+						>
+							<Text style={styles.textStyle}>Add</Text>
+						</Pressable>
+					</View>
+				</KeyboardAvoidingView>
 		</Modal>
 	);
 };

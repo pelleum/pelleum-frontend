@@ -7,7 +7,6 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
-	KeyboardAvoidingView,
 	Keyboard,
 	TouchableWithoutFeedback,
 	Platform,
@@ -117,99 +116,100 @@ const CreateThesisScreen = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView
-			//behavior={Platform.OS === "ios" ? "padding" : "height"}
-			behavior="padding"
-			style={styles.mainContainer}
-		>
-			<AddSourcesModal
-				modalVisible={modalVisible}
-				makeModalDisappear={() => setModalVisible(false)}
-				onNavigate={handleModalNavigate}
-			/>
-			<NativeBaseProvider>
-				<VStack>
-					<HStack alignItems="center" justifyContent="space-between" my="15">
-						<Image
-							style={styles.image}
-							source={require("../../assets/forest.jpg")}
-						/>
-						<TouchableOpacity
-							style={
-								disableStatus
-									? styles.shareButtonDisabled
-									: styles.shareButtonEnabled
-							}
-							disabled={disableStatus}
-							onPress={() => {
-								shareButtonPressed();
-							}}
-						>
-							<Text style={styles.buttonText}>Share</Text>
-						</TouchableOpacity>
-					</HStack>
-					<TextInput
-						placeholder="EXAMPLE"
-						placeholderTextColor="#c7c7c7"
-						value={asset_symbol}
-						onChangeText={(newValue) =>
-							handleChangeText({ newValue: newValue, symbol: true })
-						}
-						style={styles.assetSymbolInput}
-						maxLength={10}
-						autoCapitalize="characters"
-						autoCorrect={true}
-					/>
-					<Text>Asset Symbol</Text>
-					<TextInput
-						placeholder="My Thesis"
-						placeholderTextColor="#c7c7c7"
-						value={title}
-						onChangeText={(newValue) =>
-							handleChangeText({ newValue: newValue, title: true })
-						}
-						style={styles.titleInput}
-						maxLength={256}
-						autoCorrect={true}
-					/>
-					<Text>Thesis Title</Text>
-					<TextInput
-						placeholder="An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."
-						multiline={true}
-						numberOfLines={30}
-						style={styles.textArea}
-						maxLength={30000}
-						value={content}
-						onChangeText={(newValue) =>
-							handleChangeText({ newValue: newValue, content: true })
-						}
-					/>
-					<HStack style={styles.hStack} alignItems="center">
-						<View style={styles.switchSelectorContainer}>
-							<SwitchSelector
-								options={sentimentOptions}
-								initial={0}
-								onPress={(value) => setSentiment(value)}
-								height={40}
-								buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
-								selectedColor={"white"}
-								textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
-								bold={true}
-								fontSize={16}
-								hasPadding
+		<DismissKeyboard>
+			<View
+				//behavior={Platform.OS === "ios" ? "padding" : "height"}
+				style={styles.mainContainer}
+			>
+				<AddSourcesModal
+					modalVisible={modalVisible}
+					makeModalDisappear={() => setModalVisible(false)}
+					onNavigate={handleModalNavigate}
+				/>
+				<NativeBaseProvider>
+					<VStack>
+						<HStack alignItems="center" justifyContent="space-between" my="15">
+							<Image
+								style={styles.image}
+								source={require("../../assets/forest.jpg")}
 							/>
-						</View>
-						<TouchableOpacity
-							style={styles.iconButton}
-							onPress={() => setModalVisible(true)}
-						>
-							<MaterialIcons name="add-link" size={40} color="#00A8FC" />
-						</TouchableOpacity>
-					</HStack>
-					{error ? <Text style={styles.errorText}>{error}</Text> : null}
-				</VStack>
-			</NativeBaseProvider>
-		</KeyboardAvoidingView>
+							<TouchableOpacity
+								style={
+									disableStatus
+										? styles.shareButtonDisabled
+										: styles.shareButtonEnabled
+								}
+								disabled={disableStatus}
+								onPress={() => {
+									shareButtonPressed();
+								}}
+							>
+								<Text style={styles.buttonText}>Share</Text>
+							</TouchableOpacity>
+						</HStack>
+						<TextInput
+							placeholder="EXAMPLE"
+							placeholderTextColor="#c7c7c7"
+							value={asset_symbol}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, symbol: true })
+							}
+							style={styles.assetSymbolInput}
+							maxLength={10}
+							autoCapitalize="characters"
+							autoCorrect={true}
+						/>
+						<Text>Asset Symbol</Text>
+						<TextInput
+							placeholder="My Thesis"
+							placeholderTextColor="#c7c7c7"
+							value={title}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, title: true })
+							}
+							style={styles.titleInput}
+							maxLength={256}
+							autoCorrect={true}
+						/>
+						<Text>Thesis Title</Text>
+						<TextInput
+							placeholder="An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."
+							multiline={true}
+							numberOfLines={30}
+							style={styles.textArea}
+							maxLength={30000}
+							value={content}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, content: true })
+							}
+						/>
+						<HStack style={styles.hStack} alignItems="center">
+							<View style={styles.switchSelectorContainer}>
+								<SwitchSelector
+									options={sentimentOptions}
+									initial={0}
+									onPress={(value) => setSentiment(value)}
+									height={40}
+									buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
+									selectedColor={"white"}
+									textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
+									bold={true}
+									fontSize={16}
+									hasPadding
+								/>
+							</View>
+							<TouchableOpacity
+								style={styles.iconButton}
+								onPress={() => setModalVisible(true)}
+							>
+								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
+							</TouchableOpacity>
+						</HStack>
+						{error ? <Text style={styles.errorText}>{error}</Text> : null}
+					</VStack>
+				</NativeBaseProvider>
+			</View>
+		</DismissKeyboard>
 	);
 };
 
