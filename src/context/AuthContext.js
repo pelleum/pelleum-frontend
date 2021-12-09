@@ -1,99 +1,126 @@
-import createDataContext from "./CreateDataContext";
-import PelleumPublic from "../api/PelleumPublic";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigate } from "../navigationRef";
+// Import Installed Libraries
+import React, { createContext, useEffect, useMemo, useReducer } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
-const authReducer = (state, action) => {
+// Import Local Files
+import PelleumPublic from "../api/PelleumPublic";
+
+
+// Declare AuthContext as a Context object
+const AuthContext = createContext();
+
+// Declare initial state
+const initialState = {
+    isLoading: true,
+    isLogout: false,
+    userToken: null,
+    //errorMessage: '',
+}
+
+// Reducer to manage auth state
+const authReducer = (prevState, action) => {
     switch (action.type) {
-        case 'add_error':
-            return { ...state, errorMessage: action.payload }
-        case 'login':
-            return { errorMessage: '', token: action.payload }
-        case 'clear_error_message':
-            return { ...state, errorMessage: '' };
-        case 'logout':
-            return { token: null, errorMessage: '' }
+        case 'AUTH_ERROR':
+            return {
+                ...prevState,
+                errorMessage: action.error,
+            };
+        case 'CLEAR_AUTH_ERROR':
+            return {
+                ...prevState,
+                errorMessage: '',
+            };
+        case 'LOG_IN':
+            return {
+                ...prevState,
+                isLogout: false,
+                userToken: action.token,
+            };
+        case 'LOG_OUT':
+            return {
+                ...prevState,
+                isLogout: true,
+                userToken: null,
+            };
+        case 'RESTORE_TOKEN':
+            return {
+                ...prevState,
+                userToken: action.token,
+                isLoading: false,
+            };
         default:
             return state;
     };
 };
 
 
-//****    store token action    ****//
-//**********************************//
-const tryLocalLogin = dispatch => async () => {
-    const token = await AsyncStorage.getItem('token');
-    if (!token || token === null) navigate('Login');
-    if (token) {
-        dispatch({ type: 'login', payload: token });
-        navigate('AppFlow');
-    };
+// //****    fetch token action    ****//
+// //**********************************//
+// useEffect(() => {
+//     const fetchToken = async () => {
+//         let userToken;
+//         try {
+//             userToken = await SecureStore.getItemAsync('userToken');
+//         } catch (err) {
+//             // Restoring token failed
+//             console.log('Unable to fetch token.')
+//         }
+//         // After restoring token, we may need to validate it
+//         dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+//     };
+//     fetchToken();
+// }, []);
+// //**********************************//
+
+
+// //**** signUp, logIn, and logOut actions   ****//
+// //*********************************************//
+// const authContext = useMemo(() => ({
+//     signUp: async ({ email, username, password }) => {
+//         try {
+//             const response = await PelleumPublic.post('/public/auth/users', { email, username, password });
+//             console.log("\n", response.status);
+//             console.log("\n", response.data);
+//             // to log the user in after signup, store the token and dispatch the LOG_IN action
+//             // await SecureStore.setItemAsync('userToken', response.data.access_token);
+//             // dispatch({ type: 'LOG_IN', token: response.data.access_token });
+//         } catch (err) {
+//             dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
+//             console.log("\n", err.response.status);
+//             console.log("\n", err.response.data);
+//         };
+//     },
+//     logIn: async ({ username, password }) => {
+//         var qs = require('query-string');
+//         const config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
+
+//         try {
+//             const response = await PelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
+//             console.log("\n", response.status);
+//             await SecureStore.setItemAsync('userToken', response.data.access_token);
+//             dispatch({ type: 'LOG_IN', token: response.data.access_token });
+//         } catch (err) {
+//             dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
+//             console.log("\n", err.response.status);
+//             console.log("\n", err.response.data);
+//         };
+//     },
+//     logOut: async () => {
+//         await SecureStore.deleteItemAsync('token');
+//         dispatch({ type: 'LOG_OUT' });
+//     },
+//     clearErrorMessage: () => dispatch({ type: 'CLEAR_AUTH_ERROR' }),
+// }),
+//     []
+// );
+// //*********************************************//
+
+export const AuthProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(authReducer, initialState);
+
+    return (
+        <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>
+    );
 };
-//**********************************//
 
-
-//****   clear error message   ****//
-//*********************************//
-const clearErrorMessage = dispatch => () => {
-    dispatch({ type: 'clear_error_message' })
-};
-//*********************************//
-
-
-//****   signup action function   ****//
-//************************************//
-const signup = (dispatch) => async ({ email, username, password }) => {
-    try {
-        const response = await PelleumPublic.post('/public/auth/users', { email, username, password });
-        console.log("\n", response.status);
-        console.log("\n", response.data);
-        navigate('Login')
-    } catch (err) {
-        dispatch({ type: 'add_error', payload: err.response.data.detail });
-        console.log("\n", err.response.status);
-        console.log("\n", err.response.data);
-    };
-};
-//************************************//
-
-
-//**** login action function   ****//
-//*********************************//
-const login = (dispatch) => async ({ username, password }) => {
-
-    var qs = require('query-string');
-
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-
-    try {
-        const response = await PelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
-        console.log("\n", response.status);  
-        await AsyncStorage.setItem('token', response.data.access_token);
-        dispatch({ type: 'login', payload: response.data.access_token });
-        navigate('AppFlow')
-    } catch (err) {
-        dispatch({ type: 'add_error', payload: err.response.data.detail });
-        console.log("\n", err.response.status);
-        console.log("\n", err.response.data);
-    };
-};
-//*********************************//
-
-//****   logout action function   ****//
-//************************************//
-const logout = dispatch => async () => {
-    await AsyncStorage.removeItem('token');
-    dispatch({ type: 'logout' });
-    navigate('AuthFlow');
-};
-//************************************//
-
-export const { Provider, Context } = createDataContext(
-    authReducer,
-    { signup, login, logout, clearErrorMessage, tryLocalLogin },
-    { token: null, errorMessage: '' }
-);
+export default AuthContext;

@@ -1,13 +1,13 @@
-import React from 'react';
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native';
 
 const LoadingScreen = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.loadText}>Pelleum</Text>
+            <Text style={styles.loadText}>Welcome to Pelleum</Text>
         </View>
     );
-;}
+};
 
 export default LoadingScreen;
 

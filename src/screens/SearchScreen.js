@@ -44,7 +44,7 @@ const SearchScreen = () => {
 
     return (
         <DismissKeyboard>
-            <View style={styles.mainContainer}>
+            <>
                 <View style={styles.switchSelectorContainer}>
                     <SwitchSelector
                         //https://github.com/App2Sales/react-native-switch-selector
@@ -109,7 +109,7 @@ const SearchScreen = () => {
                         </FlatList>
                     </Center>
                 </NativeBaseProvider>
-            </View>
+            </>
         </DismissKeyboard>
     );
 };
@@ -117,9 +117,6 @@ const SearchScreen = () => {
 export default SearchScreen;
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-    },
     switchSelectorContainer: {
         width: '85%',
         height: 55,

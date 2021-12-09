@@ -1,20 +1,24 @@
+// Import Installed Libraries
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
-import { Context as AuthContext } from '../context/AuthContext';
+
+// Import Local Files
+import AuthContext from '../context/AuthContext';
 import DismissKeyboard from "../components/DismissKeyboard";
 
+// Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
-    const { state, login, clearErrorMessage } = useContext(AuthContext);
+    // const { state, dispatch } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener("focus", () => {
-            clearErrorMessage
-        });
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener("focus", () => {
+    //         clearErrorMessage
+    //     });
 
-        return unsubscribe;
-    }, [navigation]);
+    //     return unsubscribe;
+    // }, [navigation]);
 
     return (
         <DismissKeyboard>
@@ -43,13 +47,14 @@ const LoginScreen = ({ navigation }) => {
                         autoCorrect={false}
                         secureTextEntry={true}
                     />
-                    {state.errorMessage
+                    {/* {state.errorMessage
                         ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
-                        : null}
+                        : null} */}
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        onPress={() => login({ username, password })}
+                        // onPress={() => logIn({ username, password })}
+                        onPress={() => console.log('logged in')}
                         style={styles.button}
                     >
                         <Text style={styles.buttonText}>Log In</Text>

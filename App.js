@@ -3,7 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from "@react-navigation/drawer";
+//import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 
@@ -19,16 +19,16 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
-import { Provider as AuthProvider } from "./src/context/AuthContext"; //renaming Provider as AuthProvider in App.js
-import { setNavigator } from "./src/navigationRef";
-import CreateScreen from "./src/screens/CreateScreen";
-import AuthLoadingScreen from "./src/screens/AuthLoadingScreen";
+import LoadingScreen from "./src/screens/LoadingScreen";
+import AuthContext from "./src/context/AuthContext";
+import { AuthProvider } from "./src/context/AuthContext";
+//import CreateScreen from "./src/screens/CreateScreen";
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
 const AuthFlow = () => (
 	<AuthStack.Navigator>
-		{/* <AuthStack.Screen name="AuthLoading" component={AuthLoadingScreen} /> */}
+		{/* <AuthStack.Screen name="AuthLoading" component={LoadingScreen} /> */}
 		<AuthStack.Screen name="Login" component={LoginScreen} />
 		<AuthStack.Screen name="SignUp" component={SignupScreen} />
 	</AuthStack.Navigator>
@@ -75,6 +75,7 @@ const ProfileFlow = () => (
 	</ProfileStack.Navigator>
 );
 
+// Bottom Tap App Flow
 const AppTabs = createBottomTabNavigator();
 const AppFlow = () => (
 	<AppTabs.Navigator
@@ -130,22 +131,49 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
+	const { state, dispatch } = React.useContext(AuthContext);
+
+	React.useEffect(() => {
+		const fetchToken = async () => {
+			let userToken;
+			try {
+				userToken = await SecureStore.getItemAsync('userToken');
+			} catch (err) {
+				// Restoring token failed
+				console.log('Unable to fetch token.');
+			}
+			// After restoring token, we may need to validate it
+			dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+		};
+		fetchToken();
+	}, [dispatch]);
+
+	if (state.isLoading) {
+		// We haven't finished checking for the token yet
+		return <LoadingScreen />;
+	}
+
 	return (
 		<RootStack.Navigator>
-			<RootStack.Screen
-				name="AuthStack"
-				component={AuthFlow}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<RootStack.Screen
-				name="AppTabs"
-				component={AppFlow}
-				options={{
-					headerShown: false,
-				}}
-			/>
+			{state.userToken == null ? (
+				// No token found, user isn't logged in
+				<RootStack.Screen
+					name="AuthStack"
+					component={AuthFlow}
+					options={{
+						headerShown: false,
+					}}
+				/>
+			) : (
+				// User is logged in
+				<RootStack.Screen
+					name="AppTabs"
+					component={AppFlow}
+					options={{
+						headerShown: false,
+					}}
+				/>
+			)}
 		</RootStack.Navigator>
 	);
 };
@@ -325,7 +353,7 @@ export default () => {
 //             mode="modal"
 //         >
 //             {isLoading ? (
-//                 <RootStack.Screen name="Loading" component={AuthLoadingScreen} />
+//                 <RootStack.Screen name="Loading" component={LoadingScreen} />
 //             ) : user ? (
 //                 <RootStack.Screen name="AppTabs" component={AppFlow} />
 //             ) : (

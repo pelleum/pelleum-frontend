@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+// Import Installed Libraries
+import React, { useState, useContext } from "react";
 import {
     StyleSheet,
     TextInput,
@@ -8,13 +9,16 @@ import {
     Text,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
-import { Context as AuthContext } from "../context/AuthContext";
-import DismissKeyboard from "../components/DismissKeyboard";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider } from "native-base";
 
+// Import Local Files
+import AuthContext from "../context/AuthContext";
+import DismissKeyboard from "../components/DismissKeyboard";
+
+// Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
-    const { state, signup, clearErrorMessage } = useContext(AuthContext);
+    // const { state, dispatch } = useContext(AuthContext);
 
     // State Management
     const [email, setEmail] = useState("");
@@ -29,13 +33,6 @@ const SignupScreen = ({ navigation }) => {
         birthDate: false,
     });
     const [disableStatus, setDisableStatus] = useState(true);
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener("focus", () => {
-            clearErrorMessage
-        });
-        return unsubscribe;
-    }, [navigation]);
 
     const emailValidation = (emailText) => {
         // Email format
@@ -256,9 +253,6 @@ const SignupScreen = ({ navigation }) => {
                                 handleChangeText({ newValue: newValue, birthDate: true })
                             }
                         />
-                        {state.errorMessage ? (
-                            <Text style={styles.errorMessage}>{state.errorMessage}</Text>
-                        ) : null}
                     </View>
                     <View style={styles.validationMessageView}>
                         <HStack alignItems="center">
@@ -319,7 +313,8 @@ const SignupScreen = ({ navigation }) => {
                         </HStack>
                     </View>
                     <TouchableOpacity
-                        onPress={() => signup({ email, username, password })}
+                        // onPress={() => signUp({ email, username, password })}
+                        onPress={() => console.log('signed up')}
                         style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                         disabled={disableStatus}
                     >
