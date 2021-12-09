@@ -1,5 +1,5 @@
 // installed libraries
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Text,
 	StyleSheet,
@@ -7,10 +7,6 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
-	Keyboard,
-	TouchableWithoutFeedback,
-	Platform,
-	Dimensions,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,11 +17,16 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import PelleumPublic from "../api/PelleumPublic";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 
+
 const CreateThesisScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [title, setTitle] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
+	const [source1, setSource1] = useState("");
+	const [source2, setSource2] = useState("");
+	const [source3, setSource3] = useState("");
+	const [sourcesCount, setSourcesCount] = useState(0);
 	const [error, setError] = useState(null);
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbol: false,
@@ -40,18 +41,55 @@ const CreateThesisScreen = ({ navigation }) => {
 		{ label: "Bear", value: "Bear" },
 	];
 
+	// This may be useful to get it to rerender?
+
+	useEffect(() => {
+		let newSourcesCount = sourcesCount;
+		setSourcesCount(newSourcesCount);
+	}, [sourcesCount]);
+	
+	const countSources = (sources) => {
+		let counter = 0;
+	
+		sources.forEach(source => {
+			if (source) {
+				counter += 1;
+			}
+		});
+		setSourcesCount(counter);
+		console.log("Tally sources executed in parent.")
+	}
+
 	const shareContent = async ({ content, likedAsset = null } = {}) => {
 		let response;
-		try {
-			response = await PelleumPublic.get("/public/theses", { content });
-		} catch (err) {
-			console.log(err);
-		}
-		return response;
+		// try {
+		// 	response = await PelleumPublic.get("/public/theses", { content });
+		// } catch (err) {
+		// 	console.log(err);
+		// }
+		// return response;
+		console.log(`sources being sent: ${source1}, ${source2}, ${source3}`);
 	};
 
-	const handleModalNavigate = (screenToNavigateTo) => {
-		navigation.navigate(screenToNavigateTo);
+	const handleChangeSource = (newValue, sourceNumber) => {
+		switch (sourceNumber) {
+			case 1:
+			case "source1":           // This is called a "fall-through" case
+				setSource1(newValue)
+				break;
+			case 2:
+			case "source2":
+				setSource2(newValue);
+				break;
+			case 3:
+			case "source3":
+				setSource3(newValue);
+				break;
+		}
+		// if (sourceNumber == "source3") {
+		// 	console.log(`Should have set source3 to ${newValue}`)
+		// 	console.log(`These are the ACTUAL sources: ${source1}, ${source2}, ${source3}`);
+		// }
 	};
 
 	const shareButtonPressed = async () => {
@@ -118,13 +156,16 @@ const CreateThesisScreen = ({ navigation }) => {
 	return (
 		<DismissKeyboard>
 			<View
-				//behavior={Platform.OS === "ios" ? "padding" : "height"}
 				style={styles.mainContainer}
 			>
 				<AddSourcesModal
 					modalVisible={modalVisible}
 					makeModalDisappear={() => setModalVisible(false)}
-					onNavigate={handleModalNavigate}
+					source1={source1}
+					source2={source2}
+					source3={source3}
+					changeSource={handleChangeSource}
+					tallySources={() => countSources([source1, source2, source3])}
 				/>
 				<NativeBaseProvider>
 					<VStack>
@@ -204,6 +245,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							>
 								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
 							</TouchableOpacity>
+							<Text style={{marginLeft: 20}}>{sourcesCount} linked sources</Text>
 						</HStack>
 						{error ? <Text style={styles.errorText}>{error}</Text> : null}
 					</VStack>

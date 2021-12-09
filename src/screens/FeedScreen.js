@@ -7,7 +7,6 @@ import {
 	TouchableOpacity,
 	RefreshControl,
 	Pressable,
-	Modal,
 } from "react-native";
 import { Box, Center, VStack, NativeBaseProvider } from "native-base";
 import {
@@ -15,7 +14,6 @@ import {
 	Fontisto,
 	SimpleLineIcons,
 	MaterialCommunityIcons,
-    Feather
 } from "@expo/vector-icons";
 
 // File imports
@@ -160,7 +158,7 @@ const FeedScreen = ({ navigation }) => {
 				}
 				refreshing={refreshing}
 				ListHeaderComponent={
-					<View style={styles.centeredView}>
+					<View>
                         <CreateModal 
                             modalVisible={modalVisible}
                             makeModalDisappear={() => setModalVisible(false)}
@@ -169,7 +167,7 @@ const FeedScreen = ({ navigation }) => {
 						<Pressable
 							onPress={() => setModalVisible(true)}
 						>
-                            <MaterialCommunityIcons name="plus-circle" size={25} color="black" />
+                            <MaterialCommunityIcons name="plus-circle" size={60} color="black" />
 						</Pressable>
 					</View>
 				}

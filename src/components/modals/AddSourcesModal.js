@@ -8,21 +8,25 @@ import {
 	View,
 	TextInput,
 	KeyboardAvoidingView,
+    Platform
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { HStack, NativeBaseProvider } from "native-base";
+import { Feather, FontAwesome5 } from "@expo/vector-icons";
 
-const AddSourcesModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
-	const [urls, setUrls] = useState({
+const AddSourcesModal = ({
+	modalVisible,
+	makeModalDisappear,
+	source1,
+	source2,
+	source3,
+	changeSource,
+    tallySources
+}) => {
+	const [inputValidity, setInputValidity] = useState({
 		source1: null,
 		source2: null,
 		source3: null,
 	});
-	const [inputValidity, setInputValidity] = useState({
-		source1: false,
-		source2: false,
-		source2: false,
-	});
-	const [disableStatus, setDisableStatus] = useState(true);
 
 	validateWebsiteUrl = (websiteUrl) => {
 		let urlRegex =
@@ -31,24 +35,21 @@ const AddSourcesModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 	};
 
 	const handleChangeText = (newValue, sourceNumber) => {
-		var newInputValidity = inputValidity;
-		var newUrls = urls;
+		let newInputValidity = inputValidity;
 
-		newUrls[`source${sourceNumber}`] = newValue;
-		setUrls(newUrls);
+		changeSource(newValue, sourceNumber);
 
-		if (newValue.length < 1 || !validateWebsiteUrl(newValue)) {
-			newInputValidity[`source${sourceNumber}`] = false;
+		if (newValue.length < 1) {
+			newInputValidity[`source${sourceNumber}`] = null;
 			setInputValidity(newInputValidity);
 		} else {
-			newInputValidity[`source${sourceNumber}`] = true;
-			setInputValidity(newInputValidity);
-		}
-
-		if (Object.values(inputValidity).every((item) => item === true)) {
-			setDisableStatus(false);
-		} else {
-			setDisableStatus(true);
+			if (!validateWebsiteUrl(newValue)) {
+				newInputValidity[`source${sourceNumber}`] = false;
+				setInputValidity(newInputValidity);
+			} else {
+				newInputValidity[`source${sourceNumber}`] = true;
+				setInputValidity(newInputValidity);
+			}
 		}
 	};
 
@@ -62,61 +63,80 @@ const AddSourcesModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 				makeModalDisappear();
 			}}
 		>
+			<NativeBaseProvider>
 				<KeyboardAvoidingView behavior={"padding"} style={styles.centeredView}>
 					<View style={styles.modalView}>
+						<Text style={styles.ModalTitle}>
+							Add sources to substantiate your investment thesis!
+						</Text>
 						<Text>
-							Add sources to substantiate your investment thesis. Sources are
-							great way to share some of the information that led to your current
-							thinking on investments.
+							Sources are a great way to share some of the information that led
+							to your current thinking on investments.
 						</Text>
 						<Pressable
 							onPress={() => {
-								makeModalDisappear();
+								let newInputValidity = inputValidity;
+
+                                Object.entries(inputValidity).forEach(([key, value]) => {
+                                    if (value == false) {
+                                        newInputValidity[key] = null;
+                                        changeSource("", key);
+                                    }
+                                });
+                                
+                                setInputValidity(newInputValidity);
+                                tallySources();
+                                console.log("\nTally sources was called from child.\n");
+                                makeModalDisappear();
 							}}
 						>
 							<Feather name="x-circle" size={30} color="black" />
 						</Pressable>
-						<TextInput
-							placeholder="https://www.examplesource1.com"
-							placeholderTextColor="#c7c7c7"
-							value={urls["source1"]}
-							onChangeText={(newValue) => handleChangeText(newValue, 1)}
-							style={styles.titleInput}
-							maxLength={256}
-							autoCorrect={true}
-						/>
-						<TextInput
-							placeholder="https://www.examplesource2.com"
-							placeholderTextColor="#c7c7c7"
-							value={urls["source2"]}
-							onChangeText={(newValue) => handleChangeText(newValue, 2)}
-							style={styles.titleInput}
-							maxLength={256}
-							autoCorrect={true}
-						/>
-						<TextInput
-							placeholder="https://www.examplesource3.com"
-							placeholderTextColor="#c7c7c7"
-							value={urls["source3"]}
-							onChangeText={(newValue) => handleChangeText(newValue, 3)}
-							style={styles.titleInput}
-							maxLength={256}
-							autoCorrect={true}
-						/>
-						<Pressable
-							style={
-								disableStatus ? styles.addButtonDisabled : styles.addButtonEnabled
-							}
-							disabled={disableStatus}
-							onPress={() => {
-								makeModalDisappear();
-								console.log("Add button pressed");
-							}}
-						>
-							<Text style={styles.textStyle}>Add</Text>
-						</Pressable>
+						<HStack alignItems="center" justifyContent="space-between" >
+							<TextInput
+								placeholder="https://www.examplesource1.com"
+								placeholderTextColor="#c7c7c7"
+								value={source1}
+								onChangeText={(newValue) => handleChangeText(newValue, 1)}
+								style={styles.titleInput}
+								maxLength={256}
+                                keyboardType={Platform.OS === "ios" ? "url" : "default"}
+								autoCapitalize={"none"}
+								autoCorrect={false}
+							/>
+							<FontAwesome5 name="check" size={24} color={inputValidity["source1"] ? "green" : "transparent" } />
+						</HStack>
+						<HStack alignItems="center" justifyContent="space-between">
+							<TextInput
+								placeholder="https://www.examplesource2.com"
+								placeholderTextColor="#c7c7c7"
+								value={source2}
+								onChangeText={(newValue) => handleChangeText(newValue, 2)}
+								style={styles.titleInput}
+								maxLength={256}
+                                keyboardType={Platform.OS === "ios" ? "url" : "default"}
+								autoCapitalize={"none"}
+								autoCorrect={false}
+							/>
+							<FontAwesome5 name="check" size={24} color={inputValidity["source2"] ? "green" : "transparent" } />
+						</HStack>
+						<HStack alignItems="center" justifyContent="space-between" >
+							<TextInput
+								placeholder="https://www.examplesource3.com"
+								placeholderTextColor="#c7c7c7"
+								value={source3}
+								onChangeText={(newValue) => handleChangeText(newValue, 3)}
+								style={styles.titleInput}
+								maxLength={256}
+                                keyboardType={Platform.OS === "ios" ? "url" : "default"}
+								autoCapitalize={"none"}
+								autoCorrect={false}
+							/>
+							<FontAwesome5 name="check" size={24} color={inputValidity["source3"] ? "green" : "transparent" } />
+						</HStack>
 					</View>
 				</KeyboardAvoidingView>
+			</NativeBaseProvider>
 		</Modal>
 	);
 };
@@ -166,14 +186,24 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 20,
 	},
+	ModalTitle: {
+		fontSize: 20,
+		textAlign: "center",
+		fontWeight: "bold",
+		marginBottom: 15,
+	},
 	titleInput: {
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
 		borderBottomColor: "#00A8FC",
 		marginTop: 10,
+		marginHorizontal: 10,
 		marginBottom: 5,
 		width: "100%",
+	},
+	checkMarkHidden: {
+		opacity: 0,
 	},
 });
 
