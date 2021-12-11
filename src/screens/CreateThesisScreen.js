@@ -1,5 +1,5 @@
 // installed libraries
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Text,
 	StyleSheet,
@@ -17,7 +17,6 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import PelleumPublic from "../api/PelleumPublic";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 
-
 const CreateThesisScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
@@ -26,7 +25,6 @@ const CreateThesisScreen = ({ navigation }) => {
 	const [source1, setSource1] = useState("");
 	const [source2, setSource2] = useState("");
 	const [source3, setSource3] = useState("");
-	const [sourcesCount, setSourcesCount] = useState(0);
 	const [error, setError] = useState(null);
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbol: false,
@@ -35,47 +33,60 @@ const CreateThesisScreen = ({ navigation }) => {
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
+	const [sourceInputValidity, setSourceInputValidity] = useState({
+		source1: false,
+		source2: false,
+		source3: false,
+	});
+	const [validSources, setValidSources] = useState([]);
 
 	const sentimentOptions = [
 		{ label: "Bull", value: "Bull" },
 		{ label: "Bear", value: "Bear" },
 	];
 
-	// This may be useful to get it to rerender?
-
-	useEffect(() => {
-		let newSourcesCount = sourcesCount;
-		setSourcesCount(newSourcesCount);
-	}, [sourcesCount]);
-	
 	const countSources = (sources) => {
-		let counter = 0;
-	
-		sources.forEach(source => {
-			if (source) {
-				counter += 1;
+		// Executed when user exits the AddSourcesModal
+		let newValidSources = [];
+
+		sources.forEach((source, i) => {
+			let sourceNumber = i + 1;
+			if (source && sourceInputValidity[`source${sourceNumber}`]) {
+				newValidSources.push(source);
 			}
 		});
-		setSourcesCount(counter);
-		console.log("Tally sources executed in parent.")
-	}
+		setValidSources(newValidSources);
+	};
 
-	const shareContent = async ({ content, likedAsset = null } = {}) => {
+	const shareContent = async () => {
+		// Executed when the 'share' button is pressed
 		let response;
-		// try {
-		// 	response = await PelleumPublic.get("/public/theses", { content });
-		// } catch (err) {
-		// 	console.log(err);
-		// }
-		// return response;
-		console.log(`sources being sent: ${source1}, ${source2}, ${source3}`);
+		let sources = validSources;
+		try {
+			response = await PelleumPublic.post("/public/theses", {
+				content,
+				title,
+				asset_symbol,
+				sentiment,
+				sources,
+			});
+		} catch (err) {
+			console.log(err);
+		}
+		return response;
+	};
+
+	const handleChangeSourceInputValidity = (newSourceInputValidity) => {
+		// Executed when a source's validity is changed
+		setSourceInputValidity(newSourceInputValidity);
 	};
 
 	const handleChangeSource = (newValue, sourceNumber) => {
+		// Executed when a source is changed in the (child) Modal
 		switch (sourceNumber) {
 			case 1:
-			case "source1":           // This is called a "fall-through" case
-				setSource1(newValue)
+			case "source1": // This is called a "fall-through" case
+				setSource1(newValue);
 				break;
 			case 2:
 			case "source2":
@@ -86,14 +97,11 @@ const CreateThesisScreen = ({ navigation }) => {
 				setSource3(newValue);
 				break;
 		}
-		// if (sourceNumber == "source3") {
-		// 	console.log(`Should have set source3 to ${newValue}`)
-		// 	console.log(`These are the ACTUAL sources: ${source1}, ${source2}, ${source3}`);
-		// }
 	};
 
 	const shareButtonPressed = async () => {
-		var response = await shareContent({ content: content });
+		// Executed when the 'share' button is pressed
+		var response = await shareContent();
 		if (response.status == 201) {
 			setContent("");
 			setAssetSymbol("");
@@ -110,8 +118,9 @@ const CreateThesisScreen = ({ navigation }) => {
 		symbol = false,
 		title = false,
 	} = {}) => {
+		// Executed asset symbol, thesis title, or content's text is changed
 		setError(null);
-		var newInputValidity = inputValidity;
+		let newInputValidity = inputValidity;
 
 		if (content) {
 			setContent(newValue);
@@ -155,9 +164,7 @@ const CreateThesisScreen = ({ navigation }) => {
 
 	return (
 		<DismissKeyboard>
-			<View
-				style={styles.mainContainer}
-			>
+			<View style={styles.mainContainer}>
 				<AddSourcesModal
 					modalVisible={modalVisible}
 					makeModalDisappear={() => setModalVisible(false)}
@@ -165,6 +172,8 @@ const CreateThesisScreen = ({ navigation }) => {
 					source2={source2}
 					source3={source3}
 					changeSource={handleChangeSource}
+					sourceInputValidity={sourceInputValidity}
+					changeValidity={handleChangeSourceInputValidity}
 					tallySources={() => countSources([source1, source2, source3])}
 				/>
 				<NativeBaseProvider>
@@ -245,7 +254,9 @@ const CreateThesisScreen = ({ navigation }) => {
 							>
 								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
 							</TouchableOpacity>
-							<Text style={{marginLeft: 20}}>{sourcesCount} linked sources</Text>
+							<Text style={{ marginLeft: 20 }}>
+								{validSources.length} linked sources
+							</Text>
 						</HStack>
 						{error ? <Text style={styles.errorText}>{error}</Text> : null}
 					</VStack>
@@ -256,20 +267,15 @@ const CreateThesisScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	// keyBoardAvoidingContainer: {
-	// 	flex: 1,
-	// },
 	mainContainer: {
 		flex: 1,
 		marginHorizontal: 15,
 	},
 	textArea: {
-		// flexDirection: "column",
-		// flex: 1,
 		marginTop: 10,
 		borderBottomWidth: 0.5,
 		borderBottomColor: "#00A8FC",
-		height: 250
+		height: 250,
 	},
 	image: {
 		width: 44,
@@ -304,7 +310,6 @@ const styles = StyleSheet.create({
 		height: 45,
 		alignSelf: "flex-start",
 		justifyContent: "center",
-		//marginLeft: 15,
 	},
 	hStack: {
 		marginTop: 5,

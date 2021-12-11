@@ -1,48 +1,47 @@
 import React from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Alert, Modal, StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
 
 const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 	return (
 		<Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                makeModalDisappear();
-            }}
-        >
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <Pressable
-                        onPress={() => {
-                            makeModalDisappear();
-                        }}
-                    >
-                        <Feather name="x-circle" size={30} color="black" />
-                    </Pressable>
-                    <Pressable
-                        style={[styles.button, styles.buttonOpen]}
-                        onPress={() => {
-                            makeModalDisappear();
-                            onNavigate("CreatePost");
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Post</Text>
-                    </Pressable>
-                    <Pressable
-                    style={[styles.button, styles.buttonOpen]}
-                        onPress={() => {
-                            makeModalDisappear();
-                            onNavigate("CreateThesis");
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Thesis</Text>
-                    </Pressable>
-                </View>
-            </View>
-        </Modal>       
+			animationType="slide"
+			transparent={true}
+			visible={modalVisible}
+			onRequestClose={() => {
+				Alert.alert("Modal has been closed.");
+				makeModalDisappear();
+			}}
+		>
+			<TouchableOpacity
+				style={styles.centeredView}
+				onPress={() => {
+					makeModalDisappear();
+				}}
+			>
+				<TouchableOpacity onPress={() => {}} activeOpacity={1}>
+						<View style={styles.modalView}>
+							<Pressable
+								style={[styles.button, styles.buttonOpen]}
+								onPress={() => {
+									makeModalDisappear();
+									onNavigate("CreatePost");
+								}}
+							>
+								<Text style={styles.textStyle}>Post</Text>
+							</Pressable>
+							<Pressable
+								style={[styles.button, styles.buttonOpen]}
+								onPress={() => {
+									makeModalDisappear();
+									onNavigate("CreateThesis");
+								}}
+							>
+								<Text style={styles.textStyle}>Thesis</Text>
+							</Pressable>
+						</View>
+				</TouchableOpacity>
+			</TouchableOpacity>
+		</Modal>
 	);
 };
 
@@ -71,8 +70,8 @@ const styles = StyleSheet.create({
 	button: {
 		borderRadius: 30,
 		padding: 20,
-        marginVertical: 2,
-        width: "100%",
+		marginVertical: 2,
+		width: "100%",
 		elevation: 2,
 	},
 	buttonOpen: {
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontWeight: "bold",
 		textAlign: "center",
-        fontSize: 20
+		fontSize: 20,
 	},
 });
 

@@ -14,6 +14,7 @@ import {
 	Fontisto,
 	SimpleLineIcons,
 	MaterialCommunityIcons,
+	Ionicons
 } from "@expo/vector-icons";
 
 // File imports
@@ -101,11 +102,7 @@ const FeedScreen = ({ navigation }) => {
 													console.log(colorScheme);
 												}}
 											>
-												<Ionicons
-													name="ios-thumbs-up-outline"
-													size={23}
-													color="#00A8FC"
-												/>
+												<Ionicons name="heart-outline" size={24} color="#00A8FC" />
 											</TouchableOpacity>
 											<TouchableOpacity
 												style={styles.iconButton}

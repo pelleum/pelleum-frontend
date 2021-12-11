@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	Alert,
 	Modal,
 	StyleSheet,
 	Text,
-	Pressable,
 	View,
 	TextInput,
 	KeyboardAvoidingView,
-    Platform
+	Platform,
+	TouchableOpacity,
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
-import { Feather, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const AddSourcesModal = ({
 	modalVisible,
@@ -20,14 +20,10 @@ const AddSourcesModal = ({
 	source2,
 	source3,
 	changeSource,
-    tallySources
+	tallySources,
+	sourceInputValidity,
+	changeValidity,
 }) => {
-	const [inputValidity, setInputValidity] = useState({
-		source1: null,
-		source2: null,
-		source3: null,
-	});
-
 	validateWebsiteUrl = (websiteUrl) => {
 		let urlRegex =
 			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -35,20 +31,20 @@ const AddSourcesModal = ({
 	};
 
 	const handleChangeText = (newValue, sourceNumber) => {
-		let newInputValidity = inputValidity;
+		let newSourceInputValidity = sourceInputValidity;
 
 		changeSource(newValue, sourceNumber);
 
 		if (newValue.length < 1) {
-			newInputValidity[`source${sourceNumber}`] = null;
-			setInputValidity(newInputValidity);
+			newSourceInputValidity[`source${sourceNumber}`] = false;
+			changeValidity(newSourceInputValidity);
 		} else {
 			if (!validateWebsiteUrl(newValue)) {
-				newInputValidity[`source${sourceNumber}`] = false;
-				setInputValidity(newInputValidity);
+				newSourceInputValidity[`source${sourceNumber}`] = false;
+				changeValidity(newSourceInputValidity);
 			} else {
-				newInputValidity[`source${sourceNumber}`] = true;
-				setInputValidity(newInputValidity);
+				newSourceInputValidity[`source${sourceNumber}`] = true;
+				changeValidity(newSourceInputValidity);
 			}
 		}
 	};
@@ -64,84 +60,114 @@ const AddSourcesModal = ({
 			}}
 		>
 			<NativeBaseProvider>
-				<KeyboardAvoidingView behavior={"padding"} style={styles.centeredView}>
-					<View style={styles.modalView}>
-						<Text style={styles.ModalTitle}>
-							Add sources to substantiate your investment thesis!
-						</Text>
-						<Text>
-							Sources are a great way to share some of the information that led
-							to your current thinking on investments.
-						</Text>
-						<Pressable
-							onPress={() => {
-								let newInputValidity = inputValidity;
-
-                                Object.entries(inputValidity).forEach(([key, value]) => {
-                                    if (value == false) {
-                                        newInputValidity[key] = null;
-                                        changeSource("", key);
-                                    }
-                                });
-                                
-                                setInputValidity(newInputValidity);
-                                tallySources();
-                                console.log("\nTally sources was called from child.\n");
-                                makeModalDisappear();
-							}}
+				<TouchableOpacity
+					style={styles.modalContainer}
+					onPress={() => {
+						// 1. Change non-valid sources to: ""
+						Object.entries(sourceInputValidity).forEach(
+							([key, value]) => {
+								if (value == false) {
+									changeSource("", key);
+								}
+							}
+						);
+						// 2. Tally up valid sources
+						tallySources();
+						// 3. Make Modal Disapper
+						makeModalDisappear();
+					}}
+				>
+					<KeyboardAvoidingView
+						behavior={"padding"}
+						style={styles.centeredView}
+					>
+						<TouchableOpacity
+							onPress={() => {}}
+							activeOpacity={1}
 						>
-							<Feather name="x-circle" size={30} color="black" />
-						</Pressable>
-						<HStack alignItems="center" justifyContent="space-between" >
-							<TextInput
-								placeholder="https://www.examplesource1.com"
-								placeholderTextColor="#c7c7c7"
-								value={source1}
-								onChangeText={(newValue) => handleChangeText(newValue, 1)}
-								style={styles.titleInput}
-								maxLength={256}
-                                keyboardType={Platform.OS === "ios" ? "url" : "default"}
-								autoCapitalize={"none"}
-								autoCorrect={false}
-							/>
-							<FontAwesome5 name="check" size={24} color={inputValidity["source1"] ? "green" : "transparent" } />
-						</HStack>
-						<HStack alignItems="center" justifyContent="space-between">
-							<TextInput
-								placeholder="https://www.examplesource2.com"
-								placeholderTextColor="#c7c7c7"
-								value={source2}
-								onChangeText={(newValue) => handleChangeText(newValue, 2)}
-								style={styles.titleInput}
-								maxLength={256}
-                                keyboardType={Platform.OS === "ios" ? "url" : "default"}
-								autoCapitalize={"none"}
-								autoCorrect={false}
-							/>
-							<FontAwesome5 name="check" size={24} color={inputValidity["source2"] ? "green" : "transparent" } />
-						</HStack>
-						<HStack alignItems="center" justifyContent="space-between" >
-							<TextInput
-								placeholder="https://www.examplesource3.com"
-								placeholderTextColor="#c7c7c7"
-								value={source3}
-								onChangeText={(newValue) => handleChangeText(newValue, 3)}
-								style={styles.titleInput}
-								maxLength={256}
-                                keyboardType={Platform.OS === "ios" ? "url" : "default"}
-								autoCapitalize={"none"}
-								autoCorrect={false}
-							/>
-							<FontAwesome5 name="check" size={24} color={inputValidity["source3"] ? "green" : "transparent" } />
-						</HStack>
-					</View>
-				</KeyboardAvoidingView>
+							<View style={styles.modalView}>
+								<Text style={styles.ModalTitle}>
+									Add sources to substantiate your investment thesis!
+								</Text>
+								<Text>
+									Sources are a great way to share some of the information that
+									led to your current thinking on investments.
+								</Text>
+								<HStack alignItems="center" justifyContent="space-between">
+									<TextInput
+										placeholder="https://www.examplesource1.com"
+										placeholderTextColor="#c7c7c7"
+										value={source1}
+										onChangeText={(newValue) => handleChangeText(newValue, 1)}
+										style={styles.titleInput}
+										maxLength={256}
+										keyboardType={Platform.OS === "ios" ? "url" : "default"}
+										autoCapitalize={"none"}
+										autoCorrect={false}
+									/>
+									<FontAwesome5
+										name="check"
+										size={24}
+										color={
+											sourceInputValidity["source1"] ? "green" : "transparent"
+										}
+									/>
+								</HStack>
+								<HStack alignItems="center" justifyContent="space-between">
+									<TextInput
+										placeholder="https://www.examplesource2.com"
+										placeholderTextColor="#c7c7c7"
+										value={source2}
+										onChangeText={(newValue) => handleChangeText(newValue, 2)}
+										style={styles.titleInput}
+										maxLength={256}
+										keyboardType={Platform.OS === "ios" ? "url" : "default"}
+										autoCapitalize={"none"}
+										autoCorrect={false}
+									/>
+									<FontAwesome5
+										name="check"
+										size={24}
+										color={
+											sourceInputValidity["source2"] ? "green" : "transparent"
+										}
+									/>
+								</HStack>
+								<HStack alignItems="center" justifyContent="space-between">
+									<TextInput
+										placeholder="https://www.examplesource3.com"
+										placeholderTextColor="#c7c7c7"
+										value={source3}
+										onChangeText={(newValue) => handleChangeText(newValue, 3)}
+										style={styles.titleInput}
+										maxLength={256}
+										keyboardType={Platform.OS === "ios" ? "url" : "default"}
+										autoCapitalize={"none"}
+										autoCorrect={false}
+									/>
+									<FontAwesome5
+										name="check"
+										size={24}
+										color={
+											sourceInputValidity["source3"] ? "green" : "transparent"
+										}
+									/>
+								</HStack>
+							</View>
+						</TouchableOpacity>
+					</KeyboardAvoidingView>
+				</TouchableOpacity>
 			</NativeBaseProvider>
 		</Modal>
 	);
 };
 
 const styles = StyleSheet.create({
+	modalContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
 	centeredView: {
 		marginTop: 22,
 		flex: 1,
