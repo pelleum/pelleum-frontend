@@ -1,5 +1,5 @@
 // Import Installed Libraries
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
     StyleSheet,
     TextInput,
@@ -11,16 +11,17 @@ import {
 import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider } from "native-base";
+import * as SecureStore from 'expo-secure-store';
 
 // Import Local Files
 import AuthContext from "../context/AuthContext";
+import PelleumPublic from "../api/PelleumPublic";
 import DismissKeyboard from "../components/DismissKeyboard";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
-    // const { state, dispatch } = useContext(AuthContext);
-
     // State Management
+    const { state, dispatch } = useContext(AuthContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [birthDate, setBirthDate] = useState("");
@@ -34,7 +35,38 @@ const SignupScreen = ({ navigation }) => {
     });
     const [disableStatus, setDisableStatus] = useState(true);
 
-    const emailValidation = (emailText) => {
+    const signUp = async ({ email, username, password }) => {
+        let response;
+        let responseStatus;
+        try {
+            response = await PelleumPublic.post('/public/auth/users', { email, username, password });
+            console.log("\n", response.status);
+            console.log("\n", response.data);
+            responseStatus = response.status;
+            // to log the user in after signup, store the token and dispatch the LOG_IN action
+            // await SecureStore.setItemAsync('userToken', response.data.access_token);
+            // dispatch({ type: 'LOG_IN', token: response.data.access_token });
+        } catch (err) {
+            dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
+            console.log("\n", err.response.status);
+            console.log("\n", err.response.data);
+            responseStatus = err.response.status;
+        };
+        if (responseStatus == 201) {
+            navigation.navigate("Login")
+        };
+    };
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            const clearErrorMessage = () => dispatch({ type: 'CLEAR_AUTH_ERROR' });
+            clearErrorMessage();
+        });
+        return unsubscribe;
+    }, [navigation]);
+
+    // Input Validation
+    const emailValidation = (emailText, pass, hello) => {
         // Email format
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         if (emailRegex.test(emailText) === false) {
@@ -68,6 +100,7 @@ const SignupScreen = ({ navigation }) => {
 
         return true;
     };
+
 
     const usernameValidation = (usernameText) => {
         // Only alphanumeric characters
@@ -206,7 +239,7 @@ const SignupScreen = ({ navigation }) => {
                     style={styles.container}
                 //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
                 >
-                    <Text style={styles.titleText}>Welcome to Pelleum.</Text>
+                    <Text style={styles.titleText}>Welcome to Pelleum!</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
                             placeholder="Email"
@@ -253,6 +286,9 @@ const SignupScreen = ({ navigation }) => {
                                 handleChangeText({ newValue: newValue, birthDate: true })
                             }
                         />
+                        {state.errorMessage
+                        ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+                        : null}
                     </View>
                     <View style={styles.validationMessageView}>
                         <HStack alignItems="center">
@@ -313,8 +349,7 @@ const SignupScreen = ({ navigation }) => {
                         </HStack>
                     </View>
                     <TouchableOpacity
-                        // onPress={() => signUp({ email, username, password })}
-                        onPress={() => console.log('signed up')}
+                        onPress={() => signUp({ email, username, password })}
                         style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                         disabled={disableStatus}
                     >
@@ -330,12 +365,6 @@ const SignupScreen = ({ navigation }) => {
             </DismissKeyboard>
         </NativeBaseProvider>
     );
-};
-
-SignupScreen.navigationOptions = () => {
-    return {
-        headerShown: false,
-    };
 };
 
 export default SignupScreen;

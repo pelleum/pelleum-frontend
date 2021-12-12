@@ -10,14 +10,14 @@ const SearchScreen = () => {
     const [term, setTerm] = useState('');
     const [results, setResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [sentiment, setSentiment] = useState("Bull");
 
     const getResults = async () => {
         if (term.length > 0) {
             let response;
             try {
-                response = await PelleumPublic.get(`/public/theses/retrieve/many?asset_symbol=${term}`);
+                response = await PelleumPublic.get(`/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}`);
                 setResults(response.data.records.theses)
-                console.log(response.data.records.theses)
             } catch (err) {
                 console.log("\n", err);
                 console.log("\n", err.response.status);
@@ -27,31 +27,21 @@ const SearchScreen = () => {
         };
     };
 
-    // const filteredResults = (sentiment) => {
-    //     sentiment === 'Bull' ? 
-    //         results.filter(filteredData => filteredData.sentiment === 'Bull') :
-    //         results.filter(filteredData => filteredData.sentiment === 'Bear')
-    //         return filteredData;
-    //     };
-
-    const filteredData = results.filter(results => results.sentiment === 'Bear');
-    console.log(filteredData);
-
-    const options = [
+    const sentimentOptions = [
         { label: "Bull", value: "Bull" },
         { label: "Bear", value: "Bear" }
     ];
 
     return (
         <DismissKeyboard>
-            <>
+            <View style={styles.mainContainer}>
                 <View style={styles.switchSelectorContainer}>
                     <SwitchSelector
                         //https://github.com/App2Sales/react-native-switch-selector
-                        options={options}
+                        options={sentimentOptions}
                         initial={0}
                         //onPress={value => filteredResults(value)}
-                        onPress={value => console.log({ value })}
+                        onPress={(value) => setSentiment(value)}
                         height={40}
                         buttonColor={"#0782F9"}
                         borderColor={"#0782F9"}
@@ -109,7 +99,7 @@ const SearchScreen = () => {
                         </FlatList>
                     </Center>
                 </NativeBaseProvider>
-            </>
+            </View>
         </DismissKeyboard>
     );
 };
@@ -117,6 +107,9 @@ const SearchScreen = () => {
 export default SearchScreen;
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1
+    },
     switchSelectorContainer: {
         width: '85%',
         height: 55,

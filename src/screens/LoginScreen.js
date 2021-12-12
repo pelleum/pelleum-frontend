@@ -1,30 +1,94 @@
 // Import Installed Libraries
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 // Import Local Files
 import AuthContext from '../context/AuthContext';
+import PelleumPublic from "../api/PelleumPublic";
 import DismissKeyboard from "../components/DismissKeyboard";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
-    // const { state, dispatch } = useContext(AuthContext);
+    // State Management
+    const { state, dispatch } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [disableStatus, setDisableStatus] = useState(true);
+    const [inputValidity, setInputValidity] = useState({
+        usernameValidity: false,
+        passwordValidity: false,
+    });
 
-    // useEffect(() => {
-    //     const unsubscribe = navigation.addListener("focus", () => {
-    //         clearErrorMessage
-    //     });
 
-    //     return unsubscribe;
-    // }, [navigation]);
+    const logIn = async ({ username, password }) => {
+        var qs = require('query-string');
+        const config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
+        let response;
+        try {
+            response = await PelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
+            console.log("\n", response.status);
+            await SecureStore.setItemAsync('userToken', response.data.access_token);
+            dispatch({ type: 'LOG_IN', token: response.data.access_token });
+        } catch (err) {
+            dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
+            console.log("\n", err.response.status);
+            console.log("\n", err.response.data);
+        };
+    };
 
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            const clearErrorMessage = () => dispatch({ type: 'CLEAR_AUTH_ERROR' });
+            clearErrorMessage();
+        });
+        return unsubscribe;
+    }, [navigation]);
+
+    // Input Validation
+    const handleChangeText = ({
+        newValue,
+        checkUsername = false,
+        checkPassword = false,
+    } = {}) => {
+        var newInputValidity = inputValidity;
+        if (checkUsername) {
+            setUsername(newValue);
+            if (newValue.length > 0) {
+                // username is valid
+                newInputValidity["usernameValidity"] = true;
+                setInputValidity(newInputValidity);
+            } else {
+                // username is NOT valid
+                newInputValidity["usernameValidity"] = false;
+                setInputValidity(newInputValidity);
+            }
+        }
+        if (checkPassword) {
+            setPassword(newValue);
+            if (newValue.length > 0) {
+                // password is valid
+                newInputValidity["passwordValidity"] = true;
+                setInputValidity(newInputValidity);
+            } else {
+                // password is NOT valid
+                newInputValidity["passwordValidity"] = false;
+                setInputValidity(newInputValidity);
+            }
+        }
+        // If BOTH username and passwod are valid, enable button. Else, disbale button.
+        if (Object.values(inputValidity).every((item) => item === true)) {
+            setDisableStatus(false);
+        } else {
+            setDisableStatus(true);
+        }
+    };
+    
     return (
         <DismissKeyboard>
             <KeyboardAvoidingView
                 style={styles.container}
-            //behavior="padding"       //ensures text fields do not get blocked by keyboard
+                //behavior="padding"       //ensures text fields do not get blocked by keyboard
             >
                 <Text style={styles.titleText}>Log into your Pelleum account!</Text>
                 <View style={styles.inputContainer}>
@@ -32,7 +96,9 @@ const LoginScreen = ({ navigation }) => {
                         placeholder="Username"
                         placeholderTextColor="#c7c7c7"
                         value={username}
-                        onChangeText={text => setUsername(text)}
+                        onChangeText={(newValue) =>
+                            handleChangeText({ newValue: newValue, checkUsername: true })
+                        }
                         style={styles.input}
                         autoCapitalize="none"
                         autoCorrect={false}
@@ -41,21 +107,23 @@ const LoginScreen = ({ navigation }) => {
                         placeholder="Password"
                         placeholderTextColor="#c7c7c7"
                         value={password}
-                        onChangeText={text => setPassword(text)}
+                        onChangeText={(newValue) =>
+                            handleChangeText({ newValue: newValue, checkPassword: true })
+                        }
                         style={styles.input}
                         autoCapitalize="none"
                         autoCorrect={false}
                         secureTextEntry={true}
                     />
-                    {/* {state.errorMessage
+                    {state.errorMessage
                         ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
-                        : null} */}
+                        : null}
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        // onPress={() => logIn({ username, password })}
-                        onPress={() => console.log('logged in')}
-                        style={styles.button}
+                        onPress={() => logIn({ username, password })}
+                        style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
+                        disabled={disableStatus}
                     >
                         <Text style={styles.buttonText}>Log In</Text>
                     </TouchableOpacity>
@@ -73,15 +141,7 @@ const LoginScreen = ({ navigation }) => {
     );
 };
 
-LoginScreen.navigationOptions = () => {
-    return {
-        headerShown: false,
-        headerLeft: () => null
-    };
-};
-
 export default LoginScreen;
-
 
 
 //-----     Styles     -----/
@@ -109,12 +169,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 40
     },
-    button: {
-        backgroundColor: '#0782F9',
-        width: '100%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center'
+    buttonEnabled: {
+        backgroundColor: "#00A8FC",
+        borderRadius: 30,
+        height: 50,
+        width: 170,
+        margin: 15,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    buttonDisabled: {
+        backgroundColor: "#00A8FC",
+        borderRadius: 30,
+        height: 50,
+        width: 170,
+        margin: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.33,
     },
     buttonText: {
         color: 'white',

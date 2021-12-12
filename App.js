@@ -3,6 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as SecureStore from 'expo-secure-store';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
@@ -20,17 +21,15 @@ import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
-import AuthContext from "./src/context/AuthContext";
-import { AuthProvider } from "./src/context/AuthContext";
+import AuthContext, { AuthProvider } from "./src/context/AuthContext";
 //import CreateScreen from "./src/screens/CreateScreen";
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
 const AuthFlow = () => (
 	<AuthStack.Navigator>
-		{/* <AuthStack.Screen name="AuthLoading" component={LoadingScreen} /> */}
-		<AuthStack.Screen name="Login" component={LoginScreen} />
-		<AuthStack.Screen name="SignUp" component={SignupScreen} />
+		<AuthStack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
+		<AuthStack.Screen name="SignUp" component={SignupScreen} options={{headerShown: false}} />
 	</AuthStack.Navigator>
 );
 
@@ -142,7 +141,7 @@ const RootStackFlow = () => {
 				// Restoring token failed
 				console.log('Unable to fetch token.');
 			}
-			// After restoring token, we may need to validate it
+			// After restoring token, we should to validate it
 			dispatch({ type: 'RESTORE_TOKEN', token: userToken });
 		};
 		fetchToken();
@@ -154,7 +153,7 @@ const RootStackFlow = () => {
 	}
 
 	return (
-		<RootStack.Navigator>
+		<RootStack.Navigator screenOptions={{ animationEnabled: false }}>
 			{state.userToken == null ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen
