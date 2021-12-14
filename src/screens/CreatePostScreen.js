@@ -15,22 +15,14 @@ import PelleumPublic from "../api/PelleumPublic";
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
 import { MaterialIcons } from "@expo/vector-icons";
-import colorScheme from "../components/ColorScheme";
 
-const CreateScreen = ({ navigation }) => {
+const CreatePostScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
 	const [error, setError] = useState(null);
-	const [contentType, setContentType] = useState("post");
 	const [inputValidity, setInputValidity] = useState({ assetSymbol: false, content: false })
 	const [disableStatus, setDisableStatus] = useState(true);
-
-
-	const contentTypeOptions = [
-		{ label: "Post", value: "post" },
-		{ label: "Thesis", value: "thesis" },
-	];
 
 	const sentimentOptions = [
 		{ label: "Bull", value: "Bull" },
@@ -39,19 +31,10 @@ const CreateScreen = ({ navigation }) => {
 
 	const shareContent = async ({ content, likedAsset = null } = {}) => {
 		let response;
-
-		if (contentType == "post") {
-			try {
-				response = await PelleumPublic.post("/public/posts", { content, asset_symbol, sentiment });
-			} catch (err) {
-				console.log(err);
-			}
-		} else {
-			try {
-				response = await PelleumPublic.get("/public/theses", { content });
-			} catch (err) {
-				console.log(err);
-			}
+		try {
+			response = await PelleumPublic.post("/public/posts", { content, asset_symbol, sentiment });
+		} catch (err) {
+			console.log(err);
 		}
 		return response
 	};
@@ -156,31 +139,17 @@ const CreateScreen = ({ navigation }) => {
 						<TextInput
 							placeholder="What's your valuable insight?"
 							multiline={true}
-							numberOfLines={contentType == "post" ? 20 : 30}
+							numberOfLines={20}
 							style={styles.textArea}
-							maxLength={contentType == "post" ? 512 : 15000}
+							maxLength={512}
 							value={content}
 							onChangeText={(newValue) => handleChangeText({ newValue: newValue, content: true })}
 						/>
 						<HStack style={styles.hStack} alignItems="center">
-							<View style={styles.switchSelectorContainer}>
-								<SwitchSelector
-									options={contentTypeOptions}
-									initial={0}
-									onPress={(value) => setContentType(value)}
-									height={40}
-									buttonColor={"#00A8FC"}
-									selectedColor={"white"}
-									textColor={"#00A8FC"}
-									fontSize={16}
-									hasPadding
-								/>
-							</View>
 							<TouchableOpacity
 								style={styles.iconButton}
 								onPress={() => {
-									console.log("This button worked.");
-									console.log(colorScheme);
+									console.log("This worked. Maybe remove this button from posts (or add sources capability on backend).");
 								}}
 							>
 								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
@@ -254,4 +223,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default CreateScreen;
+export default CreatePostScreen;

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as SecureStore from 'expo-secure-store';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
-import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, FontAwesome5, Foundation } from "@expo/vector-icons";
 
 // Import Local Files
 import SignupScreen from "./src/screens/SignupScreen";
@@ -22,7 +22,8 @@ import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
 import AuthContext, { AuthProvider } from "./src/context/AuthContext";
-//import CreateScreen from "./src/screens/CreateScreen";
+import CreateThesisScreen from "./src/screens/CreateThesisScreen";
+import CreatePostScreen from "./src/screens/CreatePostScreen";
 import PelleumPublic from "./src/api/PelleumPublic";
 
 // Authentication Flow
@@ -121,7 +122,7 @@ const AppFlow = () => (
 			component={ProfileFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<Ionicons name="ios-person" size={25} color={color} />
+					<FontAwesome5 name="coins" size={25} color={color} />
 				),
 				headerShown: false,
 			}}
@@ -177,6 +178,14 @@ const RootStackFlow = () => {
 					}}
 				/>
 			)}
+			<RootStack.Screen
+				name="CreateThesis"
+				component={CreateThesisScreen}
+			/>
+			<RootStack.Screen
+				name="CreatePost"
+				component={CreatePostScreen}
+			/>
 		</RootStack.Navigator>
 	);
 };
