@@ -1,99 +1,61 @@
-import createDataContext from "./CreateDataContext";
-import PelleumPublic from "../api/PelleumPublic";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigate } from "../navigationRef";
+// Import Installed Libraries
+import React, { createContext, useReducer } from 'react';
 
-const authReducer = (state, action) => {
+// Declare AuthContext as a Context object
+const AuthContext = createContext();
+
+// Declare initial state
+const initialState = {
+    isLoading: true,
+    isLogout: false,
+    hasUserToken: false,
+    errorMessage: '',
+}
+
+// Reducer to manage auth state
+const authReducer = (prevState, action) => {
     switch (action.type) {
-        case 'add_error':
-            return { ...state, errorMessage: action.payload }
-        case 'login':
-            return { errorMessage: '', token: action.payload }
-        case 'clear_error_message':
-            return { ...state, errorMessage: '' };
-        case 'logout':
-            return { token: null, errorMessage: '' }
+        case 'AUTH_ERROR':
+            return {
+                ...prevState,
+                errorMessage: action.error,
+            };
+        case 'CLEAR_AUTH_ERROR':
+            return {
+                ...prevState,
+                errorMessage: '',
+            };
+        case 'LOG_IN':
+            return {
+                ...prevState,
+                isLogout: false,
+                hasUserToken: true,
+                isLoading: false,
+            };
+        case 'LOG_OUT':
+            return {
+                ...prevState,
+                isLogout: true,
+                hasUserToken: false,
+                isLoading: false,
+            };
+        case 'RESTORE_TOKEN':
+            return {
+                ...prevState,
+                hasUserToken: true,
+                isLoading: false,
+            };
         default:
             return state;
     };
 };
 
+export const AuthProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(authReducer, initialState);
 
-//****    store token action    ****//
-//**********************************//
-const tryLocalLogin = dispatch => async () => {
-    const token = await AsyncStorage.getItem('token');
-    if (!token || token === null) navigate('loginFlow');
-    if (token) {
-        dispatch({ type: 'login', payload: token });
-        navigate('mainFlow');
-    };
+    return (
+        <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>
+    );
 };
-//**********************************//
 
-
-//****   clear error message   ****//
-//*********************************//
-const clearErrorMessage = dispatch => () => {
-    dispatch({ type: 'clear_error_message' })
-};
-//*********************************//
-
-
-//****   signup action function   ****//
-//************************************//
-const signup = (dispatch) => async ({ email, username, password }) => {
-    try {
-        const response = await PelleumPublic.post('/public/auth/users', { email, username, password });
-        console.log("\n", response.status);
-        console.log("\n", response.data);
-        navigate('Login')
-    } catch (err) {
-        dispatch({ type: 'add_error', payload: err.response.data.detail });
-        console.log("\n", err.response.status);
-        console.log("\n", err.response.data);
-    };
-};
-//************************************//
-
-
-//**** login action function   ****//
-//*********************************//
-const login = (dispatch) => async ({ username, password }) => {
-
-    var qs = require('query-string');
-
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-
-    try {
-        const response = await PelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
-        console.log("\n", response.status);  
-        await AsyncStorage.setItem('token', response.data.access_token);
-        dispatch({ type: 'login', payload: response.data.access_token });
-        navigate('mainFlow')
-    } catch (err) {
-        dispatch({ type: 'add_error', payload: err.response.data.detail });
-        console.log("\n", err.response.status);
-        console.log("\n", err.response.data);
-    };
-};
-//*********************************//
-
-//****   logout action function   ****//
-//************************************//
-const logout = dispatch => async () => {
-    await AsyncStorage.removeItem('token');
-    dispatch({ type: 'logout' });
-    navigate('loginFlow');
-};
-//************************************//
-
-export const { Provider, Context } = createDataContext(
-    authReducer,
-    { signup, login, logout, clearErrorMessage, tryLocalLogin },
-    { token: null, errorMessage: '' }
-);
+export default AuthContext;

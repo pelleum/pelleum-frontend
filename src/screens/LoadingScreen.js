@@ -1,14 +1,7 @@
-import React, { useEffect, useContext } from 'react';
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native';
-import { Context as AuthContext } from '../context/AuthContext';
 
-const AuthLoadingScreen = () => {
-    const { tryLocalLogin } = useContext(AuthContext);
-
-    useEffect(() => {
-        tryLocalLogin();
-    }, []);
-
+const LoadingScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.loadText}>Welcome to Pelleum</Text>
@@ -16,7 +9,7 @@ const AuthLoadingScreen = () => {
     );
 };
 
-export default AuthLoadingScreen;
+export default LoadingScreen;
 
 const styles = StyleSheet.create({
     container: {

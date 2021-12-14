@@ -8,6 +8,6 @@ const DismissKeyboard = ({ children }) => {
             {children}
         </TouchableWithoutFeedback>
     );
-    };
+};
 
 export default DismissKeyboard;

@@ -3,7 +3,8 @@ import * as React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import * as SecureStore from 'expo-secure-store';
+//import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
 import { Ionicons, FontAwesome, FontAwesome5, Foundation } from "@expo/vector-icons";
 
@@ -19,20 +20,19 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
-import { Provider as AuthProvider } from "./src/context/AuthContext"; //renaming Provider as AuthProvider in App.js
-import { setNavigator } from "./src/navigationRef";
-import AuthLoadingScreen from "./src/screens/AuthLoadingScreen";
-import CreatePostScreen from "./src/screens/CreatePostScreen";
-import CreateThesisScreen from "./src/screens/CreateThesisScreen";
+import LoadingScreen from "./src/screens/LoadingScreen";
+import AuthContext, { AuthProvider } from "./src/context/AuthContext";
+//import CreateScreen from "./src/screens/CreateScreen";
+import PelleumPublic from "./src/api/PelleumPublic";
 
-// // Login and Sign Up Flow
-// const AuthStack = createNativeStackNavigator();
-// const AuthStackScreen = () => (
-//     <AuthStack.Navigator>
-//         <AuthStack.Screen name="Login" component={LoginScreen} />
-//         <AuthStack.Screen name="SignUp" component={SignupScreen} />
-//     </AuthStack.Navigator>
-// );
+// Authentication Flow
+const AuthStack = createNativeStackNavigator();
+const AuthFlow = () => (
+	<AuthStack.Navigator>
+		<AuthStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+		<AuthStack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }} />
+	</AuthStack.Navigator>
+);
 
 // Feed Flow
 const FeedStack = createNativeStackNavigator();
@@ -75,27 +75,11 @@ const ProfileFlow = () => (
 	</ProfileStack.Navigator>
 );
 
-// const ProfileDrawer = createDrawerNavigator();
-// const ProfileDrawerScreen = () => (
-// 	<ProfileDrawer.Navigator drawerPosition="right">
-// 		<ProfileDrawer.Screen 
-// 			name="Profile" 
-// 			component={ProfileFlow} 
-// 		/>
-// 		<ProfileDrawer.Screen
-// 			name="Settings"
-// 			component={SettingsScreen}
-// 			options={{
-// 				gestureEnabled: false,
-// 			}}
-// 		/>
-// 	</ProfileDrawer.Navigator>
-// );
-
+// Bottom Tap App Flow
 const AppTabs = createBottomTabNavigator();
-const AppTabsScreen = () => (
+const AppFlow = () => (
 	<AppTabs.Navigator
-		screenOptions={{ 
+		screenOptions={{
 			tabBarShowLabel: false,
 			tabBarInactiveTintColor: '#858585',
 			tabBarActiveTintColor: '#000000',
@@ -145,81 +129,81 @@ const AppTabsScreen = () => (
 	</AppTabs.Navigator>
 );
 
-// const RootStack = createNativeStackNavigator();
-// const RootStackScreen = () => {
-//     const [isLoading, setIsLoading] = React.useState(true);
-//     const [user, setUser] = React.useState(null);
-//     React.useEffect(() => {
-//         setTimeout(() => {
-//             setIsLoading(!isLoading);
-//             setUser({}); // If we have token, set user to user object, so it's always accessible?
-//         }, 500);
-//     }, []);
-
-// 	return (
-//         <RootStack.Navigator
-//             headerMode="none"
-//             screenOptions={{ animationEnabled: false }}
-//             mode="modal"
-//         >
-//             {isLoading ? (
-//                 <RootStack.Screen name="Loading" component={AuthLoadingScreen} />
-//             ) : user ? (
-//                 <RootStack.Screen name="AppTabs" component={AppTabsScreen} />
-//             ) : (
-//                 <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
-//             )}
-//             <RootStack.Screen
-//                 name="Create"
-//                 component={CreatePostScreen}
-//                 options={{ animationEnabled: true }}
-//             />
-//         </RootStack.Navigator>
-//     );
-// };
-
 const RootStack = createNativeStackNavigator();
-const RootStackScreen = () => {
+const RootStackFlow = () => {
+	const { state, dispatch } = React.useContext(AuthContext);
+	const validateToken = async () => {
+		let response;
+		try {
+			response = await PelleumPublic.get('/public/auth/users');
+		} catch (err) {
+			console.log("\n", err.response.status);
+			console.log("\n", err.response.data);
+			response = err.response;
+		};
+		if (response.status == 200) {
+			dispatch({ type: 'RESTORE_TOKEN' });
+		} else {
+			dispatch({ type: 'LOG_OUT' });
+		};
+	};
+
+	React.useEffect(() => {
+		validateToken();
+	}, [dispatch]);
+
+	if (state.isLoading) {
+		return <LoadingScreen />;
+	}
 
 	return (
-		<RootStack.Navigator
-			headerMode="none"
-			screenOptions={{
-				animationEnabled: false,
-				//cardStyle: { backgroundColor: '#000000' }
-			}}
-			mode="modal"
-			options={{ presentation: "modal" }}
-		>
-			<RootStack.Screen 
-				name="AppTabs" 
-				component={AppTabsScreen} 
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<RootStack.Screen
-				name="CreatePost"
-				component={CreatePostScreen}
-				options={{ animationEnabled: true }}
-			/>
-			<RootStack.Screen
-				name="CreateThesis"
-				component={CreateThesisScreen}
-				options={{ animationEnabled: true }}
-			/>
+		<RootStack.Navigator screenOptions={{ animationEnabled: false }}>
+			{state.hasUserToken == false ? (
+				// No token found, user isn't logged in
+				<RootStack.Screen
+					name="AuthStack"
+					component={AuthFlow}
+					options={{
+						headerShown: false,
+					}}
+				/>
+			) : (
+				// User is logged in
+				<RootStack.Screen
+					name="AppTabs"
+					component={AppFlow}
+					options={{
+						headerShown: false,
+					}}
+				/>
+			)}
 		</RootStack.Navigator>
 	);
 };
 
 export default () => {
 	return (
-		<NavigationContainer>
-			<RootStackScreen />
-		</NavigationContainer>
+		<AuthProvider>
+			<NavigationContainer>
+				<RootStackFlow />
+			</NavigationContainer>
+		</AuthProvider>
 	);
 };
 
-
-
-
+// const ProfileDrawer = createDrawerNavigator();
+// const ProfileDrawerScreen = () => (
+// 	<ProfileDrawer.Navigator drawerPosition="right">
+// 		<ProfileDrawer.Screen 
+// 			name="Profile" 
+// 			component={ProfileFlow} 
+// 		/>
+// 		<ProfileDrawer.Screen
+// 			name="Settings"
+// 			component={SettingsScreen}
+// 			options={{
+// 				gestureEnabled: false,
+// 			}}
+// 		/>
+// 	</ProfileDrawer.Navigator>
+// );

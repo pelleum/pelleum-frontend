@@ -2,9 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native';
 import { VStack, NativeBaseProvider } from "native-base"
 
-const BlogScreen = props => {
-    const dataReceived = props.navigation.state.params;
-    //console.log(dataReceived);
+const BlogScreen = ({ route, navigation })  => {
+
+    const { imageSource,
+    blogDate,
+    blogTitle,
+    blogContent } = route.params;
 
     const dimensions = Dimensions.get("window");
 	const imageHeight = Math.round((dimensions.width * 9) / 16);
@@ -14,9 +17,9 @@ const BlogScreen = props => {
             <ScrollView>
                 <NativeBaseProvider>
                     <VStack>
-                        <Image style={{width: dimensions.width, height: imageHeight}} source={dataReceived.imageSource} />
-                        <Text style={styles.titleText}>{dataReceived.blogTitle}</Text>
-                        <Text style={styles.blogText}>{dataReceived.blogContent}</Text>
+                        <Image style={{width: dimensions.width, height: imageHeight}} source={imageSource} />
+                        <Text style={styles.titleText}>{blogTitle}</Text>
+                        <Text style={styles.blogText}>{blogContent}</Text>
                     </VStack>
                 </NativeBaseProvider>
             </ScrollView>

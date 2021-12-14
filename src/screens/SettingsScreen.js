@@ -1,17 +1,27 @@
+// Import Installed Libraries
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-//import { Context as AuthContext } from '../context/AuthContext';
+import * as SecureStore from 'expo-secure-store';
+
+// Import Local Files
+import AuthContext from '../context/AuthContext';
+
 
 const SettingsScreen = () => {
-    //const { logout } = useContext(AuthContext);
+    const { state, dispatch } = useContext(AuthContext);
+
+    const logOut = async () => {
+        await SecureStore.deleteItemAsync('userToken');
+        dispatch({ type: 'LOG_OUT' });
+    };
 
     return (
         <SafeAreaView forceInset={{ top: 'always' }}>
             <Text>Settings Screen</Text>
             <Button 
                 title="Log Out" 
-                //onPress={logout} 
+                onPress={logOut} 
             />
         </SafeAreaView>
     );
@@ -19,8 +29,4 @@ const SettingsScreen = () => {
 
 export default SettingsScreen;
 
-const styles = StyleSheet.create({
-    // logoutButton: {
-    //     padding: 10
-    // }
-});
+const styles = StyleSheet.create({});
