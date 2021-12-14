@@ -22,7 +22,8 @@ import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
 import AuthContext, { AuthProvider } from "./src/context/AuthContext";
-//import CreateScreen from "./src/screens/CreateScreen";
+import CreateThesisScreen from "./src/screens/CreateThesisScreen";
+import CreatePostScreen from "./src/screens/CreatePostScreen";
 import PelleumPublic from "./src/api/PelleumPublic";
 
 // Authentication Flow
@@ -177,6 +178,14 @@ const RootStackFlow = () => {
 					}}
 				/>
 			)}
+			<RootStack.Screen
+				name="CreateThesis"
+				component={CreateThesisScreen}
+			/>
+			<RootStack.Screen
+				name="CreatePost"
+				component={CreatePostScreen}
+			/>
 		</RootStack.Navigator>
 	);
 };
