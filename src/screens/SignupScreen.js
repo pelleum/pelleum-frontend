@@ -37,23 +37,19 @@ const SignupScreen = ({ navigation }) => {
 
     const signUp = async ({ email, username, password }) => {
         let response;
-        let responseStatus;
         try {
             response = await PelleumPublic.post('/public/auth/users', { email, username, password });
             console.log("\n", response.status);
             console.log("\n", response.data);
-            responseStatus = response.status;
-            // to log the user in after signup, store the token and dispatch the LOG_IN action
-            // await SecureStore.setItemAsync('userToken', response.data.access_token);
-            // dispatch({ type: 'LOG_IN', token: response.data.access_token });
         } catch (err) {
             dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
             console.log("\n", err.response.status);
             console.log("\n", err.response.data);
-            responseStatus = err.response.status;
+            response = err.response;
         };
-        if (responseStatus == 201) {
-            navigation.navigate("Login")
+        if (response.status == 201) {
+            await SecureStore.setItemAsync('userToken', response.data.access_token);
+            dispatch({ type: 'LOG_IN' });
         };
     };
 

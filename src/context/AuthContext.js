@@ -1,5 +1,5 @@
 // Import Installed Libraries
-import React, { createContext, useEffect, useMemo, useReducer } from 'react';
+import React, { createContext, useReducer } from 'react';
 
 // Declare AuthContext as a Context object
 const AuthContext = createContext();
@@ -8,7 +8,7 @@ const AuthContext = createContext();
 const initialState = {
     isLoading: true,
     isLogout: false,
-    userToken: null,
+    hasUserToken: false,
     errorMessage: '',
 }
 
@@ -29,18 +29,20 @@ const authReducer = (prevState, action) => {
             return {
                 ...prevState,
                 isLogout: false,
-                userToken: action.token,
+                hasUserToken: true,
+                isLoading: false,
             };
         case 'LOG_OUT':
             return {
                 ...prevState,
                 isLogout: true,
-                userToken: null,
+                hasUserToken: false,
+                isLoading: false,
             };
         case 'RESTORE_TOKEN':
             return {
                 ...prevState,
-                userToken: action.token,
+                hasUserToken: true,
                 isLoading: false,
             };
         default:

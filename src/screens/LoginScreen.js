@@ -28,12 +28,15 @@ const LoginScreen = ({ navigation }) => {
         try {
             response = await PelleumPublic.post('/public/auth/users/login', qs.stringify({ username, password }), config);
             console.log("\n", response.status);
-            await SecureStore.setItemAsync('userToken', response.data.access_token);
-            dispatch({ type: 'LOG_IN', token: response.data.access_token });
         } catch (err) {
             dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
             console.log("\n", err.response.status);
             console.log("\n", err.response.data);
+            response = err.response;
+        };
+        if (response.status == 200) {
+            await SecureStore.setItemAsync('userToken', response.data.access_token);
+            dispatch({ type: 'LOG_IN' });
         };
     };
 

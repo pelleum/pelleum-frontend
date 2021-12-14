@@ -23,13 +23,14 @@ import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
 import AuthContext, { AuthProvider } from "./src/context/AuthContext";
 //import CreateScreen from "./src/screens/CreateScreen";
+import PelleumPublic from "./src/api/PelleumPublic";
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
 const AuthFlow = () => (
 	<AuthStack.Navigator>
-		<AuthStack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
-		<AuthStack.Screen name="SignUp" component={SignupScreen} options={{headerShown: false}} />
+		<AuthStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+		<AuthStack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }} />
 	</AuthStack.Navigator>
 );
 
@@ -131,30 +132,33 @@ const AppFlow = () => (
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
 	const { state, dispatch } = React.useContext(AuthContext);
+	const validateToken = async () => {
+		let response;
+		try {
+			response = await PelleumPublic.get('/public/auth/users');
+		} catch (err) {
+			console.log("\n", err.response.status);
+			console.log("\n", err.response.data);
+			response = err.response;
+		};
+		if (response.status == 200) {
+			dispatch({ type: 'RESTORE_TOKEN' });
+		} else {
+			dispatch({ type: 'LOG_OUT' });
+		};
+	};
 
 	React.useEffect(() => {
-		const fetchToken = async () => {
-			let userToken;
-			try {
-				userToken = await SecureStore.getItemAsync('userToken');
-			} catch (err) {
-				// Restoring token failed
-				console.log('Unable to fetch token.');
-			}
-			// After restoring token, we should to validate it
-			dispatch({ type: 'RESTORE_TOKEN', token: userToken });
-		};
-		fetchToken();
+		validateToken();
 	}, [dispatch]);
 
 	if (state.isLoading) {
-		// We haven't finished checking for the token yet
 		return <LoadingScreen />;
 	}
 
 	return (
 		<RootStack.Navigator screenOptions={{ animationEnabled: false }}>
-			{state.userToken == null ? (
+			{state.hasUserToken == false ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen
 					name="AuthStack"
@@ -186,192 +190,6 @@ export default () => {
 		</AuthProvider>
 	);
 };
-
-
-
-
-/*
-
-//import installed libraries
-import * as React from "react";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
-import { createBottomTabNavigator } from "react-navigation-tabs";
-import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
-
-//local file imports
-import SignupScreen from "./src/screens/SignupScreen";
-import LoginScreen from "./src/screens/LoginScreen";
-import FeedScreen from "./src/screens/FeedScreen";
-import ThesisDetailScreen from "./src/screens/ThesisDetailScreen";
-import SearchScreen from "./src/screens/SearchScreen";
-import EdScreen from "./src/screens/EdScreen";
-import BlogScreen from "./src/screens/BlogScreen";
-import ProfileScreen from "./src/screens/ProfileScreen";
-import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
-import PostDetailScreen from "./src/screens/PostDetailScreen";
-import SettingsScreen from "./src/screens/SettingsScreen";
-import { Provider as AuthProvider } from "./src/context/AuthContext"; //renaming Provider as AuthProvider in App.js
-import { setNavigator } from "./src/navigationRef";
-import AuthLoadingScreen from "./src/screens/AuthLoadingScreen";
-import CreateScreen from "./src/screens/CreateScreen";
-
-const switchNavigator = createSwitchNavigator(
-	{
-		AuthLoad: AuthLoadingScreen,
-		loginFlow: createStackNavigator({
-			Signup: SignupScreen,
-			Login: LoginScreen,
-		}),
-		mainFlow: createBottomTabNavigator(
-			{
-				feedFlow: {
-					screen: createStackNavigator({
-						Feed: FeedScreen,
-						feedPostFlow: createStackNavigator({
-							Post: PostDetailScreen,
-							Portfolio: PortfolioInsightScreen,
-						}),
-					}),
-					navigationOptions: {
-						tabBarIcon: ({ tintColor }) => (
-							<Foundation name="home" size={25} color={tintColor} />
-						),
-					},
-				},
-				searchFlow: {
-					screen: createStackNavigator({
-						Search: SearchScreen,
-						searchThesisFlow: createStackNavigator({
-							Thesis: ThesisDetailScreen,
-							Portfolio: PortfolioInsightScreen,
-						}),
-					}),
-					navigationOptions: {
-						tabBarIcon: ({ tintColor }) => (
-							<FontAwesome name="search" size={25} color={tintColor} />
-						),
-					},
-				},
-				createFlow: {
-					screen: createStackNavigator({
-						Create: CreateScreen,
-					}),
-					navigationOptions: {
-						tabBarIcon: ({ tintColor }) => (
-							<FontAwesome name="plus-square" size={25} color={tintColor} />
-						),
-					},
-				},
-				educationFlow: {
-					screen: createStackNavigator({
-						Education: EdScreen,
-						Blog: BlogScreen,
-					}),
-					navigationOptions: {
-						tabBarIcon: ({ tintColor }) => (
-							<Ionicons name="book" size={25} color={tintColor} />
-						),
-					},
-				},
-				profileFlow: {
-					screen: createStackNavigator({
-						Profile: ProfileScreen,
-						Settings: SettingsScreen,
-						feedPostFlow: createStackNavigator({
-							Post: PostDetailScreen,
-							Portfolio: PortfolioInsightScreen,
-						}),
-					}),
-					navigationOptions: {
-						tabBarIcon: ({ tintColor }) => (
-							<Ionicons name="ios-person" size={25} color={tintColor} />
-						),
-					},
-				},
-			},
-			{
-				tabBarOptions: {
-					inactiveTintColorL: "#858585",
-					activeTintColor: "#000000",
-					activeBackgroundColor: "#ebecf0",
-					showLabel: false,
-				},
-			}
-		),
-	},
-	{
-		initialRouteName: "AuthLoad",
-	}
-);
-
-const App = createAppContainer(switchNavigator);
-
-export default () => {
-	return (
-		<AuthProvider>
-			<App
-				ref={(navigator) => {
-					setNavigator(navigator);
-				}}
-			/>
-		</AuthProvider>
-	);
-};
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const RootStack = createNativeStackNavigator();
-// const RootStackFlow = () => {
-//     const [isLoading, setIsLoading] = React.useState(true);
-//     const [user, setUser] = React.useState(null);
-//     React.useEffect(() => {
-//         setTimeout(() => {
-//             setIsLoading(!isLoading);
-//             setUser({}); // If we have token, set user to user object, so it's always accessible?
-//         }, 500);
-//     }, []);
-
-// 	return (
-//         <RootStack.Navigator
-//             headerMode="none"
-//             screenOptions={{ animationEnabled: false }}
-//             mode="modal"
-//         >
-//             {isLoading ? (
-//                 <RootStack.Screen name="Loading" component={LoadingScreen} />
-//             ) : user ? (
-//                 <RootStack.Screen name="AppTabs" component={AppFlow} />
-//             ) : (
-//                 <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
-//             )}
-//             <RootStack.Screen
-//                 name="Create"
-//                 component={CreateScreen}
-//                 options={{ animationEnabled: true }}
-//             />
-//         </RootStack.Navigator>
-//     );
-// };
-
-
-
-
-
-
 
 // const ProfileDrawer = createDrawerNavigator();
 // const ProfileDrawerScreen = () => (

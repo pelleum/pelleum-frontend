@@ -12,7 +12,7 @@ const SettingsScreen = () => {
     const { state, dispatch } = useContext(AuthContext);
 
     const logOut = async () => {
-        await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('userToken');
         dispatch({ type: 'LOG_OUT' });
     };
 
