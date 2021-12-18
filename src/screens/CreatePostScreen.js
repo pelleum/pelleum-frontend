@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
-import PelleumPublic from "../api/PelleumPublic";
+import pelleumClient from "../api/PelleumClient";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -21,6 +21,7 @@ const CreatePostScreen = ({ navigation }) => {
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
 	const [error, setError] = useState(null);
+	//TODO: need to updatae variables below to assetSymbolValidity and contentValidity
 	const [inputValidity, setInputValidity] = useState({ assetSymbol: false, content: false })
 	const [disableStatus, setDisableStatus] = useState(true);
 
@@ -29,19 +30,20 @@ const CreatePostScreen = ({ navigation }) => {
 		{ label: "Bear", value: "Bear" },
 	];
 
+	// TODO: Can this be moved into the sharButtonPressed function?
 	const shareContent = async ({ content, likedAsset = null } = {}) => {
-		let response;
-		try {
-			response = await PelleumPublic.post("/public/posts", { content, asset_symbol, sentiment });
-		} catch (err) {
-			console.log(err);
-		}
-		return response
+
+		let response = await pelleumClient({
+			method: "post",
+			url: "/public/posts",
+			data: { content, asset_symbol, sentiment }
+		});
+		return response;
 	};
 
 
 	const shareButtonPressed = async () => {
-		var response = await shareContent({ content: content });
+		let response = await shareContent({ content: content });
 		if (response.status == 201) {
 			setContent("");
 			setAssetSymbol("");
@@ -52,8 +54,9 @@ const CreatePostScreen = ({ navigation }) => {
 		}
 	}
 
-
 	const handleChangeText = ({
+
+		//TODO: Update variables names here
 		newValue,
 		content = false,
 		symbol = false,

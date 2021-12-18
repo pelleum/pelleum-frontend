@@ -1,5 +1,5 @@
 // Import Installed Libraries
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     TextInput,
@@ -14,18 +14,20 @@ import { HStack, NativeBaseProvider } from "native-base";
 import * as SecureStore from 'expo-secure-store';
 
 // Import Local Files
-import AuthContext from "../context/AuthContext";
-import PelleumPublic from "../api/PelleumPublic";
+import pelleumClient from "../api/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
+
+import { useSelector, useDispatch } from 'react-redux';
+import { login, authError, clearAuthError } from "../redux/actions";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
     // State Management
-    const { state, dispatch } = useContext(AuthContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [username, setUsername] = useState("");
+    //TODO: need to update variables below to emailValididty, usernameValidity, etc.
     const [inputValidity, setInputValidity] = useState({
         email: false,
         passwordLength: false,
@@ -34,35 +36,38 @@ const SignupScreen = ({ navigation }) => {
         birthDate: false,
     });
     const [disableStatus, setDisableStatus] = useState(true);
+    // Redux
+    const { errorMessage } = useSelector(state => state.authReducer);
+    const dispatch = useDispatch();
 
     const signUp = async ({ email, username, password }) => {
-        let response;
-        try {
-            response = await PelleumPublic.post('/public/auth/users', { email, username, password });
-            console.log("\n", response.status);
-            console.log("\n", response.data);
-        } catch (err) {
-            dispatch({ type: 'AUTH_ERROR', error: err.response.data.detail });
-            console.log("\n", err.response.status);
-            console.log("\n", err.response.data);
-            response = err.response;
-        };
+
+        let response = await pelleumClient({
+            method: "post",
+            url: "/public/auth/users",
+            data: { email, username, password }
+        });
+
         if (response.status == 201) {
             await SecureStore.setItemAsync('userToken', response.data.access_token);
-            dispatch({ type: 'LOG_IN' });
-        };
+            dispatch(login());
+
+        } else {
+            dispatch(authError(response.data.detail));
+            console.log(err.response.status);
+        }
     };
 
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
-            const clearErrorMessage = () => dispatch({ type: 'CLEAR_AUTH_ERROR' });
+            const clearErrorMessage = () => dispatch(clearAuthError());
             clearErrorMessage();
         });
         return unsubscribe;
     }, [navigation]);
 
     // Input Validation
-    const emailValidation = (emailText, pass, hello) => {
+    const emailValidation = (emailText) => {
         // Email format
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         if (emailRegex.test(emailText) === false) {
@@ -154,6 +159,7 @@ const SignupScreen = ({ navigation }) => {
 
     const handleChangeText = ({
         newValue,
+        //TODO: need to change variables below to checkEmail, checkPassword, etc.
         email = false,
         password = false,
         username = false,
@@ -282,8 +288,8 @@ const SignupScreen = ({ navigation }) => {
                                 handleChangeText({ newValue: newValue, birthDate: true })
                             }
                         />
-                        {state.errorMessage
-                        ? <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+                        {errorMessage
+                        ? <Text style={styles.errorMessage}>{errorMessage}</Text>
                         : null}
                     </View>
                     <View style={styles.validationMessageView}>

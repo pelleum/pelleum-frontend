@@ -14,7 +14,7 @@ import SwitchSelector from "react-native-switch-selector";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
-import PelleumPublic from "../api/PelleumPublic";
+import pelleumClient from "../api/PelleumClient";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 
 const CreateThesisScreen = ({ navigation }) => {
@@ -27,6 +27,7 @@ const CreateThesisScreen = ({ navigation }) => {
 	const [source3, setSource3] = useState("");
 	const [error, setError] = useState(null);
 	const [inputValidity, setInputValidity] = useState({
+		//TODO: need to update variables below to contentValidity, titleValidity, etc.
 		assetSymbol: false,
 		content: false,
 		title: false,
@@ -60,19 +61,19 @@ const CreateThesisScreen = ({ navigation }) => {
 
 	const shareContent = async () => {
 		// Executed when the 'share' button is pressed
-		let response;
 		let sources = validSources;
-		try {
-			response = await PelleumPublic.post("/public/theses", {
+
+		let response = await pelleumClient({
+			method: "post",
+			url: "/public/theses",
+			data: {
 				content,
 				title,
 				asset_symbol,
 				sentiment,
 				sources,
-			});
-		} catch (err) {
-			console.log(err);
-		}
+			}
+		});
 		return response;
 	};
 
@@ -99,6 +100,7 @@ const CreateThesisScreen = ({ navigation }) => {
 		}
 	};
 
+	// TODO: Consider moving shareContent in this function?
 	const shareButtonPressed = async () => {
 		// Executed when the 'share' button is pressed
 		var response = await shareContent();
@@ -113,6 +115,7 @@ const CreateThesisScreen = ({ navigation }) => {
 	};
 
 	const handleChangeText = ({
+		//TODO: need to update variables below to checkContent, checkTitle, etc.
 		newValue,
 		content = false,
 		symbol = false,

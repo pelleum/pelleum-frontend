@@ -1,19 +1,19 @@
 // Import Installed Libraries
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet, Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 
-// Import Local Files
-import AuthContext from '../context/AuthContext';
-
+// Redux
+import { useDispatch } from 'react-redux';
+import { logout } from "../redux/actions";
 
 const SettingsScreen = () => {
-    const { state, dispatch } = useContext(AuthContext);
 
+    const dispatch = useDispatch();
     const logOut = async () => {
         await SecureStore.deleteItemAsync('userToken');
-        dispatch({ type: 'LOG_OUT' });
+        dispatch(logout());
     };
 
     return (
