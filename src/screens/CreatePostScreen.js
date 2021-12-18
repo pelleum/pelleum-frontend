@@ -21,8 +21,7 @@ const CreatePostScreen = ({ navigation }) => {
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
 	const [error, setError] = useState(null);
-	//TODO: need to updatae variables below to assetSymbolValidity and contentValidity
-	const [inputValidity, setInputValidity] = useState({ assetSymbol: false, content: false })
+	const [inputValidity, setInputValidity] = useState({ assetSymbolValidity: false, contentValidity: false })
 	const [disableStatus, setDisableStatus] = useState(true);
 
 	const sentimentOptions = [
@@ -30,20 +29,14 @@ const CreatePostScreen = ({ navigation }) => {
 		{ label: "Bear", value: "Bear" },
 	];
 
-	// TODO: Can this be moved into the sharButtonPressed function?
-	const shareContent = async ({ content, likedAsset = null } = {}) => {
 
-		let response = await pelleumClient({
+	const shareButtonPressed = async () => {
+
+		const response = await pelleumClient({
 			method: "post",
 			url: "/public/posts",
 			data: { content, asset_symbol, sentiment }
 		});
-		return response;
-	};
-
-
-	const shareButtonPressed = async () => {
-		let response = await shareContent({ content: content });
 		if (response.status == 201) {
 			setContent("");
 			setAssetSymbol("");
@@ -55,34 +48,32 @@ const CreatePostScreen = ({ navigation }) => {
 	}
 
 	const handleChangeText = ({
-
-		//TODO: Update variables names here
 		newValue,
-		content = false,
-		symbol = false,
+		checkContent = false,
+		checkSymbol = false,
 	} = {}) => {
 
 		setError(null);
 		var newInputValidity = inputValidity;
 
-		if (content) {
+		if (checkContent) {
 			setContent(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["content"] = false
+				newInputValidity["contentValidity"] = false
 				setInputValidity(newInputValidity)
 			} else {
-				newInputValidity["content"] = true
+				newInputValidity["contentValidity"] = true
 				setInputValidity(newInputValidity)
 			}
 		}
 
-		if (symbol) {
+		if (checkSymbol ) {
 			setAssetSymbol(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["assetSymbol"] = false
+				newInputValidity["assetSymbolValidity"] = false
 				setInputValidity(newInputValidity)
 			} else {
-				newInputValidity["assetSymbol"] = true
+				newInputValidity["assetSymbolValidity"] = true
 				setInputValidity(newInputValidity)
 			}
 		}
@@ -118,7 +109,7 @@ const CreatePostScreen = ({ navigation }) => {
 								placeholder="EXAMPLE"
 								placeholderTextColor="#c7c7c7"
 								value={asset_symbol}
-								onChangeText={(newValue) => handleChangeText({ newValue: newValue, symbol: true })}
+								onChangeText={(newValue) => handleChangeText({ newValue: newValue, checkSymbol: true })}
 								style={styles.assetSymbolInput}
 								maxLength={10}
 								autoCapitalize="characters"
@@ -146,7 +137,7 @@ const CreatePostScreen = ({ navigation }) => {
 							style={styles.textArea}
 							maxLength={512}
 							value={content}
-							onChangeText={(newValue) => handleChangeText({ newValue: newValue, content: true })}
+							onChangeText={(newValue) => handleChangeText({ newValue: newValue, checkContent: true })}
 						/>
 						<HStack style={styles.hStack} alignItems="center">
 							<TouchableOpacity

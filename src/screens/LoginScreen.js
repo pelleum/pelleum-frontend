@@ -32,11 +32,12 @@ const LoginScreen = ({ navigation }) => {
 
 	const logIn = async ({ username, password }) => {
 		var qs = require("query-string");
-        let response = await pelleumClient({
+        const response = await pelleumClient({
             method: "post",
             url: "/public/auth/users/login",
             headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            data: qs.stringify({ username, password })
+            data: qs.stringify({ username, password }),
+			onLogin: true
         });
 
         if (response.status == 200) {

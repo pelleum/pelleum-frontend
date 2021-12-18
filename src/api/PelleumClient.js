@@ -7,9 +7,9 @@ import { store } from '../redux/store';
 import { logout } from "../redux/actions";
     
 
-async function pelleumClient({method, url, headers=null, data=null, queryParams=null} = {}) {
+async function pelleumClient({method, url, headers=null, data=null, queryParams=null, onLogin=false} = {}) {
 
-    let requestConfig = {method: method, url: url};
+    const requestConfig = {method: method, url: url};
 
     if (headers) {
         requestConfig["headers"] = headers
@@ -30,13 +30,14 @@ async function pelleumClient({method, url, headers=null, data=null, queryParams=
     }
     
     if (response.status == 401) {
-        console.log("status:", response.status)
+        if (onLogin) {
+            return response;
+        }
         await SecureStore.deleteItemAsync('userToken');
         store.dispatch(logout());
-        return response;
-    } else {
-        return response;
     }
+
+    return response;
 }
 
 

@@ -144,11 +144,11 @@ const RootStackFlow = () => {
 
 	const validateToken = async () => {
 
-		let response = await pelleumClient({method: 'get', url: '/public/auth/users'});
+		const response = await pelleumClient({method: 'get', url: '/public/auth/users'});
 		if (response.status == 200) {
 			dispatch(restoreToken());
-		} else if (response.status != 401) {
-			console.log("Some error occured")
+		} else {
+			console.log("Some error occurred.")
 		};
 	};
 

@@ -27,10 +27,9 @@ const CreateThesisScreen = ({ navigation }) => {
 	const [source3, setSource3] = useState("");
 	const [error, setError] = useState(null);
 	const [inputValidity, setInputValidity] = useState({
-		//TODO: need to update variables below to contentValidity, titleValidity, etc.
-		assetSymbol: false,
-		content: false,
-		title: false,
+		assetSymbolValidity: false,
+		contentValidity: false,
+		titleValidity: false,
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
@@ -59,24 +58,6 @@ const CreateThesisScreen = ({ navigation }) => {
 		setValidSources(newValidSources);
 	};
 
-	const shareContent = async () => {
-		// Executed when the 'share' button is pressed
-		let sources = validSources;
-
-		let response = await pelleumClient({
-			method: "post",
-			url: "/public/theses",
-			data: {
-				content,
-				title,
-				asset_symbol,
-				sentiment,
-				sources,
-			}
-		});
-		return response;
-	};
-
 	const handleChangeSourceInputValidity = (newSourceInputValidity) => {
 		// Executed when a source's validity is changed
 		setSourceInputValidity(newSourceInputValidity);
@@ -100,10 +81,23 @@ const CreateThesisScreen = ({ navigation }) => {
 		}
 	};
 
-	// TODO: Consider moving shareContent in this function?
 	const shareButtonPressed = async () => {
 		// Executed when the 'share' button is pressed
-		var response = await shareContent();
+
+		const sources = validSources;
+		
+		const response = await pelleumClient({
+			method: "post",
+			url: "/public/theses",
+			data: {
+				content,
+				title,
+				asset_symbol,
+				sentiment,
+				sources,
+			}
+		});
+
 		if (response.status == 201) {
 			setContent("");
 			setAssetSymbol("");
@@ -115,45 +109,44 @@ const CreateThesisScreen = ({ navigation }) => {
 	};
 
 	const handleChangeText = ({
-		//TODO: need to update variables below to checkContent, checkTitle, etc.
 		newValue,
-		content = false,
-		symbol = false,
-		title = false,
+		checkContent = false,
+		checkSymbol = false,
+		checkTitle = false,
 	} = {}) => {
 		// Executed asset symbol, thesis title, or content's text is changed
 		setError(null);
-		let newInputValidity = inputValidity;
+		const newInputValidity = inputValidity;
 
-		if (content) {
+		if (checkContent) {
 			setContent(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["content"] = false;
+				newInputValidity["contentValidity"] = false;
 				setInputValidity(newInputValidity);
 			} else {
-				newInputValidity["content"] = true;
+				newInputValidity["contentValidity"] = true;
 				setInputValidity(newInputValidity);
 			}
 		}
 
-		if (symbol) {
+		if (checkSymbol) {
 			setAssetSymbol(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["assetSymbol"] = false;
+				newInputValidity["assetSymbolValidity"] = false;
 				setInputValidity(newInputValidity);
 			} else {
-				newInputValidity["assetSymbol"] = true;
+				newInputValidity["assetSymbolValidity"] = true;
 				setInputValidity(newInputValidity);
 			}
 		}
 
-		if (title) {
+		if (checkTitle) {
 			setTitle(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["title"] = false;
+				newInputValidity["titleValidity"] = false;
 				setInputValidity(newInputValidity);
 			} else {
-				newInputValidity["title"] = true;
+				newInputValidity["titleValidity"] = true;
 				setInputValidity(newInputValidity);
 			}
 		}
@@ -205,7 +198,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							placeholderTextColor="#c7c7c7"
 							value={asset_symbol}
 							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, symbol: true })
+								handleChangeText({ newValue: newValue, checkSymbol: true })
 							}
 							style={styles.assetSymbolInput}
 							maxLength={10}
@@ -218,7 +211,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							placeholderTextColor="#c7c7c7"
 							value={title}
 							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, title: true })
+								handleChangeText({ newValue: newValue, checkTitle: true })
 							}
 							style={styles.titleInput}
 							maxLength={256}
@@ -233,7 +226,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							maxLength={30000}
 							value={content}
 							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, content: true })
+								handleChangeText({ newValue: newValue, checkContent: true })
 							}
 						/>
 						<HStack style={styles.hStack} alignItems="center">
