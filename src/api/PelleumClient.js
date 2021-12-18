@@ -1,0 +1,46 @@
+
+import * as SecureStore from 'expo-secure-store';
+
+// Local File Imports
+import axiosInstance from "./AxiosInstance"
+import { store } from '../redux/store';
+import { logout } from "../redux/actions";
+    
+
+async function pelleumClient({method, url, headers=null, data=null, queryParams=null} = {}) {
+
+    let requestConfig = {method: method, url: url};
+
+    if (headers) {
+        requestConfig["headers"] = headers
+    }
+    if (data) {
+        requestConfig["data"] = data
+    }
+    if (queryParams) {
+        requestConfig["params"] = queryParams
+    }    
+
+    let response;
+
+    try {
+        response = await axiosInstance(requestConfig);
+    } catch (err) {
+        response = err.response;
+    }
+    
+    if (response.status == 401) {
+        console.log("status:", response.status)
+        await SecureStore.deleteItemAsync('userToken');
+        store.dispatch(logout());
+        return response;
+    } else {
+        return response;
+    }
+}
+
+
+
+
+export default pelleumClient;
+

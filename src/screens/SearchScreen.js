@@ -4,7 +4,7 @@ import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import DismissKeyboard from '../components/DismissKeyboard';
-import PelleumPublic from '../api/PelleumPublic';
+import pelleumClient from '../api/PelleumClient';
 
 const SearchScreen = () => {
     const [term, setTerm] = useState('');
@@ -14,16 +14,18 @@ const SearchScreen = () => {
 
     const getResults = async () => {
         if (term.length > 0) {
-            let response;
-            try {
-                response = await PelleumPublic.get(`/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}`);
+            
+            let response = await pelleumClient({
+                method: "get",
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}`,
+            });
+
+            if (response.status == 200) {
                 setResults(response.data.records.theses)
-            } catch (err) {
-                console.log("\n", err);
-                console.log("\n", err.response.status);
-                console.log("\n", err.response.data);
+            } else if (response.status != 401) {
                 setErrorMessage(err.response.data)
-            };
+                console.log("There was an error obtaining theses from the backend.")
+            }
         };
     };
 

@@ -9,44 +9,45 @@ import {
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import { Feather } from "@expo/vector-icons";
-import PelleumPublic from "../api/PelleumPublic";
+import pelleumClient from "../api/PelleumClient";
 
 const ProfileScreen = ({ navigation }) => {
 	const [assetList, setAssetList] = useState([]);
 
-	// 1. State is initialized to empty list
-	// 2. On first render, make API call and get latest list of assets
-
 	const getCurrentUser = async () => {
-		let response;
-		try {
-			response = await PelleumPublic.get('/public/auth/users');
+		let response = await pelleumClient({
+			method: "get",
+			url: "/public/auth/users"
+		});
+
+		if (response.status == 200) {
 			userData = response.data;
-		} catch (err) {
-			console.log("\n", err);
-			console.log("\n", err.response.status);
-			console.log("\n", err.response.data);
-		};
-		return userData;
+			return userData;
+		} else if (response.status != 401) {
+			console.log("There was an error retrieving the user object from the backend.")
+			return null;
+		}
 	};
 
 	const onRefresh = async (userData) => {
-		console.log('\nProfile Asset List Refresh worked!');
-		let response;
-		try {
-			response = await PelleumPublic.get(`/public/portfolio/${userData.user_id.toString()}`);
+	
+		let response = await pelleumClient({
+			method: "get",
+			url: `/public/portfolio/${userData.user_id.toString()}`,
+		});
+
+		if (response.status == 200) {
 			setAssetList(response.data.records)
-		} catch (err) {
-			console.log("\n", err);
-			console.log("\n", err.response.status);
-			console.log("\n", err.response.data);
-		};
+		} else if (response.status != 401) {
+			console.log("There was an error retrieving the assets from the backend.")
+		}
 	};
 
 	const firstRender = async () => {
-		console.log("\nFirst profile render!");
 		const userData = await getCurrentUser();
-		await onRefresh(userData);
+		if (userData) {
+			await onRefresh(userData);
+		}
 	};
 
 	useEffect(() => {

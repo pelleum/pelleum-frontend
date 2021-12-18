@@ -14,34 +14,38 @@ import {
 	Fontisto,
 	SimpleLineIcons,
 	MaterialCommunityIcons,
-	Ionicons
+	Ionicons,
 } from "@expo/vector-icons";
 
 // File imports
-import PelleumPublic from "../api/PelleumPublic";
+import pelleumClient from "../api/PelleumClient";
 import colorScheme from "../components/ColorScheme";
 import CreateModal from "../components/modals/CreateModal";
+
 
 const FeedScreen = ({ navigation }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
 
-    const handleModalNavigate = (screenToNavigateTo) => {
-        navigation.navigate(screenToNavigateTo);
-    }
+	const handleModalNavigate = (screenToNavigateTo) => {
+		navigation.navigate(screenToNavigateTo);
+	};
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		let response;
-		try {
-			response = await PelleumPublic.get("/public/posts/retrieve/many");
+		let response = await pelleumClient({
+			method: "get",
+			url: "/public/posts/retrieve/many"
+		});
+
+		if (response.status == 200) {
 			setPosts(response.data.records.posts);
-			setRefreshing(false);
-		} catch (err) {
-			console.log("\n", err);
-			setRefreshing(false);
+		} else {
+			// need to display "an unexpected error occured"
+			console.log("There was an error obtianing feed posts.")
 		}
+		setRefreshing(false);
 	}, [refreshing]);
 
 	useEffect(() => {
@@ -102,7 +106,11 @@ const FeedScreen = ({ navigation }) => {
 													console.log(colorScheme);
 												}}
 											>
-												<Ionicons name="heart-outline" size={24} color="#00A8FC" />
+												<Ionicons
+													name="heart-outline"
+													size={24}
+													color="#00A8FC"
+												/>
 											</TouchableOpacity>
 											<TouchableOpacity
 												style={styles.iconButton}
@@ -156,15 +164,17 @@ const FeedScreen = ({ navigation }) => {
 				refreshing={refreshing}
 				ListHeaderComponent={
 					<View>
-                        <CreateModal 
-                            modalVisible={modalVisible}
-                            makeModalDisappear={() => setModalVisible(false)}
-                            onNavigate={handleModalNavigate}
-                        />
-						<Pressable
-							onPress={() => setModalVisible(true)}
-						>
-                            <MaterialCommunityIcons name="plus-circle" size={60} color="black" />
+						<CreateModal
+							modalVisible={modalVisible}
+							makeModalDisappear={() => setModalVisible(false)}
+							onNavigate={handleModalNavigate}
+						/>
+						<Pressable onPress={() => setModalVisible(true)}>
+							<MaterialCommunityIcons
+								name="plus-circle"
+								size={60}
+								color="black"
+							/>
 						</Pressable>
 					</View>
 				}

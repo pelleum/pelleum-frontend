@@ -3,12 +3,11 @@ import * as React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import * as SecureStore from 'expo-secure-store';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
 import { Ionicons, FontAwesome, FontAwesome5, Foundation } from "@expo/vector-icons";
 
-// Import Local Files
+// Local Screens
 import SignupScreen from "./src/screens/SignupScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import FeedScreen from "./src/screens/FeedScreen";
@@ -21,10 +20,18 @@ import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import PostDetailScreen from "./src/screens/PostDetailScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
-import AuthContext, { AuthProvider } from "./src/context/AuthContext";
 import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
-import PelleumPublic from "./src/api/PelleumPublic";
+
+// Functions
+import pelleumClient from "./src/api/PelleumClient";
+
+// Redux
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { restoreToken } from "./src/redux/actions";
+
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
@@ -132,20 +139,16 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
-	const { state, dispatch } = React.useContext(AuthContext);
+	const { isLoading, hasUserToken } = useSelector(state => state.authReducer);
+	const dispatch = useDispatch();
+
 	const validateToken = async () => {
-		let response;
-		try {
-			response = await PelleumPublic.get('/public/auth/users');
-		} catch (err) {
-			console.log("\n", err.response.status);
-			console.log("\n", err.response.data);
-			response = err.response;
-		};
+
+		let response = await pelleumClient({method: 'get', url: '/public/auth/users'});
 		if (response.status == 200) {
-			dispatch({ type: 'RESTORE_TOKEN' });
-		} else {
-			dispatch({ type: 'LOG_OUT' });
+			dispatch(restoreToken());
+		} else if (response.status != 401) {
+			console.log("Some error occured")
 		};
 	};
 
@@ -153,13 +156,13 @@ const RootStackFlow = () => {
 		validateToken();
 	}, [dispatch]);
 
-	if (state.isLoading) {
+	if (isLoading) {
 		return <LoadingScreen />;
 	}
 
 	return (
 		<RootStack.Navigator screenOptions={{ animationEnabled: false }}>
-			{state.hasUserToken == false ? (
+			{hasUserToken == false ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen
 					name="AuthStack"
@@ -192,11 +195,11 @@ const RootStackFlow = () => {
 
 export default () => {
 	return (
-		<AuthProvider>
+		<Provider store={store}>
 			<NavigationContainer>
 				<RootStackFlow />
 			</NavigationContainer>
-		</AuthProvider>
+		</Provider>
 	);
 };
 
