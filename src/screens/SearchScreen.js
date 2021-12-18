@@ -24,7 +24,7 @@ const SearchScreen = () => {
                 if (authorizedResponse.status == 200) {
                     setResults(authorizedResponse.data.records.theses)
                 } else {
-                    setErrorMessage(err.response.data)
+                    setErrorMessage(response.data)
                     console.log("There was an error obtaining theses from the backend.")
                 }
             }

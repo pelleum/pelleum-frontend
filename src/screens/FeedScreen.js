@@ -78,7 +78,6 @@ const FeedScreen = ({ navigation }) => {
 													style={styles.assetButton}
 													onPress={() => {
 														console.log("Asset button worked.");
-														console.log(colorScheme);
 													}}
 												>
 													<Text style={styles.assetText}>
@@ -105,7 +104,6 @@ const FeedScreen = ({ navigation }) => {
 												style={styles.iconButton}
 												onPress={() => {
 													console.log("Like button worked.");
-													console.log(colorScheme);
 												}}
 											>
 												<Ionicons
@@ -118,7 +116,6 @@ const FeedScreen = ({ navigation }) => {
 												style={styles.iconButton}
 												onPress={() => {
 													console.log("Comment button worked.");
-													console.log(colorScheme);
 												}}
 											>
 												<Fontisto name="comment" size={22} color="#00A8FC" />
@@ -127,7 +124,6 @@ const FeedScreen = ({ navigation }) => {
 												style={styles.iconButton}
 												onPress={() => {
 													console.log("Share button worked.");
-													console.log(colorScheme);
 												}}
 											>
 												<SimpleLineIcons
@@ -140,7 +136,6 @@ const FeedScreen = ({ navigation }) => {
 												style={styles.iconButton}
 												onPress={() => {
 													console.log("Link button worked.");
-													console.log(colorScheme);
 												}}
 											>
 												<MaterialIcons

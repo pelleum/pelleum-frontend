@@ -51,7 +51,6 @@ const SignupScreen = ({ navigation }) => {
             dispatch(login());
         } else {
             dispatch(authError(response.data.detail));
-            console.log(err.response.status);
         }
     };
 

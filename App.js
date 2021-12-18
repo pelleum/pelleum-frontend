@@ -150,7 +150,7 @@ const RootStackFlow = () => {
 			if (authorizedResponse.status == 200) {
 				dispatch(restoreToken());
 			} else {
-				console.log("Some error occurred.")
+				console.log("Some error occurred restoring token.")
 			};
 		}
 		
