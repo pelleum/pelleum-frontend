@@ -15,7 +15,7 @@ const ProfileScreen = ({ navigation }) => {
 	const [assetList, setAssetList] = useState([]);
 
 	const getCurrentUser = async () => {
-		let response = await pelleumClient({
+		const response = await pelleumClient({
 			method: "get",
 			url: "/public/auth/users"
 		});
@@ -23,7 +23,7 @@ const ProfileScreen = ({ navigation }) => {
 		if (response.status == 200) {
 			userData = response.data;
 			return userData;
-		} else if (response.status != 401) {
+		} else {
 			console.log("There was an error retrieving the user object from the backend.")
 			return null;
 		}
@@ -31,14 +31,14 @@ const ProfileScreen = ({ navigation }) => {
 
 	const onRefresh = async (userData) => {
 	
-		let response = await pelleumClient({
+		const response = await pelleumClient({
 			method: "get",
 			url: `/public/portfolio/${userData.user_id.toString()}`,
 		});
 
 		if (response.status == 200) {
 			setAssetList(response.data.records)
-		} else if (response.status != 401) {
+		} else {
 			console.log("There was an error retrieving the assets from the backend.")
 		}
 	};

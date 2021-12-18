@@ -34,7 +34,7 @@ const FeedScreen = ({ navigation }) => {
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		let response = await pelleumClient({
+		const response = await pelleumClient({
 			method: "get",
 			url: "/public/posts/retrieve/many"
 		});

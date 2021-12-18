@@ -12,12 +12,11 @@ import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider } from "native-base";
 import * as SecureStore from 'expo-secure-store';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Import Local Files
 import pelleumClient from "../api/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
-
-import { useSelector, useDispatch } from 'react-redux';
 import { login, authError, clearAuthError } from "../redux/actions";
 
 // Signup Screen Functional Component
@@ -27,13 +26,12 @@ const SignupScreen = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [username, setUsername] = useState("");
-    //TODO: need to update variables below to emailValididty, usernameValidity, etc.
     const [inputValidity, setInputValidity] = useState({
-        email: false,
+        emailValidity: false,
         passwordLength: false,
         passwordCharacters: false,
-        username: false,
-        birthDate: false,
+        usernameValidity: false,
+        birthDateValidity: false,
     });
     const [disableStatus, setDisableStatus] = useState(true);
     // Redux
@@ -42,7 +40,7 @@ const SignupScreen = ({ navigation }) => {
 
     const signUp = async ({ email, username, password }) => {
 
-        let response = await pelleumClient({
+        const response = await pelleumClient({
             method: "post",
             url: "/public/auth/users",
             data: { email, username, password }
@@ -51,7 +49,6 @@ const SignupScreen = ({ navigation }) => {
         if (response.status == 201) {
             await SecureStore.setItemAsync('userToken', response.data.access_token);
             dispatch(login());
-
         } else {
             dispatch(authError(response.data.detail));
             console.log(err.response.status);
@@ -69,7 +66,7 @@ const SignupScreen = ({ navigation }) => {
     // Input Validation
     const emailValidation = (emailText) => {
         // Email format
-        let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         if (emailRegex.test(emailText) === false) {
             return false;
         } else {
@@ -115,7 +112,7 @@ const SignupScreen = ({ navigation }) => {
 
     const dateValidation = (dateText) => {
         // 1. Check that string is in support date format
-        let dateRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+        const dateRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
         if (dateRegex.test(dateText) === false) {
             return false;
         }
@@ -159,25 +156,24 @@ const SignupScreen = ({ navigation }) => {
 
     const handleChangeText = ({
         newValue,
-        //TODO: need to change variables below to checkEmail, checkPassword, etc.
-        email = false,
-        password = false,
-        username = false,
-        birthDate = false,
+        checkEmail = false,
+        checkPassword = false,
+        checkUsername = false,
+        checkBirthDate = false,
     } = {}) => {
         var newInputValidity = inputValidity;
 
-        if (email) {
+        if (checkEmail) {
             setEmail(newValue);
             if (emailValidation(newValue)) {
-                newInputValidity["email"] = true;
+                newInputValidity["emailValidity"] = true;
                 setInputValidity(newInputValidity);
             } else {
-                newInputValidity["email"] = false;
+                newInputValidity["emailValidity"] = false;
                 setInputValidity(newInputValidity);
             }
         }
-        if (password) {
+        if (checkPassword) {
             setPassword(newValue);
             if (
                 passwordValidation({
@@ -205,24 +201,24 @@ const SignupScreen = ({ navigation }) => {
             }
         }
 
-        if (username) {
+        if (checkUsername) {
             setUsername(newValue);
             if (usernameValidation(newValue)) {
-                newInputValidity["username"] = true;
+                newInputValidity["usernameValidity"] = true;
                 setInputValidity(newInputValidity);
             } else {
-                newInputValidity["username"] = false;
+                newInputValidity["usernameValidity"] = false;
                 setInputValidity(newInputValidity);
             }
         }
 
-        if (birthDate) {
+        if (checkBirthDate) {
             setBirthDate(newValue);
             if (dateValidation(newValue)) {
-                newInputValidity["birthDate"] = true;
+                newInputValidity["birthDateValidity"] = true;
                 setInputValidity(newInputValidity);
             } else {
-                newInputValidity["birthDate"] = false;
+                newInputValidity["birthDateValidity"] = false;
                 setInputValidity(newInputValidity);
             }
         }
@@ -248,7 +244,7 @@ const SignupScreen = ({ navigation }) => {
                             placeholderTextColor="#c7c7c7"
                             value={email}
                             onChangeText={(newValue) =>
-                                handleChangeText({ newValue: newValue, email: true })
+                                handleChangeText({ newValue: newValue, cheackEmail: true })
                             }
                             style={styles.input}
                             autoCapitalize="none"
@@ -259,7 +255,7 @@ const SignupScreen = ({ navigation }) => {
                             placeholderTextColor="#c7c7c7"
                             value={username}
                             onChangeText={(newValue) =>
-                                handleChangeText({ newValue: newValue, username: true })
+                                handleChangeText({ newValue: newValue, checkUsername: true })
                             }
                             style={styles.input}
                             autoCapitalize="none"
@@ -270,7 +266,7 @@ const SignupScreen = ({ navigation }) => {
                             placeholderTextColor="#c7c7c7"
                             value={password}
                             onChangeText={(newValue) =>
-                                handleChangeText({ newValue: newValue, password: true })
+                                handleChangeText({ newValue: newValue, checkPassword: true })
                             }
                             style={styles.input}
                             autoCapitalize="none"
@@ -285,7 +281,7 @@ const SignupScreen = ({ navigation }) => {
                             options={{ format: "MM/DD/YYYY" }}
                             value={birthDate}
                             onChangeText={(newValue) =>
-                                handleChangeText({ newValue: newValue, birthDate: true })
+                                handleChangeText({ newValue: newValue, checkBirthDate: true })
                             }
                         />
                         {errorMessage

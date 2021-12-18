@@ -15,14 +15,14 @@ const SearchScreen = () => {
     const getResults = async () => {
         if (term.length > 0) {
             
-            let response = await pelleumClient({
+            const response = await pelleumClient({
                 method: "get",
                 url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}`,
             });
 
             if (response.status == 200) {
                 setResults(response.data.records.theses)
-            } else if (response.status != 401) {
+            } else {
                 setErrorMessage(err.response.data)
                 console.log("There was an error obtaining theses from the backend.")
             }
