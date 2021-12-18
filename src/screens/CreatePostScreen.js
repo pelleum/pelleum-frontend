@@ -32,18 +32,21 @@ const CreatePostScreen = ({ navigation }) => {
 
 	const shareButtonPressed = async () => {
 
-		const response = await pelleumClient({
+		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: "/public/posts",
 			data: { content, asset_symbol, sentiment }
 		});
-		if (response.status == 201) {
-			setContent("");
-			setAssetSymbol("");
-			setDisableStatus(true);
-			navigation.navigate("Feed");
-		} else {
-			setError("An unexpected error occured. Your content was not shared.")
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				setContent("");
+				setAssetSymbol("");
+				setDisableStatus(true);
+				navigation.navigate("Feed");
+			} else {
+				setError("An unexpected error occured. Your content was not shared.")
+			}
 		}
 	}
 

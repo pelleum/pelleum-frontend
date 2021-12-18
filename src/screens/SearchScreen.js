@@ -15,16 +15,18 @@ const SearchScreen = () => {
     const getResults = async () => {
         if (term.length > 0) {
             
-            const response = await pelleumClient({
+            const authorizedResponse = await pelleumClient({
                 method: "get",
                 url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}`,
             });
-
-            if (response.status == 200) {
-                setResults(response.data.records.theses)
-            } else {
-                setErrorMessage(err.response.data)
-                console.log("There was an error obtaining theses from the backend.")
+            
+            if (authorizedResponse) {
+                if (authorizedResponse.status == 200) {
+                    setResults(authorizedResponse.data.records.theses)
+                } else {
+                    setErrorMessage(response.data)
+                    console.log("There was an error obtaining theses from the backend.")
+                }
             }
         };
     };

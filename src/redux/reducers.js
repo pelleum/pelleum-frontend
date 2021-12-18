@@ -18,7 +18,6 @@ function authReducer(state = initialState, action) {
         case "LOG_IN":
             return { ...state, isLogout: false, hasUserToken: true, isLoading: false };
         case "LOG_OUT":
-            console.log("WE GOT IN LOG_OUT CASE");
             return { ...state, isLogout: true, hasUserToken: false, isLoading: false };
         case "RESTORE_TOKEN":
             return { ...state, hasUserToken: true, isLoading: false };
