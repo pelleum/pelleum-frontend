@@ -25,7 +25,6 @@ export const login = () => dispatch => {
 };
 
 export const logout = () => dispatch => {
-    console.log("we got here in logout()")
     dispatch({
         type: LOG_OUT,
     });

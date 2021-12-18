@@ -39,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
             data: qs.stringify({ username, password }),
 			onLogin: true
         });
-
+		
         if (response.status == 200) {
             await SecureStore.setItemAsync("userToken", response.data.access_token);
             dispatch(login());
