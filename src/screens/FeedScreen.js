@@ -34,16 +34,18 @@ const FeedScreen = ({ navigation }) => {
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		const response = await pelleumClient({
+		const authorizedResponse = await pelleumClient({
 			method: "get",
 			url: "/public/posts/retrieve/many"
 		});
 
-		if (response.status == 200) {
-			setPosts(response.data.records.posts);
-		} else {
-			// need to display "an unexpected error occured"
-			console.log("There was an error obtianing feed posts.")
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				setPosts(authorizedResponse.data.records.posts);
+			} else {
+				// need to display "an unexpected error occured"
+				console.log("There was an error obtianing feed posts.")
+			}
 		}
 		setRefreshing(false);
 	}, [refreshing]);

@@ -86,7 +86,7 @@ const CreateThesisScreen = ({ navigation }) => {
 
 		const sources = validSources;
 		
-		const response = await pelleumClient({
+		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: "/public/theses",
 			data: {
@@ -98,13 +98,15 @@ const CreateThesisScreen = ({ navigation }) => {
 			}
 		});
 
-		if (response.status == 201) {
-			setContent("");
-			setAssetSymbol("");
-			setDisableStatus(true);
-			navigation.navigate("Feed");
-		} else {
-			setError("An unexpected error occured. Your content was not shared.");
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				setContent("");
+				setAssetSymbol("");
+				setDisableStatus(true);
+				navigation.navigate("Feed");
+			} else {
+				setError("An unexpected error occured. Your content was not shared.");
+			}
 		}
 	};
 

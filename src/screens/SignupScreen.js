@@ -244,7 +244,7 @@ const SignupScreen = ({ navigation }) => {
                             placeholderTextColor="#c7c7c7"
                             value={email}
                             onChangeText={(newValue) =>
-                                handleChangeText({ newValue: newValue, cheackEmail: true })
+                                handleChangeText({ newValue: newValue, checkEmail: true })
                             }
                             style={styles.input}
                             autoCapitalize="none"
