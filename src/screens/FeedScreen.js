@@ -121,11 +121,7 @@ const FeedScreen = ({ navigation }) => {
 											<TouchableOpacity
 												style={styles.iconButton}
 												onPress={() => {
-<<<<<<< HEAD
-													console.log("Comment button worked.");
-=======
 													console.log("Link button worked.");
->>>>>>> clean_up
 												}}
 											>
 												<MaterialIcons
