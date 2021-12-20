@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
     //use local IP address instead of localhost to prevent issues with locally-run server
     //Ernesto Condo IP Address:   192.168.1.5
     //Adam's house IP Address: 192.168.1.82
-    baseURL: 'http://10.0.0.137:8000',
+    baseURL: 'http://192.168.1.82:8000',
 });
 
 axiosInstance.interceptors.request.use(
