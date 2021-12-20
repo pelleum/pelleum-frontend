@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
 		borderBottomColor: "#00A8FC",
+		marginBottom: 5,
 		width: "25%",
 	},
 	titleInput: {

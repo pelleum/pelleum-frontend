@@ -22,7 +22,6 @@ import pelleumClient from "../api/PelleumClient";
 import colorScheme from "../components/ColorScheme";
 import CreateModal from "../components/modals/CreateModal";
 
-
 const FeedScreen = ({ navigation }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
@@ -36,7 +35,7 @@ const FeedScreen = ({ navigation }) => {
 		setRefreshing(true);
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: "/public/posts/retrieve/many"
+			url: "/public/posts/retrieve/many",
 		});
 
 		if (authorizedResponse) {
@@ -44,7 +43,7 @@ const FeedScreen = ({ navigation }) => {
 				setPosts(authorizedResponse.data.records.posts);
 			} else {
 				// need to display "an unexpected error occured"
-				console.log("There was an error obtianing feed posts.")
+				console.log("There was an error obtianing feed posts.");
 			}
 		}
 		setRefreshing(false);
@@ -64,7 +63,7 @@ const FeedScreen = ({ navigation }) => {
 						<NativeBaseProvider>
 							<TouchableOpacity
 								onPress={() => {
-									navigation.navigate("Post");
+									navigation.navigate("Post", item);
 								}}
 							>
 								<Box style={styles.feedPost}>
@@ -95,11 +94,18 @@ const FeedScreen = ({ navigation }) => {
 												</Text>
 											</Box>
 										</Center>
-										<Box style={styles.postBox}>
-											<Text style={styles.titleText}>{item.title}</Text>
-											<Text style={styles.contentText}>{item.content}</Text>
-										</Box>
+
+										<Text style={styles.contentText}>{item.content}</Text>
+
 										<Box style={styles.buttonBox}>
+											<TouchableOpacity
+												style={styles.iconButton}
+												onPress={() => {
+													console.log("Comment button worked.");
+												}}
+											>
+												<Fontisto name="comment" size={19} color="#00A8FC" />
+											</TouchableOpacity>
 											<TouchableOpacity
 												style={styles.iconButton}
 												onPress={() => {
@@ -115,10 +121,18 @@ const FeedScreen = ({ navigation }) => {
 											<TouchableOpacity
 												style={styles.iconButton}
 												onPress={() => {
+<<<<<<< HEAD
 													console.log("Comment button worked.");
+=======
+													console.log("Link button worked.");
+>>>>>>> clean_up
 												}}
 											>
-												<Fontisto name="comment" size={22} color="#00A8FC" />
+												<MaterialIcons
+													name="add-link"
+													size={29}
+													color="#00A8FC"
+												/>
 											</TouchableOpacity>
 											<TouchableOpacity
 												style={styles.iconButton}
@@ -128,19 +142,7 @@ const FeedScreen = ({ navigation }) => {
 											>
 												<SimpleLineIcons
 													name="action-redo"
-													size={24}
-													color="#00A8FC"
-												/>
-											</TouchableOpacity>
-											<TouchableOpacity
-												style={styles.iconButton}
-												onPress={() => {
-													console.log("Link button worked.");
-												}}
-											>
-												<MaterialIcons
-													name="add-link"
-													size={29}
+													size={22}
 													color="#00A8FC"
 												/>
 											</TouchableOpacity>
@@ -249,17 +251,9 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 	},
-	postBox: {
-		overflow: "visible",
-		marginBottom: 20,
-	},
-	titleText: {
-		fontSize: 16,
-		fontWeight: "bold",
-	},
 	contentText: {
 		fontSize: 16,
-		marginTop: 10,
+		margin: 15,
 	},
 	topPostBox: {
 		width: "100%",
