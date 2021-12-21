@@ -11,13 +11,13 @@ const SearchScreen = () => {
     const [results, setResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [sentiment, setSentiment] = useState("Bull");
+    const [page, setPage] = useState("1");
 
     const getResults = async () => {
         if (term.length > 0) {
-            
             const response = await pelleumClient({
                 method: "get",
-                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}`,
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}&page=${page}`,
             });
 
             if (response.status == 200) {
