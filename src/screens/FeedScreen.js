@@ -22,7 +22,6 @@ import pelleumClient from "../api/PelleumClient";
 import colorScheme from "../components/ColorScheme";
 import CreateModal from "../components/modals/CreateModal";
 
-
 const FeedScreen = ({ navigation }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
@@ -34,16 +33,18 @@ const FeedScreen = ({ navigation }) => {
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		const response = await pelleumClient({
+		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: "/public/posts/retrieve/many"
+			url: "/public/posts/retrieve/many",
 		});
 
-		if (response.status == 200) {
-			setPosts(response.data.records.posts);
-		} else {
-			// need to display "an unexpected error occured"
-			console.log("There was an error obtianing feed posts.")
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				setPosts(authorizedResponse.data.records.posts);
+			} else {
+				// need to display "an unexpected error occured"
+				console.log("There was an error obtianing feed posts.");
+			}
 		}
 		setRefreshing(false);
 	}, [refreshing]);
@@ -62,7 +63,7 @@ const FeedScreen = ({ navigation }) => {
 						<NativeBaseProvider>
 							<TouchableOpacity
 								onPress={() => {
-									navigation.navigate("Post");
+									navigation.navigate("Post", item);
 								}}
 							>
 								<Box style={styles.feedPost}>
@@ -76,7 +77,6 @@ const FeedScreen = ({ navigation }) => {
 													style={styles.assetButton}
 													onPress={() => {
 														console.log("Asset button worked.");
-														console.log(colorScheme);
 													}}
 												>
 													<Text style={styles.assetText}>
@@ -94,16 +94,22 @@ const FeedScreen = ({ navigation }) => {
 												</Text>
 											</Box>
 										</Center>
-										<Box style={styles.postBox}>
-											<Text style={styles.titleText}>{item.title}</Text>
-											<Text style={styles.contentText}>{item.content}</Text>
-										</Box>
+
+										<Text style={styles.contentText}>{item.content}</Text>
+
 										<Box style={styles.buttonBox}>
 											<TouchableOpacity
 												style={styles.iconButton}
 												onPress={() => {
+													console.log("Comment button worked.");
+												}}
+											>
+												<Fontisto name="comment" size={19} color="#00A8FC" />
+											</TouchableOpacity>
+											<TouchableOpacity
+												style={styles.iconButton}
+												onPress={() => {
 													console.log("Like button worked.");
-													console.log(colorScheme);
 												}}
 											>
 												<Ionicons
@@ -115,35 +121,24 @@ const FeedScreen = ({ navigation }) => {
 											<TouchableOpacity
 												style={styles.iconButton}
 												onPress={() => {
-													console.log("Comment button worked.");
-													console.log(colorScheme);
+													console.log("Link button worked.");
 												}}
 											>
-												<Fontisto name="comment" size={22} color="#00A8FC" />
-											</TouchableOpacity>
-											<TouchableOpacity
-												style={styles.iconButton}
-												onPress={() => {
-													console.log("Share button worked.");
-													console.log(colorScheme);
-												}}
-											>
-												<SimpleLineIcons
-													name="action-redo"
-													size={24}
+												<MaterialIcons
+													name="add-link"
+													size={29}
 													color="#00A8FC"
 												/>
 											</TouchableOpacity>
 											<TouchableOpacity
 												style={styles.iconButton}
 												onPress={() => {
-													console.log("Link button worked.");
-													console.log(colorScheme);
+													console.log("Share button worked.");
 												}}
 											>
-												<MaterialIcons
-													name="add-link"
-													size={29}
+												<SimpleLineIcons
+													name="action-redo"
+													size={22}
 													color="#00A8FC"
 												/>
 											</TouchableOpacity>
@@ -252,17 +247,9 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 	},
-	postBox: {
-		overflow: "visible",
-		marginBottom: 20,
-	},
-	titleText: {
-		fontSize: 16,
-		fontWeight: "bold",
-	},
 	contentText: {
 		fontSize: 16,
-		marginTop: 10,
+		margin: 15,
 	},
 	topPostBox: {
 		width: "100%",

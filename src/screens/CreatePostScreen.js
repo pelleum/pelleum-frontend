@@ -21,7 +21,10 @@ const CreatePostScreen = ({ navigation }) => {
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
 	const [error, setError] = useState(null);
-	const [inputValidity, setInputValidity] = useState({ assetSymbolValidity: false, contentValidity: false })
+	const [inputValidity, setInputValidity] = useState({
+		assetSymbolValidity: false,
+		contentValidity: false,
+	});
 	const [disableStatus, setDisableStatus] = useState(true);
 
 	const sentimentOptions = [
@@ -29,52 +32,52 @@ const CreatePostScreen = ({ navigation }) => {
 		{ label: "Bear", value: "Bear" },
 	];
 
-
 	const shareButtonPressed = async () => {
-
-		const response = await pelleumClient({
+		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: "/public/posts",
-			data: { content, asset_symbol, sentiment }
+			data: { content, asset_symbol, sentiment },
 		});
-		if (response.status == 201) {
-			setContent("");
-			setAssetSymbol("");
-			setDisableStatus(true);
-			navigation.navigate("Feed");
-		} else {
-			setError("An unexpected error occured. Your content was not shared.")
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				setContent("");
+				setAssetSymbol("");
+				setDisableStatus(true);
+				navigation.navigate("Feed");
+			} else {
+				setError("An unexpected error occured. Your content was not shared.");
+			}
 		}
-	}
+	};
 
 	const handleChangeText = ({
 		newValue,
 		checkContent = false,
 		checkSymbol = false,
 	} = {}) => {
-
 		setError(null);
 		var newInputValidity = inputValidity;
 
 		if (checkContent) {
 			setContent(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["contentValidity"] = false
-				setInputValidity(newInputValidity)
+				newInputValidity["contentValidity"] = false;
+				setInputValidity(newInputValidity);
 			} else {
-				newInputValidity["contentValidity"] = true
-				setInputValidity(newInputValidity)
+				newInputValidity["contentValidity"] = true;
+				setInputValidity(newInputValidity);
 			}
 		}
 
-		if (checkSymbol ) {
+		if (checkSymbol) {
 			setAssetSymbol(newValue);
 			if (newValue.length < 1) {
-				newInputValidity["assetSymbolValidity"] = false
-				setInputValidity(newInputValidity)
+				newInputValidity["assetSymbolValidity"] = false;
+				setInputValidity(newInputValidity);
 			} else {
-				newInputValidity["assetSymbolValidity"] = true
-				setInputValidity(newInputValidity)
+				newInputValidity["assetSymbolValidity"] = true;
+				setInputValidity(newInputValidity);
 			}
 		}
 
@@ -83,7 +86,7 @@ const CreatePostScreen = ({ navigation }) => {
 		} else {
 			setDisableStatus(true);
 		}
-	}
+	};
 
 	return (
 		<DismissKeyboard>
@@ -96,25 +99,50 @@ const CreatePostScreen = ({ navigation }) => {
 								source={require("../../assets/forest.jpg")}
 							/>
 							<TouchableOpacity
-								style={disableStatus ? styles.shareButtonDisabled : styles.shareButtonEnabled}
+								style={
+									disableStatus
+										? styles.shareButtonDisabled
+										: styles.shareButtonEnabled
+								}
 								disabled={disableStatus}
-								onPress={() => { shareButtonPressed() }}
+								onPress={() => {
+									shareButtonPressed();
+								}}
 							>
 								<Text style={styles.buttonText}>Share</Text>
 							</TouchableOpacity>
 						</HStack>
-						<HStack alignItems="center" justifyContent="space-between" marginBottom="15">
+						<HStack
+							alignItems="center"
+							justifyContent="space-between"
+							marginBottom="15"
+						>
 							<Text>Asset Symbol:</Text>
 							<TextInput
 								placeholder="EXAMPLE"
 								placeholderTextColor="#c7c7c7"
 								value={asset_symbol}
-								onChangeText={(newValue) => handleChangeText({ newValue: newValue, checkSymbol: true })}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkSymbol: true })
+								}
 								style={styles.assetSymbolInput}
 								maxLength={10}
 								autoCapitalize="characters"
 								autoCorrect={true}
 							/>
+						</HStack>
+						<TextInput
+							placeholder="What's your valuable insight?"
+							multiline={true}
+							numberOfLines={20}
+							style={styles.textArea}
+							maxLength={512}
+							value={content}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, checkContent: true })
+							}
+						/>
+						<HStack style={styles.hStack} alignItems="center">
 							<View style={styles.switchSelectorContainer}>
 								<SwitchSelector
 									options={sentimentOptions}
@@ -129,21 +157,12 @@ const CreatePostScreen = ({ navigation }) => {
 									hasPadding
 								/>
 							</View>
-						</HStack>
-						<TextInput
-							placeholder="What's your valuable insight?"
-							multiline={true}
-							numberOfLines={20}
-							style={styles.textArea}
-							maxLength={512}
-							value={content}
-							onChangeText={(newValue) => handleChangeText({ newValue: newValue, checkContent: true })}
-						/>
-						<HStack style={styles.hStack} alignItems="center">
 							<TouchableOpacity
 								style={styles.iconButton}
 								onPress={() => {
-									console.log("This worked. Maybe remove this button from posts (or add sources capability on backend).");
+									console.log(
+										"This worked. Maybe remove this button from posts (or add sources capability on backend)."
+									);
 								}}
 							>
 								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
@@ -160,7 +179,7 @@ const CreatePostScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		marginHorizontal: 15
+		marginHorizontal: 15,
 	},
 	textArea: {
 		height: 250,
@@ -206,7 +225,7 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	errorText: {
-		color: "red"
+		color: "red",
 	},
 	assetSymbolInput: {
 		backgroundColor: "white",

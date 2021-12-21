@@ -30,14 +30,16 @@ async function pelleumClient({method, url, headers=null, data=null, queryParams=
     }
     
     if (response.status == 401) {
+        // Unauthorized responses
         if (onLogin) {
             return response;
         }
         await SecureStore.deleteItemAsync('userToken');
         store.dispatch(logout());
+    } else {
+        // Authorized responses
+        return response;
     }
-
-    return response;
 }
 
 
