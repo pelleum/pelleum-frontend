@@ -43,7 +43,10 @@ const PostDetailScreen = ({ navigation, route }) => {
                 <Text style={styles.contentText}>{item.content}</Text>
                 <Pressable
 					style={styles.button}
-					onPress={() => navigation.navigate("PortfolioInsight")}
+					onPress={() => navigation.navigate("PortfolioInsight", {
+						username: item.username,
+						userId: item.user_id
+					})}
 				>
 					<Text style={styles.buttonTextStyle}>View Author's Portfolio</Text>
 				</Pressable>
