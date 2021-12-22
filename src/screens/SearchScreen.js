@@ -8,38 +8,57 @@ import pelleumClient from '../api/PelleumClient';
 
 const SearchScreen = () => {
     const [term, setTerm] = useState('');
-    const [results, setResults] = useState([]);
+    const [bullResults, setBullResults] = useState([]);
+    const [bearResults, setBearResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [sentiment, setSentiment] = useState("Bull");
-    const [page, setPage] = useState("1");
+    const [page, setPage] = useState(1);
+
+    // 1. Make the API call onEndEditing, get the results (the array of theses objects)
+    // Let's look into making the enter button be the only way to send the API call
+    // 2. Filter them, creating an array for bull results and bear results (2 arrays)
+    // 3. In the FlatList:
+    //        If sentiment is "Bull", use bullResults as data object
+    //        If sentiment is "Bear", use bearResults as data object
+
+
 
     const getResults = async () => {
         if (term.length > 0) {
-<<<<<<< HEAD
-            const response = await pelleumClient({
-=======
-            
             const authorizedResponse = await pelleumClient({
->>>>>>> fe243d53c9c82df18c47f39a66182e9472a50f9b
                 method: "get",
-                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=${sentiment}&page=${page}`,
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&records_per_page=250&page=${page}`,
             });
-            
+
             if (authorizedResponse) {
                 if (authorizedResponse.status == 200) {
-                    setResults(authorizedResponse.data.records.theses)
+                    const theses = authorizedResponse.data.records.theses;
+                    setBullResults(theses.filter(value => value.sentiment === "Bull"));
+                    setBearResults(theses.filter(value => value.sentiment === "Bear"));
                 } else {
-                    setErrorMessage(response.data)
-                    console.log("There was an error obtaining theses from the backend.")
-                }
-            }
+                    //We are not getting an appropriate response in authorizedResponse.data when we trigger an error (i.e., 404)
+                    //setErrorMessage(authorizedResponse.data);
+                    //For now, let's hardcode a string into setErrorMessage
+                    setErrorMessage("There was an error obtaining theses from the backend.")
+                    console.log("There was an error obtaining theses from the backend.");
+                };
+            };
         };
     };
+
+    //*** onRefresh function ***
+    //this function will load the next page ONLY IF the previous response contained >= 250 theses
+    //if response contains < 250 theses, tell the user that there are no more theses to load.
 
     const sentimentOptions = [
         { label: "Bull", value: "Bull" },
         { label: "Bear", value: "Bear" }
     ];
+
+    const handleSentiment = (value) => {
+        const newSentiment = value;
+        setSentiment(newSentiment);
+    }
 
     return (
         <DismissKeyboard>
@@ -49,8 +68,14 @@ const SearchScreen = () => {
                         //https://github.com/App2Sales/react-native-switch-selector
                         options={sentimentOptions}
                         initial={0}
-                        //onPress={value => filteredResults(value)}
-                        onPress={(value) => setSentiment(value)}
+                        onPress={(value) => {
+                            if (value === sentiment) {
+                                //do nothing
+                            } else {
+                                handleSentiment(value)
+                                console.log(value);
+                            }
+                        }}
                         height={40}
                         buttonColor={"#0782F9"}
                         borderColor={"#0782F9"}
@@ -65,11 +90,13 @@ const SearchScreen = () => {
                     <Center>
                         <Input
                             value={term}
-                            onChangeText={(newTerm) => setTerm(newTerm.toUpperCase())}
+                            onChangeText={(newTerm) => setTerm(newTerm.replace(/\s/g, ''))} //.replace(/\s/g, '') removes spacebar
                             maxLength={5}
+                            autoCapitalize="characters"
                             autoCorrect={false}
-                            onEndEditing={() => getResults()}
+                            onSubmitEditing={() => getResults()}
                             placeholder="Search for theses by ticker symbol"
+                            returnKeyType="search"
                             bg="transparent"
                             width="100%"
                             marginBottom={5}
@@ -89,11 +116,11 @@ const SearchScreen = () => {
                             }
                         >
                         </Input>
-                        {errorMessage ? <Text color={'red'}>{errorMessage}</Text> : null}
-                        <Text>Number of results: {results.length}</Text>
+                        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+                        <Text>Number of results: {sentiment === "Bull" ? bullResults.length : bearResults.length}</Text>
                         <FlatList
                             style={styles.flatList}
-                            data={results}
+                            data={sentiment === "Bull" ? bullResults : bearResults}
                             keyExtractor={item => item.thesis_id.toString()}
                             renderItem={({ item }) => {
                                 return (
@@ -142,5 +169,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         borderWidth: 0.5,
         borderColor: 'red'
+    },
+    error: {
+        color: 'red',
+        marginTop: 15,
+        marginBottom: 25,
+        fontSize: 14,
     }
 });

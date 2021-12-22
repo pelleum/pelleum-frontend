@@ -241,6 +241,7 @@ const SignupScreen = ({ navigation }) => {
                         <TextInput
                             placeholder="Email"
                             placeholderTextColor="#c7c7c7"
+                            keyboardType="email-address"
                             value={email}
                             onChangeText={(newValue) =>
                                 handleChangeText({ newValue: newValue, checkEmail: true })
