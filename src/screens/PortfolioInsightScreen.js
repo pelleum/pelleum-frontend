@@ -91,6 +91,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 									source={require("../../assets/forest.jpg")}
 								/>
 								<TouchableOpacity
+									style={styles.settingsButton}
 									onPress={() => {
 										navigation.navigate("Settings");
 									}}
@@ -107,7 +108,8 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 							<Text>We can add more stuff here.</Text>
 						</View>
 					}
-				></FlatList>
+				>
+				</FlatList>
 			</NativeBaseProvider>
 		</View>
 	);
@@ -208,6 +210,9 @@ const styles = StyleSheet.create({
 		marginRight: 5,
 		marginVertical: 3,
 		paddingVertical: 5,
+	},
+	settingsButton: {
+		padding: 15,
 	},
 	image: {
 		width: 60,

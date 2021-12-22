@@ -13,9 +13,10 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     async (config) => {
-        const userToken = await SecureStore.getItemAsync('userToken');
-        if (userToken) {
-            config.headers.Authorization = `Bearer ${userToken}`
+        const userObjectString = await SecureStore.getItemAsync('userObject');
+        const userObject = JSON.parse(userObjectString);
+        if (userObject) {
+            config.headers.Authorization = `Bearer ${userObject.access_token}`
         }
         return config;
     },

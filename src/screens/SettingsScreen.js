@@ -12,7 +12,7 @@ const SettingsScreen = () => {
 
     const dispatch = useDispatch();
     const logOut = async () => {
-        await SecureStore.deleteItemAsync('userToken');
+        await SecureStore.deleteItemAsync('userObject');
         dispatch(logout());
     };
 

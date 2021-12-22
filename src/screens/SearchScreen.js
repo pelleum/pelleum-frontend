@@ -73,7 +73,6 @@ const SearchScreen = () => {
                                 //do nothing
                             } else {
                                 handleSentiment(value)
-                                console.log(value);
                             }
                         }}
                         height={40}

@@ -144,7 +144,7 @@ const RootStackFlow = () => {
 
 	const validateToken = async () => {
 
-		const authorizedResponse = await pelleumClient({method: 'get', url: '/public/auth/users'});
+		const authorizedResponse = await pelleumClient({ method: 'get', url: '/public/auth/users' });
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -153,7 +153,6 @@ const RootStackFlow = () => {
 				console.log("Some error occurred restoring token.")
 			};
 		}
-		
 	};
 
 	React.useEffect(() => {

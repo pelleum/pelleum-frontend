@@ -10,33 +10,19 @@ import {
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import { Feather } from "@expo/vector-icons";
 import pelleumClient from "../api/PelleumClient";
+import * as SecureStore from "expo-secure-store";
 
 const ProfileScreen = ({ navigation }) => {
 	const [assetList, setAssetList] = useState([]);
+	const [username, setUsername] = useState('');
 
-	const getCurrentUser = async () => {
+	const onRefresh = async () => {
+		const userObjectString = await SecureStore.getItemAsync('userObject');
+		const userObject = JSON.parse(userObjectString);
+		setUsername(userObject.username);
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: "/public/auth/users"
-		});
-
-
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				userData = authorizedResponse.data;
-				return userData;
-			} else {
-				console.log("There was an error retrieving the user object from the backend.")
-				return null;
-			}
-		}
-	};
-
-	const onRefresh = async (userData) => {
-	
-		const authorizedResponse = await pelleumClient({
-			method: "get",
-			url: `/public/portfolio/${userData.user_id.toString()}`,
+			url: `/public/portfolio/${userObject.user_id}`,
 		});
 
 		if (authorizedResponse) {
@@ -48,15 +34,8 @@ const ProfileScreen = ({ navigation }) => {
 		}
 	};
 
-	const firstRender = async () => {
-		const userData = await getCurrentUser();
-		if (userData) {
-			await onRefresh(userData);
-		}
-	};
-
 	useEffect(() => {
-		firstRender();
+		onRefresh();
 	}, []);
 
 	return (
@@ -106,7 +85,7 @@ const ProfileScreen = ({ navigation }) => {
 						</Center>
 					)}
 					ListHeaderComponent={
-						<View>
+						<View style={styles.listHeaderView}>
 							<HStack alignItems="center" justifyContent="space-between">
 								<Image
 									style={styles.image}
@@ -121,6 +100,7 @@ const ProfileScreen = ({ navigation }) => {
 									<Feather name="settings" size={30} color="#00A8FC" />
 								</TouchableOpacity>
 							</HStack>
+							<Text style={styles.usernameText}>@{username}</Text>
 							<Text style={styles.listHeaderText}>Assets</Text>
 						</View>
 					}
@@ -129,7 +109,8 @@ const ProfileScreen = ({ navigation }) => {
 							<Text>We can add more stuff here.</Text>
 						</View>
 					}
-				></FlatList>
+				>
+				</FlatList>
 			</NativeBaseProvider>
 		</View>
 	);
@@ -141,11 +122,16 @@ const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
 	},
+	listHeaderView: {
+		margin: 15
+	},
 	listHeaderText: {
 		fontWeight: "bold",
 		fontSize: 16,
-		marginTop: 10,
-		padding: 15,
+		marginTop: 15,
+	},
+	usernameText: {
+		marginTop: 10
 	},
 	assetTableBox: {
 		backgroundColor: "#ebecf0",
@@ -226,7 +212,6 @@ const styles = StyleSheet.create({
 		width: 60,
 		height: 60,
 		borderRadius: 60 / 2,
-		margin: 15,
 	},
 });
 
