@@ -147,7 +147,13 @@ const CreatePostScreen = ({ navigation }) => {
 								<SwitchSelector
 									options={sentimentOptions}
 									initial={0}
-									onPress={(value) => setSentiment(value)}
+									onPress={(value) => {
+										if (value === sentiment) {
+											//do nothing
+										} else {
+											setSentiment(value)
+										}
+									}}
 									height={40}
 									buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
 									selectedColor={"white"}

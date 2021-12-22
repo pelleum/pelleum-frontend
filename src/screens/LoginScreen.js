@@ -41,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
         });
 		
         if (response.status == 200) {
-            await SecureStore.setItemAsync("userToken", response.data.access_token);
+			await SecureStore.setItemAsync('userObject', JSON.stringify(response.data));
             dispatch(login());
         } else {
             dispatch(authError(response.data.detail));
