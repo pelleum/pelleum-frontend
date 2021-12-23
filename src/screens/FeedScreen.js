@@ -19,7 +19,6 @@ import {
 
 // File imports
 import pelleumClient from "../api/PelleumClient";
-import colorScheme from "../components/ColorScheme";
 import CreateModal from "../components/modals/CreateModal";
 
 const FeedScreen = ({ navigation }) => {
