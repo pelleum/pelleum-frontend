@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     StyleSheet,
     Text,
@@ -13,31 +13,39 @@ import {
     SimpleLineIcons,
     Ionicons,
 } from "@expo/vector-icons";
+import * as WebBrowser from 'expo-web-browser';
 
 const ThesisDetailScreen = ({ navigation, route }) => {
     const item = route.params;
+    const sources = item.sources;
+    const [result, setResult] = useState(null);
 
-/*
-    Object {
-    "asset_symbol": "GOOGL",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "created_at": "2021-12-02T07:13:01.717972",
-    "is_authors_current": true,
-    "sentiment": "Bull",
-    "sources": Array [
-        "https://www.pelleum.com",
-        "https://www.youtube.com",
-    ],
-    "thesis_id": 14,
-    "title": "Google is the most valuable company ever created.",
-    "updated_at": "2021-12-02T07:13:01.717972",
-    "user_id": 1,
-    "username": "ern123",
-}
-*/
+    const handleSourceLink = async (sourceLink) => {
+        let result = await WebBrowser.openBrowserAsync(sourceLink);
+        setResult(result);
+    };
 
-//Need to conditionally render sources (links) at the bottom of the thesis.
-//Look into making the links clickable and open up with default browser.
+    /*
+        Object {
+        "asset_symbol": "GOOGL",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "created_at": "2021-12-02T07:13:01.717972",
+        "is_authors_current": true,
+        "sentiment": "Bull",
+        "sources": Array [
+            "https://www.pelleum.com",
+            "https://www.youtube.com",
+        ],
+        "thesis_id": 14,
+        "title": "Google is the most valuable company ever created.",
+        "updated_at": "2021-12-02T07:13:01.717972",
+        "user_id": 1,
+        "username": "ern123",
+    }
+    */
+
+    //Need to conditionally render sources (links) at the bottom of the thesis.
+    //Look into making the links clickable and open up with default browser.
 
     return (<NativeBaseProvider>
         <View style={styles.thesisContainer}>
@@ -62,6 +70,33 @@ const ThesisDetailScreen = ({ navigation, route }) => {
                 </Text>
             </HStack>
             <Text style={styles.contentText}>{item.content}</Text>
+            <Text style={styles.sourcesTitle}>Sources</Text>
+            {sources.length == 1 ?
+                <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
+                    <Text style={styles.linkText}>{sources[0]}</Text>
+                </TouchableOpacity> :
+                sources.length == 2 ?
+                    <>
+                        <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
+                            <Text style={styles.linkText}>{sources[0]}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleSourceLink(sources[1])}>
+                            <Text style={styles.linkText}>{sources[1]}</Text>
+                        </TouchableOpacity>
+                    </> :
+                    sources.length == 3 ?
+                        <>
+                            <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
+                                <Text style={styles.linkText}>{sources[0]}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleSourceLink(sources[1])}>
+                                <Text style={styles.linkText}>{sources[1]}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleSourceLink(sources[2])}>
+                                <Text style={styles.linkText}>{sources[2]}</Text>
+                            </TouchableOpacity>
+                        </> :
+                        null}
             <Pressable
                 style={styles.button}
                 onPress={() => navigation.navigate("PortfolioInsight", {
@@ -197,6 +232,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         borderRadius: 30,
         padding: 11,
+        marginTop: 15,
         marginBottom: 5,
         width: "100%",
         backgroundColor: "#00A8FC",
@@ -210,5 +246,14 @@ const styles = StyleSheet.create({
     },
     iconButton: {
         //add styles here
+    },
+    linkText: {
+        color: 'blue',
+        marginTop: 10,
+    },
+    sourcesTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 20
     },
 });
