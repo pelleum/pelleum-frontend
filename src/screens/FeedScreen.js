@@ -16,6 +16,7 @@ import {
 	MaterialCommunityIcons,
 	Ionicons,
 } from "@expo/vector-icons";
+import * as SecureStore from "expo-secure-store";
 
 // File imports
 import pelleumClient from "../api/PelleumClient";
@@ -25,13 +26,13 @@ const FeedScreen = ({ navigation }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
+	const [usersLikedPosts, setUsersLikedPosts] = useState([]);
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
 	};
 
-	const onRefresh = useCallback(async () => {
-		setRefreshing(true);
+	const getPosts = async () => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
 			url: "/public/posts/retrieve/many",
@@ -39,12 +40,95 @@ const FeedScreen = ({ navigation }) => {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-				setPosts(authorizedResponse.data.records.posts);
+				const retrievedPosts = authorizedResponse.data.records.posts;
+				const timeRange = {
+					oldestPostCreatedAt: retrievedPosts.slice(-1)[0].created_at,
+					newestPostCreatedAt: retrievedPosts[0].created_at,
+				};
+				const getPostsObject = {
+					retrievedPosts: retrievedPosts,
+					timeRange: timeRange,
+				};
+				return getPostsObject;
+			}
+			// need to display "an unexpected error occured"
+			console.log("There was an error obtianing feed posts.");
+		}
+	};
+
+	const getUserLikes = async (timeRange) => {
+		const userObjectString = await SecureStore.getItemAsync("userObject");
+		const userObject = JSON.parse(userObjectString);
+
+		const authorizedResponse = await pelleumClient({
+			method: "get",
+			url: "/public/posts/reactions/retrieve/many",
+			queryParams: {
+				user_id: userObject.user_id,
+				start_time: timeRange.oldestPostCreatedAt,
+				end_time: timeRange.newestPostCreatedAt,
+			},
+		});
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				const likedPosts = [];
+				const usersPostReactions =
+					authorizedResponse.data.records.posts_reactions;
+				Object.values(usersPostReactions).forEach((value) =>
+					likedPosts.push(value.post_id)
+				);
+				return likedPosts;
+			}
+			// need to display "an unexpected error occured"
+			console.log("There was an error obtianing user's liked posts.");
+		}
+	};
+
+	const sendReaction = async (post_id) => {
+		// Like or un-like a post
+		const usersLikedPostsCopy = usersLikedPosts;
+		if (usersLikedPosts.includes(post_id)) {
+			const authorizedResponse = await pelleumClient({
+				method: "delete",
+				url: `/public/posts/reactions/${post_id}`,
+			});
+			if (authorizedResponse.status == 204) {
+				const updatedUsersLikedPosts = usersLikedPostsCopy.filter(function (
+					elem
+				) {
+					return elem !== post_id;
+				});
+				setUsersLikedPosts(updatedUsersLikedPosts);
 			} else {
-				// need to display "an unexpected error occured"
-				console.log("There was an error obtianing feed posts.");
+				console.log("There was an error un-liking a post.")
+			}
+		} else {
+			const authorizedResponse = await pelleumClient({
+				method: "post",
+				url: `/public/posts/reactions/${post_id}`,
+				data: {reaction: 1}
+			});
+			if (authorizedResponse.status == 201) {
+				//usersLikedPostsCopy.push(post_id)
+				setUsersLikedPosts(usersLikedPosts => [...usersLikedPosts, post_id]);
+			} else {
+				console.log("There was an error liking a post.")
 			}
 		}
+	};
+
+	const onRefresh = useCallback(async () => {
+		setRefreshing(true);
+		const postsObject = await getPosts();
+		if (postsObject) {
+			setPosts(postsObject.retrievedPosts);
+			const likedPosts = await getUserLikes(postsObject.timeRange);
+			if (likedPosts) {
+				setUsersLikedPosts(likedPosts);
+			}
+		}
+
 		setRefreshing(false);
 	}, [refreshing]);
 
@@ -107,14 +191,16 @@ const FeedScreen = ({ navigation }) => {
 											</TouchableOpacity>
 											<TouchableOpacity
 												style={styles.iconButton}
-												onPress={() => {
-													console.log("Like button worked.");
-												}}
+												onPress={() => sendReaction(item.post_id)}
 											>
 												<Ionicons
 													name="heart-outline"
 													size={24}
-													color="#00A8FC"
+													color={
+														usersLikedPosts.includes(item.post_id)
+															? "pink"
+															: "#00A8FC"
+													}
 												/>
 											</TouchableOpacity>
 											<TouchableOpacity
