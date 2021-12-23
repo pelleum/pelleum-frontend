@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DismissKeyboard from '../components/DismissKeyboard';
 import pelleumClient from '../api/PelleumClient';
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');
     const [bullResults, setBullResults] = useState([]);
     const [bearResults, setBearResults] = useState([]);
@@ -123,7 +123,11 @@ const SearchScreen = () => {
                             keyExtractor={item => item.thesis_id.toString()}
                             renderItem={({ item }) => {
                                 return (
-                                    <TouchableOpacity onPress={() => console.log('\nThis should navigate to ThesisDetailScreen.')}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            navigation.navigate("Thesis", item);
+                                        }}
+                                    >
                                         <Box style={styles.thesisListContainer}>
                                             <Text style={styles.thesisTitleText}>{item.title}</Text>
                                         </Box>

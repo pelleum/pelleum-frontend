@@ -193,4 +193,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 15,
 	},
+	iconButton: {
+		//add styles here
+	},
 });
