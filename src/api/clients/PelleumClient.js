@@ -2,9 +2,9 @@
 import * as SecureStore from 'expo-secure-store';
 
 // Local File Imports
-import pelleumAxios from "./PelleumAxios"
-import { store } from '../redux/store';
-import { logout } from "../redux/actions";
+import pelleumAxios from "../axios/PelleumAxios"
+import { store } from '../../redux/store';
+import { logout } from "../../redux/actions/authActions";
     
 
 async function pelleumClient({method, url, headers=null, data=null, queryParams=null, onLogin=false} = {}) {

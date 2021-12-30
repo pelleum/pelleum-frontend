@@ -1,5 +1,5 @@
 // Local File Imports
-import accountConnectAxios from './AccountConnectAxios';
+import accountConnectAxios from '../axios/AccountConnectAxios'
 
 async function accountConnectClient({ method, url, headers = null, data = null, queryParams = null } = {}) {
 

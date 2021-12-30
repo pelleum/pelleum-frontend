@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import DismissKeyboard from '../components/DismissKeyboard';
 import { NativeBaseProvider } from 'native-base';
-import accountConnectClient from '../api/AccountConnectClient';
+import accountConnectClient from '../api/clients/AccountConnectClient';
 
 const LinkAccount = ({ navigation }) => {
     const [userCredential, setUserCredential] = useState('');
@@ -36,9 +36,11 @@ const LinkAccount = ({ navigation }) => {
             setErrorMessage('')
             console.log('/n Successfull institution login!');
         } else {
-            console.log("\nResponse: ", response.data)
-            if (response.detail = "Robinhood API Error: Unable to log in with provided credentials.") {
+            // we should probably make this a switch statement
+            if (response.data.detail.includes("Unable to log in with provided credentials.")) {
                 setErrorMessage('Unable to log in with provided credentials.');
+            } else if (response.data.detail.includes("already has an active account connection with Robinhood.")) {
+                setErrorMessage('Your Robinhood account is already linked to Pelleum.');
             } else {
                 setErrorMessage('There was an error logging into your account.');
             }
@@ -58,7 +60,7 @@ const LinkAccount = ({ navigation }) => {
             navigation.navigate("Profile", { accountLinked: true })
         } else {
             console.log("\nResponse: ", response.data)
-            if (response.detail = "Robinhood API Error: Please enter a valid code.") {
+            if (response.data.detail.includes("Please enter a valid code.")) {
                 setErrorMessage('Invalid code. Please enter a valid code.');
             } else {
                 setErrorMessage('There was an error validating your account.');

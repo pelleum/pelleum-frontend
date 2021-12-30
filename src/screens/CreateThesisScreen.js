@@ -14,7 +14,7 @@ import SwitchSelector from "react-native-switch-selector";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
-import pelleumClient from "../api/PelleumClient";
+import pelleumClient from "../api/clients/PelleumClient";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 
 const CreateThesisScreen = ({ navigation }) => {

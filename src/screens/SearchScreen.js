@@ -4,7 +4,7 @@ import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import DismissKeyboard from '../components/DismissKeyboard';
-import pelleumClient from '../api/PelleumClient';
+import pelleumClient from '../api/clients/PelleumClient';
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');

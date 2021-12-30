@@ -1,92 +1,154 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
 	View,
-	TouchableOpacity,
 	Pressable,
+	Keyboard,
+	FlatList,
+	RefreshControl,
 } from "react-native";
-import { HStack, NativeBaseProvider } from "native-base";
-import {
-	MaterialIcons,
-	Fontisto,
-	SimpleLineIcons,
-	Ionicons,
-} from "@expo/vector-icons";
+import { VStack, NativeBaseProvider } from "native-base";
+import CommentInput from "../components/CommentInput";
+import DismissKeyboard from "../components/DismissKeyboard";  // Do we need this?
+import pelleumClient from "../api/clients/PelleumClient";
+import PostButtonPanel from "../components/PostButtonPanel";
+import { PostBox, PostBoxType } from "../components/PostBox";
+import { getComments } from "../functions/PostFunctions";
+import { useDispatch } from 'react-redux';
+
 
 const PostDetailScreen = ({ navigation, route }) => {
-	const item = route.params;
+
+	
+	// Global State Management
+	const dispatch = useDispatch();
+	// Local State Management
+	const [commentContent, setCommentContent] = useState("");
+	const [commentContentValidity, setCommentContentValidity] = useState(false);
+	const [disableStatus, setDisableStatus] = useState(true);
+	const [error, setError] = useState("");
+	const [refreshing, setRefreshing] = useState(false);
+	const [comments, setComments] = useState([]);
+
+	const detailedPost = route.params;
+
+	// Might not need these separate functions?
+	const handleChangeContent = (newContent) => {
+		setCommentContent(newContent);
+	};
+
+	const handleChangeCommentContentValidity = (newValidity) => {
+		setCommentContentValidity(newValidity);
+		if (newValidity == true) {
+			setDisableStatus(false);
+		} else {
+			setDisableStatus(true);
+		}
+	};
+
+	const replyButtonPressed = async () => {
+		// Think about adding sentiment, symbol, theses, etc to theses comments.
+		Keyboard.dismiss();
+		const authorizedResponse = await pelleumClient({
+			method: "post",
+			url: `/public/posts`,
+			data: {
+				content: commentContent,
+				is_post_comment_on: detailedPost.post_id,
+			},
+		});
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				console.log(
+					"Need to actually display this to the user (ideally without making an API call), so they know it worked."
+				);
+				setCommentContent("");
+				setDisableStatus(true);
+				setError("");
+			} else {
+				setError("An unexpected error occured. Your reply was not shared.");
+			}
+		}
+	};
+
+	const onRefresh = async () => {
+		setRefreshing(true);
+		const retrievedComments = await getComments({
+			is_post_comment_on: detailedPost.post_id,
+		});
+		if (retrievedComments) {
+			setComments(retrievedComments);
+		}
+
+		setRefreshing(false);
+	};
+
+	useEffect(() => {
+		onRefresh();
+	}, []);
+
+	if (detailedPost.needsRefresh) {
+		onRefresh();
+		detailedPost.needsRefresh = false;
+	}
 
 	return (
 		<NativeBaseProvider>
-			<View style={styles.postContainer}>
-				<HStack style={styles.topPostBox}>
-					<Text style={styles.usernameText}>@{item.username}</Text>
-					<TouchableOpacity
-						style={styles.assetButton}
-						onPress={() => {
-							console.log("Asset button worked.");
-						}}
-					>
-						<Text style={styles.assetText}>{item.asset_symbol}</Text>
-					</TouchableOpacity>
-					<Text
-						style={
-							item.sentiment === "Bull"
-								? styles.bullSentimentText
-								: styles.bearSentimentText
-						}
-					>
-						{item.sentiment}
-					</Text>
-				</HStack>
-                <Text style={styles.contentText}>{item.content}</Text>
-                <Pressable
-					style={styles.button}
-					onPress={() => navigation.navigate("PortfolioInsight", {
-						username: item.username,
-						userId: item.user_id
-					})}
-				>
-					<Text style={styles.buttonTextStyle}>View Author's Portfolio</Text>
-				</Pressable>
-			</View>
-			<View>
-				<HStack style={styles.buttonBox}>
-					<TouchableOpacity
-						style={styles.iconButton}
-						onPress={() => {
-							console.log("Comment button worked.");
-						}}
-					>
-						<Fontisto name="comment" size={19} color="#00A8FC" />
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.iconButton}
-						onPress={() => {
-							console.log("Like button worked.");
-						}}
-					>
-						<Ionicons name="heart-outline" size={24} color="#00A8FC" />
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.iconButton}
-						onPress={() => {
-							console.log("Link button worked.");
-						}}
-					>
-						<MaterialIcons name="add-link" size={29} color="#00A8FC" />
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.iconButton}
-						onPress={() => {
-							console.log("Share button worked.");
-						}}
-					>
-						<SimpleLineIcons name="action-redo" size={22} color="#00A8FC" />
-					</TouchableOpacity>
-				</HStack>
-			</View>
+			<FlatList
+				data={comments}
+				keyExtractor={(item) => item.post_id.toString()}
+				renderItem={({ item }) => {
+					return (
+						<PostBox
+							postBoxType={PostBoxType.Comment}
+							item={item}
+							nav={navigation}
+						/>
+					);
+				}}
+				refreshControl={
+					<RefreshControl
+						enabled={true}
+						colors={["#9Bd35A", "#689F38"]}
+						onRefresh={onRefresh}
+					/>
+				}
+				refreshing={refreshing}
+				ListHeaderComponent={
+					<View style={styles.mainContainer}>
+						<View style={styles.postContainer}>
+							<PostBox
+								postBoxType={PostBoxType.PostDetail}
+								item={detailedPost}
+								nav={navigation}
+							/>
+						</View>
+						<PostButtonPanel item={detailedPost} nav={navigation} />
+						<VStack>
+							<CommentInput
+								commentContent={commentContent}
+								commentContentValidity={commentContentValidity}
+								changeContent={handleChangeContent}
+								changeCommentContentValidity={
+									handleChangeCommentContentValidity
+								}
+							/>
+							<Pressable
+								style={
+									disableStatus ? styles.buttonDisabled : styles.buttonEnabled
+								}
+								onPress={() => replyButtonPressed()}
+								disabled={disableStatus}
+							>
+								<Text style={styles.buttonTextStyle}>Reply</Text>
+							</Pressable>
+							{error ? <Text style={styles.errorText}>{error}</Text> : null}
+						</VStack>
+					</View>
+				}
+			></FlatList>
 		</NativeBaseProvider>
 	);
 };
@@ -97,22 +159,14 @@ PostDetailScreen.navigationOptions = () => {
 	};
 };
 
-export default PostDetailScreen;
-
 const styles = StyleSheet.create({
-	postContainer: {
+	mainContainer: {
 		marginHorizontal: 15,
+	},
+	postContainer: {
 		paddingTop: 20,
 		borderBottomWidth: 0.5,
 		borderBottomColor: "#00A8FC",
-	},
-	buttonBox: {
-		paddingTop: 5,
-		alignSelf: "center",
-		alignItems: "center",
-		width: "85%",
-		flexDirection: "row",
-		justifyContent: "space-between",
 	},
 	bullSentimentText: {
 		textAlign: "center",
@@ -174,11 +228,11 @@ const styles = StyleSheet.create({
 	},
 	contentText: {
 		fontSize: 16,
-        marginTop: 20,
-        marginHorizontal: 15,
-		marginBottom: 30
+		marginTop: 20,
+		marginHorizontal: 15,
+		marginBottom: 30,
 	},
-	button: {
+	buttonEnabled: {
 		alignSelf: "center",
 		borderRadius: 30,
 		padding: 11,
@@ -187,13 +241,42 @@ const styles = StyleSheet.create({
 		backgroundColor: "#00A8FC",
 		elevation: 2,
 	},
+	buttonDisabled: {
+		alignSelf: "center",
+		borderRadius: 30,
+		padding: 11,
+		marginBottom: 5,
+		width: "100%",
+		backgroundColor: "#00A8FC",
+		elevation: 2,
+		opacity: 0.33,
+	},
 	buttonTextStyle: {
 		color: "white",
 		fontWeight: "bold",
 		textAlign: "center",
 		fontSize: 15,
 	},
-	iconButton: {
-		//add styles here
+	errorText: {
+		color: "red",
+	},
+	// centeredView: {
+	// 	//marginTop:,
+	// 	flex: 1,
+	// 	flexDirection: "column",
+	// 	// justifyContent: "flex-end",
+	// },
+
+	comment: {
+		width: "100%",
+		padding: 25,
+		paddingBottom: 0,
+		fontSize: 16,
+		backgroundColor: "#ebecf0",
+		borderBottomWidth: 2,
+		borderBottomColor: "#bfc6c9",
+		overflow: "hidden",
 	},
 });
+
+export default PostDetailScreen;

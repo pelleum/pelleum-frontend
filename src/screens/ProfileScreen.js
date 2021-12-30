@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import { Feather, } from "@expo/vector-icons";
-import pelleumClient from "../api/PelleumClient";
+import pelleumClient from "../api/clients/PelleumClient";
 import * as SecureStore from "expo-secure-store";
 
 const ProfileScreen = ({ navigation, route }) => {

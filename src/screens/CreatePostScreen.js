@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
-import pelleumClient from "../api/PelleumClient";
+import pelleumClient from "../api/clients/PelleumClient";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";

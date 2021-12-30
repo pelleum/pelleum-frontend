@@ -15,9 +15,9 @@ import * as SecureStore from 'expo-secure-store';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Import Local Files
-import pelleumClient from "../api/PelleumClient";
+import pelleumClient from "../api/clients/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
-import { login, authError, clearAuthError } from "../redux/actions";
+import { login, authError, clearAuthError } from "../redux/actions/authActions";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
