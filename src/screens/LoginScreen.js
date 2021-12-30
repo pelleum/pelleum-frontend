@@ -15,7 +15,7 @@ import pelleumClient from "../api/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { login, authError, clearAuthError } from "../redux/actions";
+import { login, authError, clearAuthError } from "../redux/actions/authActions";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
