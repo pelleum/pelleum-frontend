@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -107,7 +107,7 @@ const FeedScreen = ({ navigation }) => {
 			const authorizedResponse = await pelleumClient({
 				method: "post",
 				url: `/public/posts/reactions/${post_id}`,
-				data: {reaction: 1}
+				data: { reaction: 1 }
 			});
 			if (authorizedResponse.status == 201) {
 				//usersLikedPostsCopy.push(post_id)
@@ -118,7 +118,7 @@ const FeedScreen = ({ navigation }) => {
 		}
 	};
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setRefreshing(true);
 		const postsObject = await getPosts();
 		if (postsObject) {
@@ -128,9 +128,8 @@ const FeedScreen = ({ navigation }) => {
 				setUsersLikedPosts(likedPosts);
 			}
 		}
-
 		setRefreshing(false);
-	}, [refreshing]);
+	};
 
 	useEffect(() => {
 		onRefresh();

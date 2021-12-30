@@ -8,14 +8,14 @@ import {
 	Image,
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import { Feather } from "@expo/vector-icons";
+import { Feather, } from "@expo/vector-icons";
 import pelleumClient from "../api/PelleumClient";
 import * as SecureStore from "expo-secure-store";
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState('');
-
+	
 	const onRefresh = async () => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
 		const userObject = JSON.parse(userObjectString);
@@ -37,6 +37,13 @@ const ProfileScreen = ({ navigation }) => {
 	useEffect(() => {
 		onRefresh();
 	}, []);
+
+	if (route.params) {
+		if (route.params.accountLinked) {
+			onRefresh();
+			route.params.accountLinked = false;
+		}
+	}
 
 	return (
 		<View style={styles.mainContainer}>
@@ -86,27 +93,34 @@ const ProfileScreen = ({ navigation }) => {
 					)}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
-							<HStack alignItems="center" justifyContent="space-between">
-								<Image
-									style={styles.image}
-									source={require("../../assets/forest.jpg")}
-								/>
-								<TouchableOpacity
-									style={styles.settingsButton}
-									onPress={() => {
-										navigation.navigate("Settings");
-									}}
-								>
-									<Feather name="settings" size={30} color="#00A8FC" />
-								</TouchableOpacity>
-							</HStack>
+							<Image
+								style={styles.image}
+								source={require("../../assets/forest.jpg")}
+							/>
 							<Text style={styles.usernameText}>@{username}</Text>
 							<Text style={styles.listHeaderText}>Assets</Text>
 						</View>
 					}
 					ListFooterComponent={
 						<View alignItems={'center'} paddingVertical={20}>
-							<Text>We can add more stuff here.</Text>
+							<TouchableOpacity
+								style={styles.buttonGroup}
+								onPress={() => navigation.navigate("Link")}
+							>
+								<HStack style={styles.buttonGroupTextContainer}>
+									<Feather name="link" size={25} color="#00A8FC" />
+									<Text style={styles.buttonGroupText}>Link Brokerage Accounts</Text>
+								</HStack>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.buttonGroup}
+								onPress={() => navigation.navigate("Settings")}
+							>
+								<HStack style={styles.buttonGroupTextContainer}>
+									<Feather name="settings" size={25} color="#00A8FC" />
+									<Text style={styles.buttonGroupText}>Settings</Text>
+								</HStack>
+							</TouchableOpacity>
 						</View>
 					}
 				>
@@ -153,9 +167,7 @@ const styles = StyleSheet.create({
 	assetButton: {
 		overflow: "hidden",
 		borderWidth: 0.5,
-		backgroundColor: "white",
 		borderColor: "#00A8FC",
-		borderRadius: 15,
 		backgroundColor: "white",
 		borderRadius: 30,
 		marginLeft: 5,
@@ -173,9 +185,7 @@ const styles = StyleSheet.create({
 	thesisButton: {
 		overflow: "hidden",
 		borderWidth: 0.5,
-		backgroundColor: "#00A8FC",
 		borderColor: "white",
-		borderRadius: 15,
 		backgroundColor: "#00A8FC",
 		borderRadius: 30,
 		marginLeft: 5,
@@ -205,14 +215,32 @@ const styles = StyleSheet.create({
 		marginVertical: 3,
 		paddingVertical: 5,
 	},
-	settingsButton: {
-		padding: 15,
-	},
 	image: {
 		width: 60,
 		height: 60,
 		borderRadius: 60 / 2,
 	},
+	buttonGroup: {
+		overflow: "hidden",
+		borderWidth: 0.5,
+		backgroundColor: "white",
+		borderColor: "#00A8FC",
+		borderRadius: 30,
+		width: '80%',
+		marginTop: 6,
+	},
+	buttonGroupText: {
+		color: 'black',
+		fontSize: 16,
+		fontWeight: 'bold',
+		marginLeft: 25,
+	},
+	buttonGroupTextContainer: {
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		paddingLeft: 15,
+		paddingVertical: 10,
+	}
 });
 
 /*

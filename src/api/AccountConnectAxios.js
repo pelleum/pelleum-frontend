@@ -2,16 +2,16 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const axiosInstance = axios.create({
+const accountConnectAxios = axios.create({
     //use localhost for iPhone simulator
     //use 10.0.2.2 for Android emulator
     //use local IP address instead of localhost to prevent issues with locally-run server
-    //Ernesto Condo IP Address:   192.168.1.4
-    //Adam's house IP Address: 192.168.1.82
-    baseURL: 'http://192.168.1.82:8000',
+    //Ernesto Condo IP Address:  192.168.1.10
+    //Adam's house IP Address:   192.168.1.78
+    baseURL: 'http://localhost:1201',
 });
 
-axiosInstance.interceptors.request.use(
+accountConnectAxios.interceptors.request.use(
     async (config) => {
         const userObjectString = await SecureStore.getItemAsync('userObject');
         const userObject = JSON.parse(userObjectString);
@@ -25,4 +25,4 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-export default axiosInstance;
+export default accountConnectAxios;

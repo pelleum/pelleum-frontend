@@ -196,20 +196,20 @@ const CreateThesisScreen = ({ navigation }) => {
 							</TouchableOpacity>
 						</HStack>
 						<TextInput
-							placeholder="EXAMPLE"
+							placeholder="Ex: GOOGL"
 							placeholderTextColor="#c7c7c7"
+							autoCapitalize="characters"
+							autoCorrect={false}
+							maxLength={5}
 							value={asset_symbol}
 							onChangeText={(newValue) =>
 								handleChangeText({ newValue: newValue, checkSymbol: true })
 							}
 							style={styles.assetSymbolInput}
-							maxLength={10}
-							autoCapitalize="characters"
-							autoCorrect={true}
 						/>
 						<Text>Asset Symbol</Text>
 						<TextInput
-							placeholder="My Thesis"
+							placeholder="Your Thesis Title"
 							placeholderTextColor="#c7c7c7"
 							value={title}
 							onChangeText={(newValue) =>

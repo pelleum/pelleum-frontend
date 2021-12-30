@@ -2,7 +2,7 @@
 import * as SecureStore from 'expo-secure-store';
 
 // Local File Imports
-import axiosInstance from "./AxiosInstance"
+import pelleumAxios from "./PelleumAxios"
 import { store } from '../redux/store';
 import { logout } from "../redux/actions";
     
@@ -24,7 +24,7 @@ async function pelleumClient({method, url, headers=null, data=null, queryParams=
     let response;
 
     try {
-        response = await axiosInstance(requestConfig);
+        response = await pelleumAxios(requestConfig);
     } catch (err) {
         response = err.response;
     }
@@ -42,8 +42,4 @@ async function pelleumClient({method, url, headers=null, data=null, queryParams=
     }
 }
 
-
-
-
 export default pelleumClient;
-

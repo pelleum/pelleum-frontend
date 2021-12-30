@@ -17,12 +17,15 @@ import * as WebBrowser from 'expo-web-browser';
 
 const ThesisDetailScreen = ({ navigation, route }) => {
     const item = route.params;
-    const sources = item.sources;
+
+    let sources;
+    item.sources ? sources = item.sources : sources = [];
+
     const [result, setResult] = useState(null);
 
     const handleSourceLink = async (sourceLink) => {
-        let result = await WebBrowser.openBrowserAsync(sourceLink);
-        setResult(result);
+        let webResult = await WebBrowser.openBrowserAsync(sourceLink);
+        setResult(webResult);
     };
 
     /*
@@ -70,13 +73,16 @@ const ThesisDetailScreen = ({ navigation, route }) => {
                 </Text>
             </HStack>
             <Text style={styles.contentText}>{item.content}</Text>
-            <Text style={styles.sourcesTitle}>Sources</Text>
             {sources.length == 1 ?
-                <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
-                    <Text style={styles.linkText}>{sources[0]}</Text>
-                </TouchableOpacity> :
+                <>
+                    <Text style={styles.sourcesTitle}>Sources</Text>
+                    <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
+                        <Text style={styles.linkText}>{sources[0]}</Text>
+                    </TouchableOpacity>
+                </> :
                 sources.length == 2 ?
                     <>
+                        <Text style={styles.sourcesTitle}>Sources</Text>
                         <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
                             <Text style={styles.linkText}>{sources[0]}</Text>
                         </TouchableOpacity>
@@ -86,6 +92,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
                     </> :
                     sources.length == 3 ?
                         <>
+                            <Text style={styles.sourcesTitle}>Sources</Text>
                             <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
                                 <Text style={styles.linkText}>{sources[0]}</Text>
                             </TouchableOpacity>

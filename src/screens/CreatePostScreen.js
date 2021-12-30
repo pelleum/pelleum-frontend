@@ -119,16 +119,16 @@ const CreatePostScreen = ({ navigation }) => {
 						>
 							<Text>Asset Symbol:</Text>
 							<TextInput
-								placeholder="EXAMPLE"
+								placeholder="Ex: GOOGL"
 								placeholderTextColor="#c7c7c7"
+								autoCapitalize="characters"
+								autoCorrect={false}
+								maxLength={5}
 								value={asset_symbol}
 								onChangeText={(newValue) =>
 									handleChangeText({ newValue: newValue, checkSymbol: true })
 								}
 								style={styles.assetSymbolInput}
-								maxLength={10}
-								autoCapitalize="characters"
-								autoCorrect={true}
 							/>
 						</HStack>
 						<TextInput

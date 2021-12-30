@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
-import { Ionicons, FontAwesome, FontAwesome5, Foundation } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 
 // Local Screens
 import SignupScreen from "./src/screens/SignupScreen";
@@ -22,6 +22,7 @@ import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
 import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
+import LinkAccount from "./src/screens/LinkAccount";
 
 // Functions
 import pelleumClient from "./src/api/PelleumClient";
@@ -80,6 +81,7 @@ const ProfileFlow = () => (
 		<ProfileStack.Screen name="Post" component={PostDetailScreen} />
 		<ProfileStack.Screen name="Thesis" component={ThesisDetailScreen} />
 		<ProfileStack.Screen name="Settings" component={SettingsScreen} />
+		<ProfileStack.Screen name="Link" component={LinkAccount} />
 	</ProfileStack.Navigator>
 );
 
@@ -129,7 +131,7 @@ const AppFlow = () => (
 			component={ProfileFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<FontAwesome5 name="coins" size={25} color={color} />
+					<Ionicons name="person" size={25} color={color} />
 				),
 				headerShown: false,
 			}}

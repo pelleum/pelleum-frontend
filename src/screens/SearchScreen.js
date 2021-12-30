@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
@@ -12,33 +12,24 @@ const SearchScreen = ({ navigation }) => {
     const [bearResults, setBearResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [sentiment, setSentiment] = useState("Bull");
-    const [page, setPage] = useState(1);
-
-    // 1. Make the API call onEndEditing, get the results (the array of theses objects)
-    // Let's look into making the enter button be the only way to send the API call
-    // 2. Filter them, creating an array for bull results and bear results (2 arrays)
-    // 3. In the FlatList:
-    //        If sentiment is "Bull", use bullResults as data object
-    //        If sentiment is "Bear", use bearResults as data object
-
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1)
 
     const getResults = async () => {
         if (term.length > 0) {
             const authorizedResponse = await pelleumClient({
                 method: "get",
-                url: `/public/theses/retrieve/many?asset_symbol=${term}&records_per_page=250&page=${page}`,
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&records_per_page=10&page=1`,
             });
 
             if (authorizedResponse) {
                 if (authorizedResponse.status == 200) {
                     const theses = authorizedResponse.data.records.theses;
+                    const metaData = authorizedResponse.data.meta_data;
                     setBullResults(theses.filter(value => value.sentiment === "Bull"));
                     setBearResults(theses.filter(value => value.sentiment === "Bear"));
+                    setTotalPages(metaData.total_pages);
                 } else {
-                    //We are not getting an appropriate response in authorizedResponse.data when we trigger an error (i.e., 404)
-                    //setErrorMessage(authorizedResponse.data);
-                    //For now, let's hardcode a string into setErrorMessage
                     setErrorMessage("There was an error obtaining theses from the backend.")
                     console.log("There was an error obtaining theses from the backend.");
                 };
@@ -46,9 +37,28 @@ const SearchScreen = ({ navigation }) => {
         };
     };
 
-    //*** onRefresh function ***
-    //this function will load the next page ONLY IF the previous response contained >= 250 theses
-    //if response contains < 250 theses, tell the user that there are no more theses to load.
+    const handleRefresh = async () => {
+        const newPage = currentPage + 1;
+        setCurrentPage(newPage);
+        if (newPage < totalPages) {
+            const authorizedResponse = await pelleumClient({
+                method: "get",
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&records_per_page=10&page=${newPage}`,
+            });
+
+            if (authorizedResponse) {
+                if (authorizedResponse.status == 200) {
+                    const newTheses = authorizedResponse.data.records.theses;
+                    const newBullTheses = newTheses.filter(value => value.sentiment === "Bull");
+                    const newBearTheses = newTheses.filter(value => value.sentiment === "Bear");
+                    setBullResults(oldBullTheses => [...oldBullTheses, ...newBullTheses]);
+                    setBearResults(oldBearTheses => [...oldBearTheses, ...newBearTheses]);
+                    console.log("\nCurent Page: ", newPage);
+                    console.log("\nTotal Pages: ", totalPages);
+                }
+            }
+        }
+    }
 
     const sentimentOptions = [
         { label: "Bull", value: "Bull" },
@@ -93,7 +103,10 @@ const SearchScreen = ({ navigation }) => {
                             maxLength={5}
                             autoCapitalize="characters"
                             autoCorrect={false}
-                            onSubmitEditing={() => getResults()}
+                            onSubmitEditing={() => {
+                                setCurrentPage(1);
+                                getResults()
+                            }}
                             placeholder="Search for theses by ticker symbol"
                             returnKeyType="search"
                             bg="transparent"
@@ -118,9 +131,8 @@ const SearchScreen = ({ navigation }) => {
                         {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
                         <Text>Number of results: {sentiment === "Bull" ? bullResults.length : bearResults.length}</Text>
                         <FlatList
-                            style={styles.flatList}
                             data={sentiment === "Bull" ? bullResults : bearResults}
-                            keyExtractor={item => item.thesis_id.toString()}
+                            keyExtractor={(item) => item.thesis_id}
                             renderItem={({ item }) => {
                                 return (
                                     <TouchableOpacity
@@ -130,10 +142,14 @@ const SearchScreen = ({ navigation }) => {
                                     >
                                         <Box style={styles.thesisListContainer}>
                                             <Text style={styles.thesisTitleText}>{item.title}</Text>
+                                            <Text numberOfLines={5}>{item.content}...</Text>
+                                            <Text color={'red'}>Thesis ID: {item.thesis_id}</Text>
                                         </Box>
                                     </TouchableOpacity>
                                 )
                             }}
+                        onEndReached={handleRefresh}
+                        onEndReachedThreshold={1}
                         >
                         </FlatList>
                     </Center>
@@ -155,9 +171,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
     },
-    flatList: {
-        width: '100%'
-    },
     thesisListContainer: {
         width: '100%',
         padding: 15,
@@ -170,8 +183,10 @@ const styles = StyleSheet.create({
     thesisTitleText: {
         fontWeight: 'bold',
         fontSize: 16,
-        borderWidth: 0.5,
-        borderColor: 'red'
+        marginBottom: 5
+    },
+    thesisContentText: {
+        fontSize: 14
     },
     error: {
         color: 'red',
