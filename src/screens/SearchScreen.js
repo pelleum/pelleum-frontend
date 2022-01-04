@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
@@ -12,23 +12,57 @@ const SearchScreen = ({ navigation }) => {
     const [bearResults, setBearResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [sentiment, setSentiment] = useState("Bull");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1)
+    const [currentBullPage, setCurrentBullPage] = useState(1);
+    const [currentBearPage, setCurrentBearPage] = useState(1);
+    const [totalBullPages, setlTotalBullPages] = useState(1);
+    const [totalBearPages, setlTotalBearPages] = useState(1);
+    const [lastBullItemIndex, setLastBullItemIndex] = useState(0);
+    const [lastBearItemIndex, setLastBearItemIndex] = useState(0);
+    const [tempIndex, setTempIndex] = useState(0);
+    const recordsPerPage = 15;
 
-    const getResults = async () => {
+    const viewableItemsRef = useCallback(({ viewableItems }) => {
+        const lastItem = viewableItems[viewableItems.length - 1];
+        lastItem ? setTempIndex(lastItem.index) : null;
+    }, []);
+
+    const flatListRef = React.useRef();
+
+    //need to figure out how to calculate item height, so that we are not bound by a constant item height
+    //the result of the item height calculation will be fed into getItemLayout
+    const ITEM_HEIGHT = 150;
+
+    // get initial results when user presses 'search' button on keyboard
+    const onSearch = async () => {
+        // Bull API Call
         if (term.length > 0) {
-            const authorizedResponse = await pelleumClient({
+            const authorizedBullResponse = await pelleumClient({
                 method: "get",
-                url: `/public/theses/retrieve/many?asset_symbol=${term}&records_per_page=10&page=1`,
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=Bull&records_per_page=${recordsPerPage}&page=1`,
             });
 
-            if (authorizedResponse) {
-                if (authorizedResponse.status == 200) {
-                    const theses = authorizedResponse.data.records.theses;
-                    const metaData = authorizedResponse.data.meta_data;
-                    setBullResults(theses.filter(value => value.sentiment === "Bull"));
-                    setBearResults(theses.filter(value => value.sentiment === "Bear"));
-                    setTotalPages(metaData.total_pages);
+            if (authorizedBullResponse) {
+                if (authorizedBullResponse.status == 200) {
+                    setBullResults(authorizedBullResponse.data.records.theses);
+                    const bullMetaData = authorizedBullResponse.data.meta_data;
+                    setlTotalBullPages(bullMetaData.total_pages);
+                } else {
+                    setErrorMessage("There was an error obtaining theses from the backend.")
+                    console.log("There was an error obtaining theses from the backend.");
+                };
+            };
+
+            // Bear API Call
+            const authorizedBearResponse = await pelleumClient({
+                method: "get",
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=Bear&records_per_page=${recordsPerPage}&page=1`,
+            });
+
+            if (authorizedBearResponse) {
+                if (authorizedBearResponse.status == 200) {
+                    setBearResults(authorizedBearResponse.data.records.theses);
+                    const bearMetaData = authorizedBearResponse.data.meta_data;
+                    setlTotalBearPages(bearMetaData.total_pages);
                 } else {
                     setErrorMessage("There was an error obtaining theses from the backend.")
                     console.log("There was an error obtaining theses from the backend.");
@@ -37,38 +71,59 @@ const SearchScreen = ({ navigation }) => {
         };
     };
 
-    const handleRefresh = async () => {
-        const newPage = currentPage + 1;
-        setCurrentPage(newPage);
-        if (newPage < totalPages) {
-            const authorizedResponse = await pelleumClient({
+    // get more bull results when user reaches the bottom of the FlatList
+    const getMoreBullResults = async () => {
+        const newBullPage = currentBullPage + 1;
+        setCurrentBullPage(newBullPage);
+        if (newBullPage < totalBullPages) {
+            const authorizedBullResponse = await pelleumClient({
                 method: "get",
-                url: `/public/theses/retrieve/many?asset_symbol=${term}&records_per_page=10&page=${newPage}`,
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=Bull&records_per_page=${recordsPerPage}&page=${newBullPage}`,
             });
 
-            if (authorizedResponse) {
-                if (authorizedResponse.status == 200) {
-                    const newTheses = authorizedResponse.data.records.theses;
-                    const newBullTheses = newTheses.filter(value => value.sentiment === "Bull");
-                    const newBearTheses = newTheses.filter(value => value.sentiment === "Bear");
+            if (authorizedBullResponse) {
+                if (authorizedBullResponse.status == 200) {
+                    const newBullTheses = authorizedBullResponse.data.records.theses;
                     setBullResults(oldBullTheses => [...oldBullTheses, ...newBullTheses]);
+                } else {
+                    setErrorMessage("There was an error obtaining theses from the backend.")
+                    console.log("There was an error obtaining theses from the backend.");
+                };
+            };
+        };
+
+    };
+
+    // get more bear results when user reaches the bottom of the FlatList
+    const getMoreBearResults = async () => {
+        const newBearPage = currentBearPage + 1;
+        setCurrentBearPage(newBearPage);
+        if (newBearPage < totalBearPages) {
+            const authorizedBearResponse = await pelleumClient({
+                method: "get",
+                url: `/public/theses/retrieve/many?asset_symbol=${term}&sentiment=Bear&records_per_page=${recordsPerPage}&page=${newBearPage}`,
+            });
+            if (authorizedBearResponse) {
+                if (authorizedBearResponse.status == 200) {
+                    const newBearTheses = authorizedBearResponse.data.records.theses;
                     setBearResults(oldBearTheses => [...oldBearTheses, ...newBearTheses]);
-                    console.log("\nCurent Page: ", newPage);
-                    console.log("\nTotal Pages: ", totalPages);
-                }
-            }
-        }
-    }
+                } else {
+                    setErrorMessage("There was an error obtaining theses from the backend.")
+                    console.log("There was an error obtaining theses from the backend.");
+                };
+            };
+        };
+    };
 
     const sentimentOptions = [
         { label: "Bull", value: "Bull" },
-        { label: "Bear", value: "Bear" }
+        { label: "Bear", value: "Bear" },
     ];
 
     const handleSentiment = (value) => {
         const newSentiment = value;
         setSentiment(newSentiment);
-    }
+    };
 
     return (
         <DismissKeyboard>
@@ -83,6 +138,15 @@ const SearchScreen = ({ navigation }) => {
                                 //do nothing
                             } else {
                                 handleSentiment(value)
+                                value === "Bull" ? setLastBearItemIndex(tempIndex) : setLastBullItemIndex(tempIndex);
+
+                                let index;
+                                if (value === "Bull") {
+                                    index = lastBullItemIndex >= 2 ? lastBullItemIndex - 2 : lastBullItemIndex;
+                                } else {
+                                    index = lastBearItemIndex >= 2 ? lastBearItemIndex - 2 : lastBearItemIndex;
+                                }
+                                flatListRef.current.scrollToIndex({ index: index, animated: false })
                             }
                         }}
                         height={40}
@@ -104,8 +168,9 @@ const SearchScreen = ({ navigation }) => {
                             autoCapitalize="characters"
                             autoCorrect={false}
                             onSubmitEditing={() => {
-                                setCurrentPage(1);
-                                getResults()
+                                setCurrentBullPage(1);
+                                setCurrentBearPage(1);
+                                onSearch()
                             }}
                             placeholder="Search for theses by ticker symbol"
                             returnKeyType="search"
@@ -129,7 +194,7 @@ const SearchScreen = ({ navigation }) => {
                         >
                         </Input>
                         {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-                        <Text>Number of results: {sentiment === "Bull" ? bullResults.length : bearResults.length}</Text>
+                        <Text marginBottom={5}>Number of results: {sentiment === "Bull" ? bullResults.length : bearResults.length}</Text>
                         <FlatList
                             data={sentiment === "Bull" ? bullResults : bearResults}
                             keyExtractor={(item) => item.thesis_id}
@@ -143,13 +208,19 @@ const SearchScreen = ({ navigation }) => {
                                         <Box style={styles.thesisListContainer}>
                                             <Text style={styles.thesisTitleText}>{item.title}</Text>
                                             <Text numberOfLines={5}>{item.content}...</Text>
-                                            <Text color={'red'}>Thesis ID: {item.thesis_id}</Text>
                                         </Box>
                                     </TouchableOpacity>
                                 )
                             }}
-                        onEndReached={handleRefresh}
-                        onEndReachedThreshold={1}
+                            onEndReached={() => sentiment === "Bull" ? getMoreBullResults() : getMoreBearResults()}
+                            onEndReachedThreshold={1}
+                            onViewableItemsChanged={viewableItemsRef}
+                            // a threshold of X means that at least X percentage of the item's area must be visible to be considered 'visible'
+                            viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
+                            getItemLayout={(data, index) => (
+                                { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
+                            )}
+                            ref={flatListRef}
                         >
                         </FlatList>
                     </Center>
@@ -173,6 +244,7 @@ const styles = StyleSheet.create({
     },
     thesisListContainer: {
         width: '100%',
+        height: 150,
         padding: 15,
         fontSize: 16,
         backgroundColor: "#ebecf0",
