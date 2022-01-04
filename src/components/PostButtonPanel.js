@@ -4,15 +4,15 @@ import { HStack, NativeBaseProvider } from "native-base";
 import {
 	MaterialIcons,
 	Fontisto,
-	SimpleLineIcons,
 	Ionicons,
+	FontAwesome,
 } from "@expo/vector-icons";
 import { sendPostReaction } from "../functions/PostFunctions";
 import { useSelector } from "react-redux";
 
 const PostButtonPanel = ({ item, nav }) => {
-	const { newlyAddedLikedPosts, newlyAddedUnlikedPosts } = useSelector(
-		(state) => state.likesReducer
+	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
+		(state) => state.postReactionsReducer
 	);
 
 	return (
@@ -31,16 +31,18 @@ const PostButtonPanel = ({ item, nav }) => {
 					onPress={() => sendPostReaction(item)}
 				>
 					<Ionicons
-						name={((item.is_liked_by_user &&
-							!newlyAddedUnlikedPosts.includes(item.post_id)) ||
-						newlyAddedLikedPosts.includes(item.post_id))
-							? "md-heart"
-							: "md-heart-outline"}
+						name={
+							(item.user_reaction_value == 1 &&
+								!locallyUnlikedPosts.includes(item.post_id)) ||
+							locallyLikedPosts.includes(item.post_id)
+								? "md-heart"
+								: "md-heart-outline"
+						}
 						size={24}
 						color={
-							((item.is_liked_by_user &&
-								!newlyAddedUnlikedPosts.includes(item.post_id)) ||
-							newlyAddedLikedPosts.includes(item.post_id))
+							(item.user_reaction_value == 1 &&
+								!locallyUnlikedPosts.includes(item.post_id)) ||
+							locallyLikedPosts.includes(item.post_id)
 								? "#F82057"
 								: "#00A8FC"
 						}
@@ -60,7 +62,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						console.log("Share button worked.");
 					}}
 				>
-					<SimpleLineIcons name="action-redo" size={22} color="#00A8FC" />
+					<FontAwesome name="send-o" size={19} color="#00A8FC" />
 				</TouchableOpacity>
 			</HStack>
 		</NativeBaseProvider>
@@ -78,7 +80,4 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
-	// iconButton: {
-	// 	//add styles here
-	// },
 });

@@ -1,266 +1,337 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Pressable,
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	Pressable,
+	FlatList,
+	RefreshControl,
+	Keyboard
 } from "react-native";
-import { HStack, NativeBaseProvider } from "native-base";
-import {
-    MaterialIcons,
-    Fontisto,
-    SimpleLineIcons,
-    Ionicons,
-} from "@expo/vector-icons";
-import * as WebBrowser from 'expo-web-browser';
+import { HStack, VStack, NativeBaseProvider } from "native-base";
+import * as WebBrowser from "expo-web-browser";
+import ThesisButtonPanel from "../components/ThesisButtonPanel";
+import { PostBox, PostBoxType } from "../components/PostBox";
+import { getComments } from "../functions/PostFunctions";
+import CommentInput from "../components/CommentInput";
+import pelleumClient from "../api/clients/PelleumClient";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
-    const item = route.params;
+	// State Management
+	const [result, setResult] = useState(null);
+	const [commentContent, setCommentContent] = useState("");
+	const [commentContentValidity, setCommentContentValidity] = useState(false);
+	const [disableStatus, setDisableStatus] = useState(true);
+	const [error, setError] = useState("");
+	const [refreshing, setRefreshing] = useState(false);
+	const [comments, setComments] = useState([]);
 
-    let sources;
-    item.sources ? sources = item.sources : sources = [];
+	const detailedThesis = route.params;
+	const dateWritten = new Date(detailedThesis.created_at);
+	let sources = detailedThesis.sources ? detailedThesis.sources : [];
 
-    const [result, setResult] = useState(null);
+	let sourcesToDisplay = sources.map((source, index) => (
+		<TouchableOpacity key={index} onPress={() => handleSourceLink(source)}>
+			<Text style={styles.linkText}>{source}</Text>
+		</TouchableOpacity>
+	));
 
-    const handleSourceLink = async (sourceLink) => {
-        let webResult = await WebBrowser.openBrowserAsync(sourceLink);
-        setResult(webResult);
-    };
+	const handleSourceLink = async (sourceLink) => {
+		let webResult = await WebBrowser.openBrowserAsync(sourceLink);
+		setResult(webResult);
+	};
 
-    /*
-        Object {
-        "asset_symbol": "GOOGL",
-        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        "created_at": "2021-12-02T07:13:01.717972",
-        "is_authors_current": true,
-        "sentiment": "Bull",
-        "sources": Array [
-            "https://www.pelleum.com",
-            "https://www.youtube.com",
-        ],
-        "thesis_id": 14,
-        "title": "Google is the most valuable company ever created.",
-        "updated_at": "2021-12-02T07:13:01.717972",
-        "user_id": 1,
-        "username": "ern123",
-    }
-    */
+	// Might not need these separate functions?
+	const handleChangeContent = (newContent) => {
+		setCommentContent(newContent);
+	};
 
-    //Need to conditionally render sources (links) at the bottom of the thesis.
-    //Look into making the links clickable and open up with default browser.
+	const handleChangeCommentContentValidity = (newValidity) => {
+		setCommentContentValidity(newValidity);
+		if (newValidity == true) {
+			setDisableStatus(false);
+		} else {
+			setDisableStatus(true);
+		}
+	};
 
-    return (<NativeBaseProvider>
-        <View style={styles.thesisContainer}>
-            <HStack style={styles.topThesisBox}>
-                <Text style={styles.usernameText}>@{item.username}</Text>
-                <TouchableOpacity
-                    style={styles.assetButton}
-                    onPress={() => {
-                        console.log("Asset button worked.");
-                    }}
-                >
-                    <Text style={styles.assetText}>{item.asset_symbol}</Text>
-                </TouchableOpacity>
-                <Text
-                    style={
-                        item.sentiment === "Bull"
-                            ? styles.bullSentimentText
-                            : styles.bearSentimentText
-                    }
-                >
-                    {item.sentiment}
-                </Text>
-            </HStack>
-            <Text style={styles.contentText}>{item.content}</Text>
-            {sources.length == 1 ?
-                <>
-                    <Text style={styles.sourcesTitle}>Sources</Text>
-                    <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
-                        <Text style={styles.linkText}>{sources[0]}</Text>
-                    </TouchableOpacity>
-                </> :
-                sources.length == 2 ?
-                    <>
-                        <Text style={styles.sourcesTitle}>Sources</Text>
-                        <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
-                            <Text style={styles.linkText}>{sources[0]}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleSourceLink(sources[1])}>
-                            <Text style={styles.linkText}>{sources[1]}</Text>
-                        </TouchableOpacity>
-                    </> :
-                    sources.length == 3 ?
-                        <>
-                            <Text style={styles.sourcesTitle}>Sources</Text>
-                            <TouchableOpacity onPress={() => handleSourceLink(sources[0])}>
-                                <Text style={styles.linkText}>{sources[0]}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleSourceLink(sources[1])}>
-                                <Text style={styles.linkText}>{sources[1]}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleSourceLink(sources[2])}>
-                                <Text style={styles.linkText}>{sources[2]}</Text>
-                            </TouchableOpacity>
-                        </> :
-                        null}
-            <Pressable
-                style={styles.button}
-                onPress={() => navigation.navigate("PortfolioInsight", {
-                    username: item.username,
-                    userId: item.user_id
-                })}
-            >
-                <Text style={styles.buttonTextStyle}>View Author's Portfolio</Text>
-            </Pressable>
-        </View>
-        <View>
-            <HStack style={styles.buttonBox}>
-                <TouchableOpacity
-                    style={styles.iconButton}
-                    onPress={() => {
-                        console.log("Comment button worked.");
-                    }}
-                >
-                    <Fontisto name="comment" size={19} color="#00A8FC" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.iconButton}
-                    onPress={() => {
-                        console.log("Like button worked.");
-                    }}
-                >
-                    <Ionicons name="heart-outline" size={24} color="#00A8FC" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.iconButton}
-                    onPress={() => {
-                        console.log("Link button worked.");
-                    }}
-                >
-                    <MaterialIcons name="add-link" size={29} color="#00A8FC" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.iconButton}
-                    onPress={() => {
-                        console.log("Share button worked.");
-                    }}
-                >
-                    <SimpleLineIcons name="action-redo" size={22} color="#00A8FC" />
-                </TouchableOpacity>
-            </HStack>
-        </View>
-    </NativeBaseProvider>
-    );
+	const replyButtonPressed = async () => {
+		// Think about adding sentiment, symbol, theses, etc to theses comments.
+		Keyboard.dismiss();
+		const authorizedResponse = await pelleumClient({
+			method: "post",
+			url: `/public/posts`,
+			data: {
+				content: commentContent,
+				is_thesis_comment_on: detailedThesis.thesis_id,
+			},
+		});
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				console.log(
+					"Need to actually display this to the user (ideally without making an API call), so they know it worked."
+				);
+				setCommentContent("");
+				setDisableStatus(true);
+				setError("");
+			} else {
+				setError("An unexpected error occured. Your reply was not shared.");
+			}
+		}
+	};
+
+	const onRefresh = async () => {
+		setRefreshing(true);
+		const retrievedComments = await getComments({
+			is_thesis_comment_on: detailedThesis.thesis_id,
+		});
+		if (retrievedComments) {
+			setComments(retrievedComments);
+		}
+
+		setRefreshing(false);
+	};
+
+	useEffect(() => {
+		onRefresh();
+	}, []);
+
+	return (
+		<NativeBaseProvider>
+			<FlatList
+				data={comments}
+				keyExtractor={(item) => item.post_id.toString()}
+				renderItem={({ item }) => {
+					return (
+						<PostBox
+							postBoxType={PostBoxType.Comment}
+							item={item}
+							nav={navigation}
+						/>
+					);
+				}}
+				refreshControl={
+					<RefreshControl
+						enabled={true}
+						colors={["#9Bd35A", "#689F38"]}
+						onRefresh={onRefresh}
+					/>
+				}
+				refreshing={refreshing}
+				ListHeaderComponent={
+					<View style={styles.mainContainer}>
+						<View style={styles.thesisContainer}>
+							<Text style={styles.thesisTitle}>{detailedThesis.title}</Text>
+							<Text style={styles.usernameText}>
+								Investor: @{detailedThesis.username}
+							</Text>
+							<Text style={styles.usernameText}>
+								Written: {dateWritten.toLocaleDateString()}
+							</Text>
+							<HStack style={styles.topThesisBox}>
+								<TouchableOpacity
+									style={styles.assetButton}
+									onPress={() => {
+										console.log("Asset button worked.");
+									}}
+								>
+									<Text style={styles.assetText}>
+										{detailedThesis.asset_symbol}
+									</Text>
+								</TouchableOpacity>
+								<Text
+									style={
+										detailedThesis.sentiment === "Bull"
+											? styles.bullSentimentText
+											: styles.bearSentimentText
+									}
+								>
+									{detailedThesis.sentiment}
+								</Text>
+							</HStack>
+							<Pressable
+								style={styles.portfolioInsightButton}
+								onPress={() =>
+									navigation.navigate("PortfolioInsight", {
+										username: detailedThesis.username,
+										userId: detailedThesis.user_id,
+									})
+								}
+							>
+								<Text style={styles.buttonTextStyle}>
+									View Author's Portfolio
+								</Text>
+							</Pressable>
+							<ThesisButtonPanel item={detailedThesis} />
+							<Text style={styles.subTitle}>Thesis</Text>
+							<Text style={styles.contentText}>{detailedThesis.content}</Text>
+							<Text style={styles.subTitle}>Sources</Text>
+							{sourcesToDisplay}
+						</View>
+						<VStack>
+							<CommentInput
+								commentContent={commentContent}
+								commentContentValidity={commentContentValidity}
+								changeContent={handleChangeContent}
+								changeCommentContentValidity={
+									handleChangeCommentContentValidity
+								}
+							/>
+							<Pressable
+								style={
+									disableStatus ? styles.replyButtonDisabled : styles.replyButtonEnabled
+								}
+								onPress={() => replyButtonPressed()}
+								disabled={disableStatus}
+							>
+								<Text style={styles.buttonTextStyle}>Reply</Text>
+							</Pressable>
+							{error ? <Text style={styles.errorText}>{error}</Text> : null}
+						</VStack>
+					</View>
+				}
+			></FlatList>
+		</NativeBaseProvider>
+	);
 };
 
 export default ThesisDetailScreen;
 
 const styles = StyleSheet.create({
-    thesisContainer: {
-        marginHorizontal: 15,
-        paddingTop: 20,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "#00A8FC",
-    },
-    buttonBox: {
-        paddingTop: 5,
-        alignSelf: "center",
-        alignItems: "center",
-        width: "85%",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    bullSentimentText: {
-        textAlign: "center",
-        width: 70,
-        borderWidth: 0.5,
-        backgroundColor: "#c6edc5",
-        borderColor: "#1c7850",
-        borderRadius: 15,
-        padding: 5,
-        marginBottom: 10,
-        justifyContent: "center",
-        color: "#1c7850",
-        fontSize: 16,
-        fontWeight: "bold",
-        overflow: "hidden",
-    },
-    bearSentimentText: {
-        textAlign: "center",
-        width: 70,
-        borderWidth: 0.5,
-        backgroundColor: "#edcec5",
-        borderColor: "#b02802",
-        borderRadius: 15,
-        padding: 5,
-        marginBottom: 10,
-        justifyContent: "center",
-        color: "#b02802",
-        fontSize: 16,
-        fontWeight: "bold",
-        overflow: "hidden",
-    },
-    usernameText: {
-        padding: 5,
-        marginBottom: 10,
-        justifyContent: "center",
-        color: "#026bd4",
-        fontSize: 16,
-    },
-    assetButton: {
-        width: 70,
-        borderWidth: 0.5,
-        backgroundColor: "white",
-        borderColor: "#026bd4",
-        borderRadius: 15,
-        padding: 5,
-        marginBottom: 10,
-        color: "#026bd4",
-        alignItems: "center",
-    },
-    assetText: {
-        color: "#026bd4",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    topThesisBox: {
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    contentText: {
-        fontSize: 16,
-        marginTop: 20,
-        marginHorizontal: 15,
-        marginBottom: 30
-    },
-    button: {
-        alignSelf: "center",
-        borderRadius: 30,
-        padding: 11,
-        marginTop: 15,
-        marginBottom: 5,
-        width: "100%",
-        backgroundColor: "#00A8FC",
-        elevation: 2,
-    },
-    buttonTextStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 15,
-    },
-    iconButton: {
-        //add styles here
-    },
-    linkText: {
-        color: 'blue',
-        marginTop: 10,
-    },
-    sourcesTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginTop: 20
-    },
+	mainContainer: {
+		marginHorizontal: 15,
+	},
+	thesisContainer: {
+		paddingVertical: 20,
+		marginBottom: 15,
+		borderBottomWidth: 0.5,
+		borderBottomColor: "#00A8FC",
+	},
+	buttonBox: {
+		paddingTop: 5,
+		alignSelf: "center",
+		alignItems: "center",
+		width: "85%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	bullSentimentText: {
+		textAlign: "center",
+		width: 70,
+		borderWidth: 0.5,
+		backgroundColor: "#c6edc5",
+		borderColor: "#1c7850",
+		borderRadius: 15,
+		padding: 5,
+		marginBottom: 10,
+		justifyContent: "center",
+		color: "#1c7850",
+		fontSize: 16,
+		fontWeight: "bold",
+		overflow: "hidden",
+	},
+	bearSentimentText: {
+		textAlign: "center",
+		width: 70,
+		borderWidth: 0.5,
+		backgroundColor: "#edcec5",
+		borderColor: "#b02802",
+		borderRadius: 15,
+		padding: 5,
+		marginBottom: 10,
+		justifyContent: "center",
+		color: "#b02802",
+		fontSize: 16,
+		fontWeight: "bold",
+		overflow: "hidden",
+	},
+	usernameText: {
+		marginBottom: 10,
+		justifyContent: "center",
+		color: "#026bd4",
+		fontSize: 16,
+	},
+	assetButton: {
+		width: 70,
+		borderWidth: 0.5,
+		backgroundColor: "white",
+		borderColor: "#026bd4",
+		borderRadius: 15,
+		padding: 5,
+		marginBottom: 10,
+		color: "#026bd4",
+		alignItems: "center",
+	},
+	assetText: {
+		color: "#026bd4",
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+	topThesisBox: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+	contentText: {
+		fontSize: 16,
+		marginTop: 20,
+		marginHorizontal: 15,
+		marginBottom: 30,
+	},
+	portfolioInsightButton: {
+		alignSelf: "center",
+		borderRadius: 30,
+		padding: 11,
+		marginTop: 15,
+		marginBottom: 5,
+		width: "100%",
+		backgroundColor: "#00A8FC",
+		elevation: 2,
+	},
+	buttonTextStyle: {
+		color: "white",
+		fontWeight: "bold",
+		textAlign: "center",
+		fontSize: 15,
+	},
+	linkText: {
+		color: "blue",
+		marginTop: 10,
+	},
+	subTitle: {
+		fontSize: 16,
+		fontWeight: "bold",
+		marginTop: 20,
+	},
+	thesisTitle: {
+		fontSize: 25,
+		fontWeight: "bold",
+		marginBottom: 20,
+		alignSelf: "center",
+	},
+	replyButtonEnabled: {
+		alignSelf: "center",
+		borderRadius: 30,
+		padding: 11,
+		marginBottom: 5,
+		width: "100%",
+		backgroundColor: "#00A8FC",
+		elevation: 2,
+	},
+	replyButtonDisabled: {
+		alignSelf: "center",
+		borderRadius: 30,
+		padding: 11,
+		marginBottom: 5,
+		width: "100%",
+		backgroundColor: "#00A8FC",
+		elevation: 2,
+		opacity: 0.33,
+	},
+	errorText: {
+		color: "red",
+	},
 });

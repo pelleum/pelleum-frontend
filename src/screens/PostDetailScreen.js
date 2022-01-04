@@ -15,14 +15,9 @@ import pelleumClient from "../api/clients/PelleumClient";
 import PostButtonPanel from "../components/PostButtonPanel";
 import { PostBox, PostBoxType } from "../components/PostBox";
 import { getComments } from "../functions/PostFunctions";
-import { useDispatch } from 'react-redux';
 
 
 const PostDetailScreen = ({ navigation, route }) => {
-
-	
-	// Global State Management
-	const dispatch = useDispatch();
 	// Local State Management
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
