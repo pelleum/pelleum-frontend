@@ -1,4 +1,4 @@
-import { AUTH_ERROR, CLEAR_AUTH_ERROR, LOG_IN, LOG_OUT, RESTORE_TOKEN } from "../actions/authActions";
+import { AUTH_ERROR, CLEAR_AUTH_ERROR, LOG_IN, LOG_OUT, RESTORE_TOKEN } from "../actions/AuthActions";
 
 // Declare initial state
 const initialState = {

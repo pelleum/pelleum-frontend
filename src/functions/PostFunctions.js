@@ -1,7 +1,7 @@
 import * as SecureStore from "expo-secure-store";
-import { store } from "../redux/store";
+import { store } from "../redux/Store";
 import pelleumClient from "../api/clients/PelleumClient";
-import { addLike, removeLike } from "../redux/actions/likesActions";
+import { addLike, removeLike } from "../redux/actions/PostReactionsActions";
 
 export const getPosts = async () => {
 	const authorizedResponse = await pelleumClient({
@@ -82,13 +82,13 @@ export const getUserLikes = async (timeRange) => {
 export const sendPostReaction = async (item) => {
 
 	const state = store.getState();
-    const newlyAddedLikedPosts = state.likesReducer.newlyAddedLikedPosts
-    const newlyAddedUnlikedPosts = state.likesReducer.newlyAddedUnlikedPosts
-    
+    const locallyLikedPosts = state.postReactionsReducer.locallyLikedPosts
+    const locallyUnlikedPosts = state.postReactionsReducer.locallyUnlikedPosts
+	
 	// Like or un-like a post
 	if (
-		(item.is_liked_by_user && !newlyAddedUnlikedPosts.includes(item.post_id)) ||
-		newlyAddedLikedPosts.includes(item.post_id)
+		(item.user_reaction_value == 1 && !locallyUnlikedPosts.includes(item.post_id)) ||
+		locallyLikedPosts.includes(item.post_id)
 	) {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",

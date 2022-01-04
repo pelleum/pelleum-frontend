@@ -29,9 +29,9 @@ import pelleumClient from "./src/api/clients/PelleumClient";
 
 // Redux
 import { Provider } from 'react-redux';
-import { store } from './src/redux/store';
+import { store } from './src/redux/Store';
 import { useSelector, useDispatch } from 'react-redux';
-import { restoreToken } from "./src/redux/actions/authActions";
+import { restoreToken } from "./src/redux/actions/AuthActions";
 
 
 // Authentication Flow

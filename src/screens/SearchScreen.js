@@ -5,6 +5,8 @@ import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import DismissKeyboard from '../components/DismissKeyboard';
 import pelleumClient from '../api/clients/PelleumClient';
+import { useDispatch } from "react-redux";
+import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');
@@ -14,6 +16,8 @@ const SearchScreen = ({ navigation }) => {
     const [sentiment, setSentiment] = useState("Bull");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1)
+
+    const dispatch = useDispatch();
 
     const getResults = async () => {
         if (term.length > 0) {
@@ -29,6 +33,7 @@ const SearchScreen = ({ navigation }) => {
                     setBullResults(theses.filter(value => value.sentiment === "Bull"));
                     setBearResults(theses.filter(value => value.sentiment === "Bear"));
                     setTotalPages(metaData.total_pages);
+                    dispatch(resetReactions())
                 } else {
                     setErrorMessage("There was an error obtaining theses from the backend.")
                     console.log("There was an error obtaining theses from the backend.");

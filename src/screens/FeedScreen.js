@@ -13,7 +13,7 @@ import CreateModal from "../components/modals/CreateModal";
 import { PostBox, PostBoxType } from "../components/PostBox";
 import { getPosts } from "../functions/PostFunctions";
 import { useDispatch } from 'react-redux';
-import { resetLikes } from "../redux/actions/likesActions";
+import { resetLikes } from "../redux/actions/PostReactionsActions";
 
 const FeedScreen = ({ navigation }) => {
 	// Global State Management

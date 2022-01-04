@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 // Import Local Files
 import pelleumClient from "../api/clients/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
-import { login, authError, clearAuthError } from "../redux/actions/authActions";
+import { login, authError, clearAuthError } from "../redux/actions/AuthActions";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {

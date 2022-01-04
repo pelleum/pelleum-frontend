@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 
 // Redux
 import { useDispatch } from 'react-redux';
-import { logout } from "../redux/actions/authActions";
+import { logout } from "../redux/actions/AuthActions";
 
 const SettingsScreen = () => {
 

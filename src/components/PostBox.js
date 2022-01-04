@@ -14,6 +14,15 @@ export class PostBoxType {
 }
 
 export const PostBox = ({ postBoxType, item, nav }) => {
+	// new Date() gives time in device's time zone, but we need it in UTC
+	// To do this, we get the ISO string, remove the Z from the end, and create a new date
+
+	const nowIsoString = new Date().toISOString();
+	const nowStringWithNoZ = nowIsoString.slice(0, -1);
+	const now = new Date(nowStringWithNoZ).getTime();
+	const createdAt = new Date(item.created_at).getTime();
+	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
+
 	return (
 		<NativeBaseProvider>
 			<TouchableOpacity
@@ -30,22 +39,26 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
-							<Text style={styles.usernameText}>@{item.username}</Text>
-							{postBoxType == "feed" ? (
-								<TouchableOpacity
-									style={styles.assetButton}
-									onPress={() => {
-										console.log("Asset button worked.");
-									}}
-								>
-									<Text style={styles.assetText}>{item.asset_symbol}</Text>
-								</TouchableOpacity>
+							<Text style={styles.usernameText}>@{item.username}  {elapsedTimeMinutes} min</Text>
+							{postBoxType == PostBoxType.Feed ? (
+								item.asset_symbol ? (
+									<TouchableOpacity
+										style={styles.assetButton}
+										onPress={() => {
+											console.log("Asset button worked.");
+										}}
+									>
+										<Text style={styles.assetText}>{item.asset_symbol}</Text>
+									</TouchableOpacity>
+								) : null
 							) : null}
 							<Text
 								style={
-									item.sentiment === "Bull"
-										? styles.bullSentimentText
-										: styles.bearSentimentText
+									item.sentiment
+										? item.sentiment === "Bull"
+											? styles.bullSentimentText
+											: styles.bearSentimentText
+										: null
 								}
 							>
 								{item.sentiment}
