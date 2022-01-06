@@ -15,13 +15,24 @@ import { getPosts } from "../functions/PostFunctions";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 
-const FeedScreen = ({ navigation }) => {
+const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
 	const dispatch = useDispatch();
+
 	// Local State Management
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
+
+	if (route.params) {
+		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
+		if (newCreatedPost) {
+			const postsCopy = posts;
+			postsCopy.splice(0, 0, newCreatedPost);
+			setPosts(postsCopy);
+			route.params.newPost = null;
+		};
+	};
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);

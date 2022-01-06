@@ -44,7 +44,7 @@ const CreatePostScreen = ({ navigation }) => {
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
-				navigation.navigate("Feed");
+				navigation.navigate("Feed", {newPost: authorizedResponse.data});
 			} else {
 				setError("An unexpected error occured. Your content was not shared.");
 			}
