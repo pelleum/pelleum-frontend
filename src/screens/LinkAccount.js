@@ -32,9 +32,13 @@ const LinkAccount = ({ navigation }) => {
         });
 
         if (response.status == 200) {
-            setInstitutionLogin(true);
             setErrorMessage('')
             console.log('/n Successfull institution login!');
+            if (response.data.account_connection_status == "connected") {
+                navigation.navigate("Profile", { accountLinked: true });
+            } else {
+                setInstitutionLogin(true);
+            };
         } else {
             // we should probably make this a switch statement
             if (response.data.detail.includes("Unable to log in with provided credentials.")) {
@@ -57,7 +61,7 @@ const LinkAccount = ({ navigation }) => {
         if (response.status == 201) {
             setErrorMessage('')
             console.log('/n Successfull account verification!');
-            navigation.navigate("Profile", { accountLinked: true })
+            navigation.navigate("Profile", { accountLinked: true });
         } else {
             console.log("\nResponse: ", response.data)
             if (response.data.detail.includes("Please enter a valid code.")) {

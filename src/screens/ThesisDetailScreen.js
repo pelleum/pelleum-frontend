@@ -4,7 +4,6 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	Pressable,
 	FlatList,
 	RefreshControl,
 	Keyboard
@@ -70,9 +69,9 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
-				console.log(
-					"Need to actually display this to the user (ideally without making an API call), so they know it worked."
-				);
+				const commentsCopy = comments;
+				commentsCopy.splice(0, 0, authorizedResponse.data);
+				setComments(commentsCopy);
 				setCommentContent("");
 				setDisableStatus(true);
 				setError("");
@@ -151,7 +150,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									{detailedThesis.sentiment}
 								</Text>
 							</HStack>
-							<Pressable
+							<TouchableOpacity
 								style={styles.portfolioInsightButton}
 								onPress={() =>
 									navigation.navigate("PortfolioInsight", {
@@ -163,7 +162,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 								<Text style={styles.buttonTextStyle}>
 									View Author's Portfolio
 								</Text>
-							</Pressable>
+							</TouchableOpacity>
 							<ThesisButtonPanel item={detailedThesis} />
 							<Text style={styles.subTitle}>Thesis</Text>
 							<Text style={styles.contentText}>{detailedThesis.content}</Text>
@@ -179,7 +178,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									handleChangeCommentContentValidity
 								}
 							/>
-							<Pressable
+							<TouchableOpacity
 								style={
 									disableStatus ? styles.replyButtonDisabled : styles.replyButtonEnabled
 								}
@@ -187,7 +186,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 								disabled={disableStatus}
 							>
 								<Text style={styles.buttonTextStyle}>Reply</Text>
-							</Pressable>
+							</TouchableOpacity>
 							{error ? <Text style={styles.errorText}>{error}</Text> : null}
 						</VStack>
 					</View>

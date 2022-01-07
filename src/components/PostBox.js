@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, Pressable } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 
@@ -23,14 +23,15 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 	const createdAt = new Date(item.created_at).getTime();
 	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
 
+	if (postBoxType == PostBoxType.Comment) {
+		item["needsRefresh"] = true;
+	}
+
 	return (
 		<NativeBaseProvider>
 			<TouchableOpacity
 				disabled={postBoxType == PostBoxType.PostDetail ? true : false}
 				onPress={() => {
-					if (postBoxType == PostBoxType.Comment) {
-						item["needsRefresh"] = true;
-					}
 					nav.navigate("Post", item);
 				}}
 			>
@@ -66,7 +67,7 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 						</HStack>
 						<Text style={styles.contentText}>{item.content}</Text>
 						{postBoxType == PostBoxType.PostDetail ? (
-							<Pressable
+							<TouchableOpacity
 								style={styles.buttonEnabled}
 								onPress={() =>
 									nav.navigate("PortfolioInsight", {
@@ -78,7 +79,7 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 								<Text style={styles.buttonTextStyle}>
 									View Author's Portfolio
 								</Text>
-							</Pressable>
+							</TouchableOpacity>
 						) : (
 							<PostButtonPanel item={item} nav={nav} />
 						)}

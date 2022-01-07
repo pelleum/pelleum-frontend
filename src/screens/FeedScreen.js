@@ -4,9 +4,9 @@ import {
 	View,
 	FlatList,
 	RefreshControl,
-	Pressable,
+	TouchableOpacity,
+	Text
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // File imports
 import CreateModal from "../components/modals/CreateModal";
@@ -81,16 +81,15 @@ const FeedScreen = ({ navigation, route }) => {
 							makeModalDisappear={() => setModalVisible(false)}
 							onNavigate={handleModalNavigate}
 						/>
-						<Pressable onPress={() => setModalVisible(true)}>
-							<MaterialCommunityIcons
-								name="plus-circle"
-								size={60}
-								color="black"
-							/>
-						</Pressable>
 					</View>
 				}
 			></FlatList>
+			<TouchableOpacity
+				style={styles.fab}
+				onPress={() => setModalVisible(true)}
+			>
+				<Text style={styles.fabIcon}>+</Text>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -173,10 +172,27 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
-	iconButton: {
-		paddingHorizontal: 20,
-		paddingTop: 5,
-		//borderWidth: 0.5,
-		//borderColor: 'red'
+	//Floating Action Button
+	fab: {
+		position: 'absolute',
+		width: 56,
+		height: 56,
+		alignItems: 'center',
+		justifyContent: 'center',
+		right: 20,
+		bottom: 20,
+		backgroundColor: 'white',
+		borderRadius: 30,
+		elevation: 8,
+		borderWidth: 2,
+		borderColor: '#026bd4',
+
 	},
+	fabIcon: {
+		fontSize: 40,
+		color: '#026bd4',
+		fontWeight: 'bold',
+		paddingHorizontal: 5,
+		paddingBottom: 3,
+	}, 
 });

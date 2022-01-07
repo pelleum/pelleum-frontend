@@ -3,7 +3,7 @@ import {
 	StyleSheet,
 	Text,
 	View,
-	Pressable,
+	TouchableOpacity,
 	Keyboard,
 	FlatList,
 	RefreshControl,
@@ -56,9 +56,9 @@ const PostDetailScreen = ({ navigation, route }) => {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
-				console.log(
-					"Need to actually display this to the user (ideally without making an API call), so they know it worked."
-				);
+				const commentsCopy = comments;
+				commentsCopy.splice(0, 0, authorizedResponse.data);
+				setComments(commentsCopy);
 				setCommentContent("");
 				setDisableStatus(true);
 				setError("");
@@ -130,7 +130,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 									handleChangeCommentContentValidity
 								}
 							/>
-							<Pressable
+							<TouchableOpacity
 								style={
 									disableStatus ? styles.buttonDisabled : styles.buttonEnabled
 								}
@@ -138,7 +138,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 								disabled={disableStatus}
 							>
 								<Text style={styles.buttonTextStyle}>Reply</Text>
-							</Pressable>
+							</TouchableOpacity>
 							{error ? <Text style={styles.errorText}>{error}</Text> : null}
 						</VStack>
 					</View>

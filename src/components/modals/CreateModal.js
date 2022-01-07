@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
+import { Alert, Modal, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 	return (
@@ -20,7 +20,7 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 			>
 				<TouchableOpacity onPress={() => {}} activeOpacity={1}>
 						<View style={styles.modalView}>
-							<Pressable
+							<TouchableOpacity
 								style={[styles.button, styles.buttonOpen]}
 								onPress={() => {
 									makeModalDisappear();
@@ -28,8 +28,8 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 								}}
 							>
 								<Text style={styles.textStyle}>Post</Text>
-							</Pressable>
-							<Pressable
+							</TouchableOpacity>
+							<TouchableOpacity
 								style={[styles.button, styles.buttonOpen]}
 								onPress={() => {
 									makeModalDisappear();
@@ -37,7 +37,7 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 								}}
 							>
 								<Text style={styles.textStyle}>Thesis</Text>
-							</Pressable>
+							</TouchableOpacity>
 						</View>
 				</TouchableOpacity>
 			</TouchableOpacity>

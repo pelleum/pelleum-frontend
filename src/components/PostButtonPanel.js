@@ -80,4 +80,8 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
+	iconButton: {
+		paddingHorizontal: 13,
+		paddingTop: 8,
+	},
 });
