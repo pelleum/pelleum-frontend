@@ -15,7 +15,7 @@ export const getPosts = async () => {
 			return retrievedPosts;
 		}
 		// need to display "an unexpected error occured"
-		console.log("There was an error obtianing feed posts.");
+		console.log("There was an error obtaining feed posts.");
 	}
 };
 
@@ -45,7 +45,7 @@ export const getComments = async ({
 			return retrievedComments;
 		}
 		// need to display "an unexpected error occured"
-		console.log("There was an error obtianing feed posts.");
+		console.log("There was an error obtaining feed posts.");
 	}
 };
 
@@ -75,7 +75,7 @@ export const getUserLikes = async (timeRange) => {
 			return likedPosts;
 		}
 		// need to display "an unexpected error occured"
-		console.log("There was an error obtianing user's liked posts.");
+		console.log("There was an error obtaining user's liked posts.");
 	}
 };
 

@@ -33,7 +33,6 @@ const LinkAccount = ({ navigation }) => {
 
         if (response.status == 200) {
             setErrorMessage('')
-            console.log('/n Successfull institution login!');
             if (response.data.account_connection_status == "connected") {
                 navigation.navigate("Profile", { accountLinked: true });
             } else {
@@ -60,15 +59,12 @@ const LinkAccount = ({ navigation }) => {
 
         if (response.status == 201) {
             setErrorMessage('')
-            console.log('/n Successfull account verification!');
             navigation.navigate("Profile", { accountLinked: true });
         } else {
-            console.log("\nResponse: ", response.data)
             if (response.data.detail.includes("Please enter a valid code.")) {
                 setErrorMessage('Invalid code. Please enter a valid code.');
             } else {
                 setErrorMessage('There was an error validating your account.');
-                console.log('/n There was an error validating your account.');
             }
         }
     };
