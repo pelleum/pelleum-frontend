@@ -7,6 +7,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import pelleumClient from '../api/clients/PelleumClient';
 import { useDispatch } from "react-redux";
 import { resetReactions } from '../redux/actions/ThesisReactionsActions';
+import { ThesisBox } from '../components/ThesisBox';
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');
@@ -34,7 +35,9 @@ const SearchScreen = ({ navigation }) => {
 
     //need to figure out how to calculate item height, so that we are not bound by a constant item height
     //the result of the item height calculation will be fed into getItemLayout
-    const ITEM_HEIGHT = 150;
+    //if ITEM_HEIGHT is changed here, we must also change the height in ThesisListContainer in ThesisBox
+    const ITEM_HEIGHT = 175;
+    
 
     const dispatch = useDispatch();
 
@@ -205,16 +208,10 @@ const SearchScreen = ({ navigation }) => {
                             keyExtractor={(item) => item.thesis_id}
                             renderItem={({ item }) => {
                                 return (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            navigation.navigate("Thesis", item);
-                                        }}
-                                    >
-                                        <Box style={styles.thesisListContainer}>
-                                            <Text style={styles.thesisTitleText}>{item.title}</Text>
-                                            <Text numberOfLines={5}>{item.content}...</Text>
-                                        </Box>
-                                    </TouchableOpacity>
+                                    <ThesisBox
+                                        item={item}
+                                        nav={navigation}
+                                    />
                                 )
                             }}
                             onEndReached={getMoreResults}
@@ -246,24 +243,6 @@ const styles = StyleSheet.create({
         height: 55,
         alignSelf: 'center',
         justifyContent: 'center',
-    },
-    thesisListContainer: {
-        width: '100%',
-        height: 150,
-        padding: 15,
-        fontSize: 16,
-        backgroundColor: "#ebecf0",
-        borderBottomWidth: 2,
-        borderBottomColor: "#bfc6c9",
-        overflow: "hidden",
-    },
-    thesisTitleText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginBottom: 5
-    },
-    thesisContentText: {
-        fontSize: 14
     },
     error: {
         color: 'red',

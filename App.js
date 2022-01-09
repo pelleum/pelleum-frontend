@@ -48,8 +48,6 @@ const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
 	<FeedStack.Navigator initialRouteName="Feed">
 		<FeedStack.Screen name="Feed" component={FeedScreen} />
-		<FeedStack.Screen name="Thesis" component={ThesisDetailScreen} />
-		<FeedStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
 	</FeedStack.Navigator>
 );
 
@@ -58,8 +56,6 @@ const SearchStack = createNativeStackNavigator();
 const SearchFlow = () => (
 	<SearchStack.Navigator initialRouteName="Search">
 		<SearchStack.Screen name="Search" component={SearchScreen} />
-		<SearchStack.Screen name="Thesis" component={ThesisDetailScreen} />
-		<SearchStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
 	</SearchStack.Navigator>
 );
 
@@ -77,7 +73,6 @@ const ProfileStack = createNativeStackNavigator();
 const ProfileFlow = () => (
 	<ProfileStack.Navigator initialRouteName="Profile">
 		<ProfileStack.Screen name="Profile" component={ProfileScreen} />
-		<ProfileStack.Screen name="Thesis" component={ThesisDetailScreen} />
 		<ProfileStack.Screen name="Settings" component={SettingsScreen} />
 		<ProfileStack.Screen name="Link" component={LinkAccount} />
 	</ProfileStack.Navigator>
@@ -192,7 +187,9 @@ const RootStackFlow = () => {
 				name="CreatePost"
 				component={CreatePostScreen}
 			/>
+			<RootStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
 			<RootStack.Screen name="Post" component={PostDetailScreen} />
+			<RootStack.Screen name="Thesis" component={ThesisDetailScreen} />
 		</RootStack.Navigator>
 	);
 };

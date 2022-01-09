@@ -7,6 +7,8 @@ export class PostBoxType {
 	static Feed = new PostBoxType("feed");
 	static Comment = new PostBoxType("comment");
 	static PostDetail = new PostBoxType("postDetail");
+	static PostCommentedOn = new PostBoxType("postCommentedOn");
+	static ThesisCommentedOn = new PostBoxType("thesisCommentedOn");
 
 	constructor(type) {
 		this.type = type;
@@ -23,7 +25,7 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 	const createdAt = new Date(item.created_at).getTime();
 	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
 
-	if (postBoxType == PostBoxType.Comment) {
+	if (postBoxType == PostBoxType.Comment || postBoxType == PostBoxType.PostCommentedOn || postBoxType == PostBoxType.ThesisCommentedOn) {
 		item["needsRefresh"] = true;
 	}
 
