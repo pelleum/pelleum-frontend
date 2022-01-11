@@ -212,7 +212,7 @@ const SearchScreen = ({ navigation }) => {
                                         item={item}
                                         nav={navigation}
                                     />
-                                )
+                                );
                             }}
                             onEndReached={getMoreResults}
                             onEndReachedThreshold={1}
@@ -249,5 +249,5 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 25,
         fontSize: 14,
-    }
+    },
 });

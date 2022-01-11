@@ -23,6 +23,7 @@ import LoadingScreen from "./src/screens/LoadingScreen";
 import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
 import LinkAccount from "./src/screens/LinkAccount";
+import ConvictionLibraryScreen from "./src/screens/ConvictionLibraryScreen";
 
 // Functions
 import pelleumClient from "./src/api/clients/PelleumClient";
@@ -190,6 +191,7 @@ const RootStackFlow = () => {
 			<RootStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
 			<RootStack.Screen name="Post" component={PostDetailScreen} />
 			<RootStack.Screen name="Thesis" component={ThesisDetailScreen} />
+			<RootStack.Screen name="Conviction" component={ConvictionLibraryScreen} />
 		</RootStack.Navigator>
 	);
 };
