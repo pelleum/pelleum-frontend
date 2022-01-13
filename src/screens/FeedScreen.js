@@ -12,6 +12,7 @@ import {
 import CreateModal from "../components/modals/CreateModal";
 import { PostBox, PostBoxType } from "../components/PostBox";
 import { getPosts } from "../functions/PostFunctions";
+import { getTheses } from "../functions/ThesesFunctions";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 
@@ -23,6 +24,7 @@ const FeedScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
+	const [theses, setTheses] = useState([]);
 
 	if (route.params) {
 		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
@@ -40,10 +42,14 @@ const FeedScreen = ({ navigation, route }) => {
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const retrievedPosts = await getPosts();
-		if (retrievedPosts) {
-			setPosts(retrievedPosts);
+		const postResponseData = await getPosts();
+		if (postResponseData) {
+			setPosts(postResponseData.records.posts);
 			dispatch(resetLikes());
+			const thesesResponseData = await getTheses();
+			if (thesesResponseData) {
+				setTheses(thesesResponseData.records.theses)
+			}
 		}
 		setRefreshing(false);
 	};
@@ -58,6 +64,16 @@ const FeedScreen = ({ navigation, route }) => {
 				data={posts}
 				keyExtractor={(item) => item.post_id.toString()}
 				renderItem={({ item }) => {
+					
+					if (item.thesis_id) {
+						const thesisInPost = theses.find(thesis => {
+							return thesis.thesis_id === item.thesis_id;
+						})
+						if (thesisInPost) {
+							item["thesis"] = thesisInPost;
+						}
+					}
+
 					return (
 						<PostBox
 							postBoxType={PostBoxType.Feed}

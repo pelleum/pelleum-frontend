@@ -101,3 +101,17 @@ export const sendThesisReaction = async (item, reactionType) => {
 		}
 	}
 };
+
+export const getTheses = async (queryParams) => {
+	const authorizedResponse = await pelleumClient({
+		method: "get",
+		url: '/public/theses/retrieve/many',
+		queryParams: queryParams
+	});
+
+	if (authorizedResponse.status == 200) {
+		return authorizedResponse.data;
+	} else {
+		console.log("There was an error retrieving theses from the backend.")
+	}
+}

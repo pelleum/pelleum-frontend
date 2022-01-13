@@ -66,6 +66,9 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 							</Text>
 						</HStack>
 						<Text style={styles.contentText}>{item.content}</Text>
+						{item.thesis ? (
+
+						)}
 						{postBoxType == PostBoxType.PostDetail ? (
 							<TouchableOpacity
 								style={styles.buttonEnabled}

@@ -11,8 +11,7 @@ export const getPosts = async () => {
 
 	if (authorizedResponse) {
 		if (authorizedResponse.status == 200) {
-			const retrievedPosts = authorizedResponse.data.records.posts;
-			return retrievedPosts;
+			return authorizedResponse.data;
 		}
 		// need to display "an unexpected error occured"
 		console.log("There was an error obtaining feed posts.");
@@ -41,15 +40,15 @@ export const getComments = async ({
 
 	if (authorizedResponse) {
 		if (authorizedResponse.status == 200) {
-			const retrievedComments = authorizedResponse.data.records.posts;
-			return retrievedComments;
+			return authorizedResponse.data;
 		}
 		// need to display "an unexpected error occured"
 		console.log("There was an error obtaining feed posts.");
 	}
 };
 
-// Do we even still need this function? Leaving it here just in case.
+// Do we even still need this function? Leaving it here just 
+// in case we switch back to frontend computation
 export const getUserLikes = async (timeRange) => {
 	const userObjectString = await SecureStore.getItemAsync("userObject");
 	const userObject = JSON.parse(userObjectString);
