@@ -62,6 +62,21 @@ const removeDislikeOnThesis = async (item, reactionType) => {
 	}
 };
 
+export const getThesis = async (thesis_id) => {
+	const authorizedResponse = await pelleumClient({
+		method: "get",
+		url: `/public/theses/${thesis_id}`,
+	});
+
+	if (authorizedResponse) {
+		if (authorizedResponse.status == 200) {
+			return authorizedResponse.data;
+		}
+		// need to display "an unexpected error occured"
+		console.log("There was an error obtaining the thesis.");
+	}
+};
+
 export const sendThesisReaction = async (item, reactionType) => {
 	const thesisIsLiked = () => {
 		const state = getState();

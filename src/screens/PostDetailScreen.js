@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
 import CommentInput from "../components/CommentInput";
-import DismissKeyboard from "../components/DismissKeyboard";  // Do we need this?
 import pelleumClient from "../api/clients/PelleumClient";
 import PostButtonPanel from "../components/PostButtonPanel";
 import { PostBox, PostBoxType } from "../components/PostBox";
-import { getComments } from "../functions/PostFunctions";
+import { getComments, getPost } from "../functions/PostFunctions";
+import { getThesis } from "../functions/ThesesFunctions";
+import { ThesisBox } from "../components/ThesisBox";
 
 
 const PostDetailScreen = ({ navigation, route }) => {
@@ -24,6 +25,8 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [error, setError] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
+	const [postCommentedOn, setPostCommentedOn] = useState(null);
+	const [thesisCommentedOn, setThesisCommentedOn] = useState(null);
 	const [comments, setComments] = useState([]);
 
 	const detailedPost = route.params;
@@ -73,6 +76,19 @@ const PostDetailScreen = ({ navigation, route }) => {
 		const retrievedComments = await getComments({
 			is_post_comment_on: detailedPost.post_id,
 		});
+		if (detailedPost.is_post_comment_on) {
+			const retrievedPost = await getPost(detailedPost.is_post_comment_on);
+			setPostCommentedOn(retrievedPost);
+			setThesisCommentedOn(null);
+		} else if (detailedPost.is_thesis_comment_on) {
+			const retrievedThesis = await getThesis(detailedPost.is_thesis_comment_on);
+			setThesisCommentedOn(retrievedThesis);
+			setPostCommentedOn(null);
+		} else {
+			setPostCommentedOn(null);
+			setThesisCommentedOn(null);
+		}
+
 		if (retrievedComments) {
 			setComments(retrievedComments);
 		}
@@ -113,6 +129,23 @@ const PostDetailScreen = ({ navigation, route }) => {
 				refreshing={refreshing}
 				ListHeaderComponent={
 					<View style={styles.mainContainer}>
+						{postCommentedOn ?
+							(
+								<PostBox
+									postBoxType={PostBoxType.PostCommentedOn}
+									item={postCommentedOn}
+									nav={navigation}
+								/>
+							)
+							: null}
+						{thesisCommentedOn ?
+							(
+								<ThesisBox
+									item={thesisCommentedOn}
+									nav={navigation}
+								/>
+							)
+							: null}
 						<View style={styles.postContainer}>
 							<PostBox
 								postBoxType={PostBoxType.PostDetail}

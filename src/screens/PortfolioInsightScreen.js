@@ -58,9 +58,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 										</TouchableOpacity>
 										<TouchableOpacity
 											style={styles.thesisButton}
-											onPress={() => {
-												console.log("Thesis button worked.");
-											}}
+											onPress={() => navigation.navigate("Conviction", { asset: item.asset_symbol })}
 										>
 											<Text style={styles.thesisButtonText}>Thesis</Text>
 										</TouchableOpacity>

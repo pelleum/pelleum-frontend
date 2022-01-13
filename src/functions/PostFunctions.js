@@ -14,7 +14,22 @@ export const getPosts = async () => {
 			return authorizedResponse.data;
 		}
 		// need to display "an unexpected error occured"
-		console.log("There was an error obtaining feed posts.");
+		console.log("There was an error obtaining posts.");
+	}
+};
+
+export const getPost = async (post_id) => {
+	const authorizedResponse = await pelleumClient({
+		method: "get",
+		url: `/public/posts/${post_id}`,
+	});
+
+	if (authorizedResponse) {
+		if (authorizedResponse.status == 200) {
+			return authorizedResponse.data;
+		}
+		// need to display "an unexpected error occured"
+		console.log("There was an error obtaining the post.");
 	}
 };
 
