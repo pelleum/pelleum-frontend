@@ -1,13 +1,14 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import { sendThesisReaction } from "../functions/ThesesFunctions";
+import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { sendThesisReaction, addThesisRationale } from "../functions/ThesesFunctions";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { useSelector } from "react-redux";
 
 const ThesisButtonPanel = ({ item }) => {
 	const state = useSelector((state) => state.thesisReactionsReducer);
+	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer)
 
 	const thesisIsLiked =
 		(item.user_reaction_value == 1 &&
@@ -47,10 +48,11 @@ const ThesisButtonPanel = ({ item }) => {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={styles.iconButton}
-					onPress={() => console.log("Adopt button worked.")}
+					style={rationaleLibrary.includes(item.thesis_id) ? styles.disabledIconButton : styles.iconButton}
+					onPress={() => addThesisRationale(item)}
+					disabled={rationaleLibrary.includes(item.thesis_id) ? true : false}
 				>
-					<Text>Adopt</Text>
+					<MaterialIcons name="post-add" size={27} color="#00A8FC" />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -75,5 +77,14 @@ const styles = StyleSheet.create({
 		width: "92%",
 		flexDirection: "row",
 		justifyContent: "space-between",
+	},
+	iconButton: {
+		paddingHorizontal: 13,
+		paddingTop: 8,
+	},
+	disabledIconButton: {
+		paddingHorizontal: 13,
+		paddingTop: 8,
+		opacity: 0.33
 	},
 });

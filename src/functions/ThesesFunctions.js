@@ -5,6 +5,7 @@ import {
 	removeReaction,
 	addReaction,
 } from "../redux/actions/ThesisReactionsActions";
+import { addToLibrary } from "../redux/actions/RationaleActions";
 
 const getState = () => {
 	const storeState = store.getState();
@@ -75,6 +76,23 @@ export const getThesis = async (thesis_id) => {
 		// need to display "an unexpected error occured"
 		console.log("There was an error obtaining the thesis.");
 	}
+};
+
+export const addThesisRationale = async (item) => {
+	const authorizedResponse = await pelleumClient({
+		method: "post",
+		url: '/public/theses/rationales',
+		data: { thesis_id: item.thesis_id },
+	});
+
+	if (authorizedResponse) {
+		if (authorizedResponse.status == 201) {
+			store.dispatch(addToLibrary(item.thesis_id));
+			console.log("Thesis successfully added to your library.")
+		} else {
+			console.log("There was an error adding the thesis to your library.");
+		};
+	};
 };
 
 export const sendThesisReaction = async (item, reactionType) => {

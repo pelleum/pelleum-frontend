@@ -5,7 +5,7 @@ export const LOG_OUT = 'LOG_OUT';
 export const RESTORE_TOKEN = 'RESTORE_TOKEN';
 
 
-export const authError = errorMessage => dispatch => {
+export const authError = (errorMessage) => dispatch => {
     dispatch({
         type: AUTH_ERROR,
         payload: errorMessage
