@@ -59,7 +59,7 @@ const SearchScreen = ({ navigation }) => {
         if (term.length > 0) {
             for (const sent of ["Bull", "Bear"]) {
                 const queryParams = { asset_symbol: term, sentiment: sent, records_per_page: recordsPerPage, page: 1 };
-                const responseData = await getTheses(queryParams);
+                const responseData = await getTheses({queryParams: queryParams});
                 if (responseData) {
                     successfulResponses.push(true)
                     if (sent == "Bull") {
@@ -94,7 +94,7 @@ const SearchScreen = ({ navigation }) => {
             setCurrentBullPage(newPageNumber);
             if (newPageNumber < totalBullPages) {
                 queryParams = { asset_symbol: term, sentiment: sentiment, records_per_page: recordsPerPage, page: newPageNumber };
-                responseData = await getTheses(queryParams);
+                responseData = await getTheses({queryParams: queryParams});
                 if (responseData) {
                     setBullResults(oldBullTheses => [...oldBullTheses, ...responseData.records.theses]);
                 }
@@ -104,7 +104,7 @@ const SearchScreen = ({ navigation }) => {
             setCurrentBearPage(newPageNumber);
             if (newPageNumber < totalBearPages) {
                 queryParams = { asset_symbol: term, sentiment: sentiment, records_per_page: recordsPerPage, page: newPageNumber };
-                responseData = await getTheses(queryParams);
+                responseData = await getTheses({queryParams: queryParams});
                 if (responseData) {
                     setBearResults(oldBearTheses => [...oldBearTheses, ...responseData.records.theses]);
                 }

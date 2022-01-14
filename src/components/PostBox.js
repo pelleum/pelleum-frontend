@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
+import { ThesisBox } from "./ThesisBox";
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -25,7 +26,11 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 	const createdAt = new Date(item.created_at).getTime();
 	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
 
-	if (postBoxType == PostBoxType.Comment || postBoxType == PostBoxType.PostCommentedOn || postBoxType == PostBoxType.ThesisCommentedOn) {
+	if (
+		postBoxType == PostBoxType.Comment ||
+		postBoxType == PostBoxType.PostCommentedOn ||
+		postBoxType == PostBoxType.ThesisCommentedOn
+	) {
 		item["needsRefresh"] = true;
 	}
 
@@ -42,7 +47,9 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
-							<Text style={styles.usernameText}>@{item.username}  {elapsedTimeMinutes} min</Text>
+							<Text style={styles.usernameText}>
+								@{item.username} {elapsedTimeMinutes} min
+							</Text>
 							{postBoxType == PostBoxType.Feed ? (
 								item.asset_symbol ? (
 									<TouchableOpacity
@@ -68,9 +75,7 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 							</Text>
 						</HStack>
 						<Text style={styles.contentText}>{item.content}</Text>
-						{item.thesis ? (
-
-						)}
+						{item.thesis ? <ThesisBox item={item.thesis} nav={nav} /> : null}
 						{postBoxType == PostBoxType.PostDetail ? (
 							<TouchableOpacity
 								style={styles.buttonEnabled}

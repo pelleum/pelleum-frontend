@@ -12,7 +12,7 @@ import {
 import CreateModal from "../components/modals/CreateModal";
 import { PostBox, PostBoxType } from "../components/PostBox";
 import { getPosts } from "../functions/PostFunctions";
-import { getTheses } from "../functions/ThesesFunctions";
+import { getTheses, extractThesesIDs } from "../functions/ThesesFunctions";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 
@@ -46,10 +46,6 @@ const FeedScreen = ({ navigation, route }) => {
 		if (postResponseData) {
 			setPosts(postResponseData.records.posts);
 			dispatch(resetLikes());
-			const thesesResponseData = await getTheses();
-			if (thesesResponseData) {
-				setTheses(thesesResponseData.records.theses)
-			}
 		}
 		setRefreshing(false);
 	};
@@ -57,6 +53,34 @@ const FeedScreen = ({ navigation, route }) => {
 	useEffect(() => {
 		onRefresh();
 	}, []);
+
+
+	const getThesesAsync = async (uniqueThesesIDs) => {
+		// This funciton ONLY exists so we can await getTheses...
+		const thesesResponseData = await getTheses({thesesIDs: uniqueThesesIDs});
+			if (thesesResponseData) {
+				setTheses(thesesResponseData.records.theses);
+			}
+	};
+
+
+	useEffect(() => {
+		const thesesIDs = [];
+		for (const post of posts) {
+			if (post.thesis_id) {
+				thesesIDs.push(post.thesis_id);
+			}
+		};
+		const unique = (value, index, self) => {
+			return self.indexOf(value) === index
+		}
+		  
+		const uniqueThesesIDs = thesesIDs.filter(unique)
+		  
+		if (thesesIDs.length > 0) {
+			getThesesAsync(uniqueThesesIDs);
+		}
+	}, [posts]);
 
 	return (
 		<View style={styles.mainContainer}>
