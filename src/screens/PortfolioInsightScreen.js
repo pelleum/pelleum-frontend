@@ -8,7 +8,6 @@ import {
 	Image,
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import { Feather } from "@expo/vector-icons";
 import pelleumClient from "../api/clients/PelleumClient";
 
 const PortfolioInsightScreen = ({ navigation, route }) => {
@@ -58,7 +57,12 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 										</TouchableOpacity>
 										<TouchableOpacity
 											style={styles.thesisButton}
-											onPress={() => navigation.navigate("Conviction", { asset: item.asset_symbol })}
+											onPress={() => {
+												navigation.navigate("Conviction", {
+													asset: item.asset_symbol,
+													userId: item.user_id
+												});
+											}}
 										>
 											<Text style={styles.thesisButtonText}>Thesis</Text>
 										</TouchableOpacity>
@@ -83,20 +87,10 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 					)}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
-							<HStack alignItems="center" justifyContent="space-between">
 								<Image
 									style={styles.image}
 									source={require("../../assets/forest.jpg")}
 								/>
-								<TouchableOpacity
-									style={styles.settingsButton}
-									onPress={() => {
-										navigation.navigate("Settings");
-									}}
-								>
-									<Feather name="settings" size={30} color="#00A8FC" />
-								</TouchableOpacity>
-							</HStack>
                             <Text style={styles.usernameText}>@{username}</Text>
 							<Text style={styles.listHeaderText}>Assets</Text>
 						</View>
@@ -208,9 +202,6 @@ const styles = StyleSheet.create({
 		marginRight: 5,
 		marginVertical: 3,
 		paddingVertical: 5,
-	},
-	settingsButton: {
-		padding: 15,
 	},
 	image: {
 		width: 60,

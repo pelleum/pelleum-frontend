@@ -88,11 +88,18 @@ export const addThesisRationale = async (item) => {
 	if (authorizedResponse) {
 		if (authorizedResponse.status == 201) {
 			store.dispatch(addToLibrary(item.thesis_id));
-			console.log("Thesis successfully added to your library.")
 		} else {
 			console.log("There was an error adding the thesis to your library.");
 		};
 	};
+};
+
+export const extractThesesIDs = async (theses) => {
+	const thesesIDs = [];
+	for (const thesis of theses) {
+		thesesIDs.push(thesis.thesis_id)
+	};
+	return thesesIDs;
 };
 
 export const sendThesisReaction = async (item, reactionType) => {
