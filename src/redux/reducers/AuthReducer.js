@@ -6,7 +6,7 @@ const initialState = {
     isLogout: false,
     hasUserToken: false,
     errorMessage: '',
-}
+};
 
 
 function authReducer(state = initialState, action) {

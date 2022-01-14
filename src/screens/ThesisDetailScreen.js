@@ -77,8 +77,8 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				setError("");
 			} else {
 				setError("An unexpected error occured. Your reply was not shared.");
-			}
-		}
+			};
+		};
 	};
 
 	const onRefresh = async () => {
