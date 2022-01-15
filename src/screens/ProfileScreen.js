@@ -66,7 +66,12 @@ const ProfileScreen = ({ navigation, route }) => {
 										</TouchableOpacity>
 										<TouchableOpacity
 											style={styles.thesisButton}
-											onPress={() => navigation.navigate("Conviction", { asset: item.asset_symbol })}
+											onPress={() => {
+												navigation.navigate("Conviction", {
+													asset: item.asset_symbol,
+													userId: item.user_id
+												});
+											}}
 										>
 											<Text style={styles.thesisButtonText}>Thesis</Text>
 										</TouchableOpacity>

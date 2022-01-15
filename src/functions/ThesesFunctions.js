@@ -87,12 +87,19 @@ export const addThesisRationale = async (item) => {
 
 	if (authorizedResponse) {
 		if (authorizedResponse.status == 201) {
-			store.dispatch(addToLibrary(item.thesis_id));
-			console.log("Thesis successfully added to your library.")
+			store.dispatch(addToLibrary({ thesisID: item.thesis_id, asset: item.asset_symbol }));
 		} else {
 			console.log("There was an error adding the thesis to your library.");
 		};
 	};
+};
+
+export const extractRationaleInfo = async (theses) => {
+	const rationaleInfo = [];
+	for (const thesis of theses) {
+		rationaleInfo.push({thesisID: thesis.thesis_id, asset: thesis.asset_symbol});
+	};
+	return rationaleInfo;
 };
 
 export const sendThesisReaction = async (item, reactionType) => {

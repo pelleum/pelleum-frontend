@@ -9,25 +9,27 @@ const ConvictionLibraryScreen = ({ navigation, route }) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const asset = route.params.asset ? route.params.asset : null;
+    const userId = route.params.userId ? route.params.userId : null;
 
-    //This is here just to get some theses for the time being...
-    const getTheses = async () => {
-        const authorizedResponse = await pelleumClient({
-            method: "get",
-            url: '/public/theses/retrieve/many',
-            queryParams: { asset_symbol: asset }
-        });
+    const getConvictionTheses = async () => {
+		const authorizedResponse = await pelleumClient({
+			method: "get",
+			url: '/public/theses/rationales/retrieve/many',
+			queryParams: { user_id: userId, asset_symbol: asset }
+		});
 
-        if (authorizedResponse.status == 200) {
-            setThesesArray(authorizedResponse.data.records.theses);
-        } else {
-            setErrorMessage("There was an error obtaining theses from the backend.");
-        }
-    };
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				setThesesArray(authorizedResponse.data.records.theses);
+			} else {
+				setErrorMessage("There was an error obtaining theses from the backend.");
+			};
+		};
+	};
 
     //on first render
     useEffect(() => {
-        getTheses();
+        getConvictionTheses();
     }, []);
 
     return (
