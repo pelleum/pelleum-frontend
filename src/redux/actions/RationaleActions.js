@@ -3,23 +3,23 @@ export const REMOVE_FROM_LIBRARY = 'REMOVE_FROM_LIBRARY';
 export const REFRESH_LIBRARY = 'REFRESH_LIBRARY';
 
 
-export const addToLibrary = (thesis_id) => dispatch => {
+export const addToLibrary = (rationaleInfo) => dispatch => {
     dispatch({
         type: ADD_TO_LIBRARY,
-        payload: thesis_id,
+        payload: rationaleInfo,
     });
 };
 
-export const removeFromLibrary = (thesis_id) => dispatch => {
+export const removeFromLibrary = (rationaleInfo) => dispatch => {
     dispatch({
         type: REMOVE_FROM_LIBRARY,
-        payload: thesis_id,
+        payload: rationaleInfo,
     });
 };
 
-export const refreshLibrary = (thesis_id_array) => (dispatch) => {
+export const refreshLibrary = (rationaleInfoArray) => (dispatch) => {
     dispatch({
         type: REFRESH_LIBRARY,
-        payload: thesis_id_array,
+        payload: rationaleInfoArray,
     });
 };

@@ -25,7 +25,7 @@ import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
 import LinkAccount from "./src/screens/LinkAccount";
 import ConvictionLibraryScreen from "./src/screens/ConvictionLibraryScreen";
-import { extractThesesIDs } from "./src/functions/ThesesFunctions";
+import { extractRationaleInfo } from "./src/functions/ThesesFunctions";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 
 // Functions
@@ -150,11 +150,10 @@ const RootStackFlow = () => {
 			url: '/public/theses/rationales/retrieve/many',
 			queryParams: { user_id: userObject.user_id }
 		});
-
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-				const thesesIDs = await extractThesesIDs(authorizedResponse.data.records.theses);
-				dispatch(refreshLibrary(thesesIDs));
+				const rationaleInfo = await extractRationaleInfo(authorizedResponse.data.records.theses);
+				dispatch(refreshLibrary(rationaleInfo));
 			} else {
 				console.log("There was an error refreshing the rationale library.");
 			};
@@ -162,7 +161,10 @@ const RootStackFlow = () => {
 	};
 
 	const validateToken = async () => {
-		const authorizedResponse = await pelleumClient({ method: 'get', url: '/public/auth/users' });
+		const authorizedResponse = await pelleumClient({ 
+			method: 'get', 
+			url: '/public/auth/users' 
+		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
 				dispatch(restoreToken());
