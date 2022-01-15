@@ -83,11 +83,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const retrievedComments = await getComments({
+		const commentsResponseData = await getComments({
 			is_thesis_comment_on: detailedThesis.thesis_id,
 		});
-		if (retrievedComments) {
-			setComments(retrievedComments);
+		if (commentsResponseData) {
+			setComments(commentsResponseData.records.posts);
 		}
 
 		setRefreshing(false);

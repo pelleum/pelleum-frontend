@@ -4,9 +4,9 @@ import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import DismissKeyboard from '../components/DismissKeyboard';
-import pelleumClient from '../api/clients/PelleumClient';
 import { useDispatch } from "react-redux";
 import { resetReactions } from '../redux/actions/ThesisReactionsActions';
+import { getTheses } from '../functions/ThesesFunctions';
 import { ThesisBox } from '../components/ThesisBox';
 
 const SearchScreen = ({ navigation }) => {
@@ -54,37 +54,32 @@ const SearchScreen = ({ navigation }) => {
 
     // get initial results when user presses 'search' button on keyboard
     const onSearch = async () => {
-        let responseStatuses = [];
+        let successfulResponses = [];
         const retrievedThesesArrayLengths = { bull: 0, bear: 0 };
         if (term.length > 0) {
             for (const sent of ["Bull", "Bear"]) {
-                const authorizedResponse = await pelleumClient({
-                    method: "get",
-                    url: '/public/theses/retrieve/many',
-                    queryParams: { asset_symbol: term, sentiment: sent, records_per_page: recordsPerPage, page: 1 }
-                });
-                if (authorizedResponse) {
-                    responseStatuses.push(authorizedResponse.status)
-                    if (authorizedResponse.status == 200) {
-                        if (sent == "Bull") {
-                            retrievedThesesArrayLengths.bull = authorizedResponse.data.records.theses.length;
-                            setBullResults(authorizedResponse.data.records.theses);
-                            setTotalBullPages(authorizedResponse.data.meta_data.total_pages);
-                            setLastBullItemIndex(0);
-                        } else {
-                            retrievedThesesArrayLengths.bear = authorizedResponse.data.records.theses.length;
-                            setBearResults(authorizedResponse.data.records.theses);
-                            setTotalBearPages(authorizedResponse.data.meta_data.total_pages);
-                            setLastBearItemIndex(0);
-                            dispatch(resetReactions());
-                        }
+                const queryParams = { asset_symbol: term, sentiment: sent, records_per_page: recordsPerPage, page: 1 };
+                const responseData = await getTheses({queryParams: queryParams});
+                if (responseData) {
+                    successfulResponses.push(true)
+                    if (sent == "Bull") {
+                        retrievedThesesArrayLengths.bull = responseData.records.theses.length;
+                        setBullResults(responseData.records.theses);
+                        setTotalBullPages(responseData.meta_data.total_pages);
+                        setLastBullItemIndex(0);
                     } else {
-                        setErrorMessage("There was an error obtaining theses from the backend.")
-                    };
-                };
+                        retrievedThesesArrayLengths.bear = responseData.records.theses.length;
+                        setBearResults(responseData.records.theses);
+                        setTotalBearPages(responseData.meta_data.total_pages);
+                        setLastBearItemIndex(0);
+                        dispatch(resetReactions());
+                    }
+                } else {
+                    successfulResponses.push(false)
+                }
             };
             const thesesArrayLength = sentiment === "Bull" ? retrievedThesesArrayLengths.bull : retrievedThesesArrayLengths.bear
-            if (responseStatuses.every(status => status === 200) && thesesArrayLength > 0) {
+            if (successfulResponses.every(responseSuccess => responseSuccess === true) && thesesArrayLength > 0) {
                 flatListRef.current.scrollToIndex({ index: 0, animated: false });
             };
         };
@@ -92,40 +87,27 @@ const SearchScreen = ({ navigation }) => {
 
     const getMoreResults = async () => {
         let newPageNumber;
-        let authorizedResponse;
+        let responseData;
+        let queryParams
         if (sentiment === "Bull") {
             newPageNumber = currentBullPage + 1;
             setCurrentBullPage(newPageNumber);
             if (newPageNumber < totalBullPages) {
-                authorizedResponse = await pelleumClient({
-                    method: "get",
-                    url: '/public/theses/retrieve/many',
-                    queryParams: { asset_symbol: term, sentiment: sentiment, records_per_page: recordsPerPage, page: newPageNumber }
-                });
-                if (authorizedResponse) {
-                    if (authorizedResponse.status == 200) {
-                        setBullResults(oldBullTheses => [...oldBullTheses, ...authorizedResponse.data.records.theses]);
-                    } else {
-                        setErrorMessage("There was an error obtaining theses from the backend.")
-                    };
-                };
+                queryParams = { asset_symbol: term, sentiment: sentiment, records_per_page: recordsPerPage, page: newPageNumber };
+                responseData = await getTheses({queryParams: queryParams});
+                if (responseData) {
+                    setBullResults(oldBullTheses => [...oldBullTheses, ...responseData.records.theses]);
+                }
             }
         } else {
             newPageNumber = currentBearPage + 1;
             setCurrentBearPage(newPageNumber);
             if (newPageNumber < totalBearPages) {
-                authorizedResponse = await pelleumClient({
-                    method: "get",
-                    url: '/public/theses/retrieve/many',
-                    queryParams: { asset_symbol: term, sentiment: sentiment, records_per_page: recordsPerPage, page: newPageNumber }
-                });
-                if (authorizedResponse) {
-                    if (authorizedResponse.status == 200) {
-                        setBearResults(oldBearTheses => [...oldBearTheses, ...authorizedResponse.data.records.theses]);
-                    } else {
-                        setErrorMessage("There was an error obtaining theses from the backend.")
-                    };
-                };
+                queryParams = { asset_symbol: term, sentiment: sentiment, records_per_page: recordsPerPage, page: newPageNumber };
+                responseData = await getTheses({queryParams: queryParams});
+                if (responseData) {
+                    setBearResults(oldBearTheses => [...oldBearTheses, ...responseData.records.theses]);
+                }
             };
         };
     };

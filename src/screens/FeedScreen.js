@@ -12,6 +12,7 @@ import {
 import CreateModal from "../components/modals/CreateModal";
 import { PostBox, PostBoxType } from "../components/PostBox";
 import { getPosts } from "../functions/PostFunctions";
+import { getTheses, extractThesesIDs } from "../functions/ThesesFunctions";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 
@@ -23,6 +24,7 @@ const FeedScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
+	const [theses, setTheses] = useState([]);
 
 	if (route.params) {
 		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
@@ -40,9 +42,9 @@ const FeedScreen = ({ navigation, route }) => {
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const retrievedPosts = await getPosts();
-		if (retrievedPosts) {
-			setPosts(retrievedPosts);
+		const postResponseData = await getPosts();
+		if (postResponseData) {
+			setPosts(postResponseData.records.posts);
 			dispatch(resetLikes());
 		}
 		setRefreshing(false);
@@ -52,12 +54,50 @@ const FeedScreen = ({ navigation, route }) => {
 		onRefresh();
 	}, []);
 
+
+	const getThesesAsync = async (uniqueThesesIDs) => {
+		// This funciton ONLY exists so we can await getTheses...
+		const thesesResponseData = await getTheses({thesesIDs: uniqueThesesIDs});
+			if (thesesResponseData) {
+				setTheses(thesesResponseData.records.theses);
+			}
+	};
+
+
+	useEffect(() => {
+		const thesesIDs = [];
+		for (const post of posts) {
+			if (post.thesis_id) {
+				thesesIDs.push(post.thesis_id);
+			}
+		};
+		const unique = (value, index, self) => {
+			return self.indexOf(value) === index
+		}
+		  
+		const uniqueThesesIDs = thesesIDs.filter(unique)
+		  
+		if (thesesIDs.length > 0) {
+			getThesesAsync(uniqueThesesIDs);
+		}
+	}, [posts]);
+
 	return (
 		<View style={styles.mainContainer}>
 			<FlatList
 				data={posts}
 				keyExtractor={(item) => item.post_id.toString()}
 				renderItem={({ item }) => {
+					
+					if (item.thesis_id) {
+						const thesisInPost = theses.find(thesis => {
+							return thesis.thesis_id === item.thesis_id;
+						})
+						if (thesisInPost) {
+							item["thesis"] = thesisInPost;
+						}
+					}
+
 					return (
 						<PostBox
 							postBoxType={PostBoxType.Feed}

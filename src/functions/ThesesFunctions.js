@@ -134,3 +134,42 @@ export const sendThesisReaction = async (item, reactionType) => {
 		}
 	}
 };
+
+export const getTheses = async ({
+		queryParams = null,
+		thesesIDs = null,
+	} = {}) => {
+	// This function takes an optional queryParams as an input parameter, and 
+	// an optional thesesIDs. When thesesIDs are supplied, the query parameter
+	// string is created manually, becuase objects can't have duplicate keys, and 
+	// the endpoint requeires ?theses_ids=foo&theses_ids=bar to construct a list
+	
+	let manualQueryParams;
+	let url;
+	if (thesesIDs) {
+		manualQueryParams = "?";
+		const thesesIDsLength = thesesIDs.length
+		thesesIDs.forEach(function (thesisID, index) {
+			if (index < thesesIDsLength - 1) {
+				manualQueryParams += `theses_ids=${thesisID}&`
+			} else {
+				manualQueryParams += `theses_ids=${thesisID}`
+			}
+		});
+		url = '/public/theses/retrieve/many' + manualQueryParams
+	} else {
+		url = '/public/theses/retrieve/many'
+	}
+	
+	const authorizedResponse = await pelleumClient({
+		method: "get",
+		url: url,
+		queryParams: queryParams
+	});
+
+	if (authorizedResponse.status == 200) {
+		return authorizedResponse.data;
+	} else {
+		console.log("There was an error retrieving theses from the backend.")
+	}
+}
