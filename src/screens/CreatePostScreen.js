@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
-import pelleumClient from "../api/clients/PelleumClient";
+import PostsManager from "../managers/PostsManager";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -20,7 +20,7 @@ const CreatePostScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(null);     // Migrate this to reusable, universally accessable state
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbolValidity: false,
 		contentValidity: false,
@@ -33,21 +33,12 @@ const CreatePostScreen = ({ navigation }) => {
 	];
 
 	const shareButtonPressed = async () => {
-		const authorizedResponse = await pelleumClient({
-			method: "post",
-			url: "/public/posts",
-			data: { content, asset_symbol, sentiment },
-		});
-
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 201) {
-				setContent("");
+		const createdPost = await PostsManager.createPost({ content, asset_symbol, sentiment });
+		if (createdPost) {
+			setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
-				navigation.navigate("Feed", {newPost: authorizedResponse.data});
-			} else {
-				setError("An unexpected error occured. Your content was not shared.");
-			}
+				navigation.navigate("Feed", {newPost: createdPost});
 		}
 	};
 

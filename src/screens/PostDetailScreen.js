@@ -10,11 +10,10 @@ import {
 } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
 import CommentInput from "../components/CommentInput";
-import pelleumClient from "../api/clients/PelleumClient";
 import PostButtonPanel from "../components/PostButtonPanel";
 import { PostBox, PostBoxType } from "../components/PostBox";
-import { getComments, getPost } from "../functions/PostFunctions";
-import { getThesis } from "../functions/ThesesFunctions";
+import PostsManager from "../managers/PostsManager";
+import ThesesManager from "../managers/ThesesManager";
 import { ThesisBox } from "../components/ThesisBox";
 
 
@@ -48,40 +47,31 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const replyButtonPressed = async () => {
 		// Think about adding sentiment, symbol, theses, etc to theses comments.
 		Keyboard.dismiss();
-		const authorizedResponse = await pelleumClient({
-			method: "post",
-			url: `/public/posts`,
-			data: {
-				content: commentContent,
-				is_post_comment_on: detailedPost.post_id,
-			},
+		const createdComment = await PostsManager.createPost({
+			content: commentContent,
+			is_post_comment_on: detailedPost.post_id,
 		});
 
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 201) {
-				const commentsCopy = comments;
-				commentsCopy.splice(0, 0, authorizedResponse.data);
-				setComments(commentsCopy);
-				setCommentContent("");
-				setDisableStatus(true);
-				setError("");
-			} else {
-				setError("An unexpected error occured. Your reply was not shared.");
-			}
+		if (createdComment) {
+			const commentsCopy = comments;
+			commentsCopy.splice(0, 0, authorizedResponse.data);
+			setComments(commentsCopy);
+			setCommentContent("");
+			setDisableStatus(true);
 		}
 	};
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const commentsResponseData = await getComments({
+		const commentsResponseData = await PostsManager.getComments({
 			is_post_comment_on: detailedPost.post_id,
 		});
 		if (detailedPost.is_post_comment_on) {
-			const retrievedPost = await getPost(detailedPost.is_post_comment_on);
+			const retrievedPost = await PostsManager.getPost(detailedPost.is_post_comment_on);
 			setPostCommentedOn(retrievedPost);
 			setThesisCommentedOn(null);
 		} else if (detailedPost.is_thesis_comment_on) {
-			const retrievedThesis = await getThesis(detailedPost.is_thesis_comment_on);
+			const retrievedThesis = await ThesesManager.getThesis(detailedPost.is_thesis_comment_on);
 			setThesisCommentedOn(retrievedThesis);
 			setPostCommentedOn(null);
 		} else {

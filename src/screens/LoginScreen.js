@@ -8,14 +8,13 @@ import {
 	TouchableOpacity,
 	Text,
 } from "react-native";
-import * as SecureStore from "expo-secure-store";
 
 // Import Local Files
-import pelleumClient from "../api/clients/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { login, authError, clearAuthError } from "../redux/actions/AuthActions";
+import { clearAuthError } from "../redux/actions/AuthActions";
+import UserManager from "../managers/UserManager";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
@@ -29,24 +28,6 @@ const LoginScreen = ({ navigation }) => {
 		usernameValidity: false,
 		passwordValidity: false,
 	});
-
-	const logIn = async ({ username, password }) => {
-		var qs = require("query-string");
-        const response = await pelleumClient({
-            method: "post",
-            url: "/public/auth/users/login",
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            data: qs.stringify({ username, password }),
-			onLogin: true
-        });
-		
-        if (response.status == 200) {
-			await SecureStore.setItemAsync('userObject', JSON.stringify(response.data));
-            dispatch(login());
-        } else {
-            dispatch(authError(response.data.detail));
-        }
-    };
 
 	useEffect(() => {
 		const unsubscribe = navigation.addListener("focus", () => {
@@ -132,7 +113,7 @@ const LoginScreen = ({ navigation }) => {
 				</View>
 				<View style={styles.buttonContainer}>
 					<TouchableOpacity
-						onPress={() => logIn({ username, password })}
+						onPress={() => UserManager.login({ username, password })}
 						style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
 						disabled={disableStatus}
 					>

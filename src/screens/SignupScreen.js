@@ -11,13 +11,12 @@ import {
 import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider } from "native-base";
-import * as SecureStore from 'expo-secure-store';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Import Local Files
-import pelleumClient from "../api/clients/PelleumClient";
 import DismissKeyboard from "../components/DismissKeyboard";
-import { login, authError, clearAuthError } from "../redux/actions/AuthActions";
+import { clearAuthError } from "../redux/actions/AuthActions";
+import UserManager from "../managers/UserManager";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
@@ -37,22 +36,6 @@ const SignupScreen = ({ navigation }) => {
     // Redux
     const { errorMessage } = useSelector(state => state.authReducer);
     const dispatch = useDispatch();
-
-    const signUp = async ({ email, username, password }) => {
-
-        const response = await pelleumClient({
-            method: "post",
-            url: "/public/auth/users",
-            data: { email, username, password }
-        });
-
-        if (response.status == 201) {
-            await SecureStore.setItemAsync('userObject', JSON.stringify(response.data));
-            dispatch(login());
-        } else {
-            dispatch(authError(response.data.detail));
-        }
-    };
 
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
@@ -347,7 +330,7 @@ const SignupScreen = ({ navigation }) => {
                         </HStack>
                     </View>
                     <TouchableOpacity
-                        onPress={() => signUp({ email, username, password })}
+                        onPress={() => UserManager.signup({ email, username, password })}
                         style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                         disabled={disableStatus}
                     >

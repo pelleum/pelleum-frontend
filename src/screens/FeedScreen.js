@@ -11,8 +11,8 @@ import {
 // File imports
 import CreateModal from "../components/modals/CreateModal";
 import { PostBox, PostBoxType } from "../components/PostBox";
-import { getPosts } from "../functions/PostFunctions";
-import { getTheses, extractThesesIDs } from "../functions/ThesesFunctions";
+import PostsManager from "../managers/PostsManager";
+import ThesesManager from "../managers/ThesesManager";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 
@@ -42,7 +42,7 @@ const FeedScreen = ({ navigation, route }) => {
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const postResponseData = await getPosts();
+		const postResponseData = await PostsManager.getPosts();
 		if (postResponseData) {
 			setPosts(postResponseData.records.posts);
 			dispatch(resetLikes());
@@ -57,7 +57,7 @@ const FeedScreen = ({ navigation, route }) => {
 
 	const getThesesAsync = async (uniqueThesesIDs) => {
 		// This funciton ONLY exists so we can await getTheses...
-		const thesesResponseData = await getTheses({thesesIDs: uniqueThesesIDs});
+		const thesesResponseData = await ThesesManager.getTheses({thesesIDs: uniqueThesesIDs});
 			if (thesesResponseData) {
 				setTheses(thesesResponseData.records.theses);
 			}

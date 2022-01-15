@@ -8,7 +8,7 @@ import {
 	Image,
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import pelleumClient from "../api/clients/PelleumClient";
+import PortfolioManager from "../managers/PortfolioManager";
 
 const PortfolioInsightScreen = ({ navigation, route }) => {
 
@@ -17,18 +17,9 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
 
 	const onRefresh = async () => {
-	
-		const authorizedResponse = await pelleumClient({
-			method: "get",
-			url: `/public/portfolio/${userId}`,
-		});
-
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				setAssetList(authorizedResponse.data.records)
-			} else {
-				console.log("There was an error retrieving the assets from the backend.")
-			}
+		const retrievedAssets = await PortfolioManager.retrieveAssets(userId);
+		if (retrievedAssets) {
+			setAssetList(retrievedAssets.records);
 		}
 	};
 
@@ -58,7 +49,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 										<TouchableOpacity
 											style={styles.thesisButton}
 											onPress={() => {
-												navigation.navigate("Conviction", {
+												navigation.navigate("Rationales", {
 													asset: item.asset_symbol,
 													userId: item.user_id
 												});

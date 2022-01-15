@@ -14,8 +14,8 @@ import SwitchSelector from "react-native-switch-selector";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
-import pelleumClient from "../api/clients/PelleumClient";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
+import ThesesManager from "../managers/ThesesManager";
 
 const CreateThesisScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
@@ -25,7 +25,7 @@ const CreateThesisScreen = ({ navigation }) => {
 	const [source1, setSource1] = useState("");
 	const [source2, setSource2] = useState("");
 	const [source3, setSource3] = useState("");
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(null);    // Migrate to Redux
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbolValidity: false,
 		contentValidity: false,
@@ -85,29 +85,21 @@ const CreateThesisScreen = ({ navigation }) => {
 		// Executed when the 'share' button is pressed
 
 		const sources = validSources;
-		
-		const authorizedResponse = await pelleumClient({
-			method: "post",
-			url: "/public/theses",
-			data: {
-				content,
-				title,
-				asset_symbol,
-				sentiment,
-				sources,
-			}
+
+		const createdThesis = await ThesesManager.createThesis({
+			content,
+			title,
+			asset_symbol,
+			sentiment,
+			sources,
 		});
 
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 201) {
-				setContent("");
-				setAssetSymbol("");
-				setDisableStatus(true);
-				navigation.navigate("Feed");
-			} else {
-				setError("An unexpected error occured. Your content was not shared.");
-			}
-		}
+		if (createdThesis) {
+			setContent("");
+			setAssetSymbol("");
+			setDisableStatus(true);
+			navigation.navigate("Feed");
+		}		
 	};
 
 	const handleChangeText = ({

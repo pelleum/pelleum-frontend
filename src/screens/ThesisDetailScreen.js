@@ -12,9 +12,8 @@ import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
 import { PostBox, PostBoxType } from "../components/PostBox";
-import { getComments } from "../functions/PostFunctions";
+import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
-import pelleumClient from "../api/clients/PelleumClient";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// State Management
@@ -22,7 +21,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
 	const [disableStatus, setDisableStatus] = useState(true);
-	const [error, setError] = useState("");
+	const [error, setError] = useState("");     //Migrate to redux
 	const [refreshing, setRefreshing] = useState(false);
 	const [comments, setComments] = useState([]);
 
@@ -58,32 +57,24 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const replyButtonPressed = async () => {
 		// Think about adding sentiment, symbol, theses, etc to theses comments.
 		Keyboard.dismiss();
-		const authorizedResponse = await pelleumClient({
-			method: "post",
-			url: `/public/posts`,
-			data: {
-				content: commentContent,
-				is_thesis_comment_on: detailedThesis.thesis_id,
-			},
+		const createdComment = await PostsManager.createPost({
+			content: commentContent,
+			is_thesis_comment_on: detailedThesis.thesis_id,
 		});
 
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 201) {
-				const commentsCopy = comments;
-				commentsCopy.splice(0, 0, authorizedResponse.data);
-				setComments(commentsCopy);
-				setCommentContent("");
-				setDisableStatus(true);
-				setError("");
-			} else {
-				setError("An unexpected error occured. Your reply was not shared.");
-			};
-		};
+		if (createdComment) {
+			const commentsCopy = comments;
+			commentsCopy.splice(0, 0, authorizedResponse.data);
+			setComments(commentsCopy);
+			setCommentContent("");
+			setDisableStatus(true);
+		}
 	};
+
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const commentsResponseData = await getComments({
+		const commentsResponseData = await PostsManager.getComments({
 			is_thesis_comment_on: detailedThesis.thesis_id,
 		});
 		if (commentsResponseData) {

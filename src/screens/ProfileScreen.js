@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import { Feather, } from "@expo/vector-icons";
-import pelleumClient from "../api/clients/PelleumClient";
+import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
 
 const ProfileScreen = ({ navigation, route }) => {
@@ -20,18 +20,11 @@ const ProfileScreen = ({ navigation, route }) => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
 		const userObject = JSON.parse(userObjectString);
 		setUsername(userObject.username);
-		const authorizedResponse = await pelleumClient({
-			method: "get",
-			url: `/public/portfolio/${userObject.user_id}`,
-		});
-
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				setAssetList(authorizedResponse.data.records)
-			} else {
-				console.log("There was an error retrieving the assets from the backend.")
-			}
+		const retrievedAssets = await PortfolioManager.retrieveAssets(userObject.user_id);
+		if (retrievedAssets) {
+			setAssetList(retrievedAssets.records);
 		}
+
 	};
 
 	useEffect(() => {
@@ -67,7 +60,7 @@ const ProfileScreen = ({ navigation, route }) => {
 										<TouchableOpacity
 											style={styles.thesisButton}
 											onPress={() => {
-												navigation.navigate("Conviction", {
+												navigation.navigate("Rationales", {
 													asset: item.asset_symbol,
 													userId: item.user_id
 												});

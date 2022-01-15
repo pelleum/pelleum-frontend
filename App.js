@@ -24,18 +24,17 @@ import LoadingScreen from "./src/screens/LoadingScreen";
 import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
 import LinkAccount from "./src/screens/LinkAccount";
-import ConvictionLibraryScreen from "./src/screens/ConvictionLibraryScreen";
-import { extractRationaleInfo } from "./src/functions/ThesesFunctions";
+import RationaleScreen from "./src/screens/RationaleScreen";
+import RationalesManager from "./src/managers/RationalesManager";
+import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 
-// Functions
-import pelleumClient from "./src/api/clients/PelleumClient";
+
 
 // Redux
 import { Provider } from 'react-redux';
 import { store } from './src/redux/Store';
 import { useSelector, useDispatch } from 'react-redux';
-import { restoreToken } from "./src/redux/actions/AuthActions";
 
 
 
@@ -145,38 +144,23 @@ const RootStackFlow = () => {
 	const getRationaleLibrary = async () => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
 		const userObject = JSON.parse(userObjectString);
-		const authorizedResponse = await pelleumClient({
-			method: "get",
-			url: '/public/theses/rationales/retrieve/many',
-			queryParams: { user_id: userObject.user_id }
-		});
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				const rationaleInfo = await extractRationaleInfo(authorizedResponse.data.records.theses);
-				dispatch(refreshLibrary(rationaleInfo));
-			} else {
-				console.log("There was an error refreshing the rationale library.");
-			};
-		};
+		const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userObject.user_id });
+
+		if (retrievedRationales) {
+			const rationaleInfo = await RationalesManager.extractRationaleInfo(retrievedRationales.records.theses);
+			dispatch(refreshLibrary(rationaleInfo));
+		}
 	};
 
 	const validateToken = async () => {
-		const authorizedResponse = await pelleumClient({ 
-			method: 'get', 
-			url: '/public/auth/users' 
-		});
-		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				dispatch(restoreToken());
-			} else {
-				console.log("Some error occurred restoring token.")
-			};
-		};
+		const user = await UserManager.getUser();
+		if (user) {
+			await getRationaleLibrary();
+		}
 	};
 
 	React.useEffect(() => {
 		validateToken();
-		getRationaleLibrary();
 	}, [dispatch]);
 
 	if (isLoading) {
@@ -215,7 +199,7 @@ const RootStackFlow = () => {
 			<RootStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
 			<RootStack.Screen name="Post" component={PostDetailScreen} />
 			<RootStack.Screen name="Thesis" component={ThesisDetailScreen} />
-			<RootStack.Screen name="Conviction" component={ConvictionLibraryScreen} />
+			<RootStack.Screen name="Rationales" component={RationaleScreen} />
 		</RootStack.Navigator>
 	);
 };

@@ -2,7 +2,8 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import { sendThesisReaction, addThesisRationale } from "../functions/ThesesFunctions";
+import ThesesManager from "../managers/ThesesManager";
+import RationalesManager from "../managers/RationalesManager";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { useSelector } from "react-redux";
 
@@ -29,7 +30,7 @@ const ThesisButtonPanel = ({ item }) => {
 			<HStack style={styles.buttonBox}>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => sendThesisReaction(item, ReactionType.Like)}
+					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Like)}
 				>
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
@@ -39,7 +40,7 @@ const ThesisButtonPanel = ({ item }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => sendThesisReaction(item, ReactionType.Dislike)}
+					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Dislike)}
 				>
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
@@ -48,9 +49,9 @@ const ThesisButtonPanel = ({ item }) => {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={rationaleLibrary.includes(item.thesis_id) ? styles.disabledIconButton : styles.iconButton}
-					onPress={() => addThesisRationale(item)}
-					disabled={rationaleLibrary.includes(item.thesis_id) ? true : false}
+					style={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? styles.disabledIconButton : styles.iconButton}
+					onPress={() => RationalesManager.addRationale(item)}
+					disabled={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? true : false}
 				>
 					<MaterialIcons name="post-add" size={27} color="#00A8FC" />
 				</TouchableOpacity>

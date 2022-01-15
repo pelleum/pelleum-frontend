@@ -7,8 +7,8 @@ import {
 	Ionicons,
 	FontAwesome,
 } from "@expo/vector-icons";
-import { sendPostReaction } from "../functions/PostFunctions";
 import { useSelector } from "react-redux";
+import PostsManager from "../managers/PostsManager";
 
 const PostButtonPanel = ({ item, nav }) => {
 	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
@@ -28,7 +28,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => sendPostReaction(item)}
+					onPress={() => PostsManager.sendPostReaction(item)}
 				>
 					<Ionicons
 						name={
