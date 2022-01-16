@@ -36,9 +36,9 @@ const CreatePostScreen = ({ navigation }) => {
 		const createdPost = await PostsManager.createPost({ content, asset_symbol, sentiment });
 		if (createdPost) {
 			setContent("");
-				setAssetSymbol("");
-				setDisableStatus(true);
-				navigation.navigate("Feed", {newPost: createdPost});
+			setAssetSymbol("");
+			setDisableStatus(true);
+			navigation.navigate("Feed", {newPost: createdPost});
 		}
 	};
 

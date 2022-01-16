@@ -16,6 +16,7 @@ import SwitchSelector from "react-native-switch-selector";
 import DismissKeyboard from "../components/DismissKeyboard";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 import ThesesManager from "../managers/ThesesManager";
+import PostsManager from "../managers/PostsManager";
 
 const CreateThesisScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
@@ -95,10 +96,16 @@ const CreateThesisScreen = ({ navigation }) => {
 		});
 
 		if (createdThesis) {
-			setContent("");
-			setAssetSymbol("");
-			setDisableStatus(true);
-			navigation.navigate("Feed");
+			const createdPost = await PostsManager.createPost({
+				content: `Just wrote a thesis on ${createdThesis.asset_symbol}!`,
+				thesis_id: createdThesis.thesis_id
+			});
+			if (createdPost) {
+				setContent("");
+				setAssetSymbol("");
+				setDisableStatus(true);
+				navigation.navigate("Feed", {newPost: createdPost, newThesis: createdThesis});
+			}
 		}		
 	};
 

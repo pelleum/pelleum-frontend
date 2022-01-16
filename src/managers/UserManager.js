@@ -7,7 +7,6 @@ import { authError, login, restoreToken } from "../redux/actions/AuthActions";
 class UserManager {
 
     static login = async ({ username, password }) => {
-        console.log(`username sent to login(): ${JSON.stringify(username)}\npassword sent to login(): ${JSON.stringify(password)}`)
         var qs = require("query-string");
         const response = await pelleumClient({
             method: "post",
