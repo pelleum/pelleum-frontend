@@ -26,15 +26,7 @@ const FeedScreen = ({ navigation, route }) => {
 	const [posts, setPosts] = useState([]);
 	const [theses, setTheses] = useState([]);
 
-	if (route.params) {
-		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
-		if (newCreatedPost) {
-			const postsCopy = posts;
-			postsCopy.splice(0, 0, newCreatedPost);
-			setPosts(postsCopy);
-			route.params.newPost = null;
-		};
-	};
+	
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
@@ -63,7 +55,23 @@ const FeedScreen = ({ navigation, route }) => {
 			}
 	};
 
+	if (route.params) {
+		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
+		const newCreatedThesis = route.params.newThesis ? route.params.newThesis : null;
 
+		if (newCreatedPost) {
+			const postsCopy = posts;
+			postsCopy.splice(0, 0, newCreatedPost);
+			setPosts(postsCopy);
+			route.params.newPost = null;
+		};
+		if (newCreatedThesis) {
+			setTheses([...theses, newCreatedThesis]);
+			route.params.newThesis = null;
+		};
+	};
+
+	
 	useEffect(() => {
 		const thesesIDs = [];
 		for (const post of posts) {
