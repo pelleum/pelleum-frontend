@@ -113,10 +113,12 @@ class PostsManager {
 				method: "delete",
 				url: `/public/posts/reactions/${item.post_id}`,
 			});
-			if (authorizedResponse.status == 204) {
-				store.dispatch(removeLike(item.post_id));
-			} else {
-				console.log("There was an error un-liking a post.");
+			if (authorizedResponse) {
+				if (authorizedResponse.status == 204) {
+					store.dispatch(removeLike(item.post_id));
+				} else {
+					console.log("There was an error un-liking a post.");
+				}
 			}
 		} else {
 			const authorizedResponse = await pelleumClient({
@@ -124,10 +126,12 @@ class PostsManager {
 				url: `/public/posts/reactions/${item.post_id}`,
 				data: { reaction: 1 },
 			});
-			if (authorizedResponse.status == 201) {
-				store.dispatch(addLike(item.post_id));
-			} else {
-				console.log("There was an error liking a post.");
+			if (authorizedResponse) {
+				if (authorizedResponse.status == 201) {
+					store.dispatch(addLike(item.post_id));
+				} else {
+					console.log("There was an error liking a post.");
+				}
 			}
 		}
 	};
