@@ -8,23 +8,28 @@ import {
 	Image,
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import { Feather, } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
+import { useSelector } from "react-redux";
 
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState('');
-	
-	const onRefresh = async () => {
+	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer)
+
+	const getUserObject = async () => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
-		const userObject = JSON.parse(userObjectString);
+		return JSON.parse(userObjectString);
+	};
+
+	const onRefresh = async () => {
+		const userObject = await getUserObject();
 		setUsername(userObject.username);
 		const retrievedAssets = await PortfolioManager.retrieveAssets(userObject.user_id);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
 		}
-
 	};
 
 	useEffect(() => {
@@ -58,7 +63,9 @@ const ProfileScreen = ({ navigation, route }) => {
 											<Text style={styles.assetButtonText}>{item.asset_symbol}</Text>
 										</TouchableOpacity>
 										<TouchableOpacity
-											style={styles.thesisButton}
+											style={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? styles.thesisButton : styles.disabledThesisButton}
+											onPress={() => RationalesManager.addRationale(item)}
+											disabled={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? false : true}
 											onPress={() => {
 												navigation.navigate("Rationales", {
 													asset: item.asset_symbol,
@@ -115,6 +122,32 @@ const ProfileScreen = ({ navigation, route }) => {
 								<HStack style={styles.buttonGroupTextContainer}>
 									<Feather name="settings" size={25} color="#00A8FC" />
 									<Text style={styles.buttonGroupText}>Settings</Text>
+								</HStack>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.buttonGroup}
+								onPress={async () => {
+									const userObject = await getUserObject();
+									const userId = userObject.user_id;
+									navigation.navigate("Rationales", { userId: userId });
+								}}
+							>
+								<HStack style={styles.buttonGroupTextContainer}>
+									<Ionicons name="md-file-tray-full-outline" size={25} color="#00A8FC" />
+									<Text style={styles.buttonGroupText}>Rationale Library</Text>
+								</HStack>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.buttonGroup}
+								onPress={async () => {
+									const userObject = await getUserObject();
+									const userId = userObject.user_id;
+									navigation.navigate("Authored", { userId: userId });
+								}}
+							>
+								<HStack style={styles.buttonGroupTextContainer}>
+									<MaterialCommunityIcons name="book-open-outline" size={25} color="#00A8FC" />
+									<Text style={styles.buttonGroupText}>My Authored Theses</Text>
 								</HStack>
 							</TouchableOpacity>
 						</View>
@@ -190,6 +223,20 @@ const styles = StyleSheet.create({
 		width: 75,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	disabledThesisButton: {
+		overflow: "hidden",
+		borderWidth: 0.5,
+		borderColor: "white",
+		backgroundColor: "#00A8FC",
+		borderRadius: 30,
+		marginLeft: 5,
+		marginVertical: 3,
+		height: 30,
+		width: 75,
+		justifyContent: "center",
+		alignItems: "center",
+		opacity: 0.33,
 	},
 	thesisButtonText: {
 		fontSize: 15,

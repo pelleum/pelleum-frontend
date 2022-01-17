@@ -1,6 +1,6 @@
 import pelleumClient from "../api/clients/PelleumClient";
 import { store } from "../redux/Store";
-import { addToLibrary } from "../redux/actions/RationaleActions";
+import { addToLibrary, removeFromLibrary } from "../redux/actions/RationaleActions";
 
 class RationalesManager {
 
@@ -36,9 +36,21 @@ class RationalesManager {
 		};
 	};
 
-    static deleteRationale = async () => {
+    static removeRationale = async (item) => {
+		const authorizedResponse = await pelleumClient({
+			method: "delete",
+			url: `/public/theses/rationales/${item.rationale_id}`,
+		});
 
-    }
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 204) {
+				store.dispatch(removeFromLibrary({ thesisID: item.thesis_id, asset: item.asset_symbol }));
+				return authorizedResponse.status;
+			} else {
+				console.log("There was an error removing the thesis from your library.");
+			};
+		};
+    };
 
     static extractRationaleInfo = async (theses) => {
 		const rationaleInfo = [];
