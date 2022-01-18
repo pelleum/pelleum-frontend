@@ -12,6 +12,7 @@ const RationaleScreen = ({ navigation, route }) => {
 
     const asset = route.params.asset ? route.params.asset : null;
     const userId = route.params.userId ? route.params.userId : null;
+    const disableRemoveRationale = route.params.disableRemoveRationale ? route.params.disableRemoveRationale : false;
 
     const getRationales = async () => {
         const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userId, asset_symbol: asset });
@@ -65,14 +66,23 @@ const RationaleScreen = ({ navigation, route }) => {
                 keyExtractor={(item) => item.thesis_id}
                 renderItem={({ item }) => {
                     return (
-                        <Swipeable renderRightActions={() => swipeRight(item)} rightThreshold={-200}>
-                            <Animated.View>
-                                <ThesisBox
-                                    item={item}
-                                    nav={navigation}
-                                />
-                            </Animated.View>
-                        </Swipeable>
+                        disableRemoveRationale ? (
+                            <ThesisBox
+                                item={item}
+                                nav={navigation}
+                            />
+                        ) : (
+                            <Swipeable renderRightActions={() => swipeRight(item)}
+                                rightThreshold={-200}
+                            >
+                                <Animated.View>
+                                    <ThesisBox
+                                        item={item}
+                                        nav={navigation}
+                                    />
+                                </Animated.View>
+                            </Swipeable>
+                        )
                     );
                 }}
                 extraData={refreshFlatlist}

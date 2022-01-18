@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState('');
-	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer)
+	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
 	const getUserObject = async () => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
@@ -64,12 +64,11 @@ const ProfileScreen = ({ navigation, route }) => {
 										</TouchableOpacity>
 										<TouchableOpacity
 											style={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? styles.thesisButton : styles.disabledThesisButton}
-											onPress={() => RationalesManager.addRationale(item)}
 											disabled={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? false : true}
 											onPress={() => {
 												navigation.navigate("Rationales", {
 													asset: item.asset_symbol,
-													userId: item.user_id
+													userId: item.user_id,
 												});
 											}}
 										>
