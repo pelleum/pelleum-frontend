@@ -181,26 +181,28 @@ const RootStackFlow = () => {
 				/>
 			) : (
 				// User is logged in
-				<RootStack.Screen
-					name="AppTabs"
-					component={AppFlow}
-					options={{
-						headerShown: false,
-					}}
-				/>
+				<>
+					<RootStack.Screen
+						name="AppTabs"
+						component={AppFlow}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<RootStack.Screen
+						name="CreateThesis"
+						component={CreateThesisScreen}
+					/>
+					<RootStack.Screen
+						name="CreatePost"
+						component={CreatePostScreen}
+					/>
+					<RootStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
+					<RootStack.Screen name="Post" component={PostDetailScreen} />
+					<RootStack.Screen name="Thesis" component={ThesisDetailScreen} />
+					<RootStack.Screen name="Rationales" component={RationaleScreen} />
+				</>
 			)}
-			<RootStack.Screen
-				name="CreateThesis"
-				component={CreateThesisScreen}
-			/>
-			<RootStack.Screen
-				name="CreatePost"
-				component={CreatePostScreen}
-			/>
-			<RootStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
-			<RootStack.Screen name="Post" component={PostDetailScreen} />
-			<RootStack.Screen name="Thesis" component={ThesisDetailScreen} />
-			<RootStack.Screen name="Rationales" component={RationaleScreen} />
 		</RootStack.Navigator>
 	);
 };

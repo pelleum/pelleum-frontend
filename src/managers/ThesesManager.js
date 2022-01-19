@@ -14,72 +14,80 @@ class ThesesManager {
 		const state = storeState.thesisReactionsReducer;
 		return state;
 	};
-	
+
 	static likeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: `/public/theses/reactions/${item.thesis_id}`,
 			data: { reaction: 1 },
 		});
-		if (authorizedResponse.status == 201) {
-			store.dispatch(addReaction(item.thesis_id, reactionType));
-		} else {
-			console.log("There was an error liking a post.");
-		}
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				store.dispatch(addReaction(item.thesis_id, reactionType));
+			} else {
+				console.log("There was an error liking a post.");
+			};
+		};
 	};
-	
+
 	static unlikeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
 			url: `/public/theses/reactions/${item.thesis_id}`,
 		});
-		if (authorizedResponse.status == 204) {
-			store.dispatch(removeReaction(item.thesis_id, reactionType));
-		} else {
-			console.log("There was an error un-liking a thesis.");
-		}
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 204) {
+				store.dispatch(removeReaction(item.thesis_id, reactionType));
+			} else {
+				console.log("There was an error un-liking a thesis.");
+			};
+		};
 	};
-	
+
 	static dislikeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: `/public/theses/reactions/${item.thesis_id}`,
 			data: { reaction: -1 },
 		});
-		if (authorizedResponse.status == 201) {
-			store.dispatch(addReaction(item.thesis_id, reactionType));
-		} else {
-			console.log("There was an error liking a post.");
-		}
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 201) {
+				store.dispatch(addReaction(item.thesis_id, reactionType));
+			} else {
+				console.log("There was an error liking a post.");
+			};
+		};
 	};
-	
+
 	static removeDislikeOnThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
 			url: `/public/theses/reactions/${item.thesis_id}`,
 		});
-		if (authorizedResponse.status == 204) {
-			store.dispatch(removeReaction(item.thesis_id, reactionType));
-		} else {
-			console.log("There was an error un-liking a thesis.");
-		}
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 204) {
+				store.dispatch(removeReaction(item.thesis_id, reactionType));
+			} else {
+				console.log("There was an error un-liking a thesis.");
+			};
+		};
 	};
-	
+
 	static getThesis = async (thesis_id) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
 			url: `/public/theses/${thesis_id}`,
 		});
-	
+
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
 				return authorizedResponse.data;
-			}
+			};
 			// need to display "an unexpected error occured"
 			console.log("There was an error obtaining the thesis.");
-		}
+		};
 	};
-	
+
 	static sendThesisReaction = async (item, reactionType) => {
 		const thesisIsLiked = () => {
 			const state = this.getState();
@@ -91,7 +99,7 @@ class ThesesManager {
 				state.locallyLikedTheses.includes(item.thesis_id)
 			);
 		};
-	
+
 		const thesisIsDisliked = () => {
 			const state = this.getState();
 			return (
@@ -102,7 +110,7 @@ class ThesesManager {
 				state.locallyDislikedTheses.includes(item.thesis_id)
 			);
 		};
-	
+
 		if (reactionType == ReactionType.Like) {
 			// See if thesis is already liked
 			if (thesisIsLiked()) {
@@ -119,7 +127,7 @@ class ThesesManager {
 			}
 		}
 	};
-	
+
 	static getTheses = async (queryParams) => {
 
 		const authorizedResponse = await pelleumClient({
@@ -127,14 +135,15 @@ class ThesesManager {
 			url: '/public/theses/retrieve/many',
 			queryParams: queryParams
 		});
-	
-		if (authorizedResponse.status == 200) {
-			return authorizedResponse.data;
-		} else {
-			console.log("There was an error retrieving theses from the backend.")
-		}
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				return authorizedResponse.data;
+			} else {
+				console.log("There was an error retrieving theses from the backend.")
+			};
+		};
 	}
-	
+
 	static createThesis = async (data) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
