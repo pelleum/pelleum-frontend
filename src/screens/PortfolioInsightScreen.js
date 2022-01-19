@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import PortfolioManager from "../managers/PortfolioManager";
+import { useSelector } from "react-redux";
 
 const PortfolioInsightScreen = ({ navigation, route }) => {
+	// state
+	const [assetList, setAssetList] = useState([]);
+	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
     const { username, userId } = route.params;
-
-	const [assetList, setAssetList] = useState([]);
 
 	const onRefresh = async () => {
 		const retrievedAssets = await PortfolioManager.retrieveAssets(userId);
@@ -47,11 +49,13 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 											<Text style={styles.assetButtonText}>{item.asset_symbol}</Text>
 										</TouchableOpacity>
 										<TouchableOpacity
-											style={styles.thesisButton}
+											style={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? styles.thesisButton : styles.disabledThesisButton}
+											disabled={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? false : true}
 											onPress={() => {
 												navigation.navigate("Rationales", {
 													asset: item.asset_symbol,
-													userId: item.user_id
+													userId: item.user_id,
+													disableRemoveRationale: true
 												});
 											}}
 										>
@@ -173,6 +177,20 @@ const styles = StyleSheet.create({
 		width: 75,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	disabledThesisButton: {
+		overflow: "hidden",
+		borderWidth: 0.5,
+		borderColor: "white",
+		backgroundColor: "#00A8FC",
+		borderRadius: 30,
+		marginLeft: 5,
+		marginVertical: 3,
+		height: 30,
+		width: 75,
+		justifyContent: "center",
+		alignItems: "center",
+		opacity: 0.33,
 	},
 	thesisButtonText: {
 		fontSize: 15,

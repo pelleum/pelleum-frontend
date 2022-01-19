@@ -19,7 +19,7 @@ function rationaleReducer(state = initialState, action) {
             };
         case REMOVE_FROM_LIBRARY:
             const rationaleLibraryCopy = state.rationaleLibrary;
-            const index = rationaleLibraryCopy.indexOf(action.payload);
+            const index = rationaleLibraryCopy.findIndex(rationale => rationale.thesisID === action.payload.thesisID);
             if (index > -1) {
                 rationaleLibraryCopy.splice(index, 1);
             };

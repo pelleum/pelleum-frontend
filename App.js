@@ -25,6 +25,7 @@ import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
 import LinkAccount from "./src/screens/LinkAccount";
 import RationaleScreen from "./src/screens/RationaleScreen";
+import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
@@ -79,6 +80,7 @@ const ProfileFlow = () => (
 		<ProfileStack.Screen name="Profile" component={ProfileScreen} />
 		<ProfileStack.Screen name="Settings" component={SettingsScreen} />
 		<ProfileStack.Screen name="Link" component={LinkAccount} />
+		<ProfileStack.Screen name="Authored" component={AuthoredThesesScreen} />
 	</ProfileStack.Navigator>
 );
 
@@ -145,18 +147,17 @@ const RootStackFlow = () => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
 		const userObject = JSON.parse(userObjectString);
 		const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userObject.user_id });
-
 		if (retrievedRationales) {
-			const rationaleInfo = await RationalesManager.extractRationaleInfo(retrievedRationales.records.theses);
+			const rationaleInfo = await RationalesManager.extractRationaleInfo(retrievedRationales.records.rationales);
 			dispatch(refreshLibrary(rationaleInfo));
-		}
+		};
 	};
 
 	const validateToken = async () => {
 		const user = await UserManager.getUser();
 		if (user) {
 			await getRationaleLibrary();
-		}
+		};
 	};
 
 	React.useEffect(() => {
