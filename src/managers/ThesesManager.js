@@ -120,35 +120,11 @@ class ThesesManager {
 		}
 	};
 	
-	static getTheses = async ({
-			queryParams = null,
-			thesesIDs = null,
-		} = {}) => {
-		// This function takes an optional queryParams as an input parameter, and 
-		// an optional thesesIDs. When thesesIDs are supplied, the query parameter
-		// string is created manually, becuase objects can't have duplicate keys, and 
-		// the endpoint requeires ?theses_ids=foo&theses_ids=bar to construct a list
-		
-		let manualQueryParams;
-		let url;
-		if (thesesIDs) {
-			manualQueryParams = "?";
-			const thesesIDsLength = thesesIDs.length
-			thesesIDs.forEach(function (thesisID, index) {
-				if (index < thesesIDsLength - 1) {
-					manualQueryParams += `theses_ids=${thesisID}&`
-				} else {
-					manualQueryParams += `theses_ids=${thesisID}`
-				}
-			});
-			url = '/public/theses/retrieve/many' + manualQueryParams
-		} else {
-			url = '/public/theses/retrieve/many'
-		}
-		
+	static getTheses = async (queryParams) => {
+
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: url,
+			url: '/public/theses/retrieve/many',
 			queryParams: queryParams
 		});
 	

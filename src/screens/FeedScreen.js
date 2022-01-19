@@ -12,7 +12,6 @@ import {
 import CreateModal from "../components/modals/CreateModal";
 import { PostBox, PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
-import ThesesManager from "../managers/ThesesManager";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 
@@ -24,7 +23,7 @@ const FeedScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
-	const [theses, setTheses] = useState([]);
+	//const [theses, setTheses] = useState([]);
 
 	
 
@@ -47,13 +46,13 @@ const FeedScreen = ({ navigation, route }) => {
 	}, []);
 
 
-	const getThesesAsync = async (uniqueThesesIDs) => {
-		// This funciton ONLY exists so we can await getTheses...
-		const thesesResponseData = await ThesesManager.getTheses({thesesIDs: uniqueThesesIDs});
-			if (thesesResponseData) {
-				setTheses(thesesResponseData.records.theses);
-			}
-	};
+	// const getThesesAsync = async (uniqueThesesIDs) => {
+	// 	// This funciton ONLY exists so we can await getTheses...
+	// 	const thesesResponseData = await ThesesManager.getTheses({thesesIDs: uniqueThesesIDs});
+	// 		if (thesesResponseData) {
+	// 			setTheses(thesesResponseData.records.theses);
+	// 		}
+	// };
 
 	if (route.params) {
 		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
@@ -65,30 +64,31 @@ const FeedScreen = ({ navigation, route }) => {
 			setPosts(postsCopy);
 			route.params.newPost = null;
 		};
-		if (newCreatedThesis) {
-			setTheses([...theses, newCreatedThesis]);
-			route.params.newThesis = null;
-		};
+		// if (newCreatedThesis) {
+		// 	set
+		// 	//setTheses([...theses, newCreatedThesis]);
+		// 	route.params.newThesis = null;
+		// };
 	};
 
 	
-	useEffect(() => {
-		const thesesIDs = [];
-		for (const post of posts) {
-			if (post.thesis_id) {
-				thesesIDs.push(post.thesis_id);
-			}
-		};
-		const unique = (value, index, self) => {
-			return self.indexOf(value) === index
-		}
+	// useEffect(() => {
+	// 	const thesesIDs = [];
+	// 	for (const post of posts) {
+	// 		if (post.thesis_id) {
+	// 			thesesIDs.push(post.thesis_id);
+	// 		}
+	// 	};
+	// 	const unique = (value, index, self) => {
+	// 		return self.indexOf(value) === index
+	// 	}
 		  
-		const uniqueThesesIDs = thesesIDs.filter(unique)
+	// 	const uniqueThesesIDs = thesesIDs.filter(unique)
 		  
-		if (thesesIDs.length > 0) {
-			getThesesAsync(uniqueThesesIDs);
-		}
-	}, [posts]);
+	// 	if (thesesIDs.length > 0) {
+	// 		getThesesAsync(uniqueThesesIDs);
+	// 	}
+	// }, [posts]);
 
 	return (
 		<View style={styles.mainContainer}>
@@ -97,14 +97,14 @@ const FeedScreen = ({ navigation, route }) => {
 				keyExtractor={(item) => item.post_id.toString()}
 				renderItem={({ item }) => {
 					
-					if (item.thesis_id) {
-						const thesisInPost = theses.find(thesis => {
-							return thesis.thesis_id === item.thesis_id;
-						})
-						if (thesisInPost) {
-							item["thesis"] = thesisInPost;
-						}
-					}
+					// if (item.thesis_id) {
+					// 	const thesisInPost = theses.find(thesis => {
+					// 		return thesis.thesis_id === item.thesis_id;
+					// 	})
+					// 	if (thesisInPost) {
+					// 		item["thesis"] = thesisInPost;
+					// 	}
+					// }
 
 					return (
 						<PostBox

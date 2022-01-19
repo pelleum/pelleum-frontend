@@ -104,7 +104,8 @@ const CreateThesisScreen = ({ navigation }) => {
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
-				navigation.navigate("Feed", {newPost: createdPost, newThesis: createdThesis});
+				createdPost.thesis = createdThesis
+				navigation.navigate("Feed", {newPost: createdPost});
 			}
 		}		
 	};
