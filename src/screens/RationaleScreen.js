@@ -68,7 +68,7 @@ const RationaleScreen = ({ navigation, route }) => {
                     return (
                         disableRemoveRationale ? (
                             <ThesisBox
-                                item={item}
+                                item={item.thesis}
                                 nav={navigation}
                             />
                         ) : (
@@ -77,7 +77,7 @@ const RationaleScreen = ({ navigation, route }) => {
                             >
                                 <Animated.View>
                                     <ThesisBox
-                                        item={item}
+                                        item={item.thesis}
                                         nav={navigation}
                                     />
                                 </Animated.View>

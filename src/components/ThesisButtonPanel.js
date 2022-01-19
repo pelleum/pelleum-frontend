@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
@@ -24,6 +24,20 @@ const ThesisButtonPanel = ({ item }) => {
 			!state.locallyLikedTheses.includes(item.thesis_id) &&
 			!state.locallyUnlikedTheses.includes(item.thesis_id)) ||
 		state.locallyDislikedTheses.includes(item.thesis_id);
+
+	const handleAddRationale = async (item) => {
+		const responseStatus = await RationalesManager.addRationale(item);
+		if (responseStatus == 403) {
+			Alert.alert(
+				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
+				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one.`,
+				[
+					{ text: "Remove later", onPress: () => {/* do nothing */} },
+					{ text: "Remove now", onPress: () => console.log("Go to RationaleLibrary and pass this thesis as a route.param to be added ONLY after one rationale is removed.") }
+				]
+			);
+		};
+	};
 
 	return (
 		<NativeBaseProvider>
@@ -50,7 +64,7 @@ const ThesisButtonPanel = ({ item }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? styles.disabledIconButton : styles.iconButton}
-					onPress={() => RationalesManager.addRationale(item)}
+					onPress={() => handleAddRationale(item)}
 					disabled={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? true : false}
 				>
 					<MaterialIcons name="post-add" size={27} color="#00A8FC" />

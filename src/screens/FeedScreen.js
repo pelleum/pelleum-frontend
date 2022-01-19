@@ -23,7 +23,6 @@ const FeedScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
-	//const [theses, setTheses] = useState([]);
 
 	
 
@@ -45,18 +44,8 @@ const FeedScreen = ({ navigation, route }) => {
 		onRefresh();
 	}, []);
 
-
-	// const getThesesAsync = async (uniqueThesesIDs) => {
-	// 	// This funciton ONLY exists so we can await getTheses...
-	// 	const thesesResponseData = await ThesesManager.getTheses({thesesIDs: uniqueThesesIDs});
-	// 		if (thesesResponseData) {
-	// 			setTheses(thesesResponseData.records.theses);
-	// 		}
-	// };
-
 	if (route.params) {
 		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
-		const newCreatedThesis = route.params.newThesis ? route.params.newThesis : null;
 
 		if (newCreatedPost) {
 			const postsCopy = posts;
@@ -64,31 +53,7 @@ const FeedScreen = ({ navigation, route }) => {
 			setPosts(postsCopy);
 			route.params.newPost = null;
 		};
-		// if (newCreatedThesis) {
-		// 	set
-		// 	//setTheses([...theses, newCreatedThesis]);
-		// 	route.params.newThesis = null;
-		// };
 	};
-
-	
-	// useEffect(() => {
-	// 	const thesesIDs = [];
-	// 	for (const post of posts) {
-	// 		if (post.thesis_id) {
-	// 			thesesIDs.push(post.thesis_id);
-	// 		}
-	// 	};
-	// 	const unique = (value, index, self) => {
-	// 		return self.indexOf(value) === index
-	// 	}
-		  
-	// 	const uniqueThesesIDs = thesesIDs.filter(unique)
-		  
-	// 	if (thesesIDs.length > 0) {
-	// 		getThesesAsync(uniqueThesesIDs);
-	// 	}
-	// }, [posts]);
 
 	return (
 		<View style={styles.mainContainer}>
@@ -96,15 +61,6 @@ const FeedScreen = ({ navigation, route }) => {
 				data={posts}
 				keyExtractor={(item) => item.post_id.toString()}
 				renderItem={({ item }) => {
-					
-					// if (item.thesis_id) {
-					// 	const thesisInPost = theses.find(thesis => {
-					// 		return thesis.thesis_id === item.thesis_id;
-					// 	})
-					// 	if (thesisInPost) {
-					// 		item["thesis"] = thesisInPost;
-					// 	}
-					// }
 
 					return (
 						<PostBox

@@ -31,6 +31,7 @@ async function pelleumClient({method, url, headers=null, data=null, queryParams=
     
     if (response.status == 401) {
         // Unauthorized responses
+        console.log("\n\nWe got a 401.")
         if (onLogin) {
             return response;
         }

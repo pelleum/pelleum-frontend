@@ -4,8 +4,8 @@ import { addToLibrary, removeFromLibrary } from "../redux/actions/RationaleActio
 
 class RationalesManager {
 
-    static retrieveRationales = async (queryParams) => {
-        const authorizedResponse = await pelleumClient({
+	static retrieveRationales = async (queryParams) => {
+		const authorizedResponse = await pelleumClient({
 			method: "get",
 			url: '/public/theses/rationales/retrieve/many',
 			queryParams: queryParams
@@ -13,49 +13,50 @@ class RationalesManager {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-                return authorizedResponse.data;
+				return authorizedResponse.data;
 			} else {
-                console.log("There was an error obtaining rationales from the backend.");
+				console.log("There was an error obtaining rationales from the backend.");
 			};
 		};
 	}
 
-    static addRationale = async (item) => {
+	static addRationale = async (thesis) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: '/public/theses/rationales',
-			data: { thesis_id: item.thesis_id },
+			data: { thesis_id: thesis.thesis_id },
 		});
-	
+
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
-				store.dispatch(addToLibrary({ thesisID: item.thesis_id, asset: item.asset_symbol }));
+				store.dispatch(addToLibrary({ thesisID: thesis.thesis_id, asset: thesis.asset_symbol }));
 			} else {
 				console.log("There was an error adding the thesis to your library.");
 			};
+			return authorizedResponse.status;
 		};
 	};
 
-    static removeRationale = async (item) => {
+	static removeRationale = async (rationale) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `/public/theses/rationales/${item.rationale_id}`,
+			url: `/public/theses/rationales/${rationale.rationale_id}`,
 		});
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 204) {
-				store.dispatch(removeFromLibrary({ thesisID: item.thesis_id, asset: item.asset_symbol }));
+				store.dispatch(removeFromLibrary({ thesisID: rationale.thesis_id, asset: rationale.thesis.asset_symbol }));
 				return authorizedResponse.status;
 			} else {
 				console.log("There was an error removing the thesis from your library.");
 			};
 		};
-    };
+	};
 
-    static extractRationaleInfo = async (theses) => {
+	static extractRationaleInfo = async (rationales) => {
 		const rationaleInfo = [];
-		for (const thesis of theses) {
-			rationaleInfo.push({thesisID: thesis.thesis_id, asset: thesis.asset_symbol});
+		for (const rationale of rationales) {
+			rationaleInfo.push({ thesisID: rationale.thesis_id, asset: rationale.thesis.asset_symbol });
 		};
 		return rationaleInfo;
 	};
