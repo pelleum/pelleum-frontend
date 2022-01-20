@@ -6,10 +6,11 @@ import ThesesManager from "../managers/ThesesManager";
 import RationalesManager from "../managers/RationalesManager";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { useSelector } from "react-redux";
+import * as SecureStore from "expo-secure-store";
 
-const ThesisButtonPanel = ({ item }) => {
+const ThesisButtonPanel = ({ item, nav }) => {
 	const state = useSelector((state) => state.thesisReactionsReducer);
-	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer)
+	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
 	const thesisIsLiked =
 		(item.user_reaction_value == 1 &&
@@ -25,6 +26,11 @@ const ThesisButtonPanel = ({ item }) => {
 			!state.locallyUnlikedTheses.includes(item.thesis_id)) ||
 		state.locallyDislikedTheses.includes(item.thesis_id);
 
+	const getUserObject = async () => {
+		const userObjectString = await SecureStore.getItemAsync('userObject');
+		return JSON.parse(userObjectString);
+	};
+
 	const handleAddRationale = async (item) => {
 		const responseStatus = await RationalesManager.addRationale(item);
 		if (responseStatus == 403) {
@@ -32,8 +38,18 @@ const ThesisButtonPanel = ({ item }) => {
 				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
 				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one.`,
 				[
-					{ text: "Remove later", onPress: () => {/* do nothing */} },
-					{ text: "Remove now", onPress: () => console.log("Go to RationaleLibrary and pass this thesis as a route.param to be added ONLY after one rationale is removed.") }
+					{ text: "Remove later", onPress: () => {/* do nothing */ } },
+					{
+						text: "Remove now", onPress: async () => {
+							const userObject = await getUserObject();
+							const userId = userObject.user_id;
+							nav.navigate("Rationales", {
+								thesisToAddAfterRemoval: item,
+								asset: item.asset_symbol,
+								userId: userId,
+							})
+						}
+					}
 				]
 			);
 		};

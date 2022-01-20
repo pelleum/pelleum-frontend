@@ -13,6 +13,7 @@ const RationaleScreen = ({ navigation, route }) => {
     const asset = route.params.asset ? route.params.asset : null;
     const userId = route.params.userId ? route.params.userId : null;
     const disableRemoveRationale = route.params.disableRemoveRationale ? route.params.disableRemoveRationale : false;
+    const thesisToAddAfterRemoval = route.params.thesisToAddAfterRemoval ? route.params.thesisToAddAfterRemoval : null;
 
     const getRationales = async () => {
         const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userId, asset_symbol: asset });
@@ -32,9 +33,21 @@ const RationaleScreen = ({ navigation, route }) => {
                 if (index > -1) {
                     rationaleArrayCopy.splice(index, 1);
                     setRationaleArray(rationaleArrayCopy);
-                    setRefreshFlatList(!refreshFlatlist)
+                    setRefreshFlatList(!refreshFlatlist);
                 };
             };
+        };
+    };
+
+    const addRationaleAfterRemoval = async (item) => {
+        await deleteRationale(item);
+        const response = await RationalesManager.addRationale(thesisToAddAfterRemoval);
+        if (response.data.rationale_id) {
+            const rationaleArrayCopy = rationaleArray;
+            rationaleArrayCopy.unshift(response.data);
+            setRationaleArray(rationaleArrayCopy);
+            route.params.thesisToAddAfterRemoval = null;
+            console.log("\n\nRemoved item with thesis_id", item.thesis_id, "\nAdded item with thesis_id", response.data.thesis_id)
         };
     };
 
@@ -43,7 +56,14 @@ const RationaleScreen = ({ navigation, route }) => {
             <Animated.View style={{ backgroundColor: '#cc0000', width: "30%", justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
                     style={{ paddingVertical: '50%', paddingHorizontal: '7%' }}
-                    onPress={() => deleteRationale(item)}
+                    onPress={() => {
+                        if (thesisToAddAfterRemoval) {
+                            addRationaleAfterRemoval(item)
+                        } else {
+                            deleteRationale(item)
+                            console.log("\n\nJust deleted item with thesis_id", item.thesis_id)
+                        }
+                    }}
                 >
                     <Animated.Text style={{ fontSize: 16, fontWeight: 'bold' }}>REMOVE</Animated.Text>
                 </TouchableOpacity>
@@ -63,7 +83,7 @@ const RationaleScreen = ({ navigation, route }) => {
             <FlatList
                 data={rationaleArray}
                 //maybe we should use rationale_id as the key extractor for the RationaleScreen only
-                keyExtractor={(item) => item.thesis_id}
+                keyExtractor={(item) => item.rationale_id}
                 renderItem={({ item }) => {
                     return (
                         disableRemoveRationale ? (

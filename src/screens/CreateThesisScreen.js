@@ -7,16 +7,19 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
+	Alert
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
+import RationalesManager from "../managers/RationalesManager";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
+
 
 const CreateThesisScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
@@ -82,6 +85,28 @@ const CreateThesisScreen = ({ navigation }) => {
 		}
 	};
 
+	const handleAddRationale = async (createdThesis) => {
+		const response = await RationalesManager.addRationale(createdThesis);
+		if (response.status == 403) {
+			Alert.alert(
+				`${createdThesis.asset_symbol} ${createdThesis.sentiment} Rationale Limit Reached`,
+				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${createdThesis.sentiment} theses per asset. To add this thesis to your ${createdThesis.asset_symbol} ${createdThesis.sentiment} library, please remove one.`,
+				[
+					{ text: "Remove later", onPress: () => {/* do nothing */ } },
+					{
+						text: "Remove now", onPress: async () => {
+							navigation.navigate("Rationales", {
+								thesisToAddAfterRemoval: createdThesis,
+								asset: createdThesis.asset_symbol,
+								userId: createdThesis.user_id,
+							})
+						}
+					}
+				]
+			);
+		};
+	};
+
 	const shareButtonPressed = async () => {
 		// Executed when the 'share' button is pressed
 
@@ -96,6 +121,7 @@ const CreateThesisScreen = ({ navigation }) => {
 		});
 
 		if (createdThesis) {
+			handleAddRationale(createdThesis);
 			const createdPost = await PostsManager.createPost({
 				content: `Just wrote a thesis on ${createdThesis.asset_symbol}!`,
 				thesis_id: createdThesis.thesis_id
@@ -105,9 +131,9 @@ const CreateThesisScreen = ({ navigation }) => {
 				setAssetSymbol("");
 				setDisableStatus(true);
 				createdPost.thesis = createdThesis
-				navigation.navigate("Feed", {newPost: createdPost});
-			}
-		}		
+				navigation.navigate("Feed", { newPost: createdPost });
+			};
+		};
 	};
 
 	const handleChangeText = ({

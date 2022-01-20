@@ -33,7 +33,7 @@ class RationalesManager {
 			} else {
 				console.log("There was an error adding the thesis to your library.");
 			};
-			return authorizedResponse.status;
+			return authorizedResponse;
 		};
 	};
 

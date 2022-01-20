@@ -154,7 +154,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									View Author's Portfolio
 								</Text>
 							</TouchableOpacity>
-							<ThesisButtonPanel item={detailedThesis} />
+							<ThesisButtonPanel item={detailedThesis} nav={navigation} />
 							<Text style={styles.subTitle}>Thesis</Text>
 							<Text style={styles.contentText}>{detailedThesis.content}</Text>
 							<Text style={styles.subTitle}>Sources</Text>

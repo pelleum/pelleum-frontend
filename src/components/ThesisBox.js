@@ -29,7 +29,7 @@ export const ThesisBox = ({ item, nav }) => {
                             {item.sentiment}
                         </Text>
                     </HStack>
-                    <Text style={styles.thesisTitleText}>{item.title}</Text>
+                    <Text style={styles.thesisTitleText}>{item.title} thesis_id: {item.thesis_id}</Text>
                     <Text numberOfLines={5}>{item.content}...</Text>
                 </Box>
             </TouchableOpacity>
