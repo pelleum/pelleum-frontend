@@ -32,8 +32,8 @@ const ThesisButtonPanel = ({ item, nav }) => {
 	};
 
 	const handleAddRationale = async (item) => {
-		const responseStatus = await RationalesManager.addRationale(item);
-		if (responseStatus == 403) {
+		const response = await RationalesManager.addRationale(item);
+		if (response.status == 403) {
 			Alert.alert(
 				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
 				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one.`,
