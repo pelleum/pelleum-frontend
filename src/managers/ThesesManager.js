@@ -142,7 +142,7 @@ class ThesesManager {
 				console.log("There was an error retrieving theses from the backend.")
 			};
 		};
-	}
+	};
 
 	static createThesis = async (data) => {
 		const authorizedResponse = await pelleumClient({

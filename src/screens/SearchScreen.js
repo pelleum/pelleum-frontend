@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 import SwitchSelector from "react-native-switch-selector";
-import { Input, Icon, NativeBaseProvider, Center, Box } from 'native-base';
+import { Input, Icon, NativeBaseProvider, Center } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import DismissKeyboard from '../components/DismissKeyboard';
 import { useDispatch } from "react-redux";
@@ -22,7 +22,7 @@ const SearchScreen = ({ navigation }) => {
     const [lastBullItemIndex, setLastBullItemIndex] = useState(0);
     const [lastBearItemIndex, setLastBearItemIndex] = useState(0);
     const [tempIndex, setTempIndex] = useState(0);
-    const recordsPerPage = 15;
+    const RECORDS_PER_PAGE = 25;
 
     const viewableItemsRef = useCallback(({ viewableItems }) => {
         const lastItem = viewableItems[viewableItems.length - 1];
@@ -80,15 +80,18 @@ const SearchScreen = ({ navigation }) => {
             };
             const thesesArrayLength = sentiment === "Bull" ? retrievedThesesArrayLengths.bull : retrievedThesesArrayLengths.bear
             if (successfulResponses.every(responseSuccess => responseSuccess === true) && thesesArrayLength > 0) {
+                setErrorMessage("");
                 flatListRef.current.scrollToIndex({ index: 0, animated: false });
-            };
+            } else {
+                setErrorMessage("There was an error retrieving theses. Please try again later.");
+            }
         };
     };
 
     const getMoreResults = async () => {
         let newPageNumber;
         let responseData;
-        let queryParams
+        let queryParams;
         if (sentiment === "Bull") {
             newPageNumber = currentBullPage + 1;
             setCurrentBullPage(newPageNumber);
@@ -97,8 +100,10 @@ const SearchScreen = ({ navigation }) => {
                 responseData = await ThesesManager.getTheses(queryParams);
                 if (responseData) {
                     setBullResults(oldBullTheses => [...oldBullTheses, ...responseData.records.theses]);
-                }
-            }
+                } else {
+                    setErrorMessage("There was an error retrieving theses. Please try again later.");
+                };
+            };
         } else {
             newPageNumber = currentBearPage + 1;
             setCurrentBearPage(newPageNumber);
@@ -107,7 +112,9 @@ const SearchScreen = ({ navigation }) => {
                 responseData = await ThesesManager.getTheses(queryParams);
                 if (responseData) {
                     setBearResults(oldBearTheses => [...oldBearTheses, ...responseData.records.theses]);
-                }
+                } else {
+                    setErrorMessage("There was an error retrieving theses. Please try again later.");
+                };
             };
         };
     };

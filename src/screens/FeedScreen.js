@@ -3,7 +3,6 @@ import {
 	StyleSheet,
 	View,
 	FlatList,
-	RefreshControl,
 	TouchableOpacity,
 	Text
 } from "react-native";
@@ -23,8 +22,11 @@ const FeedScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [posts, setPosts] = useState([]);
-
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
+	const [errorMessage, setErrorMessage] = useState("");
 	
+	const RECORDS_PER_PAGE = 50;
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
@@ -32,11 +34,35 @@ const FeedScreen = ({ navigation, route }) => {
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const postResponseData = await PostsManager.getPosts();
+		const queryParams = { records_per_page: RECORDS_PER_PAGE, page: 1 };
+		const postResponseData = await PostsManager.getPosts(queryParams);
 		if (postResponseData) {
+			setErrorMessage("");
 			setPosts(postResponseData.records.posts);
+			setTotalPages(postResponseData.meta_data.total_pages);
 			dispatch(resetLikes());
-		}
+		} else {
+			setErrorMessage("There was an error retrieving posts. Please try again later.");
+		};
+		setRefreshing(false);
+	};
+
+	const getMorePosts = async () => {
+		setRefreshing(true);
+		let newPageNumber;
+		let responseData;
+		let queryParams;
+		newPageNumber = currentPage + 1;
+		setCurrentPage(newPageNumber);
+		if (newPageNumber < totalPages) {
+			queryParams = { records_per_page: RECORDS_PER_PAGE, page: newPageNumber };
+			responseData = await PostsManager.getPosts(queryParams);
+			if (responseData) {
+				setPosts(currentPosts => [...currentPosts, ...responseData.records.posts]);
+			} else {
+				setErrorMessage("There was an error retrieving posts. Please try again later.");
+			};
+		};
 		setRefreshing(false);
 	};
 
@@ -49,7 +75,7 @@ const FeedScreen = ({ navigation, route }) => {
 
 		if (newCreatedPost) {
 			const postsCopy = posts;
-			postsCopy.splice(0, 0, newCreatedPost);
+			postsCopy.unshift(newCreatedPost);
 			setPosts(postsCopy);
 			route.params.newPost = null;
 		};
@@ -70,24 +96,17 @@ const FeedScreen = ({ navigation, route }) => {
 						/>
 					);
 				}}
-				refreshControl={
-					<RefreshControl
-						enabled={true}
-						colors={["#9Bd35A", "#689F38"]}
-						onRefresh={onRefresh}
-					/>
-				}
 				refreshing={refreshing}
-				ListHeaderComponent={
-					<View>
-						<CreateModal
-							modalVisible={modalVisible}
-							makeModalDisappear={() => setModalVisible(false)}
-							onNavigate={handleModalNavigate}
-						/>
-					</View>
-				}
+				onRefresh={onRefresh}
+				onEndReached={getMorePosts}
+				onEndReachedThreshold={2.5}
 			></FlatList>
+			{errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+			<CreateModal
+				modalVisible={modalVisible}
+				makeModalDisappear={() => setModalVisible(false)}
+				onNavigate={handleModalNavigate}
+			/>
 			<TouchableOpacity
 				style={styles.fab}
 				onPress={() => setModalVisible(true)}
@@ -198,5 +217,11 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		paddingHorizontal: 5,
 		paddingBottom: 3,
-	}, 
+	},
+	error: {
+		color: 'red',
+		marginTop: 15,
+		marginBottom: 25,
+		fontSize: 14,
+	},
 });

@@ -22,11 +22,11 @@ class PostsManager {
 		}
 	}
 
-
-	static getPosts = async () => {
+	static getPosts = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
 			url: "/public/posts/retrieve/many",
+			queryParams: queryParams
 		});
 
 		if (authorizedResponse) {
@@ -35,7 +35,7 @@ class PostsManager {
 			}
 			// need to display "an unexpected error occured"
 			console.log("There was an error obtaining posts.");
-		}
+		};
 	};
 
 	static getPost = async (post_id) => {

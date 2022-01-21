@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Animated, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { ThesisBox } from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
@@ -25,7 +25,7 @@ const RationaleScreen = ({ navigation, route }) => {
     };
 
     const deleteRationale = async (item) => {
-        responseStatus = await RationalesManager.removeRationale(item);
+        const responseStatus = await RationalesManager.removeRationale(item);
         if (responseStatus) {
             if (responseStatus == 204) {
                 const rationaleArrayCopy = rationaleArray;
@@ -47,7 +47,11 @@ const RationaleScreen = ({ navigation, route }) => {
             rationaleArrayCopy.unshift(response.data);
             setRationaleArray(rationaleArrayCopy);
             route.params.thesisToAddAfterRemoval = null;
-            console.log("\n\nRemoved item with thesis_id", item.thesis_id, "\nAdded item with thesis_id", response.data.thesis_id)
+            Alert.alert(
+				`Rationale Library Updated`,
+                `A new ${response.data.thesis.asset_symbol} ${response.data.thesis.sentiment} thesis was added to your library! \n\n“${response.data.thesis.title}”`,
+					{ text: "OK", onPress: () => {/* do nothing */ } }
+			);
         };
     };
 
