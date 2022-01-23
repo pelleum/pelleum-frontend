@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { HStack, NativeBaseProvider, Box } from "native-base";
 
-export const ThesisBox = ({ item, nav }) => {
+const ThesisBox = ({ item, nav }) => {
 
     const dateWritten = new Date(item.created_at);
 
@@ -46,6 +46,8 @@ export const ThesisBox = ({ item, nav }) => {
         </NativeBaseProvider>
     );
 };
+
+export default React.memo(ThesisBox);
 
 const styles = StyleSheet.create({
     thesisListContainer: {

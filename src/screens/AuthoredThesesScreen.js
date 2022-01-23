@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import ThesesManager from "../managers/ThesesManager";
-import { ThesisBox } from '../components/ThesisBox';
+import ThesisBox from '../components/ThesisBox';
 
 const AuthoredThesesScreen = ({ navigation, route }) => {
     const [thesesArray, setThesesArray] = useState([]);

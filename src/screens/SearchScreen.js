@@ -7,7 +7,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import { useDispatch } from "react-redux";
 import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 import ThesesManager from "../managers/ThesesManager";
-import { ThesisBox } from '../components/ThesisBox';
+import ThesisBox from '../components/ThesisBox';
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');

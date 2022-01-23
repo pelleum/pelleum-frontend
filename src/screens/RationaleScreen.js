@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { ThesisBox } from '../components/ThesisBox';
+import ThesisBox from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
 
 const RationaleScreen = ({ navigation, route }) => {

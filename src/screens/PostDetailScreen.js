@@ -11,10 +11,10 @@ import {
 import { VStack, NativeBaseProvider } from "native-base";
 import CommentInput from "../components/CommentInput";
 import PostButtonPanel from "../components/PostButtonPanel";
-import { PostBox, PostBoxType } from "../components/PostBox";
+import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
-import { ThesisBox } from "../components/ThesisBox";
+import ThesisBox from "../components/ThesisBox";
 
 
 const PostDetailScreen = ({ navigation, route }) => {

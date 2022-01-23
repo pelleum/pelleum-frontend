@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
-import { ThesisBox } from "./ThesisBox";
+import ThesisBox from "./ThesisBox";
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -16,7 +16,7 @@ export class PostBoxType {
 	}
 }
 
-export const PostBox = ({ postBoxType, item, nav }) => {
+const PostBox = ({ postBoxType, item, nav }) => {
 	// new Date() gives time in device's time zone, but we need it in UTC
 	// To do this, we get the ISO string, remove the Z from the end, and create a new date
 
@@ -99,6 +99,8 @@ export const PostBox = ({ postBoxType, item, nav }) => {
 		</NativeBaseProvider>
 	);
 };
+
+export default React.memo(PostBox);
 
 const styles = StyleSheet.create({
 	topPostBox: {

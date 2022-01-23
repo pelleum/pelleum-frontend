@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
 	StyleSheet,
 	View,
@@ -9,7 +9,7 @@ import {
 
 // File imports
 import CreateModal from "../components/modals/CreateModal";
-import { PostBox, PostBoxType } from "../components/PostBox";
+import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
@@ -25,8 +25,8 @@ const FeedScreen = ({ navigation, route }) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const [errorMessage, setErrorMessage] = useState("");
-	
-	const RECORDS_PER_PAGE = 50;
+
+	const RECORDS_PER_PAGE = 10;
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
@@ -86,17 +86,16 @@ const FeedScreen = ({ navigation, route }) => {
 			<FlatList
 				data={posts}
 				keyExtractor={(item) => item.post_id.toString()}
-				renderItem={({ item }) => {
-
-					return (
-						<PostBox
-							postBoxType={PostBoxType.Feed}
-							item={item}
-							nav={navigation}
-						/>
-					);
-				}}
-				refreshing={refreshing}
+					renderItem={({ item }) => {
+						return (
+							<PostBox
+								postBoxType={PostBoxType.Feed}
+								item={item}
+								nav={navigation}
+							/>
+						);
+					}}
+					refreshing = { refreshing }
 				onRefresh={onRefresh}
 				onEndReached={getMorePosts}
 				onEndReachedThreshold={2.5}

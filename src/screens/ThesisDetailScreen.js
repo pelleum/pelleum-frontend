@@ -11,7 +11,7 @@ import {
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
-import { PostBox, PostBoxType } from "../components/PostBox";
+import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
 
