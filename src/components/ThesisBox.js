@@ -17,6 +17,16 @@ export const ThesisBox = ({ item, nav }) => {
                     <HStack justifyContent={"space-between"}>
                         <Text style={styles.usernameText}>@{item.username}</Text>
                         <Text style={styles.usernameText}>{dateWritten.toLocaleDateString()}</Text>
+                        {item.asset_symbol ? (
+                            <TouchableOpacity
+                                style={styles.assetButton}
+                                onPress={() => {
+                                    console.log("Asset button worked.");
+                                }}
+                            >
+                                <Text style={styles.assetText}>{item.asset_symbol}</Text>
+                            </TouchableOpacity>
+                        ) : null}
                         <Text
                             style={
                                 item.sentiment
@@ -61,33 +71,49 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     bullSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#c6edc5",
-		borderColor: "#1c7850",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#1c7850",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
-	bearSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#edcec5",
-		borderColor: "#b02802",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#b02802",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
+        textAlign: "center",
+        width: 70,
+        borderWidth: 0.5,
+        backgroundColor: "#c6edc5",
+        borderColor: "#1c7850",
+        borderRadius: 15,
+        padding: 5,
+        marginBottom: 10,
+        justifyContent: "center",
+        color: "#1c7850",
+        fontSize: 16,
+        fontWeight: "bold",
+        overflow: "hidden",
+    },
+    bearSentimentText: {
+        textAlign: "center",
+        width: 70,
+        borderWidth: 0.5,
+        backgroundColor: "#edcec5",
+        borderColor: "#b02802",
+        borderRadius: 15,
+        padding: 5,
+        marginBottom: 10,
+        justifyContent: "center",
+        color: "#b02802",
+        fontSize: 16,
+        fontWeight: "bold",
+        overflow: "hidden",
+    },
+    assetButton: {
+        width: 70,
+        borderWidth: 0.5,
+        backgroundColor: "white",
+        borderColor: "#026bd4",
+        borderRadius: 15,
+        padding: 5,
+        marginBottom: 10,
+        color: "#026bd4",
+        alignItems: "center",
+    },
+    assetText: {
+        color: "#026bd4",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
 });

@@ -60,7 +60,7 @@ const FeedFlow = () => (
 const SearchStack = createNativeStackNavigator();
 const SearchFlow = () => (
 	<SearchStack.Navigator initialRouteName="Search">
-		<SearchStack.Screen name="Search" component={SearchScreen} />
+		<SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
 	</SearchStack.Navigator>
 );
 
