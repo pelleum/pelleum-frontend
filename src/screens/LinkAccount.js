@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import DismissKeyboard from '../components/DismissKeyboard';
 import { NativeBaseProvider } from 'native-base';
-import accountConnectClient from '../api/clients/AccountConnectClient';
+import LinkAccountsManager from '../managers/LinkAccountsManager';
 
 const LinkAccount = ({ navigation }) => {
     const [userCredential, setUserCredential] = useState('');
@@ -22,15 +22,8 @@ const LinkAccount = ({ navigation }) => {
     const [smsDisableStatus, setSMSDisableStatus] = useState(true);
     const [credentialsValidity, setCredentialsValidity] = useState({ userCredentialValidity: false, passwordValidity: false });
 
-    const robinhood_ID = 'd75e2cf4-a4ee-4869-88c3-14bfadf7c196';
-
-    const logIn = async () => {
-        const response = await accountConnectClient({
-            method: "post",
-            url: `/public/institutions/login/${robinhood_ID}`,
-            data: { username: userCredential, password: password }
-        });
-
+    const onAccountLogin = async () => {
+        const response = await LinkAccountsManager.accountLogin({ username: userCredential, password: password });
         if (response.status == 200) {
             setErrorMessage('')
             if (response.data.account_connection_status == "connected") {
@@ -46,17 +39,12 @@ const LinkAccount = ({ navigation }) => {
                 setErrorMessage('Your Robinhood account is already linked to Pelleum.');
             } else {
                 setErrorMessage('There was an error logging into your account.');
-            }
-        }
+            };
+        };
     };
 
-    const verifyAccount = async (sms_code) => {
-        const response = await accountConnectClient({
-            method: "post",
-            url: `/public/institutions/login/${robinhood_ID}/verify`,
-            data: { sms_code }
-        });
-
+    const onVerifyAccount = async (sms_code) => {
+        const response = await LinkAccountsManager.verifyAccount({ sms_code });
         if (response.status == 201) {
             setErrorMessage('')
             navigation.navigate("Profile", { accountLinked: true });
@@ -65,8 +53,8 @@ const LinkAccount = ({ navigation }) => {
                 setErrorMessage('Invalid code. Please enter a valid code.');
             } else {
                 setErrorMessage('There was an error validating your account.');
-            }
-        }
+            };
+        };
     };
 
     useEffect(() => {
@@ -168,7 +156,7 @@ const LinkAccount = ({ navigation }) => {
                                 <Text style={styles.errorMessage}>{errorMessage}</Text>
                             ) : null}
                             <TouchableOpacity
-                                onPress={() => logIn()}
+                                onPress={() => onAccountLogin()}
                                 style={credentialsDisableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                                 disabled={credentialsDisableStatus}
                             >
@@ -191,7 +179,7 @@ const LinkAccount = ({ navigation }) => {
                                 <Text style={styles.errorMessage}>{errorMessage}</Text>
                             ) : null}
                             <TouchableOpacity
-                                onPress={() => verifyAccount(sms_code)}
+                                onPress={() => onVerifyAccount(sms_code)}
                                 style={smsDisableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                                 disabled={smsDisableStatus}
                             >

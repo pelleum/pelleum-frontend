@@ -5,6 +5,7 @@ import pelleumClient from "../api/clients/PelleumClient";
 import { authError, login, restoreToken } from "../redux/actions/AuthActions";
 import RationalesManager from "../managers/RationalesManager";
 import { refreshLibrary } from "../redux/actions/RationaleActions";
+import LinkAccountsManager from "./LinkAccountsManager";
 
 class UserManager {
 
@@ -29,6 +30,8 @@ class UserManager {
                 const rationaleInfo = await RationalesManager.extractRationaleInfo(retrievedRationales.records.rationales);
                 store.dispatch(refreshLibrary(rationaleInfo));
             };
+            //4. update linked brokerage accounts status
+            await LinkAccountsManager.getLinkedAccountsStatus();
         } else {
             store.dispatch(authError(response.data.detail));
         }

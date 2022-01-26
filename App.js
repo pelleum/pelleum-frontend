@@ -1,5 +1,6 @@
 // Import Installed Libraries
 import * as React from "react";
+import { Button } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -24,13 +25,13 @@ import LoadingScreen from "./src/screens/LoadingScreen";
 import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
 import LinkAccount from "./src/screens/LinkAccount";
+import LinkedAccountsStatus from "./src/screens/LinkedAccountsStatus";
 import RationaleScreen from "./src/screens/RationaleScreen";
 import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
-
-
+import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 
 // Redux
 import { Provider } from 'react-redux';
@@ -52,7 +53,7 @@ const AuthFlow = () => (
 const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
 	<FeedStack.Navigator initialRouteName="Feed">
-		<FeedStack.Screen name="Feed" component={FeedScreen} />
+		<FeedStack.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }} />
 	</FeedStack.Navigator>
 );
 
@@ -68,18 +69,44 @@ const SearchFlow = () => (
 const EducationStack = createNativeStackNavigator();
 const EducationFlow = () => (
 	<EducationStack.Navigator initialRouteName="Education">
-		<EducationStack.Screen name="Education" component={EdScreen} />
-		<EducationStack.Screen name="BlogPost" component={BlogScreen} />
+		<EducationStack.Screen name="Education" component={EdScreen} options={{ headerShown: false }} />
+		<EducationStack.Screen name="BlogPost" component={BlogScreen} options={{ headerTitle: "Blog" }} />
 	</EducationStack.Navigator>
 );
 
 // Profile Flow
 const ProfileStack = createNativeStackNavigator();
 const ProfileFlow = () => (
-	<ProfileStack.Navigator initialRouteName="Profile">
-		<ProfileStack.Screen name="Profile" component={ProfileScreen} />
+	<ProfileStack.Navigator
+		initialRouteName="Profile"
+		screenOptions={{
+			headerStyle: {
+				backgroundColor: '#f4511e',
+			},
+			headerBackTitleVisible: false,
+			headerTintColor: '#fff',
+			headerTitleStyle: {
+				fontWeight: 'bold',
+			},
+		}}
+	>
+		<ProfileStack.Screen
+			name="Profile"
+			component={ProfileScreen}
+			options={{
+				headerTitle: "Custom Profile Header",
+				headerRight: () => (
+					<Button
+						onPress={() => alert('This is a button!')}
+						title="Info"
+						color="#fff"
+					/>
+				),
+			}}
+		/>
 		<ProfileStack.Screen name="Settings" component={SettingsScreen} />
 		<ProfileStack.Screen name="Link" component={LinkAccount} />
+		<ProfileStack.Screen name="LinkedStatus" component={LinkedAccountsStatus} />
 		<ProfileStack.Screen name="Authored" component={AuthoredThesesScreen} />
 	</ProfileStack.Navigator>
 );
@@ -157,6 +184,7 @@ const RootStackFlow = () => {
 		const user = await UserManager.getUser();
 		if (user) {
 			await getRationaleLibrary();
+			await LinkAccountsManager.getLinkedAccountsStatus();
 		};
 	};
 

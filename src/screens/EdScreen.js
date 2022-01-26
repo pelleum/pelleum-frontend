@@ -2,6 +2,7 @@ import React from "react";
 import {
 	StyleSheet,
 	View,
+	SafeAreaView,
 	FlatList,
 	Text,
 	TouchableOpacity,
@@ -10,7 +11,7 @@ import {
 } from "react-native";
 import { Box, VStack, NativeBaseProvider } from "native-base";
 
-const EdScreen = ({ navigation }) => {
+const EdScreen = ( { navigation }) => {
 	//need to add the full text of each blog to the object array below, then render it in the BlogScreen
 	const blogList = [
 		{
@@ -78,7 +79,7 @@ const EdScreen = ({ navigation }) => {
 	const imageHeight = Math.round((dimensions.width * 9) / 16);
 
 	return (
-		<View style={styles.mainContainer}>
+		<SafeAreaView style={styles.mainContainer}>
 			<FlatList
 				data={blogList}
 				keyExtractor={(item) => item.blog_id}
@@ -109,7 +110,7 @@ const EdScreen = ({ navigation }) => {
 					</NativeBaseProvider>
 				)}
 			></FlatList>
-		</View>
+		</SafeAreaView>
 	);
 };
 

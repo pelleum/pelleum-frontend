@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native';
 import { VStack, NativeBaseProvider } from "native-base"
 
-const BlogScreen = ({ route, navigation })  => {
+const BlogScreen = ( { route })  => {
 
     const { imageSource,
     blogDate,
@@ -11,7 +11,7 @@ const BlogScreen = ({ route, navigation })  => {
 
     const dimensions = Dimensions.get("window");
 	const imageHeight = Math.round((dimensions.width * 9) / 16);
-    
+
     return (
         <View style={styles.mainContainer}>
             <ScrollView>

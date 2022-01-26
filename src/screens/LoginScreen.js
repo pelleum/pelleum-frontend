@@ -11,7 +11,6 @@ import {
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
-
 import { useSelector, useDispatch } from 'react-redux';
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";

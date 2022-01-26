@@ -18,7 +18,7 @@ class RationalesManager {
 				console.log("There was an error obtaining rationales from the backend.");
 			};
 		};
-	}
+	};
 
 	static addRationale = async (thesis) => {
 		const authorizedResponse = await pelleumClient({
@@ -33,6 +33,7 @@ class RationalesManager {
 			} else {
 				console.log("There was an error adding the thesis to your library.");
 			};
+			console.log("\nRetrieved Rationales:\n", authorizedResponse.data);
 			return authorizedResponse;
 		};
 	};
@@ -60,6 +61,6 @@ class RationalesManager {
 		};
 		return rationaleInfo;
 	};
-}
+};
 
 export default RationalesManager;

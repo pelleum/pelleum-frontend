@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
 	StyleSheet,
 	View,
+	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
 	Text
@@ -82,7 +83,7 @@ const FeedScreen = ({ navigation, route }) => {
 	};
 
 	return (
-		<View style={styles.mainContainer}>
+		<SafeAreaView style={styles.mainContainer}>
 			<FlatList
 				data={posts}
 				keyExtractor={(item) => item.post_id.toString()}
@@ -112,7 +113,7 @@ const FeedScreen = ({ navigation, route }) => {
 			>
 				<Text style={styles.fabIcon}>+</Text>
 			</TouchableOpacity>
-		</View>
+		</SafeAreaView>
 	);
 };
 
