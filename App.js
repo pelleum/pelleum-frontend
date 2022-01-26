@@ -52,7 +52,12 @@ const AuthFlow = () => (
 // Feed Flow
 const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
-	<FeedStack.Navigator initialRouteName="Feed">
+	<FeedStack.Navigator 
+	initialRouteName="Feed"
+	screenOptions={{
+		headerBackTitleVisible: false,
+	}}
+	>
 		<FeedStack.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }} />
 	</FeedStack.Navigator>
 );
@@ -60,7 +65,12 @@ const FeedFlow = () => (
 // Search Flow
 const SearchStack = createNativeStackNavigator();
 const SearchFlow = () => (
-	<SearchStack.Navigator initialRouteName="Search">
+	<SearchStack.Navigator
+		initialRouteName="Search"
+		screenOptions={{
+			headerBackTitleVisible: false,
+		}}
+	>
 		<SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
 	</SearchStack.Navigator>
 );
@@ -68,7 +78,12 @@ const SearchFlow = () => (
 // Education Flow
 const EducationStack = createNativeStackNavigator();
 const EducationFlow = () => (
-	<EducationStack.Navigator initialRouteName="Education">
+	<EducationStack.Navigator
+		initialRouteName="Education"
+		screenOptions={{
+			headerBackTitleVisible: false,
+		}}
+	>
 		<EducationStack.Screen name="Education" component={EdScreen} options={{ headerShown: false }} />
 		<EducationStack.Screen name="BlogPost" component={BlogScreen} options={{ headerTitle: "Blog" }} />
 	</EducationStack.Navigator>
@@ -80,28 +95,32 @@ const ProfileFlow = () => (
 	<ProfileStack.Navigator
 		initialRouteName="Profile"
 		screenOptions={{
-			headerStyle: {
-				backgroundColor: '#f4511e',
-			},
 			headerBackTitleVisible: false,
-			headerTintColor: '#fff',
-			headerTitleStyle: {
-				fontWeight: 'bold',
-			},
 		}}
+		// screenOptions={{
+		// 	headerStyle: {
+		// 		backgroundColor: '#f4511e',
+		// 	},
+		// 	headerBackTitleVisible: false,
+		// 	headerTintColor: '#fff',
+		// 	headerTitleStyle: {
+		// 		fontWeight: 'bold',
+		// 	},
+		// }}
 	>
 		<ProfileStack.Screen
 			name="Profile"
 			component={ProfileScreen}
 			options={{
-				headerTitle: "Custom Profile Header",
-				headerRight: () => (
-					<Button
-						onPress={() => alert('This is a button!')}
-						title="Info"
-						color="#fff"
-					/>
-				),
+				headerShown: false,
+				// headerTitle: "Custom Profile Header",
+				// headerRight: () => (
+				// 	<Button
+				// 		onPress={() => alert('This is a button!')}
+				// 		title="Info"
+				// 		color="#fff"
+				// 	/>
+				// ),
 			}}
 		/>
 		<ProfileStack.Screen name="Settings" component={SettingsScreen} />
@@ -197,7 +216,7 @@ const RootStackFlow = () => {
 	}
 
 	return (
-		<RootStack.Navigator screenOptions={{ animationEnabled: false }}>
+		<RootStack.Navigator screenOptions={{ headerBackTitleVisible: false }}>
 			{hasUserToken == false ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen

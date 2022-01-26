@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import {
 	MaterialIcons,
@@ -48,14 +48,14 @@ const PostButtonPanel = ({ item, nav }) => {
 						}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity
+				{/* <TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {
 						console.log("Link button worked.");
 					}}
 				>
 					<MaterialIcons name="add-link" size={29} color="#00A8FC" />
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {

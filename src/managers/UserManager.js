@@ -38,7 +38,6 @@ class UserManager {
     }
 
     static signup = async (data) => {
-
         const response = await pelleumClient({
             method: "post",
             url: "/public/auth/users",
@@ -46,13 +45,22 @@ class UserManager {
         });
 
         if (response.status == 201) {
+            // 1. store user object in SecureStore
             await SecureStore.setItemAsync('userObject', JSON.stringify(response.data));
+            // 2. dispatch login action
             store.dispatch(login());
-
+            // 3. retrieve rationales from backend and update rationaleLibrary
+            const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: response.data.user_id });
+            if (retrievedRationales) {
+                const rationaleInfo = await RationalesManager.extractRationaleInfo(retrievedRationales.records.rationales);
+                store.dispatch(refreshLibrary(rationaleInfo));
+            };
+            //4. update linked brokerage accounts status
+            await LinkAccountsManager.getLinkedAccountsStatus();
         } else {
             store.dispatch(authError(response.data.detail));
-        }
-    }
+        };
+    };
 
     static getUser = async () => {
         const authorizedResponse = await pelleumClient({
@@ -67,7 +75,7 @@ class UserManager {
                 console.log("There was an error retrieving the current user when attempting to restore the token.")
             };
         };
-    }
-}
+    };
+};
 
 export default UserManager;

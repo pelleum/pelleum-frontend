@@ -27,6 +27,7 @@ const LinkAccount = ({ navigation }) => {
         if (response.status == 200) {
             setErrorMessage('')
             if (response.data.account_connection_status == "connected") {
+                await LinkAccountsManager.getLinkedAccountsStatus();
                 navigation.navigate("Profile", { accountLinked: true });
             } else {
                 setInstitutionLogin(true);
@@ -47,6 +48,7 @@ const LinkAccount = ({ navigation }) => {
         const response = await LinkAccountsManager.verifyAccount({ sms_code });
         if (response.status == 201) {
             setErrorMessage('')
+            await LinkAccountsManager.getLinkedAccountsStatus();
             navigation.navigate("Profile", { accountLinked: true });
         } else {
             if (response.data.detail.includes("Please enter a valid code.")) {

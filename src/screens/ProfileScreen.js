@@ -3,6 +3,7 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
 	Image,
@@ -17,6 +18,7 @@ const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState('');
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
+	const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
 
 	const getUserObject = async () => {
 		const userObjectString = await SecureStore.getItemAsync('userObject');
@@ -44,7 +46,7 @@ const ProfileScreen = ({ navigation, route }) => {
 	}
 
 	return (
-		<View style={styles.mainContainer}>
+		<SafeAreaView style={styles.mainContainer}>
 			<NativeBaseProvider>
 				<FlatList
 					data={assetList}
@@ -100,6 +102,9 @@ const ProfileScreen = ({ navigation, route }) => {
 								source={require("../../assets/forest.jpg")}
 							/>
 							<Text style={styles.usernameText}>@{username}</Text>
+							{activeAccounts.some(account => account.is_active) == false ? (
+								<Text style={styles.inactiveAccountWarning}>There was an error validating your linked account(s). Please go to Settings and check the status of your linked account(s).</Text>
+							) : null}
 							<Text style={styles.listHeaderText}>Assets</Text>
 						</View>
 					}
@@ -154,7 +159,7 @@ const ProfileScreen = ({ navigation, route }) => {
 				>
 				</FlatList>
 			</NativeBaseProvider>
-		</View>
+		</SafeAreaView>
 	);
 };
 
@@ -173,7 +178,8 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 	},
 	usernameText: {
-		marginTop: 10
+		marginTop: 10,
+		color: "#026bd4"
 	},
 	assetTableBox: {
 		backgroundColor: "#ebecf0",
@@ -282,31 +288,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		paddingLeft: 15,
 		paddingVertical: 10,
-	}
+	},
+	inactiveAccountWarning: {
+		alignSelf: "center",
+		marginTop: 15,
+		color: "red"
+	},
 });
-
-/*
-	const assetsOwned = [
-		{
-			assetSymbol: "TSLA",
-			contribution: "$8,533.06",
-			currentValue: "$19,215.48",
-		},
-		{
-			assetSymbol: "AAPL",
-			contribution: "$2,568.72",
-			currentValue: "$5,651.18",
-		},
-		{ assetSymbol: "COIN", contribution: "$1,225.99", currentValue: "$992.79" },
-		{
-			assetSymbol: "GOOGL",
-			contribution: "$4,850.19",
-			currentValue: "$7,125.35",
-		},
-		{
-			assetSymbol: "VOO",
-			contribution: "$14,041.45",
-			currentValue: "$22,378.63",
-		}
-	];
-*/
