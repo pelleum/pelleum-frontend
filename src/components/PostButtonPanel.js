@@ -15,6 +15,26 @@ const PostButtonPanel = ({ item, nav }) => {
 		(state) => state.postReactionsReducer
 	);
 
+	const onShare = async () => {
+		try {
+			const result = await Share.share({
+				message:
+					'React Native | A framework for building native apps using React',
+			});
+			if (result.action === Share.sharedAction) {
+				if (result.activityType) {
+					// shared with activity type of result.activityType
+				} else {
+					// shared
+				}
+			} else if (result.action === Share.dismissedAction) {
+				// dismissed
+			}
+		} catch (error) {
+			alert(error.message);
+		}
+	};
+
 	return (
 		<NativeBaseProvider>
 			<HStack style={styles.buttonBox}>
@@ -34,7 +54,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						name={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
-							locallyLikedPosts.includes(item.post_id)
+								locallyLikedPosts.includes(item.post_id)
 								? "md-heart"
 								: "md-heart-outline"
 						}
@@ -42,7 +62,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						color={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
-							locallyLikedPosts.includes(item.post_id)
+								locallyLikedPosts.includes(item.post_id)
 								? "#F82057"
 								: "#00A8FC"
 						}
@@ -58,9 +78,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity> */}
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => {
-						console.log("Share button worked.");
-					}}
+					onPress={onShare}
 				>
 					<FontAwesome name="send-o" size={19} color="#00A8FC" />
 				</TouchableOpacity>

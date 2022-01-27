@@ -10,7 +10,7 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
     const userId = route.params.userId ? route.params.userId : null;
 
     const getAuthoredTheses = async () => {
-        const retrievedTheses = await ThesesManager.getTheses( { queryParams: { user_id: userId } } );
+        const retrievedTheses = await ThesesManager.getTheses( { user_id: userId } );
         if (retrievedTheses) {
             setThesesArray(retrievedTheses.records.theses);
         } else {
