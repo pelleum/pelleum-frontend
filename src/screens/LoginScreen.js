@@ -81,7 +81,7 @@ const LoginScreen = ({ navigation }) => {
 				style={styles.container}
 				//behavior="padding"       //ensures text fields do not get blocked by keyboard
 			>
-				<Text style={styles.titleText}>Log into your Pelleum account!</Text>
+				<Text style={styles.titleText}>Welcome to Pelleum.</Text>
 				<View style={styles.inputContainer}>
 					<TextInput
 						placeholder="Username"

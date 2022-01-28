@@ -74,7 +74,7 @@ const ProfileScreen = ({ navigation, route }) => {
 												});
 											}}
 										>
-											<Text style={styles.thesisButtonText}>Thesis</Text>
+											<Text style={styles.thesisButtonText}>Rationales</Text>
 										</TouchableOpacity>
 									</VStack>
 									<VStack>
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		marginVertical: 3,
 		height: 30,
-		width: 75,
+		width: 100,
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		marginVertical: 3,
 		height: 30,
-		width: 75,
+		width: 100,
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		marginVertical: 3,
 		height: 30,
-		width: 75,
+		width: 100,
 		justifyContent: "center",
 		alignItems: "center",
 		opacity: 0.33,
@@ -259,7 +259,8 @@ const styles = StyleSheet.create({
 		width: 130,
 		textAlign: "right",
 		fontSize: 15,
-		marginRight: 5,
+		fontWeight: "bold",
+		marginRight: 10,
 		marginVertical: 3,
 		paddingVertical: 5,
 	},

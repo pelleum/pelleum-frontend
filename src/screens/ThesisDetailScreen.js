@@ -8,7 +8,7 @@ import {
 	RefreshControl,
 	Keyboard
 } from "react-native";
-import { HStack, VStack, NativeBaseProvider } from "native-base";
+import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
@@ -114,12 +114,14 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 					<View style={styles.mainContainer}>
 						<View style={styles.thesisContainer}>
 							<Text style={styles.thesisTitle}>{detailedThesis.title}</Text>
-							<Text style={styles.usernameText}>
-								Investor: @{detailedThesis.username}
-							</Text>
-							<Text style={styles.usernameText}>
-								Written: {dateWritten.toLocaleDateString()}
-							</Text>
+							<HStack justifyContent="space-between" marginBottom={5}>
+								<Text style={styles.usernameText}>
+									Investor: @{detailedThesis.username}
+								</Text>
+								<Text style={styles.usernameText}>
+									Written: {dateWritten.toLocaleDateString()}
+								</Text>
+							</HStack>
 							<HStack style={styles.topThesisBox}>
 								<TouchableOpacity
 									style={styles.assetButton}

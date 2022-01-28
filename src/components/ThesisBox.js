@@ -14,7 +14,7 @@ const ThesisBox = ({ item, nav }) => {
                 }}
             >
                 <Box style={styles.thesisListContainer}>
-                    <HStack justifyContent={"space-between"}>
+                    <HStack justifyContent="space-between">
                         <Text style={styles.usernameText}>@{item.username}</Text>
                         <Text style={styles.usernameText}>{dateWritten.toLocaleDateString()}</Text>
                         {item.asset_symbol ? (
