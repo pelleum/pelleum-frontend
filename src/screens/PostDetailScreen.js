@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
-	Text,
 	View,
 	TouchableOpacity,
 	Keyboard,
@@ -15,6 +14,7 @@ import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
+import AppText from "../components/AppText";
 
 
 const PostDetailScreen = ({ navigation, route }) => {
@@ -160,9 +160,9 @@ const PostDetailScreen = ({ navigation, route }) => {
 								onPress={() => replyButtonPressed()}
 								disabled={disableStatus}
 							>
-								<Text style={styles.buttonTextStyle}>Reply</Text>
+								<AppText style={styles.buttonTextStyle}>Reply</AppText>
 							</TouchableOpacity>
-							{error ? <Text style={styles.errorText}>{error}</Text> : null}
+							{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 						</VStack>
 					</View>
 				}

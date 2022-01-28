@@ -1,10 +1,9 @@
 // Import Installed Libraries
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
-
-// Redux
+import AppText from '../components/AppText';
 import { useDispatch } from 'react-redux';
 import { logout } from "../redux/actions/AuthActions";
 
@@ -22,13 +21,13 @@ const SettingsScreen = ({ navigation }) => {
                 style={styles.button}
                 onPress={() => navigation.navigate("LinkedStatus")}
             >
-                <Text style={styles.buttonText}>Linked Accounts</Text>
+                <AppText style={styles.buttonText}>Linked Accounts</AppText>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
                 onPress={logOut} 
             >
-                <Text style={styles.buttonText}>Log Out</Text>
+                <AppText style={styles.buttonText}>Log Out</AppText>
             </TouchableOpacity>
         </SafeAreaView>
     );

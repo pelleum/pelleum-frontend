@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ThesisBox from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
+import AppText from '../components/AppText';
 
 const RationaleScreen = ({ navigation, route }) => {
     //State Management
@@ -69,7 +70,7 @@ const RationaleScreen = ({ navigation, route }) => {
                         }
                     }}
                 >
-                    <Animated.Text style={{ fontSize: 16, fontWeight: 'bold' }}>REMOVE</Animated.Text>
+                    <Animated.AppText style={{ fontSize: 16, fontWeight: 'bold' }}>REMOVE</Animated.AppText>
                 </TouchableOpacity>
             </Animated.View>
         );
@@ -82,8 +83,8 @@ const RationaleScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.mainContainer}>
-            <Text style={styles.title}>{asset} Rationale Library</Text>
-            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+            <AppText style={styles.title}>{asset} Rationale Library</AppText>
+            {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
             <FlatList
                 data={rationaleArray}
                 //maybe we should use rationale_id as the key extractor for the RationaleScreen only

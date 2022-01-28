@@ -1,6 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, NativeBaseProvider, Box } from "native-base";
+import { BACKGROUND_COLOR } from "../styles/ComponentStyles";
+import AppText from "../components/AppText"
 
 const ThesisBox = ({ item, nav }) => {
 
@@ -15,8 +17,8 @@ const ThesisBox = ({ item, nav }) => {
             >
                 <Box style={styles.thesisListContainer}>
                     <HStack justifyContent="space-between">
-                        <Text style={styles.usernameText}>@{item.username}</Text>
-                        <Text style={styles.usernameText}>{dateWritten.toLocaleDateString()}</Text>
+                        <AppText style={styles.usernameText}>@{item.username}</AppText>
+                        <AppText style={styles.usernameText}>{dateWritten.toLocaleDateString()}</AppText>
                         {item.asset_symbol ? (
                             <TouchableOpacity
                                 style={styles.assetButton}
@@ -24,10 +26,10 @@ const ThesisBox = ({ item, nav }) => {
                                     console.log("Asset button worked.");
                                 }}
                             >
-                                <Text style={styles.assetText}>{item.asset_symbol}</Text>
+                                <AppText style={styles.assetText}>{item.asset_symbol}</AppText>
                             </TouchableOpacity>
                         ) : null}
-                        <Text
+                        <AppText
                             style={
                                 item.sentiment
                                     ? item.sentiment === "Bull"
@@ -37,10 +39,10 @@ const ThesisBox = ({ item, nav }) => {
                             }
                         >
                             {item.sentiment}
-                        </Text>
+                        </AppText>
                     </HStack>
-                    <Text style={styles.thesisTitleText}>{item.title} thesis_id: {item.thesis_id}</Text>
-                    <Text numberOfLines={5}>{item.content}...</Text>
+                    <AppText style={styles.thesisTitleText}>{item.title}</AppText>
+                    <AppText numberOfLines={5}>{item.content}...</AppText>
                 </Box>
             </TouchableOpacity>
         </NativeBaseProvider>
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
         height: 175,
         padding: 10,
         fontSize: 16,
-        backgroundColor: "#ebecf0",
+        backgroundColor: BACKGROUND_COLOR,
         borderBottomWidth: 2,
         borderBottomColor: "#bfc6c9",
         overflow: "hidden",

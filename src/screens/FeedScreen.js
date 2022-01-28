@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
 	StyleSheet,
-	View,
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
-	Text
 } from "react-native";
 
 // File imports
@@ -14,6 +12,7 @@ import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
+import AppText from "../components/AppText";
 
 const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
@@ -101,7 +100,7 @@ const FeedScreen = ({ navigation, route }) => {
 				onEndReached={getMorePosts}
 				onEndReachedThreshold={2.5}
 			></FlatList>
-			{errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+			{errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
 			<CreateModal
 				modalVisible={modalVisible}
 				makeModalDisappear={() => setModalVisible(false)}
@@ -111,7 +110,7 @@ const FeedScreen = ({ navigation, route }) => {
 				style={styles.fab}
 				onPress={() => setModalVisible(true)}
 			>
-				<Text style={styles.fabIcon}>+</Text>
+				<AppText style={styles.fabIcon}>+</AppText>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);

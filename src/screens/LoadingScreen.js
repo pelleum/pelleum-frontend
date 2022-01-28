@@ -1,10 +1,11 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import AppText from '../components/AppText';
 
 const LoadingScreen = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.loadText}>Welcome to Pelleum</Text>
+            <AppText style={styles.loadText}>Welcome to Pelleum</AppText>
         </View>
     );
 };
@@ -16,11 +17,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#DEDBD5'
     },
     loadText: {
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: 25
+        fontSize: 25,
     },
 });

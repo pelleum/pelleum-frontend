@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, HStack } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
+import AppText from '../components/AppText';
+import { TEXT_COLOR } from '../styles/ComponentStyles';
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');
@@ -196,6 +198,7 @@ const SearchScreen = ({ navigation }) => {
                                     getResults();
                                 }}
                                 placeholder="Search by ticker symbol"
+                                placeholderTextColor={TEXT_COLOR}
                                 returnKeyType="search"
                                 bg="transparent"
                                 width="75%"
@@ -241,7 +244,7 @@ const SearchScreen = ({ navigation }) => {
                                 hasPadding
                             />
                         </View>
-                        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+                        {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
                         <FlatList
                             data={sentiment === "Bull" ? bullResults : bearResults}
                             keyExtractor={(item) => item.thesis_id}

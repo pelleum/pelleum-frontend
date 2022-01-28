@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, TouchableOpacity } from 'react-native';
 import { NativeBaseProvider, HStack } from 'native-base';
 import LinkAccountsManager from '../managers/LinkAccountsManager';
 import { useSelector } from "react-redux";
+import AppText from '../components/AppText';
 
 const LinkedAccountsStatus = ({ navigation }) => {
     const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
@@ -23,11 +24,11 @@ const LinkedAccountsStatus = ({ navigation }) => {
                     keyExtractor={(item) => item.connection_id}
                     renderItem={({ item }) => (
                         <HStack style={styles.itemBox}>
-                            <Text style={styles.accountNameText}>{item.name}</Text>
+                            <AppText style={styles.accountNameText}>{item.name}</AppText>
                             {item.is_active ? (
-                                <Text style={styles.activeText}>ACTIVE</Text>
+                                <AppText style={styles.activeText}>ACTIVE</AppText>
                             ) : (
-                                <Text style={styles.inactiveText}>NOT ACTIVE</Text>
+                                <AppText style={styles.inactiveText}>NOT ACTIVE</AppText>
                             )}
                         </HStack>
                     )}
@@ -35,11 +36,11 @@ const LinkedAccountsStatus = ({ navigation }) => {
                         <>
                             {activeAccounts.some(account => account.is_active) == false ? (
                                 <>
-                                    <Text style={styles.inactiveAccountWarning}>It looks like one (or more) of your accounts needs to be linked to Pelleum again. </Text>
+                                    <AppText style={styles.inactiveAccountWarning}>It looks like one (or more) of your accounts needs to be linked to Pelleum again. </AppText>
                                     <TouchableOpacity
                                         onPress={() => navigation.navigate("Link")}
                                     >
-                                        <Text style={styles.linkButtonText}>Re-link your account(s) now!</Text>
+                                        <AppText style={styles.linkButtonText}>Re-link your account(s) now!</AppText>
                                     </TouchableOpacity>
                                 </>
                             ) : null}

@@ -1,7 +1,6 @@
 // installed libraries
 import React, { useState } from "react";
 import {
-	Text,
 	StyleSheet,
 	TextInput,
 	Image,
@@ -12,13 +11,15 @@ import {
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
-import RationalesManager from "../managers/RationalesManager";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
+import RationalesManager from "../managers/RationalesManager";
+import AppText from "../components/AppText";
+import { TEXT_COLOR } from "../styles/ComponentStyles";
 
 
 const CreateThesisScreen = ({ navigation }) => {
@@ -218,12 +219,13 @@ const CreateThesisScreen = ({ navigation }) => {
 									shareButtonPressed();
 								}}
 							>
-								<Text style={styles.buttonText}>Share</Text>
+								<AppText style={styles.buttonText}>Share</AppText>
 							</TouchableOpacity>
 						</HStack>
 						<TextInput
+							color={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor="#c7c7c7"
+							placeholderTextColor={TEXT_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -233,10 +235,11 @@ const CreateThesisScreen = ({ navigation }) => {
 							}
 							style={styles.assetSymbolInput}
 						/>
-						<Text>Asset Symbol</Text>
+						<AppText>Asset Symbol</AppText>
 						<TextInput
+							color={TEXT_COLOR}
 							placeholder="Your Thesis Title"
-							placeholderTextColor="#c7c7c7"
+							placeholderTextColor={TEXT_COLOR}
 							value={title}
 							onChangeText={(newValue) =>
 								handleChangeText({ newValue: newValue, checkTitle: true })
@@ -245,9 +248,11 @@ const CreateThesisScreen = ({ navigation }) => {
 							maxLength={256}
 							autoCorrect={true}
 						/>
-						<Text>Thesis Title</Text>
+						<AppText>Thesis Title</AppText>
 						<TextInput
+							color={TEXT_COLOR}
 							placeholder="An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."
+							placeholderTextColor={TEXT_COLOR}
 							multiline={true}
 							numberOfLines={30}
 							style={styles.textArea}
@@ -284,11 +289,11 @@ const CreateThesisScreen = ({ navigation }) => {
 							>
 								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
 							</TouchableOpacity>
-							<Text style={{ marginLeft: 20 }}>
+							<AppText style={{ marginLeft: 20 }}>
 								{validSources.length} linked sources
-							</Text>
+							</AppText>
 						</HStack>
-						{error ? <Text style={styles.errorText}>{error}</Text> : null}
+						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 					</VStack>
 				</NativeBaseProvider>
 			</View>

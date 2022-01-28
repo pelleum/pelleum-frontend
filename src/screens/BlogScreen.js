@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native';
-import { VStack, NativeBaseProvider } from "native-base"
+import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
+import { VStack, NativeBaseProvider } from "native-base";
+import AppText from '../components/AppText';
 
 const BlogScreen = ( { route })  => {
 
@@ -18,8 +19,8 @@ const BlogScreen = ( { route })  => {
                 <NativeBaseProvider>
                     <VStack>
                         <Image style={{width: dimensions.width, height: imageHeight}} source={imageSource} />
-                        <Text style={styles.titleText}>{blogTitle}</Text>
-                        <Text style={styles.blogText}>{blogContent}</Text>
+                        <AppText style={styles.titleText}>{blogTitle}</AppText>
+                        <AppText style={styles.blogText}>{blogContent}</AppText>
                     </VStack>
                 </NativeBaseProvider>
             </ScrollView>

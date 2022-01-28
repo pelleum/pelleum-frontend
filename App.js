@@ -1,7 +1,7 @@
 // Import Installed Libraries
 import * as React from "react";
 import { Button } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -52,11 +52,11 @@ const AuthFlow = () => (
 // Feed Flow
 const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
-	<FeedStack.Navigator 
-	initialRouteName="Feed"
-	screenOptions={{
-		headerBackTitleVisible: false,
-	}}
+	<FeedStack.Navigator
+		initialRouteName="Feed"
+		screenOptions={{
+			headerBackTitleVisible: false,
+		}}
 	>
 		<FeedStack.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }} />
 	</FeedStack.Navigator>
@@ -97,16 +97,16 @@ const ProfileFlow = () => (
 		screenOptions={{
 			headerBackTitleVisible: false,
 		}}
-		// screenOptions={{
-		// 	headerStyle: {
-		// 		backgroundColor: '#f4511e',
-		// 	},
-		// 	headerBackTitleVisible: false,
-		// 	headerTintColor: '#fff',
-		// 	headerTitleStyle: {
-		// 		fontWeight: 'bold',
-		// 	},
-		// }}
+	// screenOptions={{
+	// 	headerStyle: {
+	// 		backgroundColor: '#f4511e',
+	// 	},
+	// 	headerBackTitleVisible: false,
+	// 	headerTintColor: '#fff',
+	// 	headerTitleStyle: {
+	// 		fontWeight: 'bold',
+	// 	},
+	// }}
 	>
 		<ProfileStack.Screen
 			name="Profile"
@@ -257,26 +257,9 @@ const RootStackFlow = () => {
 export default () => {
 	return (
 		<Provider store={store}>
-			<NavigationContainer>
+			<NavigationContainer theme={DarkTheme} >
 				<RootStackFlow />
 			</NavigationContainer>
 		</Provider>
 	);
 };
-
-// const ProfileDrawer = createDrawerNavigator();
-// const ProfileDrawerScreen = () => (
-// 	<ProfileDrawer.Navigator drawerPosition="right">
-// 		<ProfileDrawer.Screen 
-// 			name="Profile" 
-// 			component={ProfileFlow} 
-// 		/>
-// 		<ProfileDrawer.Screen
-// 			name="Settings"
-// 			component={SettingsScreen}
-// 			options={{
-// 				gestureEnabled: false,
-// 			}}
-// 		/>
-// 	</ProfileDrawer.Navigator>
-// );

@@ -1,7 +1,5 @@
-// installed libraries
 import React, { useState } from "react";
 import {
-	Text,
 	StyleSheet,
 	TextInput,
 	Image,
@@ -11,10 +9,10 @@ import {
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
 import PostsManager from "../managers/PostsManager";
-
-// local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
 import { MaterialIcons } from "@expo/vector-icons";
+import AppText from "../components/AppText";
+import { TEXT_COLOR } from "../styles/ComponentStyles";
 
 const CreatePostScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
@@ -100,7 +98,7 @@ const CreatePostScreen = ({ navigation }) => {
 									shareButtonPressed();
 								}}
 							>
-								<Text style={styles.buttonText}>Share</Text>
+								<AppText style={styles.buttonText}>Share</AppText>
 							</TouchableOpacity>
 						</HStack>
 						<HStack
@@ -108,10 +106,11 @@ const CreatePostScreen = ({ navigation }) => {
 							justifyContent="space-between"
 							marginBottom="15"
 						>
-							<Text>Asset Symbol:</Text>
+							<AppText>Asset Symbol:</AppText>
 							<TextInput
+								color = {TEXT_COLOR}
 								placeholder="Ex: GOOGL"
-								placeholderTextColor="#c7c7c7"
+								placeholderTextColor={TEXT_COLOR}
 								autoCapitalize="characters"
 								autoCorrect={false}
 								maxLength={5}
@@ -123,7 +122,9 @@ const CreatePostScreen = ({ navigation }) => {
 							/>
 						</HStack>
 						<TextInput
+							color={TEXT_COLOR}
 							placeholder="What's your valuable insight?"
+							placeholderTextColor={TEXT_COLOR}
 							multiline={true}
 							numberOfLines={20}
 							style={styles.textArea}
@@ -165,7 +166,7 @@ const CreatePostScreen = ({ navigation }) => {
 								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
 							</TouchableOpacity>
 						</HStack>
-						{error ? <Text style={styles.errorText}>{error}</Text> : null}
+						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 					</VStack>
 				</NativeBaseProvider>
 			</View>
@@ -225,7 +226,6 @@ const styles = StyleSheet.create({
 		color: "red",
 	},
 	assetSymbolInput: {
-		backgroundColor: "white",
 		paddingHorizontal: 15,
 		paddingVertical: 10,
 		borderRadius: 10,

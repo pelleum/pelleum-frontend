@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
+import AppText from '../components/AppText';
 
 const AuthoredThesesScreen = ({ navigation, route }) => {
     const [thesesArray, setThesesArray] = useState([]);
@@ -25,8 +26,8 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.mainContainer}>
-            <Text style={styles.title}>My Authored Theses</Text>
-            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+            <AppText style={styles.title}>My Authored Theses</AppText>
+            {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
             <FlatList
                 data={thesesArray}
                 keyExtractor={(item) => item.thesis_id}

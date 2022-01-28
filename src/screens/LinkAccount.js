@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
     StyleSheet,
-    Text,
     KeyboardAvoidingView,
     View,
     TextInput,
@@ -11,6 +10,8 @@ import {
 import DismissKeyboard from '../components/DismissKeyboard';
 import { NativeBaseProvider } from 'native-base';
 import LinkAccountsManager from '../managers/LinkAccountsManager';
+import AppText from '../components/AppText';
+import { TEXT_COLOR } from '../styles/ComponentStyles';
 
 const LinkAccount = ({ navigation }) => {
     const [userCredential, setUserCredential] = useState('');
@@ -125,14 +126,14 @@ const LinkAccount = ({ navigation }) => {
                             style={styles.headerImage}
                             source={require("../../assets/robinhood.png")}
                         />
-                        <Text style={styles.headerText}>Link a Robinhood account.</Text>
+                        <AppText style={styles.headerText}>Link a Robinhood account.</AppText>
                     </View>
                     {institutionLogin == false ? (
                         <>
-                            <Text style={styles.instruction}>Log into your Robinhood brokerage account.</Text>
+                            <AppText style={styles.instruction}>Log into your Robinhood brokerage account.</AppText>
                             <TextInput
                                 placeholder="Username or Email"
-                                placeholderTextColor="#c7c7c7"
+                                placeholderTextColor={TEXT_COLOR}
                                 value={userCredential}
                                 onChangeText={(newValue) =>
                                     handleChangeText({ newValue: newValue, checkUserCredential: true })
@@ -144,7 +145,7 @@ const LinkAccount = ({ navigation }) => {
                             />
                             <TextInput
                                 placeholder="Password"
-                                placeholderTextColor="#c7c7c7"
+                                placeholderTextColor={TEXT_COLOR}
                                 value={password}
                                 onChangeText={(newValue) =>
                                     handleChangeText({ newValue: newValue, checkPassword: true })
@@ -155,22 +156,23 @@ const LinkAccount = ({ navigation }) => {
                                 secureTextEntry={true}
                             />
                             {errorMessage ? (
-                                <Text style={styles.errorMessage}>{errorMessage}</Text>
+                                <AppText style={styles.errorMessage}>{errorMessage}</AppText>
                             ) : null}
                             <TouchableOpacity
                                 onPress={() => onAccountLogin()}
                                 style={credentialsDisableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                                 disabled={credentialsDisableStatus}
                             >
-                                <Text style={styles.buttonText}>Log In</Text>
+                                <AppText style={styles.buttonText}>Log In</AppText>
                             </TouchableOpacity>
                         </>
                     ) : (
                         <>
-                            <Text style={styles.instruction}>Enter the SMS code you received.</Text>
+                            <AppText style={styles.instruction}>Enter the SMS code you received.</AppText>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Ex: 123456"
+                                placeholderTextColor={TEXT_COLOR}
                                 onChangeText={(newValue) =>
                                     handleChangeText({ newValue: newValue, checkSMSCode: true })
                                 }
@@ -178,14 +180,14 @@ const LinkAccount = ({ navigation }) => {
                                 maxLength={6}
                             />
                             {errorMessage ? (
-                                <Text style={styles.errorMessage}>{errorMessage}</Text>
+                                <AppText style={styles.errorMessage}>{errorMessage}</AppText>
                             ) : null}
                             <TouchableOpacity
                                 onPress={() => onVerifyAccount(sms_code)}
                                 style={smsDisableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                                 disabled={smsDisableStatus}
                             >
-                                <Text style={styles.buttonText}>Verify Account</Text>
+                                <AppText style={styles.buttonText}>Verify Account</AppText>
                             </TouchableOpacity>
                         </>
                     )}

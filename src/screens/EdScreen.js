@@ -1,15 +1,14 @@
 import React from "react";
 import {
 	StyleSheet,
-	View,
 	SafeAreaView,
 	FlatList,
-	Text,
 	TouchableOpacity,
 	Image,
 	Dimensions,
 } from "react-native";
 import { Box, VStack, NativeBaseProvider } from "native-base";
+import AppText from "../components/AppText";
 
 const EdScreen = ( { navigation }) => {
 	//need to add the full text of each blog to the object array below, then render it in the BlogScreen
@@ -102,8 +101,8 @@ const EdScreen = ( { navigation }) => {
 										source={item.imageLocation}
 									//resizeMode={"contain"}
 									/>
-									<Text style={styles.titleText}>{item.title}</Text>
-									<Text style={styles.previewText}>{item.preview}</Text>
+									<AppText style={styles.titleText}>{item.title}</AppText>
+									<AppText style={styles.previewText}>{item.preview}</AppText>
 								</VStack>
 							</Box>
 						</TouchableOpacity>

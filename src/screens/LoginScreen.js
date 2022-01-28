@@ -6,7 +6,6 @@ import {
 	View,
 	KeyboardAvoidingView,
 	TouchableOpacity,
-	Text,
 } from "react-native";
 
 // Import Local Files
@@ -14,6 +13,8 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { useSelector, useDispatch } from 'react-redux';
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
+import AppText from "../components/AppText";
+import { TEXT_COLOR, BACKGROUND_COLOR_2 } from "../styles/ComponentStyles";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
@@ -81,11 +82,11 @@ const LoginScreen = ({ navigation }) => {
 				style={styles.container}
 				//behavior="padding"       //ensures text fields do not get blocked by keyboard
 			>
-				<Text style={styles.titleText}>Welcome to Pelleum.</Text>
+				<AppText style={styles.titleText}>Welcome to Pelleum!</AppText>
 				<View style={styles.inputContainer}>
 					<TextInput
 						placeholder="Username"
-						placeholderTextColor="#c7c7c7"
+						placeholderTextColor={TEXT_COLOR}
 						value={username}
 						onChangeText={(newValue) =>
 							handleChangeText({ newValue: newValue, checkUsername: true })
@@ -96,7 +97,7 @@ const LoginScreen = ({ navigation }) => {
 					/>
 					<TextInput
 						placeholder="Password"
-						placeholderTextColor="#c7c7c7"
+						placeholderTextColor={TEXT_COLOR}
 						value={password}
 						onChangeText={(newValue) =>
 							handleChangeText({ newValue: newValue, checkPassword: true })
@@ -107,7 +108,7 @@ const LoginScreen = ({ navigation }) => {
 						secureTextEntry={true}
 					/>
 					{errorMessage ? (
-						<Text style={styles.errorMessage}>{errorMessage}</Text>
+						<AppText style={styles.errorMessage}>{errorMessage}</AppText>
 					) : null}
 				</View>
 				<View style={styles.buttonContainer}>
@@ -116,12 +117,12 @@ const LoginScreen = ({ navigation }) => {
 						style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
 						disabled={disableStatus}
 					>
-						<Text style={styles.buttonText}>Log In</Text>
+						<AppText style={styles.buttonText}>Log In</AppText>
 					</TouchableOpacity>
 					<View style={styles.loginContainer}>
-						<Text style={styles.already}>Don't have an account?</Text>
+						<AppText style={styles.already}>Don't have an account?</AppText>
 						<TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-							<Text style={styles.logInNow}>Sign up</Text>
+							<AppText style={styles.logInNow}>Sign up</AppText>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -139,13 +140,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "#DEDBD5",
 	},
 	inputContainer: {
 		width: "80%",
 	},
 	input: {
-		backgroundColor: "white",
+		backgroundColor: BACKGROUND_COLOR_2,
 		paddingHorizontal: 15,
 		paddingVertical: 10,
 		borderRadius: 10,
@@ -205,144 +205,9 @@ const styles = StyleSheet.create({
 	},
 	titleText: {
 		fontSize: 22,
-		color: "#5d5e61",
+		color: TEXT_COLOR,
 		padding: 5,
 		alignSelf: "center",
 		marginBottom: 15,
 	},
 });
-
-/*
-
-import React, {useState} from 'react';
-import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native';
-import pelleumPublic from '../api/pelleumPublic';
-
-const SignupScreen = () => {
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleSignup = () => {
-        pelleumPublic.post('/public/auth/users', {
-            "email": "johndoe@example.com",
-            "username": "johndoe",
-            "password": "Examplepas$word"
-        })
-        .then()
-    };
-
-    return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior="padding"       //ensures text fields do not get blocked by keyboard
-        >
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                <TextInput
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={text => setUsername(text)}
-                    style={styles.input}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                <TextInput
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={text => setPassword(text)}
-                    style={styles.password}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    secureTextEntry={true}
-                />
-            </View>
-
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    //onPress= {() => { }}
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}>Log In</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    //onPress= {() => { }}
-                    style={[styles.button, styles.buttonOutline]}
-                >
-                    <Text style={styles.buttonOutlineText}>Sign Up</Text>
-                </TouchableOpacity>
-            </View>
-        </KeyboardAvoidingView>
-    );
-};
-
-export default SignupScreen;
-
-
-
-
-//-----     Styles     -----/
-//--------------------------/
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#dedbd5'
-    },
-    inputContainer: {
-        width: '80%'
-    },
-    input: {
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius: 10,
-        marginTop: 5
-    },
-    password: {
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius: 10,
-        marginTop: 5
-    },
-    buttonContainer: {
-        width: '60%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40
-    },
-    button: {
-        backgroundColor: '#0782F9',
-        width: '100%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center'
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16
-    },
-    buttonOutline: {
-        backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782F9',
-        borderWidth: 2
-    },
-    buttonOutlineText: {
-        color: '#0782F9',
-        fontWeight: '700',
-        fontSize: 16
-    }
-});
-
-*/

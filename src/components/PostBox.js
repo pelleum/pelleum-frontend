@@ -1,8 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 import ThesisBox from "./ThesisBox";
+import { BACKGROUND_COLOR } from "../styles/ComponentStyles";
+import AppText from "./AppText";
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -47,9 +49,9 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
-							<Text style={styles.usernameText}>
+							<AppText style={styles.usernameText}>
 								@{item.username} {elapsedTimeMinutes} min
-							</Text>
+							</AppText>
 							{postBoxType == PostBoxType.Feed ? (
 								item.asset_symbol ? (
 									<TouchableOpacity
@@ -58,11 +60,11 @@ const PostBox = ({ postBoxType, item, nav }) => {
 											console.log("Asset button worked.");
 										}}
 									>
-										<Text style={styles.assetText}>{item.asset_symbol}</Text>
+										<AppText style={styles.assetText}>{item.asset_symbol}</AppText>
 									</TouchableOpacity>
 								) : null
 							) : null}
-							<Text
+							<AppText
 								style={
 									item.sentiment
 										? item.sentiment === "Bull"
@@ -72,9 +74,9 @@ const PostBox = ({ postBoxType, item, nav }) => {
 								}
 							>
 								{item.sentiment}
-							</Text>
+							</AppText>
 						</HStack>
-						<Text style={styles.contentText}>{item.content}</Text>
+						<AppText style={styles.contentText}>{item.content}</AppText>
 						{item.thesis ? <ThesisBox item={item.thesis} nav={nav} /> : null}
 						{postBoxType == PostBoxType.PostDetail ? (
 							<TouchableOpacity
@@ -86,9 +88,9 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									})
 								}
 							>
-								<Text style={styles.buttonTextStyle}>
+								<AppText style={styles.buttonTextStyle}>
 									View Author's Portfolio
-								</Text>
+								</AppText>
 							</TouchableOpacity>
 						) : (
 							<PostButtonPanel item={item} nav={nav} />
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
 		padding: 25,
 		paddingBottom: 0,
 		fontSize: 16,
-		backgroundColor: "#ebecf0",
+		backgroundColor: BACKGROUND_COLOR,
 		borderBottomWidth: 2,
 		borderBottomColor: "#bfc6c9",
 		overflow: "hidden",

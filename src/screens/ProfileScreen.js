@@ -8,16 +8,16 @@ import {
 	TouchableOpacity,
 	Image,
 } from "react-native";
-import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
+import { HStack, NativeBaseProvider } from "native-base";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
+import AssetBox from "../components/AssetBox";
 
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState('');
-	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 	const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
 
 	const getUserObject = async () => {
@@ -52,48 +52,10 @@ const ProfileScreen = ({ navigation, route }) => {
 					data={assetList}
 					keyExtractor={(item) => item.asset_symbol}
 					renderItem={({ item }) => (
-						<Center>
-							<Box style={styles.assetTableBox}>
-								<Box style={styles.assetRowBox}>
-									<VStack>
-										<TouchableOpacity
-											style={styles.assetButton}
-											onPress={() => {
-												console.log("Asset button worked.");
-											}}
-										>
-											<Text style={styles.assetButtonText}>{item.asset_symbol}</Text>
-										</TouchableOpacity>
-										<TouchableOpacity
-											style={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? styles.thesisButton : styles.disabledThesisButton}
-											disabled={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? false : true}
-											onPress={() => {
-												navigation.navigate("Rationales", {
-													asset: item.asset_symbol,
-													userId: item.user_id,
-												});
-											}}
-										>
-											<Text style={styles.thesisButtonText}>Rationales</Text>
-										</TouchableOpacity>
-									</VStack>
-									<VStack>
-										<HStack>
-											<Text style={styles.valueText}>Shares Owned:</Text>
-											<Text style={styles.valueNumbers}>
-												{item.quantity}
-											</Text>
-										</HStack>
-										<HStack>
-											<Text style={styles.valueText}>Avg Buy Price:</Text>
-											<Text style={styles.valueNumbers}>
-												${item.average_buy_price.toFixed(2)}
-											</Text>
-										</HStack>
-									</VStack>
-								</Box>
-							</Box>
-						</Center>
+						<AssetBox
+							item={item}
+							nav={navigation}
+						/>
 					)}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>

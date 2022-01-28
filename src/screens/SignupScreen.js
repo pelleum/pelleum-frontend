@@ -6,7 +6,6 @@ import {
     View,
     KeyboardAvoidingView,
     TouchableOpacity,
-    Text,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
@@ -17,6 +16,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import DismissKeyboard from "../components/DismissKeyboard";
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
+import AppText from "../components/AppText";
+import { TEXT_COLOR, BACKGROUND_COLOR_2 } from "../styles/ComponentStyles";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
@@ -219,11 +220,11 @@ const SignupScreen = ({ navigation }) => {
                     style={styles.container}
                 //behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
                 >
-                    <Text style={styles.titleText}>Welcome to Pelleum!</Text>
+                    <AppText style={styles.titleText}>Welcome to Pelleum!</AppText>
                     <View style={styles.inputContainer}>
                         <TextInput
                             placeholder="Email"
-                            placeholderTextColor="#c7c7c7"
+                            placeholderTextColor={TEXT_COLOR}
                             keyboardType="email-address"
                             value={email}
                             onChangeText={(newValue) =>
@@ -235,7 +236,7 @@ const SignupScreen = ({ navigation }) => {
                         />
                         <TextInput
                             placeholder="Username"
-                            placeholderTextColor="#c7c7c7"
+                            placeholderTextColor={TEXT_COLOR}
                             value={username}
                             onChangeText={(newValue) =>
                                 handleChangeText({ newValue: newValue, checkUsername: true })
@@ -246,7 +247,7 @@ const SignupScreen = ({ navigation }) => {
                         />
                         <TextInput
                             placeholder="Password"
-                            placeholderTextColor="#c7c7c7"
+                            placeholderTextColor={TEXT_COLOR}
                             value={password}
                             onChangeText={(newValue) =>
                                 handleChangeText({ newValue: newValue, checkPassword: true })
@@ -258,7 +259,7 @@ const SignupScreen = ({ navigation }) => {
                         />
                         <TextInputMask
                             placeholder="MM/DD/YYYY"
-                            placeholderTextColor="#c7c7c7"
+                            placeholderTextColor={TEXT_COLOR}
                             type={"datetime"}
                             style={styles.input}
                             options={{ format: "MM/DD/YYYY" }}
@@ -268,7 +269,7 @@ const SignupScreen = ({ navigation }) => {
                             }
                         />
                         {errorMessage
-                        ? <Text style={styles.errorMessage}>{errorMessage}</Text>
+                        ? <AppText style={styles.errorMessage}>{errorMessage}</AppText>
                         : null}
                     </View>
                     <View style={styles.validationMessageView}>
@@ -278,7 +279,7 @@ const SignupScreen = ({ navigation }) => {
                             ) : (
                                 <Ionicons name="shield-checkmark" size={24} color="green" />
                             )}
-                            <Text style={styles.validationMessageText}>Email is valid.</Text>
+                            <AppText style={styles.validationMessageText}>Email is valid.</AppText>
                         </HStack>
                         <HStack alignItems="center">
                             {!usernameValidation(username) ? (
@@ -286,9 +287,9 @@ const SignupScreen = ({ navigation }) => {
                             ) : (
                                 <Ionicons name="shield-checkmark" size={24} color="green" />
                             )}
-                            <Text style={styles.validationMessageText}>
+                            <AppText style={styles.validationMessageText}>
                                 Username is valid.
-                            </Text>
+                            </AppText>
                         </HStack>
                         <HStack alignItems="center">
                             {!passwordValidation({
@@ -299,9 +300,9 @@ const SignupScreen = ({ navigation }) => {
                             ) : (
                                 <Ionicons name="shield-checkmark" size={24} color="green" />
                             )}
-                            <Text style={styles.validationMessageText}>
+                            <AppText style={styles.validationMessageText}>
                                 Password must be at least 8 characters long.
-                            </Text>
+                            </AppText>
                         </HStack>
                         <HStack>
                             {!passwordValidation({
@@ -312,11 +313,11 @@ const SignupScreen = ({ navigation }) => {
                             ) : (
                                 <Ionicons name="shield-checkmark" size={24} color="green" />
                             )}
-                            <Text style={styles.validationMessageText}>
+                            <AppText style={styles.validationMessageText}>
                                 Password must contain at least one uppercase character, one
                                 lowercase character, one numerical character, and one special
                                 character.
-                            </Text>
+                            </AppText>
                         </HStack>
                         <HStack alignItems="center">
                             {!dateValidation(birthDate) ? (
@@ -324,9 +325,9 @@ const SignupScreen = ({ navigation }) => {
                             ) : (
                                 <Ionicons name="shield-checkmark" size={24} color="green" />
                             )}
-                            <Text style={styles.validationMessageText}>
+                            <AppText style={styles.validationMessageText}>
                                 Birtdate is valid, and you are at least 18 years old.
-                            </Text>
+                            </AppText>
                         </HStack>
                     </View>
                     <TouchableOpacity
@@ -334,12 +335,12 @@ const SignupScreen = ({ navigation }) => {
                         style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
                         disabled={disableStatus}
                     >
-                        <Text style={styles.buttonText}>Create Account</Text>
+                        <AppText style={styles.buttonText}>Create Account</AppText>
                     </TouchableOpacity>
                     <HStack style={styles.alreadyHaveAccount}>
-                        <Text style={styles.dontHave}>Already have an account? </Text>
+                        <AppText style={styles.dontHave}>Already have an account? </AppText>
                         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                            <Text style={styles.LoginText}>Log in</Text>
+                            <AppText style={styles.LoginText}>Log in</AppText>
                         </TouchableOpacity>
                     </HStack>
                 </KeyboardAvoidingView>
@@ -357,13 +358,12 @@ const styles = StyleSheet.create({
         flex: 1, //this ensures that the container (view) fills up max vertical space
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#DEDBD5",
     },
     inputContainer: {
         width: "80%",
     },
     input: {
-        backgroundColor: "white",
+        backgroundColor: BACKGROUND_COLOR_2,
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontSize: 22,
-        color: "#5d5e61",
+        color: TEXT_COLOR,
         padding: 5,
         alignSelf: "center",
         marginBottom: 15,

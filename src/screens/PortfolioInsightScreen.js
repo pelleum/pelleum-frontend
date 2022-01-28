@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
-	Text,
 	View,
 	FlatList,
 	TouchableOpacity,
@@ -10,6 +9,13 @@ import {
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import PortfolioManager from "../managers/PortfolioManager";
 import { useSelector } from "react-redux";
+import AppText from "../components/AppText";
+import AssetBox from "../components/AssetBox";
+
+//*****************************************************************
+////*******BEFORE USING AssetBox, we need to take into account 
+////*******the disableRemoveRationale parameter that we pass to RationaleScreen
+//*****************************************************************
 
 const PortfolioInsightScreen = ({ navigation, route }) => {
 	// state
@@ -46,7 +52,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 												console.log("Asset button worked.");
 											}}
 										>
-											<Text style={styles.assetButtonText}>{item.asset_symbol}</Text>
+											<AppText style={styles.assetButtonText}>{item.asset_symbol}</AppText>
 										</TouchableOpacity>
 										<TouchableOpacity
 											style={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? styles.thesisButton : styles.disabledThesisButton}
@@ -59,21 +65,21 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 												});
 											}}
 										>
-											<Text style={styles.thesisButtonText}>Thesis</Text>
+											<AppText style={styles.thesisButtonText}>Thesis</AppText>
 										</TouchableOpacity>
 									</VStack>
 									<VStack>
 										<HStack>
-											<Text style={styles.valueText}>Shares Owned:</Text>
-											<Text style={styles.valueNumbers}>
+											<AppText style={styles.valueText}>Shares Owned:</AppText>
+											<AppText style={styles.valueNumbers}>
 												{item.quantity}
-											</Text>
+											</AppText>
 										</HStack>
 										<HStack>
-											<Text style={styles.valueText}>Avg Buy Price:</Text>
-											<Text style={styles.valueNumbers}>
+											<AppText style={styles.valueText}>Avg Buy Price:</AppText>
+											<AppText style={styles.valueNumbers}>
 												${item.average_buy_price.toFixed(2)}
-											</Text>
+											</AppText>
 										</HStack>
 									</VStack>
 								</Box>
@@ -86,13 +92,13 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 									style={styles.image}
 									source={require("../../assets/forest.jpg")}
 								/>
-                            <Text style={styles.usernameText}>@{username}</Text>
-							<Text style={styles.listHeaderText}>Assets</Text>
+                            <AppText style={styles.usernameText}>@{username}</AppText>
+							<AppText style={styles.listHeaderText}>Assets</AppText>
 						</View>
 					}
 					ListFooterComponent={
 						<View alignItems={'center'} paddingVertical={20}>
-							<Text>We can add more stuff here.</Text>
+							<AppText>We can add more stuff here.</AppText>
 						</View>
 					}
 				>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
-	Text,
 	View,
 	TouchableOpacity,
 	FlatList,
@@ -14,6 +13,7 @@ import ThesisButtonPanel from "../components/ThesisButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
+import AppText from "../components/AppText";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// State Management
@@ -31,7 +31,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	let sourcesToDisplay = sources.map((source, index) => (
 		<TouchableOpacity key={index} onPress={() => handleSourceLink(source)}>
-			<Text style={styles.linkText}>{source}</Text>
+			<AppText style={styles.linkText}>{source}</AppText>
 		</TouchableOpacity>
 	));
 
@@ -113,14 +113,14 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				ListHeaderComponent={
 					<View style={styles.mainContainer}>
 						<View style={styles.thesisContainer}>
-							<Text style={styles.thesisTitle}>{detailedThesis.title}</Text>
+							<AppText style={styles.thesisTitle}>{detailedThesis.title}</AppText>
 							<HStack justifyContent="space-between" marginBottom={5}>
-								<Text style={styles.usernameText}>
+								<AppText style={styles.usernameText}>
 									Investor: @{detailedThesis.username}
-								</Text>
-								<Text style={styles.usernameText}>
+								</AppText>
+								<AppText style={styles.usernameText}>
 									Written: {dateWritten.toLocaleDateString()}
-								</Text>
+								</AppText>
 							</HStack>
 							<HStack style={styles.topThesisBox}>
 								<TouchableOpacity
@@ -129,11 +129,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 										console.log("Asset button worked.");
 									}}
 								>
-									<Text style={styles.assetText}>
+									<AppText style={styles.assetText}>
 										{detailedThesis.asset_symbol}
-									</Text>
+									</AppText>
 								</TouchableOpacity>
-								<Text
+								<AppText
 									style={
 										detailedThesis.sentiment === "Bull"
 											? styles.bullSentimentText
@@ -141,7 +141,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									}
 								>
 									{detailedThesis.sentiment}
-								</Text>
+								</AppText>
 							</HStack>
 							<TouchableOpacity
 								style={styles.portfolioInsightButton}
@@ -152,14 +152,14 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									})
 								}
 							>
-								<Text style={styles.buttonTextStyle}>
+								<AppText style={styles.buttonTextStyle}>
 									View Author's Portfolio
-								</Text>
+								</AppText>
 							</TouchableOpacity>
 							<ThesisButtonPanel item={detailedThesis} nav={navigation} />
-							<Text style={styles.subTitle}>Thesis</Text>
-							<Text style={styles.contentText}>{detailedThesis.content}</Text>
-							<Text style={styles.subTitle}>Sources</Text>
+							<AppText style={styles.subTitle}>Thesis</AppText>
+							<AppText style={styles.contentText}>{detailedThesis.content}</AppText>
+							<AppText style={styles.subTitle}>Sources</AppText>
 							{sourcesToDisplay}
 						</View>
 						<VStack>
@@ -178,9 +178,9 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 								onPress={() => replyButtonPressed()}
 								disabled={disableStatus}
 							>
-								<Text style={styles.buttonTextStyle}>Reply</Text>
+								<AppText style={styles.buttonTextStyle}>Reply</AppText>
 							</TouchableOpacity>
-							{error ? <Text style={styles.errorText}>{error}</Text> : null}
+							{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 						</VStack>
 					</View>
 				}
