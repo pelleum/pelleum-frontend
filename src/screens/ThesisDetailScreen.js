@@ -7,13 +7,18 @@ import {
 	RefreshControl,
 	Keyboard
 } from "react-native";
-import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
+import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
 import AppText from "../components/AppText";
+
+// Universal Styles
+import commonTextStyles from "../styles/CommonText";
+import commonButtonStyles from "../styles/CommonButtons";
+import { MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// State Management
@@ -115,29 +120,29 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 						<View style={styles.thesisContainer}>
 							<AppText style={styles.thesisTitle}>{detailedThesis.title}</AppText>
 							<HStack justifyContent="space-between" marginBottom={5}>
-								<AppText style={styles.usernameText}>
+								<AppText style={commonTextStyles.usernameText}>
 									Investor: @{detailedThesis.username}
 								</AppText>
-								<AppText style={styles.usernameText}>
+								<AppText style={commonTextStyles.dateText}>
 									Written: {dateWritten.toLocaleDateString()}
 								</AppText>
 							</HStack>
 							<HStack style={styles.topThesisBox}>
 								<TouchableOpacity
-									style={styles.assetButton}
+									style={commonButtonStyles.assetButton}
 									onPress={() => {
 										console.log("Asset button worked.");
 									}}
 								>
-									<AppText style={styles.assetText}>
-										{detailedThesis.asset_symbol}
+									<AppText style={commonButtonStyles.assetText}>
+										#{detailedThesis.asset_symbol}
 									</AppText>
 								</TouchableOpacity>
 								<AppText
 									style={
 										detailedThesis.sentiment === "Bull"
-											? styles.bullSentimentText
-											: styles.bearSentimentText
+											? commonButtonStyles.bullSentimentText
+											: commonButtonStyles.bearSentimentText
 									}
 								>
 									{detailedThesis.sentiment}
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		marginBottom: 15,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: MAIN_SECONDARY_COLOR,
 	},
 	buttonBox: {
 		paddingTop: 5,
@@ -208,58 +213,6 @@ const styles = StyleSheet.create({
 		width: "85%",
 		flexDirection: "row",
 		justifyContent: "space-between",
-	},
-	bullSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#c6edc5",
-		borderColor: "#1c7850",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#1c7850",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
-	bearSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#edcec5",
-		borderColor: "#b02802",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#b02802",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
-	usernameText: {
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#026bd4",
-		fontSize: 16,
-	},
-	assetButton: {
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "white",
-		borderColor: "#026bd4",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		color: "#026bd4",
-		alignItems: "center",
-	},
-	assetText: {
-		color: "#026bd4",
-		fontSize: 16,
-		fontWeight: "bold",
 	},
 	topThesisBox: {
 		width: "100%",
@@ -280,7 +233,7 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		marginBottom: 5,
 		width: "100%",
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 	},
 	buttonTextStyle: {
@@ -310,7 +263,7 @@ const styles = StyleSheet.create({
 		padding: 11,
 		marginBottom: 5,
 		width: "100%",
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 	},
 	replyButtonDisabled: {
@@ -319,9 +272,9 @@ const styles = StyleSheet.create({
 		padding: 11,
 		marginBottom: 5,
 		width: "100%",
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
-		opacity: 0.33,
+		opacity: 0.2,
 	},
 	errorText: {
 		color: "red",

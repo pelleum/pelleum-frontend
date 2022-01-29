@@ -19,7 +19,7 @@ import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
 import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR } from "../styles/ComponentStyles";
+import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
 
 
 const CreateThesisScreen = ({ navigation }) => {
@@ -277,6 +277,8 @@ const CreateThesisScreen = ({ navigation }) => {
 									height={40}
 									buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
 									selectedColor={"white"}
+									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+									borderColor={MAIN_DIFFERENTIATOR_COLOR}
 									textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
 									bold={true}
 									fontSize={16}

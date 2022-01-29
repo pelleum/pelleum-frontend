@@ -203,16 +203,13 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		right: 20,
 		bottom: 20,
-		backgroundColor: 'white',
+		backgroundColor: "#49E131",
 		borderRadius: 30,
 		elevation: 8,
-		borderWidth: 2,
-		borderColor: '#026bd4',
-
 	},
 	fabIcon: {
 		fontSize: 40,
-		color: '#026bd4',
+		color: 'white',
 		fontWeight: 'bold',
 		paddingHorizontal: 5,
 		paddingBottom: 3,

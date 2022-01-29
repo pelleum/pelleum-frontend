@@ -11,7 +11,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import { NativeBaseProvider } from 'native-base';
 import LinkAccountsManager from '../managers/LinkAccountsManager';
 import AppText from '../components/AppText';
-import { TEXT_COLOR } from '../styles/ComponentStyles';
+import { TEXT_COLOR } from '../styles/Colors';
 
 const LinkAccount = ({ navigation }) => {
     const [userCredential, setUserCredential] = useState('');

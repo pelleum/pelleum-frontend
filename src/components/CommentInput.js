@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TextInput } from "react-native";
+import { LIGHT_GREY_COLOR } from "../styles/Colors";
 
 
 const CommentInput = ({
@@ -26,6 +27,7 @@ const CommentInput = ({
 		<View>
 			<TextInput
 				placeholder="Reply with your thoughts here"
+				placeholderTextColor={LIGHT_GREY_COLOR}
 				multiline={true}
 				numberOfLines={20}
 				style={styles.textArea}
@@ -39,8 +41,7 @@ const CommentInput = ({
 
 const styles = StyleSheet.create({
 	textArea: {
-		// height: 250,
-		paddingVertical: 20,
+		marginVertical: 30
 	},
 });
 

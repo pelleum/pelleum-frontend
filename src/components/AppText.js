@@ -12,7 +12,7 @@ export default class AppText extends React.Component {
 
     render() {
         return (
-            <Text style={[styles.defaultStyle, this.props.style]}>
+            <Text numberOfLines={this.props.numberOfLines ? this.props.numberOfLines : null} style={[styles.defaultStyle, this.props.style]}>
                 {this.props.children}
             </Text>
         );

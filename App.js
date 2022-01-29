@@ -1,12 +1,11 @@
 // Import Installed Libraries
 import * as React from "react";
-import { Button } from "react-native";
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
-import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, Foundation, FontAwesome5 } from "@expo/vector-icons";
 import * as SecureStore from 'expo-secure-store';
 
 // Local Files
@@ -137,7 +136,7 @@ const AppFlow = () => (
 		screenOptions={{
 			tabBarShowLabel: false,
 			tabBarInactiveTintColor: '#858585',
-			tabBarActiveTintColor: '#000000',
+			tabBarActiveTintColor: 'white',
 		}}
 	>
 		<AppTabs.Screen
@@ -146,7 +145,7 @@ const AppFlow = () => (
 			headerMode='none'
 			options={{
 				tabBarIcon: ({ color }) => (
-					<Foundation name="home" size={25} color={color} />
+					<Foundation name="home" size={26} color={color} />
 				),
 				headerShown: false
 			}}
@@ -166,7 +165,7 @@ const AppFlow = () => (
 			component={EducationFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<Ionicons name="book" size={25} color={color} />
+					<Ionicons name="book" size={24.5} color={color} />
 				),
 				headerShown: false
 			}}
@@ -176,7 +175,7 @@ const AppFlow = () => (
 			component={ProfileFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<Ionicons name="person" size={25} color={color} />
+					<FontAwesome5 name="money-bill-wave" size={23} color={color} />
 				),
 				headerShown: false,
 			}}

@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
-import ThesisBox from "./ThesisBox";
-import { BACKGROUND_COLOR } from "../styles/ComponentStyles";
+import ThesisBox, { ThesesBoxType } from "./ThesisBox";
+import { MAIN_BACKGROUND_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 import AppText from "./AppText";
+import commonTextStyles from "../styles/CommonText";
+import commonButtonStyles from "../styles/CommonButtons";
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -49,35 +51,40 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
-							<AppText style={styles.usernameText}>
-								@{item.username} {elapsedTimeMinutes} min
-							</AppText>
-							{postBoxType == PostBoxType.Feed ? (
-								item.asset_symbol ? (
-									<TouchableOpacity
-										style={styles.assetButton}
-										onPress={() => {
-											console.log("Asset button worked.");
-										}}
-									>
-										<AppText style={styles.assetText}>{item.asset_symbol}</AppText>
-									</TouchableOpacity>
-								) : null
-							) : null}
+							<HStack>
+								<AppText style={commonTextStyles.usernameText}>
+									@{item.username}   
+								</AppText>
+								<AppText style={styles.timeElapsedText}>
+									• {elapsedTimeMinutes} min
+								</AppText>
+							</HStack>
 							<AppText
 								style={
 									item.sentiment
 										? item.sentiment === "Bull"
-											? styles.bullSentimentText
-											: styles.bearSentimentText
+											? commonButtonStyles.bullSentimentText
+											: commonButtonStyles.bearSentimentText
 										: null
 								}
 							>
 								{item.sentiment}
 							</AppText>
 						</HStack>
+						{postBoxType == PostBoxType.Feed ? (
+							item.asset_symbol ? (  
+								<TouchableOpacity
+									style={commonButtonStyles.assetButton}
+									onPress={() => {
+										console.log("Asset button worked.");
+									}}
+								>
+									<AppText style={commonButtonStyles.assetText}>#{item.asset_symbol}</AppText>
+								</TouchableOpacity>
+							) : null
+						) : null}
 						<AppText style={styles.contentText}>{item.content}</AppText>
-						{item.thesis ? <ThesisBox item={item.thesis} nav={nav} /> : null}
+						{item.thesis ? <ThesisBox item={item.thesis} nav={nav} thesisBoxType={ThesesBoxType.Contained}/> : null}
 						{postBoxType == PostBoxType.PostDetail ? (
 							<TouchableOpacity
 								style={styles.buttonEnabled}
@@ -108,76 +115,28 @@ const styles = StyleSheet.create({
 	topPostBox: {
 		width: "100%",
 		flexDirection: "row",
+		alignItems: "center",
 		justifyContent: "space-between",
 	},
 	feedPost: {
 		width: "100%",
-		padding: 25,
-		paddingBottom: 0,
+		paddingHorizontal: 25,
+		paddingBottom: 7,
+		paddingTop: 10,
 		fontSize: 16,
-		backgroundColor: BACKGROUND_COLOR,
-		borderBottomWidth: 2,
-		borderBottomColor: "#bfc6c9",
+		backgroundColor: MAIN_BACKGROUND_COLOR,
+		borderBottomWidth: 0.17,
+		borderBottomColor: LIGHT_GREY_COLOR,
 		overflow: "hidden",
 	},
-	usernameText: {
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#026bd4",
+	timeElapsedText: {
+		color: LIGHT_GREY_COLOR,
 		fontSize: 16,
-	},
-	assetButton: {
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "white",
-		borderColor: "#026bd4",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		color: "#026bd4",
-		alignItems: "center",
-	},
-	assetText: {
-		color: "#026bd4",
-		fontSize: 16,
-		fontWeight: "bold",
-	},
-	bullSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#c6edc5",
-		borderColor: "#1c7850",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#1c7850",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
-	bearSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#edcec5",
-		borderColor: "#b02802",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#b02802",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
+		marginLeft: 5
 	},
 	contentText: {
 		fontSize: 16,
-		marginTop: 20,
-		marginHorizontal: 15,
-		marginBottom: 30,
+		padding: 15
 	},
 	buttonEnabled: {
 		alignSelf: "center",
@@ -185,7 +144,7 @@ const styles = StyleSheet.create({
 		padding: 11,
 		marginBottom: 5,
 		width: "100%",
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 	},
 	buttonTextStyle: {

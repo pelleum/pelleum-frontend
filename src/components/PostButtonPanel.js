@@ -2,13 +2,14 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import {
-	MaterialIcons,
+	EvilIcons,
 	Fontisto,
 	Ionicons,
 	FontAwesome,
 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import PostsManager from "../managers/PostsManager";
+import { LIGHT_GREY_COLOR } from "../styles/Colors";
 
 const PostButtonPanel = ({ item, nav }) => {
 	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
@@ -44,7 +45,15 @@ const PostButtonPanel = ({ item, nav }) => {
 						nav.navigate("Post", item);
 					}}
 				>
-					<Fontisto name="comment" size={19} color="#00A8FC" />
+					<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.iconButton}
+					onPress={() => {
+						console.log("Retweet button worked.");
+					}}
+				>
+					<EvilIcons name="retweet" size={30} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -58,29 +67,21 @@ const PostButtonPanel = ({ item, nav }) => {
 								? "md-heart"
 								: "md-heart-outline"
 						}
-						size={24}
+						size={21}
 						color={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
 								locallyLikedPosts.includes(item.post_id)
 								? "#F82057"
-								: "#00A8FC"
+								: LIGHT_GREY_COLOR
 						}
 					/>
 				</TouchableOpacity>
-				{/* <TouchableOpacity
-					style={styles.iconButton}
-					onPress={() => {
-						console.log("Link button worked.");
-					}}
-				>
-					<MaterialIcons name="add-link" size={29} color="#00A8FC" />
-				</TouchableOpacity> */}
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={onShare}
 				>
-					<FontAwesome name="send-o" size={19} color="#00A8FC" />
+					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 			</HStack>
 		</NativeBaseProvider>

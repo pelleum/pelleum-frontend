@@ -9,7 +9,11 @@ import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
 import AppText from '../components/AppText';
-import { TEXT_COLOR } from '../styles/ComponentStyles';
+import { TEXT_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR } from '../styles/Colors';
+import { THESIS_BOX_HEIGHT } from '../components/ThesisBox';
+    //need to figure out how to calculate item height, so that we are not bound by a constant item height
+    //the result of the item height calculation will be fed into getItemLayout
+    //if THESIS_BOX_HEIGHT is changed here, we must also change the height in ThesisListContainer in ThesisBox
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');
@@ -28,22 +32,15 @@ const SearchScreen = ({ navigation }) => {
 
     const RECORDS_PER_PAGE = 25;
 
+    const flatListRef = React.useRef();
+    const dispatch = useDispatch();
+
     const viewableItemsRef = useCallback(({ viewableItems }) => {
         const lastItem = viewableItems[viewableItems.length - 1];
         if (lastItem) {
         }
         lastItem ? setTempIndex(lastItem.index) : null;
     }, []);
-
-    const flatListRef = React.useRef();
-
-    //need to figure out how to calculate item height, so that we are not bound by a constant item height
-    //the result of the item height calculation will be fed into getItemLayout
-    //if ITEM_HEIGHT is changed here, we must also change the height in ThesisListContainer in ThesisBox
-    const ITEM_HEIGHT = 175;
-
-
-    const dispatch = useDispatch();
 
     useEffect(() => {
         let index;
@@ -235,10 +232,12 @@ const SearchScreen = ({ navigation }) => {
                                     }
                                 }}
                                 height={40}
-                                buttonColor={"#0782F9"}
-                                borderColor={"#0782F9"}
+                                buttonColor={sentiment === "Bull" ? MAIN_SECONDARY_COLOR : "red"}
+                                borderColor={sentiment === "Bull" ? MAIN_SECONDARY_COLOR : "red"}
+                                borderColor={MAIN_DIFFERENTIATOR_COLOR}
+                                backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
                                 selectedColor={'white'}
-                                textColor={"#0782F9"}
+                                textColor={sentiment === "Bull" ? "red" : MAIN_SECONDARY_COLOR}
                                 fontSize={16}
                                 bold={true}
                                 hasPadding
@@ -262,7 +261,7 @@ const SearchScreen = ({ navigation }) => {
                             // a threshold of X means that at least X percentage of the item's area must be visible to be considered 'visible'
                             viewabilityConfig={{ viewAreaCoveragePercentThreshold: 75 }}
                             getItemLayout={(data, index) => (
-                                { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
+                                { length: THESIS_BOX_HEIGHT, offset: THESIS_BOX_HEIGHT * index, index }
                             )}
                             ref={flatListRef}
                         >

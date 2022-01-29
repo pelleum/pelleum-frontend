@@ -15,6 +15,7 @@ import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
+import { MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 
 const PostDetailScreen = ({ navigation, route }) => {
@@ -256,7 +257,7 @@ const styles = StyleSheet.create({
 		padding: 11,
 		marginBottom: 5,
 		width: "100%",
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 	},
 	buttonDisabled: {
@@ -265,7 +266,7 @@ const styles = StyleSheet.create({
 		padding: 11,
 		marginBottom: 5,
 		width: "100%",
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 		opacity: 0.33,
 	},

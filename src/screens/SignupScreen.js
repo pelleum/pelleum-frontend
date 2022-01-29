@@ -17,7 +17,7 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, BACKGROUND_COLOR_2 } from "../styles/ComponentStyles";
+import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
         width: "80%",
     },
     input: {
-        backgroundColor: BACKGROUND_COLOR_2,
+        backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,

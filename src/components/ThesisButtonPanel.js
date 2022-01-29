@@ -7,6 +7,7 @@ import RationalesManager from "../managers/RationalesManager";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { useSelector } from "react-redux";
 import * as SecureStore from "expo-secure-store";
+import { LIGHT_GREY_COLOR } from "../styles/Colors";
 
 const ThesisButtonPanel = ({ item, nav }) => {
 	const state = useSelector((state) => state.thesisReactionsReducer);
@@ -64,8 +65,8 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				>
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
-						size={24}
-						color={thesisIsLiked ? "#F82057" : "#00A8FC"}
+						size={20}
+						color={thesisIsLiked ? "#F82057" : LIGHT_GREY_COLOR}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -74,8 +75,8 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				>
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
-						size={24}
-						color={thesisIsDisliked ? "#F82057" : "#00A8FC"}
+						size={20}
+						color={thesisIsDisliked ? "#F82057" : LIGHT_GREY_COLOR}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -83,7 +84,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					onPress={() => handleAddRationale(item)}
 					disabled={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? true : false}
 				>
-					<MaterialIcons name="post-add" size={27} color="#00A8FC" />
+					<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -91,7 +92,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 						console.log("Share button worked.");
 					}}
 				>
-					<FontAwesome name="send-o" size={19} color="#00A8FC" />
+					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 			</HStack>
 		</NativeBaseProvider>
@@ -116,6 +117,6 @@ const styles = StyleSheet.create({
 	disabledIconButton: {
 		paddingHorizontal: 13,
 		paddingTop: 8,
-		opacity: 0.33
+		opacity: 0.2
 	},
 });

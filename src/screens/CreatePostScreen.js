@@ -10,15 +10,14 @@ import { HStack, VStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
 import PostsManager from "../managers/PostsManager";
 import DismissKeyboard from "../components/DismissKeyboard";
-import { MaterialIcons } from "@expo/vector-icons";
 import AppText from "../components/AppText";
-import { TEXT_COLOR } from "../styles/ComponentStyles";
+import { LIGHT_GREY_COLOR, MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "../styles/Colors";
 
 const CreatePostScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
-	const [error, setError] = useState(null);     // Migrate this to reusable, universally accessable state
+	const [error, setError] = useState(null); // Migrate this to reusable, universally accessable state
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbolValidity: false,
 		contentValidity: false,
@@ -31,12 +30,16 @@ const CreatePostScreen = ({ navigation }) => {
 	];
 
 	const shareButtonPressed = async () => {
-		const createdPost = await PostsManager.createPost({ content, asset_symbol, sentiment });
+		const createdPost = await PostsManager.createPost({
+			content,
+			asset_symbol,
+			sentiment,
+		});
 		if (createdPost) {
 			setContent("");
 			setAssetSymbol("");
 			setDisableStatus(true);
-			navigation.navigate("Feed", {newPost: createdPost});
+			navigation.navigate("Feed", { newPost: createdPost });
 		}
 	};
 
@@ -101,30 +104,24 @@ const CreatePostScreen = ({ navigation }) => {
 								<AppText style={styles.buttonText}>Share</AppText>
 							</TouchableOpacity>
 						</HStack>
-						<HStack
-							alignItems="center"
-							justifyContent="space-between"
-							marginBottom="15"
-						>
-							<AppText>Asset Symbol:</AppText>
-							<TextInput
-								color = {TEXT_COLOR}
-								placeholder="Ex: GOOGL"
-								placeholderTextColor={TEXT_COLOR}
-								autoCapitalize="characters"
-								autoCorrect={false}
-								maxLength={5}
-								value={asset_symbol}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkSymbol: true })
-								}
-								style={styles.assetSymbolInput}
-							/>
-						</HStack>
+						<TextInput
+							color={TEXT_COLOR}
+							placeholder="Ex: GOOGL"
+							placeholderTextColor={LIGHT_GREY_COLOR}
+							autoCapitalize="characters"
+							autoCorrect={false}
+							maxLength={5}
+							value={asset_symbol}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, checkSymbol: true })
+							}
+							style={styles.assetSymbolInput}
+						/>
+						<AppText>Asset Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="What's your valuable insight?"
-							placeholderTextColor={TEXT_COLOR}
+							placeholderTextColor={LIGHT_GREY_COLOR}
 							multiline={true}
 							numberOfLines={20}
 							style={styles.textArea}
@@ -134,38 +131,29 @@ const CreatePostScreen = ({ navigation }) => {
 								handleChangeText({ newValue: newValue, checkContent: true })
 							}
 						/>
-						<HStack style={styles.hStack} alignItems="center">
-							<View style={styles.switchSelectorContainer}>
-								<SwitchSelector
-									options={sentimentOptions}
-									initial={0}
-									onPress={(value) => {
-										if (value === sentiment) {
-											//do nothing
-										} else {
-											setSentiment(value)
-										}
-									}}
-									height={40}
-									buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
-									selectedColor={"white"}
-									textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
-									bold={true}
-									fontSize={16}
-									hasPadding
-								/>
-							</View>
-							<TouchableOpacity
-								style={styles.iconButton}
-								onPress={() => {
-									console.log(
-										"This worked. Maybe remove this button from posts (or add sources capability on backend)."
-									);
+
+						<View style={styles.switchSelectorContainer}>
+							<SwitchSelector
+								options={sentimentOptions}
+								initial={0}
+								onPress={(value) => {
+									if (value === sentiment) {
+										//do nothing
+									} else {
+										setSentiment(value);
+									}
 								}}
-							>
-								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
-							</TouchableOpacity>
-						</HStack>
+								height={40}
+								buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
+								backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+								borderColor={MAIN_DIFFERENTIATOR_COLOR}
+								selectedColor={"white"}
+								textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
+								bold={true}
+								fontSize={16}
+								hasPadding
+							/>
+						</View>
 						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 					</VStack>
 				</NativeBaseProvider>
@@ -181,8 +169,9 @@ const styles = StyleSheet.create({
 	},
 	textArea: {
 		height: 250,
+		marginTop: 20,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: MAIN_SECONDARY_COLOR,
 	},
 	image: {
 		width: 44,
@@ -190,7 +179,7 @@ const styles = StyleSheet.create({
 		borderRadius: 44 / 2,
 	},
 	shareButtonEnabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 35,
 		width: 80,
@@ -198,7 +187,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	shareButtonDisabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 35,
 		width: 80,
@@ -217,7 +206,7 @@ const styles = StyleSheet.create({
 		height: 45,
 		alignSelf: "flex-start",
 		justifyContent: "center",
-		//marginLeft: 15,
+		marginTop: 5,
 	},
 	hStack: {
 		marginTop: 5,
@@ -226,10 +215,13 @@ const styles = StyleSheet.create({
 		color: "red",
 	},
 	assetSymbolInput: {
-		paddingHorizontal: 15,
-		paddingVertical: 10,
-		borderRadius: 10,
-		marginTop: 5,
+		backgroundColor: "transparent",
+		paddingVertical: 5,
+		borderBottomWidth: 0.5,
+		borderBottomColor: MAIN_SECONDARY_COLOR,
+		marginBottom: 5,
+		marginTop: 10,
+		width: "25%",
 	},
 });
 

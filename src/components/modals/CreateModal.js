@@ -1,5 +1,6 @@
 import React from "react";
 import { Alert, Modal, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../../styles/Colors";
 
 const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 	return (
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 20,
-		backgroundColor: "white",
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 20,
 		padding: 35,
 		alignItems: "center",
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
 		elevation: 2,
 	},
 	buttonOpen: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 	},
 	textStyle: {
 		color: "white",
