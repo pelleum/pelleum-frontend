@@ -69,7 +69,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 		if (createdComment) {
 			const commentsCopy = comments;
-			commentsCopy.splice(0, 0, authorizedResponse.data);
+			commentsCopy.splice(0, 0, createdComment);
 			setComments(commentsCopy);
 			setCommentContent("");
 			setDisableStatus(true);
