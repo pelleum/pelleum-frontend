@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, FlatList, Animated, TouchableOpacity, Alert, Text } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ThesisBox from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
@@ -49,10 +49,10 @@ const RationaleScreen = ({ navigation, route }) => {
             setRationaleArray(rationaleArrayCopy);
             route.params.thesisToAddAfterRemoval = null;
             Alert.alert(
-				`Rationale Library Updated`,
+                `Rationale Library Updated`,
                 `A new ${response.data.thesis.asset_symbol} ${response.data.thesis.sentiment} thesis was added to your library! \n\n“${response.data.thesis.title}”`,
-					{ text: "OK", onPress: () => {/* do nothing */ } }
-			);
+                { text: "OK", onPress: () => {/* do nothing */ } }
+            );
         };
     };
 
@@ -70,7 +70,7 @@ const RationaleScreen = ({ navigation, route }) => {
                         }
                     }}
                 >
-                    <Animated.AppText style={{ fontSize: 16, fontWeight: 'bold' }}>REMOVE</Animated.AppText>
+                    <Animated.Text style={{ fontSize: 16, fontWeight: 'bold' }}>REMOVE</Animated.Text>
                 </TouchableOpacity>
             </Animated.View>
         );
@@ -97,7 +97,8 @@ const RationaleScreen = ({ navigation, route }) => {
                                 nav={navigation}
                             />
                         ) : (
-                            <Swipeable renderRightActions={() => swipeRight(item)}
+                            <Swipeable
+                                renderRightActions={() => swipeRight(item)}
                                 rightThreshold={-200}
                             >
                                 <Animated.View>

@@ -15,4 +15,3 @@ const commonTextStyles = StyleSheet.create({
 });
 
 export default commonTextStyles;
-
