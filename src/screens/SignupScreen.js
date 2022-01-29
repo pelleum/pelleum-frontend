@@ -17,7 +17,7 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
+import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
@@ -224,7 +224,7 @@ const SignupScreen = ({ navigation }) => {
                     <View style={styles.inputContainer}>
                         <TextInput
                             placeholder="Email"
-                            placeholderTextColor={TEXT_COLOR}
+                            placeholderTextColor={LIGHT_GREY_COLOR}
                             keyboardType="email-address"
                             value={email}
                             onChangeText={(newValue) =>
@@ -236,7 +236,7 @@ const SignupScreen = ({ navigation }) => {
                         />
                         <TextInput
                             placeholder="Username"
-                            placeholderTextColor={TEXT_COLOR}
+                            placeholderTextColor={LIGHT_GREY_COLOR}
                             value={username}
                             onChangeText={(newValue) =>
                                 handleChangeText({ newValue: newValue, checkUsername: true })
@@ -247,7 +247,7 @@ const SignupScreen = ({ navigation }) => {
                         />
                         <TextInput
                             placeholder="Password"
-                            placeholderTextColor={TEXT_COLOR}
+                            placeholderTextColor={LIGHT_GREY_COLOR}
                             value={password}
                             onChangeText={(newValue) =>
                                 handleChangeText({ newValue: newValue, checkPassword: true })
@@ -259,7 +259,7 @@ const SignupScreen = ({ navigation }) => {
                         />
                         <TextInputMask
                             placeholder="MM/DD/YYYY"
-                            placeholderTextColor={TEXT_COLOR}
+                            placeholderTextColor={LIGHT_GREY_COLOR}
                             type={"datetime"}
                             style={styles.input}
                             options={{ format: "MM/DD/YYYY" }}
@@ -363,6 +363,7 @@ const styles = StyleSheet.create({
         width: "80%",
     },
     input: {
+        color: TEXT_COLOR,
         backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
         paddingHorizontal: 15,
         paddingVertical: 10,

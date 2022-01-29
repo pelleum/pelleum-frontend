@@ -9,7 +9,7 @@ import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
 import AppText from '../components/AppText';
-import { TEXT_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR } from '../styles/Colors';
+import { TEXT_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from '../styles/Colors';
 import { THESIS_BOX_HEIGHT } from '../components/ThesisBox';
     //need to figure out how to calculate item height, so that we are not bound by a constant item height
     //the result of the item height calculation will be fed into getItemLayout
@@ -194,8 +194,9 @@ const SearchScreen = ({ navigation }) => {
                                     setCurrentBearPage(1);
                                     getResults();
                                 }}
+                                color={TEXT_COLOR}
                                 placeholder="Search by ticker symbol"
-                                placeholderTextColor={TEXT_COLOR}
+                                placeholderTextColor={LIGHT_GREY_COLOR}
                                 returnKeyType="search"
                                 bg="transparent"
                                 width="75%"

@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
+import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
@@ -86,7 +86,7 @@ const LoginScreen = ({ navigation }) => {
 				<View style={styles.inputContainer}>
 					<TextInput
 						placeholder="Username"
-						placeholderTextColor={TEXT_COLOR}
+						placeholderTextColor={LIGHT_GREY_COLOR}
 						value={username}
 						onChangeText={(newValue) =>
 							handleChangeText({ newValue: newValue, checkUsername: true })
@@ -97,7 +97,7 @@ const LoginScreen = ({ navigation }) => {
 					/>
 					<TextInput
 						placeholder="Password"
-						placeholderTextColor={TEXT_COLOR}
+						placeholderTextColor={LIGHT_GREY_COLOR}
 						value={password}
 						onChangeText={(newValue) =>
 							handleChangeText({ newValue: newValue, checkPassword: true })
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
 		width: "80%",
 	},
 	input: {
+		color: TEXT_COLOR,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		paddingHorizontal: 15,
 		paddingVertical: 10,
