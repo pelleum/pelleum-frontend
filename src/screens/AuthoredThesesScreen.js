@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList } from 'react-native';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
 import AppText from '../components/AppText';
+import { BAD_COLOR } from '../styles/Colors';
 
 const AuthoredThesesScreen = ({ navigation, route }) => {
     const [thesesArray, setThesesArray] = useState([]);
@@ -11,7 +12,7 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
     const userId = route.params.userId ? route.params.userId : null;
 
     const getAuthoredTheses = async () => {
-        const retrievedTheses = await ThesesManager.getTheses( { user_id: userId } );
+        const retrievedTheses = await ThesesManager.getTheses({ user_id: userId });
         if (retrievedTheses) {
             setThesesArray(retrievedTheses.records.theses);
         } else {
@@ -19,16 +20,17 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
         };
     };
 
-        //on first render
-        useEffect(() => {
-            getAuthoredTheses();
-        }, []);
+    //on first render
+    useEffect(() => {
+        getAuthoredTheses();
+    }, []);
 
     return (
         <View style={styles.mainContainer}>
             <AppText style={styles.title}>My Authored Theses</AppText>
             {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
             <FlatList
+                width={"100%"}
                 data={thesesArray}
                 keyExtractor={(item) => item.thesis_id}
                 renderItem={({ item }) => {
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
 
     },
     error: {
-        color: 'red',
+        color: BAD_COLOR,
         marginTop: 15,
         marginBottom: 25,
         fontSize: 14,

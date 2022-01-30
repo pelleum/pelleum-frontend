@@ -42,49 +42,11 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 					data={assetList}
 					keyExtractor={(item) => item.asset_symbol}
 					renderItem={({ item }) => (
-						<Center>
-							<Box style={styles.assetTableBox}>
-								<Box style={styles.assetRowBox}>
-									<VStack>
-										<TouchableOpacity
-											style={styles.assetButton}
-											onPress={() => {
-												console.log("Asset button worked.");
-											}}
-										>
-											<AppText style={styles.assetButtonText}>{item.asset_symbol}</AppText>
-										</TouchableOpacity>
-										<TouchableOpacity
-											style={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? styles.thesisButton : styles.disabledThesisButton}
-											disabled={rationaleLibrary.some(rationale => rationale.asset === item.asset_symbol) ? false : true}
-											onPress={() => {
-												navigation.navigate("Rationales", {
-													asset: item.asset_symbol,
-													userId: item.user_id,
-													disableRemoveRationale: true
-												});
-											}}
-										>
-											<AppText style={styles.thesisButtonText}>Thesis</AppText>
-										</TouchableOpacity>
-									</VStack>
-									<VStack>
-										<HStack>
-											<AppText style={styles.valueText}>Shares Owned:</AppText>
-											<AppText style={styles.valueNumbers}>
-												{item.quantity}
-											</AppText>
-										</HStack>
-										<HStack>
-											<AppText style={styles.valueText}>Avg Buy Price:</AppText>
-											<AppText style={styles.valueNumbers}>
-												${item.average_buy_price.toFixed(2)}
-											</AppText>
-										</HStack>
-									</VStack>
-								</Box>
-							</Box>
-						</Center>
+						<AssetBox
+						item={item}
+						nav={navigation}
+						disableRemoveRationale={true}
+						/>
 					)}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>

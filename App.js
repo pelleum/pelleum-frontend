@@ -15,7 +15,6 @@ import FeedScreen from "./src/screens/FeedScreen";
 import ThesisDetailScreen from "./src/screens/ThesisDetailScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 import EdScreen from "./src/screens/EdScreen";
-import BlogScreen from "./src/screens/BlogScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import PostDetailScreen from "./src/screens/PostDetailScreen";
@@ -31,13 +30,12 @@ import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
+import { MAIN_DIFFERENTIATOR_COLOR } from "./src/styles/Colors";
 
 // Redux
 import { Provider } from 'react-redux';
 import { store } from './src/redux/Store';
 import { useSelector, useDispatch } from 'react-redux';
-
-
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
@@ -83,8 +81,10 @@ const EducationFlow = () => (
 			headerBackTitleVisible: false,
 		}}
 	>
-		<EducationStack.Screen name="Education" component={EdScreen} options={{ headerShown: false }} />
-		<EducationStack.Screen name="BlogPost" component={BlogScreen} options={{ headerTitle: "Blog" }} />
+		<EducationStack.Screen name="Education" component={EdScreen} options={{
+			headerTitle: "Pelleum Learn",
+			headerStyle: { backgroundColor: MAIN_DIFFERENTIATOR_COLOR }
+		}} />
 	</EducationStack.Navigator>
 );
 
@@ -257,7 +257,7 @@ export default () => {
 	return (
 		<Provider store={store}>
 			<NavigationContainer theme={DarkTheme} >
-				<RootStackFlow />
+					<RootStackFlow />
 			</NavigationContainer>
 		</Provider>
 	);

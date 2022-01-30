@@ -15,7 +15,7 @@ import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
-import { MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
 
 
 const PostDetailScreen = ({ navigation, route }) => {
@@ -99,6 +99,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 	return (
 		<NativeBaseProvider>
 			<FlatList
+				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id.toString()}
 				renderItem={({ item }) => {
@@ -277,14 +278,8 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 	},
 	errorText: {
-		color: "red",
+		color: BAD_COLOR,
 	},
-	// centeredView: {
-	// 	//marginTop:,
-	// 	flex: 1,
-	// 	flexDirection: "column",
-	// 	// justifyContent: "flex-end",
-	// },
 
 	comment: {
 		width: "100%",

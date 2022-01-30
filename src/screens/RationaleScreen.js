@@ -86,6 +86,7 @@ const RationaleScreen = ({ navigation, route }) => {
             <AppText style={styles.title}>{asset} Rationale Library</AppText>
             {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
             <FlatList
+                width={"100%"}
                 data={rationaleArray}
                 //maybe we should use rationale_id as the key extractor for the RationaleScreen only
                 keyExtractor={(item) => item.rationale_id}

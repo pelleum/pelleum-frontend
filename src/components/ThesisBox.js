@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { HStack, NativeBaseProvider, Box } from "native-base";
 import {
 	MAIN_BACKGROUND_COLOR,
 	LIGHT_GREY_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
 } from "../styles/Colors";
 import AppText from "../components/AppText";
 import commonTextStyles from "../styles/CommonText";
@@ -52,7 +53,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							{item.sentiment}
 						</AppText>
 					</HStack>
-					<AppText style={styles.thesisTitleText}>{item.title}</AppText>
+						<AppText style={styles.thesisTitleText}>{item.title}</AppText>
 					<HStack justifyContent="space-between">
 						{item.asset_symbol ? (
 							<TouchableOpacity
@@ -95,13 +96,13 @@ const styles = StyleSheet.create({
 		padding: 10,
 		fontSize: 16,
 		backgroundColor: MAIN_BACKGROUND_COLOR,
-		borderWidth: 0.17,
+		borderWidth: 0.3,
 		borderColor: LIGHT_GREY_COLOR,
 		borderRadius: 25,
 		overflow: "hidden",
 	},
 	thesisTitleText: {
-        marginTop: 5,
+		marginTop: 5,
 		fontWeight: "bold",
 		fontSize: 16,
 	},

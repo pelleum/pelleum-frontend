@@ -17,7 +17,15 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+import {
+    TEXT_COLOR,
+    MAIN_DIFFERENTIATOR_COLOR,
+    LIGHT_GREY_COLOR,
+    MAIN_SECONDARY_COLOR,
+    BAD_COLOR,
+    GOOD_COLOR,
+}
+    from "../styles/Colors";
 
 // Signup Screen Functional Component
 const SignupScreen = ({ navigation }) => {
@@ -269,23 +277,23 @@ const SignupScreen = ({ navigation }) => {
                             }
                         />
                         {errorMessage
-                        ? <AppText style={styles.errorMessage}>{errorMessage}</AppText>
-                        : null}
+                            ? <AppText style={styles.errorMessage}>{errorMessage}</AppText>
+                            : null}
                     </View>
                     <View style={styles.validationMessageView}>
                         <HStack alignItems="center">
                             {!emailValidation(email) ? (
-                                <Feather name="x-circle" size={24} color="red" />
+                                <Feather name="x-circle" size={24} color={BAD_COLOR} />
                             ) : (
-                                <Ionicons name="shield-checkmark" size={24} color="green" />
+                                <Ionicons name="shield-checkmark" size={24} color={GOOD_COLOR} />
                             )}
                             <AppText style={styles.validationMessageText}>Email is valid.</AppText>
                         </HStack>
                         <HStack alignItems="center">
                             {!usernameValidation(username) ? (
-                                <Feather name="x-circle" size={24} color="red" />
+                                <Feather name="x-circle" size={24} color={BAD_COLOR} />
                             ) : (
-                                <Ionicons name="shield-checkmark" size={24} color="green" />
+                                <Ionicons name="shield-checkmark" size={24} color={GOOD_COLOR} />
                             )}
                             <AppText style={styles.validationMessageText}>
                                 Username is valid.
@@ -296,9 +304,9 @@ const SignupScreen = ({ navigation }) => {
                                 passwordText: password,
                                 checkLength: true,
                             }) ? (
-                                <Feather name="x-circle" size={24} color="red" />
+                                <Feather name="x-circle" size={24} color={BAD_COLOR} />
                             ) : (
-                                <Ionicons name="shield-checkmark" size={24} color="green" />
+                                <Ionicons name="shield-checkmark" size={24} color={GOOD_COLOR} />
                             )}
                             <AppText style={styles.validationMessageText}>
                                 Password must be at least 8 characters long.
@@ -309,9 +317,9 @@ const SignupScreen = ({ navigation }) => {
                                 passwordText: password,
                                 checkCharacters: true,
                             }) ? (
-                                <Feather name="x-circle" size={24} color="red" />
+                                <Feather name="x-circle" size={24} color={BAD_COLOR} />
                             ) : (
-                                <Ionicons name="shield-checkmark" size={24} color="green" />
+                                <Ionicons name="shield-checkmark" size={24} color={GOOD_COLOR} />
                             )}
                             <AppText style={styles.validationMessageText}>
                                 Password must contain at least one uppercase character, one
@@ -321,12 +329,12 @@ const SignupScreen = ({ navigation }) => {
                         </HStack>
                         <HStack alignItems="center">
                             {!dateValidation(birthDate) ? (
-                                <Feather name="x-circle" size={24} color="red" />
+                                <Feather name="x-circle" size={24} color={BAD_COLOR} />
                             ) : (
-                                <Ionicons name="shield-checkmark" size={24} color="green" />
+                                <Ionicons name="shield-checkmark" size={24} color={GOOD_COLOR} />
                             )}
                             <AppText style={styles.validationMessageText}>
-                                Birtdate is valid, and you are at least 18 years old.
+                                Birthdate is valid, and you are at least 18 years old.
                             </AppText>
                         </HStack>
                     </View>
@@ -375,7 +383,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonEnabled: {
-        backgroundColor: "#00A8FC",
+        backgroundColor: MAIN_SECONDARY_COLOR,
         borderRadius: 30,
         height: 50,
         width: 170,
@@ -384,7 +392,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonDisabled: {
-        backgroundColor: "#00A8FC",
+        backgroundColor: MAIN_SECONDARY_COLOR,
         borderRadius: 30,
         height: 50,
         width: 170,
@@ -394,13 +402,13 @@ const styles = StyleSheet.create({
         opacity: 0.33,
     },
     buttonText: {
-        color: "white",
+        color: TEXT_COLOR,
         fontWeight: "700",
         fontSize: 16,
     },
     errorMessage: {
         fontSize: 16,
-        color: "red",
+        color: BAD_COLOR,
         paddingVertical: 10,
         marginTop: 30,
         marginHorizontal: 10,
@@ -409,16 +417,17 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginTop: 30,
         justifyContent: "space-evenly",
-        width: "110%",
+        width: "100%",
         flexDirection: "row",
     },
     dontHave: {
         fontSize: 16,
-        color: "gray",
+        color: LIGHT_GREY_COLOR,
     },
     LoginText: {
         fontSize: 16,
-        color: "#00A8FC",
+        color: MAIN_SECONDARY_COLOR,
+        marginLeft: 10
     },
     titleText: {
         fontSize: 22,
@@ -428,11 +437,11 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     validationMessageView: {
-        marginHorizontal: 50,
+        width: "95%",
         marginVertical: 20,
     },
     validationMessageText: {
-        padding: 0,
+        marginLeft: 5,
     },
     alreadyHaveAccount: {
         position: "absolute",

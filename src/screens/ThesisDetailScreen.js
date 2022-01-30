@@ -18,11 +18,10 @@ import AppText from "../components/AppText";
 // Universal Styles
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
-import { MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// State Management
-	const [result, setResult] = useState(null);
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
 	const [disableStatus, setDisableStatus] = useState(true);
@@ -41,8 +40,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	));
 
 	const handleSourceLink = async (sourceLink) => {
-		let webResult = await WebBrowser.openBrowserAsync(sourceLink);
-		setResult(webResult);
+		await WebBrowser.openBrowserAsync(sourceLink);
 	};
 
 	// Might not need these separate functions?
@@ -96,6 +94,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	return (
 		<NativeBaseProvider>
 			<FlatList
+				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id.toString()}
 				renderItem={({ item }) => {
@@ -277,6 +276,6 @@ const styles = StyleSheet.create({
 		opacity: 0.2,
 	},
 	errorText: {
-		color: "red",
+		color: BAD_COLOR,
 	},
 });

@@ -11,7 +11,7 @@ import SwitchSelector from "react-native-switch-selector";
 import PostsManager from "../managers/PostsManager";
 import DismissKeyboard from "../components/DismissKeyboard";
 import AppText from "../components/AppText";
-import { LIGHT_GREY_COLOR, MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "../styles/Colors";
+import { LIGHT_GREY_COLOR, MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR, BAD_COLOR, GOOD_COLOR } from "../styles/Colors";
 
 const CreatePostScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
@@ -144,11 +144,11 @@ const CreatePostScreen = ({ navigation }) => {
 									}
 								}}
 								height={40}
-								buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
+								buttonColor={sentiment == "Bull" ? GOOD_COLOR : BAD_COLOR}
 								backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
 								borderColor={MAIN_DIFFERENTIATOR_COLOR}
 								selectedColor={"white"}
-								textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
+								textColor={sentiment == "Bull" ? BAD_COLOR : GOOD_COLOR}
 								bold={true}
 								fontSize={16}
 								hasPadding
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	errorText: {
-		color: "red",
+		color: BAD_COLOR,
 	},
 	assetSymbolInput: {
 		backgroundColor: "transparent",
