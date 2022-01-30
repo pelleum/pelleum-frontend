@@ -1,13 +1,11 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, NativeBaseProvider, Box } from "native-base";
-import {
-	MAIN_BACKGROUND_COLOR,
-	LIGHT_GREY_COLOR,
-} from "../styles/Colors";
+import { MAIN_BACKGROUND_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
 import AppText from "../components/AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
+import SentimentPill, { Sentiment } from "./SentimentPill";
 
 export class ThesesBoxType {
 	static Contained = new ThesesBoxType("contained");
@@ -39,18 +37,14 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 					}
 				>
 					<HStack justifyContent="space-between">
-						<AppText style={commonTextStyles.usernameText}>@{item.username}</AppText>
-						<AppText
-							style={
-								item.sentiment
-									? item.sentiment === "Bull"
-										? commonButtonStyles.bullSentimentText
-										: commonButtonStyles.bearSentimentText
-									: null
-							}
-						>
-							{item.sentiment}
+						<AppText style={commonTextStyles.usernameText}>
+							@{item.username}
 						</AppText>
+						{item.sentiment === "Bull" ? (
+							<SentimentPill item={item} sentiment={Sentiment.Bull} />
+						) : (
+							<SentimentPill item={item} sentiment={Sentiment.Bear} />
+						)}
 					</HStack>
 					<AppText style={styles.thesisTitleText}>{item.title}</AppText>
 					<HStack justifyContent="space-between">
@@ -61,7 +55,9 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 									console.log("Asset button worked.");
 								}}
 							>
-								<AppText style={commonButtonStyles.assetText}>#{item.asset_symbol}</AppText>
+								<AppText style={commonButtonStyles.assetText}>
+									#{item.asset_symbol}
+								</AppText>
 							</TouchableOpacity>
 						) : null}
 						<AppText style={commonTextStyles.dateText}>
@@ -101,7 +97,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	thesisTitleText: {
-        marginTop: 5,
+		marginTop: 5,
 		fontWeight: "bold",
 		fontSize: 16,
 	},

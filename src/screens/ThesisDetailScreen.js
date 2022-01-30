@@ -14,6 +14,7 @@ import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
 import AppText from "../components/AppText";
+import SentimentPill, { Sentiment } from "../components/SentimentPill";
 
 // Universal Styles
 import commonTextStyles from "../styles/CommonText";
@@ -32,9 +33,8 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	const detailedThesis = route.params;
 	const dateWritten = new Date(detailedThesis.created_at);
-	let sources = detailedThesis.sources ? detailedThesis.sources : [];
 
-	let sourcesToDisplay = sources.map((source, index) => (
+	let sourcesToDisplay = detailedThesis.sources.map((source, index) => (
 		<TouchableOpacity key={index} onPress={() => handleSourceLink(source)}>
 			<AppText style={styles.linkText}>{source}</AppText>
 		</TouchableOpacity>
@@ -138,15 +138,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 										#{detailedThesis.asset_symbol}
 									</AppText>
 								</TouchableOpacity>
-								<AppText
-									style={
-										detailedThesis.sentiment === "Bull"
-											? commonButtonStyles.bullSentimentText
-											: commonButtonStyles.bearSentimentText
-									}
-								>
-									{detailedThesis.sentiment}
-								</AppText>
+								{detailedThesis.sentiment === "Bull" ? (
+									<SentimentPill item={detailedThesis} sentiment={Sentiment.Bull} />
+								) : (
+									<SentimentPill item={detailedThesis} sentiment={Sentiment.Bear} />
+								)}
 							</HStack>
 							<TouchableOpacity
 								style={styles.portfolioInsightButton}
@@ -165,7 +161,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 							<AppText style={styles.subTitle}>Thesis</AppText>
 							<AppText style={styles.contentText}>{detailedThesis.content}</AppText>
 							<AppText style={styles.subTitle}>Sources</AppText>
-							{sourcesToDisplay}
+							{detailedThesis.sources.length > 0 ? sourcesToDisplay : <AppText>This thesis has no linked sources😕</AppText>}
 						</View>
 						<VStack>
 							<CommentInput
@@ -250,6 +246,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		marginTop: 20,
+		marginBottom: 10
 	},
 	thesisTitle: {
 		fontSize: 25,

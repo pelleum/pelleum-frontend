@@ -3,10 +3,15 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 import ThesisBox, { ThesesBoxType } from "./ThesisBox";
-import { MAIN_BACKGROUND_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import {
+	MAIN_BACKGROUND_COLOR,
+	LIGHT_GREY_COLOR,
+	MAIN_SECONDARY_COLOR,
+} from "../styles/Colors";
 import AppText from "./AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
+import SentimentPill, { Sentiment } from "./SentimentPill";
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -53,38 +58,42 @@ const PostBox = ({ postBoxType, item, nav }) => {
 						<HStack style={styles.topPostBox}>
 							<HStack>
 								<AppText style={commonTextStyles.usernameText}>
-									@{item.username}   
+									@{item.username}
 								</AppText>
 								<AppText style={styles.timeElapsedText}>
 									• {elapsedTimeMinutes} min
 								</AppText>
 							</HStack>
-							<AppText
-								style={
-									item.sentiment
-										? item.sentiment === "Bull"
-											? commonButtonStyles.bullSentimentText
-											: commonButtonStyles.bearSentimentText
-										: null
-								}
-							>
-								{item.sentiment}
-							</AppText>
+							{item.sentiment ? (
+								item.sentiment === "Bull" ? (
+									<SentimentPill item={item} sentiment={Sentiment.Bull} />
+								) : (
+									<SentimentPill item={item} sentiment={Sentiment.Bear} />
+								)
+							) : null}
 						</HStack>
 						{postBoxType == PostBoxType.Feed ? (
-							item.asset_symbol ? (  
+							item.asset_symbol ? (
 								<TouchableOpacity
 									style={commonButtonStyles.assetButton}
 									onPress={() => {
 										console.log("Asset button worked.");
 									}}
 								>
-									<AppText style={commonButtonStyles.assetText}>#{item.asset_symbol}</AppText>
+									<AppText style={commonButtonStyles.assetText}>
+										#{item.asset_symbol}
+									</AppText>
 								</TouchableOpacity>
 							) : null
 						) : null}
 						<AppText style={styles.contentText}>{item.content}</AppText>
-						{item.thesis ? <ThesisBox item={item.thesis} nav={nav} thesisBoxType={ThesesBoxType.Contained}/> : null}
+						{item.thesis ? (
+							<ThesisBox
+								item={item.thesis}
+								nav={nav}
+								thesisBoxType={ThesesBoxType.Contained}
+							/>
+						) : null}
 						{postBoxType == PostBoxType.PostDetail ? (
 							<TouchableOpacity
 								style={styles.buttonEnabled}
@@ -132,11 +141,11 @@ const styles = StyleSheet.create({
 	timeElapsedText: {
 		color: LIGHT_GREY_COLOR,
 		fontSize: 16,
-		marginLeft: 5
+		marginLeft: 5,
 	},
 	contentText: {
 		fontSize: 16,
-		padding: 15
+		padding: 15,
 	},
 	buttonEnabled: {
 		alignSelf: "center",

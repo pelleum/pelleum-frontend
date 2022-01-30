@@ -11,7 +11,7 @@ const commonTextStyles = StyleSheet.create({
 		justifyContent: "center",
 		color: LIGHT_GREY_COLOR,
 		fontSize: 16,
-	},
+	}
 });
 
 export default commonTextStyles;

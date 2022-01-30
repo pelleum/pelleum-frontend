@@ -124,7 +124,7 @@ const CreateThesisScreen = ({ navigation }) => {
 		if (createdThesis) {
 			handleAddRationale(createdThesis);
 			const createdPost = await PostsManager.createPost({
-				content: `Just wrote a thesis on ${createdThesis.asset_symbol}!`,
+				content: `Just wrote a thesis on ${createdThesis.asset_symbol}! ✍️`,
 				thesis_id: createdThesis.thesis_id
 			});
 			if (createdPost) {

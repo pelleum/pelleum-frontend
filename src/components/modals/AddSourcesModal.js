@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../../styles/Colors";
+import AppText from "../AppText";
 
 const AddSourcesModal = ({
 	modalVisible,
@@ -86,20 +88,21 @@ const AddSourcesModal = ({
 							activeOpacity={1}
 						>
 							<View style={styles.modalView}>
-								<Text style={styles.ModalTitle}>
-									Add sources to substantiate your investment thesis!
-								</Text>
-								<Text>
+								<AppText style={styles.ModalTitle}>
+									Add sources to substantiate your investment thesis!🎉
+								</AppText>
+								<AppText style={styles.descriptionText}>
 									Sources are a great way to share some of the information that
 									led to your current thinking on investments.
-								</Text>
+								</AppText>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
+										color="white"
 										placeholder="https://www.examplesource1.com"
-										placeholderTextColor="#c7c7c7"
+										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source1}
 										onChangeText={(newValue) => handleChangeText(newValue, 1)}
-										style={styles.titleInput}
+										style={styles.sourceInput}
 										maxLength={256}
 										keyboardType={Platform.OS === "ios" ? "url" : "default"}
 										autoCapitalize={"none"}
@@ -115,11 +118,12 @@ const AddSourcesModal = ({
 								</HStack>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
+										color="white"
 										placeholder="https://www.examplesource2.com"
-										placeholderTextColor="#c7c7c7"
+										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source2}
 										onChangeText={(newValue) => handleChangeText(newValue, 2)}
-										style={styles.titleInput}
+										style={styles.sourceInput}
 										maxLength={256}
 										keyboardType={Platform.OS === "ios" ? "url" : "default"}
 										autoCapitalize={"none"}
@@ -135,11 +139,12 @@ const AddSourcesModal = ({
 								</HStack>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
+										color="white"
 										placeholder="https://www.examplesource3.com"
-										placeholderTextColor="#c7c7c7"
+										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source3}
 										onChangeText={(newValue) => handleChangeText(newValue, 3)}
-										style={styles.titleInput}
+										style={styles.sourceInput}
 										maxLength={256}
 										keyboardType={Platform.OS === "ios" ? "url" : "default"}
 										autoCapitalize={"none"}
@@ -174,9 +179,12 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		justifyContent: "flex-end",
 	},
+	descriptionText: {
+		marginBottom: 20
+	},
 	modalView: {
 		margin: 20,
-		backgroundColor: "white",
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 20,
 		padding: 35,
 		alignItems: "center",
@@ -189,40 +197,17 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 5,
 	},
-	addButtonEnabled: {
-		backgroundColor: "#00A8FC",
-		borderRadius: 30,
-		padding: 10,
-		marginTop: 15,
-		width: "50%",
-		elevation: 2,
-	},
-	addButtonDisabled: {
-		backgroundColor: "#00A8FC",
-		borderRadius: 30,
-		padding: 10,
-		marginTop: 15,
-		width: "50%",
-		elevation: 2,
-		opacity: 0.33,
-	},
-	textStyle: {
-		color: "white",
-		fontWeight: "bold",
-		textAlign: "center",
-		fontSize: 20,
-	},
 	ModalTitle: {
 		fontSize: 20,
 		textAlign: "center",
 		fontWeight: "bold",
 		marginBottom: 15,
 	},
-	titleInput: {
+	sourceInput: {
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: MAIN_SECONDARY_COLOR,
 		marginTop: 10,
 		marginHorizontal: 10,
 		marginBottom: 5,
@@ -232,5 +217,4 @@ const styles = StyleSheet.create({
 		opacity: 0,
 	},
 });
-
 export default AddSourcesModal;
