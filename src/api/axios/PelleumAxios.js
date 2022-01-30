@@ -6,11 +6,7 @@ const pelleumAxios = axios.create({
     //use localhost for iPhone simulator
     //use 10.0.2.2 for Android emulator
     //use local IP address instead of localhost to prevent issues with locally-run server
-<<<<<<< HEAD
     baseURL: 'http://192.168.1.64:8000',
-=======
-    baseURL: 'http://192.168.1.78:8000',
->>>>>>> d3071a4d5933db70237179d388cbeaf4a891b9b6
 });
 
 pelleumAxios.interceptors.request.use(

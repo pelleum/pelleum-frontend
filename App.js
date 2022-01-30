@@ -30,7 +30,7 @@ import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
-import { MAIN_DIFFERENTIATOR_COLOR } from "./src/styles/Colors";
+import { MAIN_BACKGROUND_COLOR } from "./src/styles/Colors";
 
 // Redux
 import { Provider } from 'react-redux';
@@ -83,7 +83,7 @@ const EducationFlow = () => (
 	>
 		<EducationStack.Screen name="Education" component={EdScreen} options={{
 			headerTitle: "Pelleum Learn",
-			headerStyle: { backgroundColor: MAIN_DIFFERENTIATOR_COLOR }
+			headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
 		}} />
 	</EducationStack.Navigator>
 );
