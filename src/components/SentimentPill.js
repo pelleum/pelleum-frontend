@@ -14,18 +14,18 @@ export class Sentiment {
 }
 
 
-const SentimentPill = ({item, sentiment}) => {
+const SentimentPill = ({ item, sentiment }) => {
 
-    let colors;
-    let style;
+	let colors;
+	let style;
 
-    if (sentiment == Sentiment.Bull) {
-        colors = ["#A7FF02", "#39DA0E", "#155703"];
-        style = styles.bullSentimentText;
-    } else {
-        colors = ["#FF6C00", "#FF0000", "#5F0606"];
-        style = styles.bearSentimentText;
-    }
+	if (sentiment == Sentiment.Bull) {
+		colors = ["#30D325", "#24a600", "#135900"];
+		style = styles.bullSentimentText;
+	} else {
+		colors = ["#ff0000", "#b50000", "#660000"];
+		style = styles.bearSentimentText;
+	}
 
 	return (
 		<LinearGradient
@@ -44,12 +44,12 @@ const SentimentPill = ({item, sentiment}) => {
 export default SentimentPill;
 
 const styles = StyleSheet.create({
-    linearGradient: {
-        borderRadius: 15,
-        width: 70,
-        padding: 5
-      },
-    bullSentimentText: {
+	linearGradient: {
+		borderRadius: 15,
+		width: 70,
+		padding: 5
+	},
+	bullSentimentText: {
 		textAlign: "center",
 		justifyContent: "center",
 		fontSize: 16,

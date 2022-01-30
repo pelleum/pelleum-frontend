@@ -11,7 +11,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import { NativeBaseProvider } from 'native-base';
 import LinkAccountsManager from '../managers/LinkAccountsManager';
 import AppText from '../components/AppText';
-import { TEXT_COLOR, BAD_COLOR } from '../styles/Colors';
+import { TEXT_COLOR, BAD_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from '../styles/Colors';
 
 const LinkAccount = ({ navigation }) => {
     const [userCredential, setUserCredential] = useState('');
@@ -133,7 +133,8 @@ const LinkAccount = ({ navigation }) => {
                             <AppText style={styles.instruction}>Log into your Robinhood brokerage account.</AppText>
                             <TextInput
                                 placeholder="Username or Email"
-                                placeholderTextColor={TEXT_COLOR}
+                                color={TEXT_COLOR}
+                                placeholderTextColor={LIGHT_GREY_COLOR}
                                 value={userCredential}
                                 onChangeText={(newValue) =>
                                     handleChangeText({ newValue: newValue, checkUserCredential: true })
@@ -145,7 +146,8 @@ const LinkAccount = ({ navigation }) => {
                             />
                             <TextInput
                                 placeholder="Password"
-                                placeholderTextColor={TEXT_COLOR}
+                                color={TEXT_COLOR}
+                                placeholderTextColor={LIGHT_GREY_COLOR}
                                 value={password}
                                 onChangeText={(newValue) =>
                                     handleChangeText({ newValue: newValue, checkPassword: true })
@@ -172,7 +174,8 @@ const LinkAccount = ({ navigation }) => {
                             <TextInput
                                 style={styles.input}
                                 placeholder="Ex: 123456"
-                                placeholderTextColor={TEXT_COLOR}
+                                color={TEXT_COLOR}
+                                placeholderTextColor={LIGHT_GREY_COLOR}
                                 onChangeText={(newValue) =>
                                     handleChangeText({ newValue: newValue, checkSMSCode: true })
                                 }
@@ -205,7 +208,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#DEDBD5",
     },
     header: {
         flexDirection: 'row',
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     input: {
-        backgroundColor: "white",
+        backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     buttonEnabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 50,
 		width: 170,
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
 	},
 	buttonDisabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 50,
 		width: 170,
@@ -260,7 +262,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
 	},
     buttonText: {
-        color: "white",
         fontWeight: "700",
         fontSize: 16,
     },
