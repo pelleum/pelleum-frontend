@@ -19,7 +19,7 @@ import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
 import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
+import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR, BAD_COLOR, GOOD_COLOR } from "../styles/Colors";
 
 
 const CreateThesisScreen = ({ navigation }) => {
@@ -225,7 +225,7 @@ const CreateThesisScreen = ({ navigation }) => {
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor={TEXT_COLOR}
+							placeholderTextColor={LIGHT_GREY_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -239,7 +239,7 @@ const CreateThesisScreen = ({ navigation }) => {
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="Your Thesis Title"
-							placeholderTextColor={TEXT_COLOR}
+							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={title}
 							onChangeText={(newValue) =>
 								handleChangeText({ newValue: newValue, checkTitle: true })
@@ -252,7 +252,7 @@ const CreateThesisScreen = ({ navigation }) => {
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."
-							placeholderTextColor={TEXT_COLOR}
+							placeholderTextColor={LIGHT_GREY_COLOR}
 							multiline={true}
 							numberOfLines={30}
 							style={styles.textArea}
@@ -275,11 +275,11 @@ const CreateThesisScreen = ({ navigation }) => {
 										}
 									}}
 									height={40}
-									buttonColor={sentiment == "Bull" ? "#46B84B" : "#E24343"}
-									selectedColor={"white"}
+									buttonColor={sentiment == "Bull" ? GOOD_COLOR : BAD_COLOR}
 									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
 									borderColor={MAIN_DIFFERENTIATOR_COLOR}
-									textColor={sentiment == "Bull" ? "#E24343" : "#46B84B"}
+									selectedColor={"white"}
+									textColor={sentiment == "Bull" ? BAD_COLOR : GOOD_COLOR}
 									bold={true}
 									fontSize={16}
 									hasPadding
@@ -289,7 +289,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								style={styles.iconButton}
 								onPress={() => setModalVisible(true)}
 							>
-								<MaterialIcons name="add-link" size={40} color="#00A8FC" />
+								<MaterialIcons name="add-link" size={40} color={MAIN_SECONDARY_COLOR} />
 							</TouchableOpacity>
 							<AppText style={{ marginLeft: 20 }}>
 								{validSources.length} linked sources
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
 	textArea: {
 		marginTop: 10,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: MAIN_SECONDARY_COLOR,
 		height: 250,
 	},
 	image: {
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
 		borderRadius: 44 / 2,
 	},
 	shareButtonEnabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 35,
 		width: 80,
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	shareButtonDisabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 35,
 		width: 80,
@@ -352,13 +352,13 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	errorText: {
-		color: "red",
+		color: BAD_COLOR,
 	},
 	assetSymbolInput: {
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: MAIN_SECONDARY_COLOR,
 		marginBottom: 5,
 		width: "25%",
 	},
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: MAIN_SECONDARY_COLOR,
 		marginTop: 10,
 		marginBottom: 5,
 		width: "100%",

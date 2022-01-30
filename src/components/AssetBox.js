@@ -5,7 +5,7 @@ import { MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Color
 import AppText from "./AppText";
 import { useSelector } from "react-redux";
 
-const AssetBox = ({ item, nav }) => {
+const AssetBox = ({ item, nav, disableRemoveRationale=false }) => {
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
 	return (
@@ -42,6 +42,7 @@ const AssetBox = ({ item, nav }) => {
 								nav.navigate("Rationales", {
 									asset: item.asset_symbol,
 									userId: item.user_id,
+									disableRemoveRationale: disableRemoveRationale,
 								});
 							}}
 						>

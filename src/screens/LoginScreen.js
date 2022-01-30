@@ -14,13 +14,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+import {
+	TEXT_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
+	LIGHT_GREY_COLOR,
+	MAIN_SECONDARY_COLOR,
+	BAD_COLOR,
+}
+	from "../styles/Colors";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
 	// State Management
-    const { errorMessage } = useSelector(state => state.authReducer);
-    const dispatch = useDispatch();
+	const { errorMessage } = useSelector(state => state.authReducer);
+	const dispatch = useDispatch();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [disableStatus, setDisableStatus] = useState(true);
@@ -31,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		const unsubscribe = navigation.addListener("focus", () => {
-            const clearErrorMessage = () => dispatch(clearAuthError());
+			const clearErrorMessage = () => dispatch(clearAuthError());
 			clearErrorMessage();
 		});
 		return unsubscribe;
@@ -80,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
 		<DismissKeyboard>
 			<KeyboardAvoidingView
 				style={styles.container}
-				//behavior="padding"       //ensures text fields do not get blocked by keyboard
+			//behavior="padding"       //ensures text fields do not get blocked by keyboard
 			>
 				<AppText style={styles.titleText}>Welcome to Pelleum.</AppText>
 				<View style={styles.inputContainer}>
@@ -122,7 +129,7 @@ const LoginScreen = ({ navigation }) => {
 					<View style={styles.loginContainer}>
 						<AppText style={styles.already}>Don't have an account?</AppText>
 						<TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-							<AppText style={styles.logInNow}>Sign up</AppText>
+							<AppText style={styles.signUpButton}>Sign up</AppText>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
 		marginTop: 40,
 	},
 	buttonEnabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 50,
 		width: 170,
@@ -168,7 +175,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	buttonDisabled: {
-		backgroundColor: "#00A8FC",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		height: 50,
 		width: 170,
@@ -178,13 +185,13 @@ const styles = StyleSheet.create({
 		opacity: 0.33,
 	},
 	buttonText: {
-		color: "white",
+		color: TEXT_COLOR,
 		fontWeight: "700",
 		fontSize: 16,
 	},
 	errorMessage: {
 		fontSize: 16,
-		color: "red",
+		color: BAD_COLOR,
 		paddingVertical: 10,
 		marginTop: 30,
 		marginHorizontal: 10,
@@ -193,16 +200,17 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 		marginTop: 30,
 		justifyContent: "space-evenly",
-		width: "110%",
+		width: "100%",
 		flexDirection: "row",
 	},
 	already: {
 		fontSize: 16,
-		color: "gray",
+		color: LIGHT_GREY_COLOR,
 	},
-	logInNow: {
+	signUpButton: {
 		fontSize: 16,
-		color: "#0782F9",
+		color: MAIN_SECONDARY_COLOR,
+		marginLeft: 10
 	},
 	titleText: {
 		fontSize: 22,

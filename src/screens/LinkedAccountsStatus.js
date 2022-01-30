@@ -4,6 +4,7 @@ import { NativeBaseProvider, HStack } from 'native-base';
 import LinkAccountsManager from '../managers/LinkAccountsManager';
 import { useSelector } from "react-redux";
 import AppText from '../components/AppText';
+import { BAD_COLOR, GOOD_COLOR } from '../styles/Colors';
 
 const LinkedAccountsStatus = ({ navigation }) => {
     const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
@@ -20,6 +21,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
         <View style={styles.mainContainer}>
             <NativeBaseProvider>
                 <FlatList
+                    width={"100%"}
                     data={activeAccounts}
                     keyExtractor={(item) => item.connection_id}
                     renderItem={({ item }) => (
@@ -70,18 +72,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     activeText: {
-        color: 'green',
+        color: GOOD_COLOR,
         marginLeft: 10,
     },
     inactiveText: {
-        color: 'red',
+        color: BAD_COLOR,
         marginLeft: 10,
     },
     inactiveAccountWarning: {
         alignSelf: "center",
         marginVertical: 15,
         fontSize: 16,
-        color: "red"
+        color: BAD_COLOR,
     },
     linkButtonText: {
         alignSelf: "center",

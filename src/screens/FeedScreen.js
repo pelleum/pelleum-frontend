@@ -13,6 +13,7 @@ import PostsManager from "../managers/PostsManager";
 import { useDispatch } from 'react-redux';
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 import AppText from "../components/AppText";
+import { BAD_COLOR } from "../styles/Colors";
 
 const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
@@ -84,18 +85,19 @@ const FeedScreen = ({ navigation, route }) => {
 	return (
 		<SafeAreaView style={styles.mainContainer}>
 			<FlatList
+				width={"100%"}
 				data={posts}
 				keyExtractor={(item) => item.post_id.toString()}
-					renderItem={({ item }) => {
-						return (
-							<PostBox
-								postBoxType={PostBoxType.Feed}
-								item={item}
-								nav={navigation}
-							/>
-						);
-					}}
-					refreshing = { refreshing }
+				renderItem={({ item }) => {
+					return (
+						<PostBox
+							postBoxType={PostBoxType.Feed}
+							item={item}
+							nav={navigation}
+						/>
+					);
+				}}
+				refreshing={refreshing}
 				onRefresh={onRefresh}
 				onEndReached={getMorePosts}
 				onEndReachedThreshold={2.5}
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 3,
 	},
 	error: {
-		color: 'red',
+		color: BAD_COLOR,
 		marginTop: 15,
 		marginBottom: 25,
 		fontSize: 14,

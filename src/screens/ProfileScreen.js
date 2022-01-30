@@ -14,6 +14,7 @@ import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 import AssetBox from "../components/AssetBox";
+import { BAD_COLOR } from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
@@ -172,6 +173,6 @@ const styles = StyleSheet.create({
 	inactiveAccountWarning: {
 		alignSelf: "center",
 		marginTop: 15,
-		color: "red"
+		color: BAD_COLOR,
 	},
 });

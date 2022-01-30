@@ -9,11 +9,12 @@ import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
 import AppText from '../components/AppText';
-import { TEXT_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from '../styles/Colors';
+import { TEXT_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, BAD_COLOR, GOOD_COLOR } from '../styles/Colors';
 import { THESIS_BOX_HEIGHT } from '../components/ThesisBox';
-    //need to figure out how to calculate item height, so that we are not bound by a constant item height
-    //the result of the item height calculation will be fed into getItemLayout
-    //if THESIS_BOX_HEIGHT is changed here, we must also change the height in ThesisListContainer in ThesisBox
+
+//need to figure out how to calculate item height, so that we are not bound by a constant item height
+//the result of the item heigsht calculation will be fed into getItemLayout
+//if THESIS_BOX_HEIGHT is changed here, we must also change the height in ThesisListContainer in ThesisBox
 
 const SearchScreen = ({ navigation }) => {
     const [term, setTerm] = useState('');
@@ -233,12 +234,12 @@ const SearchScreen = ({ navigation }) => {
                                     }
                                 }}
                                 height={40}
-                                buttonColor={sentiment === "Bull" ? MAIN_SECONDARY_COLOR : "red"}
-                                borderColor={sentiment === "Bull" ? MAIN_SECONDARY_COLOR : "red"}
+                                buttonColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
+                                borderColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
                                 borderColor={MAIN_DIFFERENTIATOR_COLOR}
                                 backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
                                 selectedColor={'white'}
-                                textColor={sentiment === "Bull" ? "red" : MAIN_SECONDARY_COLOR}
+                                textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
                                 fontSize={16}
                                 bold={true}
                                 hasPadding
@@ -246,6 +247,7 @@ const SearchScreen = ({ navigation }) => {
                         </View>
                         {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
                         <FlatList
+                            width={"100%"}
                             data={sentiment === "Bull" ? bullResults : bearResults}
                             keyExtractor={(item) => item.thesis_id}
                             renderItem={({ item }) => {
@@ -278,7 +280,7 @@ export default SearchScreen;
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1
+        flex: 1,
     },
     switchSelectorContainer: {
         width: '85%',
