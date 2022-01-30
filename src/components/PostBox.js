@@ -28,12 +28,23 @@ export class PostBoxType {
 const PostBox = ({ postBoxType, item, nav }) => {
 	// new Date() gives time in device's time zone, but we need it in UTC
 	// To do this, we get the ISO string, remove the Z from the end, and create a new date
-
 	const nowIsoString = new Date().toISOString();
 	const nowStringWithNoZ = nowIsoString.slice(0, -1);
 	const now = new Date(nowStringWithNoZ).getTime();
 	const createdAt = new Date(item.created_at).getTime();
 	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
+	
+	// Calculate elapsed time figure to present
+	let elapsedTime;
+	if (elapsedTimeMinutes > 60 && elapsedTimeMinutes <= 60 * 24) {
+		const elapsedHours = Math.round((elapsedTimeMinutes) / 60);
+		elapsedTime = `${elapsedHours}h`;
+	} else if (elapsedTimeMinutes > 60 * 24) {
+		const elapsedDays = Math.round((elapsedTimeMinutes) / (60 * 24));
+		elapsedTime = `${elapsedDays}d`
+	} else {
+		elapsedTime = `${elapsedTimeMinutes} min`
+	}
 
 	if (
 		postBoxType == PostBoxType.Comment ||
@@ -61,7 +72,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									@{item.username}
 								</AppText>
 								<AppText style={styles.timeElapsedText}>
-									• {elapsedTimeMinutes} min
+									• {elapsedTime}
 								</AppText>
 							</HStack>
 							{item.sentiment ? (

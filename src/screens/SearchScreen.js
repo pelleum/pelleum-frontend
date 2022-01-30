@@ -22,6 +22,7 @@ const SearchScreen = ({ navigation }) => {
     const [bullResults, setBullResults] = useState([]);
     const [bearResults, setBearResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [message, setMessage] = useState('');
     const [sentiment, setSentiment] = useState("Bull");
     const [currentBullPage, setCurrentBullPage] = useState(1);
     const [currentBearPage, setCurrentBearPage] = useState(1);
@@ -110,12 +111,17 @@ const SearchScreen = ({ navigation }) => {
         };
         // If theses were retrieved properly, scroll to the top of the FlatList
         const thesesArrayLength = sentiment === "Bull" ? retrievedThesesArrayLengths.bull : retrievedThesesArrayLengths.bear;
-        if (successfulResponses.every(responseSuccess => responseSuccess === true) && thesesArrayLength > 0) {
-            setErrorMessage("");
-            flatListRef.current.scrollToIndex({ index: 0, animated: false });
+        if (successfulResponses.every(responseSuccess => responseSuccess === true)) {
+            if (thesesArrayLength > 0) {
+                setErrorMessage("");
+                setMessage("");
+                flatListRef.current.scrollToIndex({ index: 0, animated: false });
+            } else {
+                setMessage("Looks like no one has written a thesis on this asset yet. You can be the first! 🥇");
+            }
         } else {
             setErrorMessage("There was an error retrieving theses. Please try again later.");
-        }
+        };
     };
 
     const getMoreResults = async () => {
@@ -246,6 +252,7 @@ const SearchScreen = ({ navigation }) => {
                             />
                         </View>
                         {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
+                        {message ? <AppText style={styles.message}>{message}</AppText> : null}
                         <FlatList
                             width={"100%"}
                             data={sentiment === "Bull" ? bullResults : bearResults}
@@ -293,6 +300,11 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 25,
         fontSize: 14,
+    },
+    message: {
+        marginTop: 80,
+        fontSize: 14,
+        width: "80%"
     },
     backButton: {
         alignSelf: 'center',

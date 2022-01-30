@@ -88,12 +88,20 @@ const CreateThesisScreen = ({ navigation }) => {
 
 	const handleAddRationale = async (createdThesis) => {
 		const response = await RationalesManager.addRationale(createdThesis);
-		if (response.status == 403) {
+		if (response.status == 201) {
+			Alert.alert(
+				`Your thesis was added to your ${createdThesis.asset_symbol} Rationale Library🎉`,
+				`You can use your Rationale Library, accessible in your profile, to keep track of your investment thinking and reasoning. You can add or remove theses anytime🙂`,
+				[
+					{ text: "Got it!", onPress: () => {/* do nothing */ } },
+				]
+			);
+		} else if (response.status == 403) {
 			Alert.alert(
 				`${createdThesis.asset_symbol} ${createdThesis.sentiment} Rationale Limit Reached`,
 				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${createdThesis.sentiment} theses per asset. To add this thesis to your ${createdThesis.asset_symbol} ${createdThesis.sentiment} library, please remove one.`,
 				[
-					{ text: "Remove later", onPress: () => {/* do nothing */ } },
+					{ text: "Got it!", onPress: () => {/* do nothing */ } },
 					{
 						text: "Remove now", onPress: async () => {
 							navigation.navigate("Rationales", {
