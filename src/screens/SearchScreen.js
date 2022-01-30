@@ -9,7 +9,7 @@ import { resetReactions } from '../redux/actions/ThesisReactionsActions';
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from '../components/ThesisBox';
 import AppText from '../components/AppText';
-import { TEXT_COLOR, MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, BAD_COLOR, GOOD_COLOR } from '../styles/Colors';
+import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, BAD_COLOR, GOOD_COLOR } from '../styles/Colors';
 import { THESIS_BOX_HEIGHT } from '../components/ThesisBox';
 
 //need to figure out how to calculate item height, so that we are not bound by a constant item height
@@ -117,7 +117,7 @@ const SearchScreen = ({ navigation }) => {
                 setMessage("");
                 flatListRef.current.scrollToIndex({ index: 0, animated: false });
             } else {
-                setMessage("Looks like no one has written a thesis on this asset yet. You can be the first! 🥇");
+                setMessage(`Looks like no one has written a ${sentiment} thesis on this asset yet. You can be the first! 🥇`);
             }
         } else {
             setErrorMessage("There was an error retrieving theses. Please try again later.");
@@ -165,9 +165,21 @@ const SearchScreen = ({ navigation }) => {
         { label: "Bear", value: "Bear" },
     ];
 
-    const handleSentiment = (value) => {
-        const newSentiment = value;
+    const handleSentiment = (newSentiment) => {
         setSentiment(newSentiment);
+        if (newSentiment === "Bull") {
+            if (bullResults.length > 0) {
+                setMessage("");
+            } else {
+                setMessage(`Looks like no one has written a ${newSentiment} thesis on this asset yet. You can be the first! 🥇`);
+            }
+        } else {
+            if (bearResults.length > 0) {
+                setMessage("");
+            } else {
+                setMessage(`Looks like no one has written a ${newSentiment} thesis on this asset yet. You can be the first! 🥇`);
+            }
+        }
     };
 
     return (
