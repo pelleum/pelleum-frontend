@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
-	Text,
 	View,
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
 	Image,
 } from "react-native";
-import { HStack, NativeBaseProvider } from "native-base";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { HStack, NativeBaseProvider, VStack } from "native-base";
+import { MaterialCommunityIcons, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 import AssetBox from "../components/AssetBox";
-import { BAD_COLOR } from "../styles/Colors";
+import AppText from "../components/AppText";
+import { BAD_COLOR, LINK_COLOR, MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
@@ -50,6 +50,7 @@ const ProfileScreen = ({ navigation, route }) => {
 		<SafeAreaView style={styles.mainContainer}>
 			<NativeBaseProvider>
 				<FlatList
+					showsVerticalScrollIndicator={false}
 					data={assetList}
 					keyExtractor={(item) => item.asset_symbol}
 					renderItem={({ item }) => (
@@ -60,37 +61,40 @@ const ProfileScreen = ({ navigation, route }) => {
 					)}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
-							<Image
-								style={styles.image}
-								source={require("../../assets/forest.jpg")}
-							/>
-							<Text style={styles.usernameText}>@{username}</Text>
+							<HStack justifyContent={"space-between"}>
+								<Image
+									style={styles.image}
+									source={require("../../assets/forest.jpg")}
+								/>
+								<TouchableOpacity
+									style={styles.settingsButton}
+									onPress={() => navigation.navigate("Settings")}
+								>
+									<SimpleLineIcons name="settings" size={28} color={MAIN_SECONDARY_COLOR} />
+								</TouchableOpacity>
+							</HStack>
+							<AppText style={styles.usernameText}>@{username}</AppText>
 							{activeAccounts.some(account => account.is_active) == false ? (
-								<Text style={styles.inactiveAccountWarning}>There was an error validating your linked account(s). Please go to Settings and check the status of your linked account(s).</Text>
+								<>
+									<AppText style={styles.inactiveAccountWarning}>There was an error validating your linked account(s).</AppText>
+									<TouchableOpacity onPress={() => navigation.navigate("LinkedStatus")}>
+										<AppText style={styles.inactiveLinkButtonText}>Check the status of your linked account(s).</AppText>
+									</TouchableOpacity>
+								</>
 							) : null}
-							<Text style={styles.listHeaderText}>Assets</Text>
+							<HStack style={styles.headerStyle}>
+								<AppText style={styles.listHeaderText}>Assets</AppText>
+								<TouchableOpacity
+									style={styles.linkAccountButton}
+									onPress={() => navigation.navigate("Link")}
+								>
+									<MaterialCommunityIcons name="bank-plus" size={26} color={MAIN_SECONDARY_COLOR} />
+								</TouchableOpacity>
+							</HStack>
 						</View>
 					}
 					ListFooterComponent={
 						<View alignItems={'center'} paddingVertical={20}>
-							<TouchableOpacity
-								style={styles.buttonGroup}
-								onPress={() => navigation.navigate("Link")}
-							>
-								<HStack style={styles.buttonGroupTextContainer}>
-									<Feather name="link" size={25} color="#00A8FC" />
-									<Text style={styles.buttonGroupText}>Link Brokerage Accounts</Text>
-								</HStack>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.buttonGroup}
-								onPress={() => navigation.navigate("Settings")}
-							>
-								<HStack style={styles.buttonGroupTextContainer}>
-									<Feather name="settings" size={25} color="#00A8FC" />
-									<Text style={styles.buttonGroupText}>Settings</Text>
-								</HStack>
-							</TouchableOpacity>
 							<TouchableOpacity
 								style={styles.buttonGroup}
 								onPress={async () => {
@@ -100,8 +104,8 @@ const ProfileScreen = ({ navigation, route }) => {
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
-									<Ionicons name="md-file-tray-full-outline" size={25} color="#00A8FC" />
-									<Text style={styles.buttonGroupText}>Rationale Library</Text>
+									<Ionicons name="md-file-tray-full-outline" size={25} color={MAIN_SECONDARY_COLOR} />
+									<AppText style={styles.buttonGroupText}>Rationale Library</AppText>
 								</HStack>
 							</TouchableOpacity>
 							<TouchableOpacity
@@ -113,8 +117,8 @@ const ProfileScreen = ({ navigation, route }) => {
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
-									<MaterialCommunityIcons name="book-open-outline" size={25} color="#00A8FC" />
-									<Text style={styles.buttonGroupText}>My Authored Theses</Text>
+									<MaterialCommunityIcons name="book-open-outline" size={25} color={MAIN_SECONDARY_COLOR} />
+									<AppText style={styles.buttonGroupText}>Authored Theses</AppText>
 								</HStack>
 							</TouchableOpacity>
 						</View>
@@ -133,16 +137,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	listHeaderView: {
-		margin: 15
+		margin: 13
 	},
 	listHeaderText: {
+		marginLeft: 3,
 		fontWeight: "bold",
-		fontSize: 16,
-		marginTop: 15,
+		fontSize: 20,
 	},
 	usernameText: {
+		fontSize: 15,
 		marginTop: 10,
-		color: "#026bd4"
+		color: LINK_COLOR,
 	},
 	image: {
 		width: 60,
@@ -152,14 +157,12 @@ const styles = StyleSheet.create({
 	buttonGroup: {
 		overflow: "hidden",
 		borderWidth: 0.5,
-		backgroundColor: "white",
-		borderColor: "#00A8FC",
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 30,
 		width: '80%',
 		marginTop: 6,
 	},
 	buttonGroupText: {
-		color: 'black',
 		fontSize: 16,
 		fontWeight: 'bold',
 		marginLeft: 25,
@@ -171,8 +174,38 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 	},
 	inactiveAccountWarning: {
+		fontSize: 15,
 		alignSelf: "center",
 		marginTop: 15,
 		color: BAD_COLOR,
+	},
+	inactiveLinkButtonText: {
+		fontSize: 15,
+		alignSelf: "center",
+		paddingTop: 15,
+		paddingBottom: 10,
+		color: LINK_COLOR,
+	},
+	headerStyle: {
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginTop: 10,
+	},
+	settingsButton: {
+		justifyContent: "center",
+		alignItems: "center",
+		width: 52,
+		height: 52,
+		borderRadius: 52 / 2,
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+	},
+	linkAccountButton: {
+		justifyContent: "center",
+		alignItems: "center",
+		paddingLeft: 2.5,
+		width: 52,
+		height: 52,
+		borderRadius: 52 / 2,
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 	},
 });

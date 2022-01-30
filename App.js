@@ -30,7 +30,6 @@ import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
-import { MAIN_BACKGROUND_COLOR } from "./src/styles/Colors";
 
 // Redux
 import { Provider } from 'react-redux';
@@ -51,9 +50,7 @@ const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
 	<FeedStack.Navigator
 		initialRouteName="Feed"
-		screenOptions={{
-			headerBackTitleVisible: false,
-		}}
+		screenOptions={{ headerBackTitleVisible: false }}
 	>
 		<FeedStack.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }} />
 	</FeedStack.Navigator>
@@ -64,9 +61,7 @@ const SearchStack = createNativeStackNavigator();
 const SearchFlow = () => (
 	<SearchStack.Navigator
 		initialRouteName="Search"
-		screenOptions={{
-			headerBackTitleVisible: false,
-		}}
+		screenOptions={{ headerBackTitleVisible: false }}
 	>
 		<SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
 	</SearchStack.Navigator>
@@ -77,14 +72,13 @@ const EducationStack = createNativeStackNavigator();
 const EducationFlow = () => (
 	<EducationStack.Navigator
 		initialRouteName="Education"
-		screenOptions={{
-			headerBackTitleVisible: false,
-		}}
+		screenOptions={{ headerBackTitleVisible: false }}
 	>
-		<EducationStack.Screen name="Education" component={EdScreen} options={{
-			headerTitle: "Pelleum Learn",
-			headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
-		}} />
+		<EducationStack.Screen
+			name="Education"
+			component={EdScreen}
+			options={{ headerTitle: "Pelleum Learn" }}
+		/>
 	</EducationStack.Navigator>
 );
 
@@ -93,39 +87,33 @@ const ProfileStack = createNativeStackNavigator();
 const ProfileFlow = () => (
 	<ProfileStack.Navigator
 		initialRouteName="Profile"
-		screenOptions={{
-			headerBackTitleVisible: false,
-		}}
-	// screenOptions={{
-	// 	headerStyle: {
-	// 		backgroundColor: '#f4511e',
-	// 	},
-	// 	headerBackTitleVisible: false,
-	// 	headerTintColor: '#fff',
-	// 	headerTitleStyle: {
-	// 		fontWeight: 'bold',
-	// 	},
-	// }}
+		screenOptions={{ headerBackTitleVisible: false }}
 	>
 		<ProfileStack.Screen
 			name="Profile"
 			component={ProfileScreen}
-			options={{
-				headerShown: false,
-				// headerTitle: "Custom Profile Header",
-				// headerRight: () => (
-				// 	<Button
-				// 		onPress={() => alert('This is a button!')}
-				// 		title="Info"
-				// 		color="#fff"
-				// 	/>
-				// ),
-			}}
+			options={{ headerShown: false }}
 		/>
-		<ProfileStack.Screen name="Settings" component={SettingsScreen} />
-		<ProfileStack.Screen name="Link" component={LinkAccount} />
-		<ProfileStack.Screen name="LinkedStatus" component={LinkedAccountsStatus} />
-		<ProfileStack.Screen name="Authored" component={AuthoredThesesScreen} />
+		<ProfileStack.Screen
+			name="Settings"
+			component={SettingsScreen}
+			options={{ headerTitle: "Settings" }}
+		/>
+		<ProfileStack.Screen
+			name="Link"
+			component={LinkAccount}
+			options={{ headerTitle: "Link an Account" }}
+		/>
+		<ProfileStack.Screen
+			name="LinkedStatus"
+			component={LinkedAccountsStatus}
+			options={{ headerTitle: "Linked Accounts" }}
+		/>
+		<ProfileStack.Screen
+			name="Authored"
+			component={AuthoredThesesScreen}
+			options={{ headerTitle: "Authored Theses" }}
+		/>
 	</ProfileStack.Navigator>
 );
 
@@ -238,15 +226,33 @@ const RootStackFlow = () => {
 					<RootStack.Screen
 						name="CreateThesis"
 						component={CreateThesisScreen}
+						options={{ headerTitle: "Create a Thesis" }}
 					/>
 					<RootStack.Screen
 						name="CreatePost"
 						component={CreatePostScreen}
+						options={{ headerTitle: "Create a Post" }}
 					/>
-					<RootStack.Screen name="PortfolioInsight" component={PortfolioInsightScreen} />
-					<RootStack.Screen name="Post" component={PostDetailScreen} />
-					<RootStack.Screen name="Thesis" component={ThesisDetailScreen} />
-					<RootStack.Screen name="Rationales" component={RationaleScreen} />
+					<RootStack.Screen
+						name="PortfolioInsight"
+						component={PortfolioInsightScreen}
+						options={{ headerTitle: "Portfolio Insight" }}
+					/>
+					<RootStack.Screen
+						name="Post"
+						component={PostDetailScreen}
+						options={{ headerTitle: "Post Detail" }}
+					/>
+					<RootStack.Screen
+						name="Thesis"
+						component={ThesisDetailScreen}
+						options={{ headerTitle: "Thesis Detail" }}
+					/>
+					<RootStack.Screen
+						name="Rationales"
+						component={RationaleScreen}
+						options={{ headerTitle: "Rationale Library" }}
+					/>
 				</>
 			)}
 		</RootStack.Navigator>
@@ -257,7 +263,7 @@ export default () => {
 	return (
 		<Provider store={store}>
 			<NavigationContainer theme={DarkTheme} >
-					<RootStackFlow />
+				<RootStackFlow />
 			</NavigationContainer>
 		</Provider>
 	);
