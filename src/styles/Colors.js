@@ -3,7 +3,7 @@
 // Main Color Theme
 export const MAIN_BACKGROUND_COLOR = '#0000';         //invisible
 export const MAIN_SECONDARY_COLOR = "#30D325";        //currently this is green
-export const MAIN_DIFFERENTIATOR_COLOR = '#202220';   //lighter black
+export const MAIN_DIFFERENTIATOR_COLOR = '#1D1D1D';   //lighter black
 
 // Supplementary Colors
 export const TEXT_COLOR = '#ffffff';              //white text for textInput text

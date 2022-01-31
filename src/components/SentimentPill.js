@@ -20,10 +20,10 @@ const SentimentPill = ({ item, sentiment }) => {
 	let style;
 
 	if (sentiment == Sentiment.Bull) {
-		colors = ["#30D325", "#24a600", "#135900"];
+		colors = ["#A7FF02", "#24a600", "#135900"];
 		style = styles.bullSentimentText;
 	} else {
-		colors = ["#ff0000", "#b50000", "#660000"];
+		colors = ["#FF6C00", "#b50000", "#660000"];
 		style = styles.bearSentimentText;
 	}
 

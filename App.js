@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
-import { Ionicons, FontAwesome, Foundation, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from 'expo-secure-store';
 
 // Local Files
@@ -163,7 +163,7 @@ const AppFlow = () => (
 			component={ProfileFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<FontAwesome5 name="money-bill-wave" size={23} color={color} />
+					<Ionicons name="person-sharp" size={25} color={color} />
 				),
 				headerShown: false,
 			}}

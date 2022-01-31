@@ -7,14 +7,14 @@ import {
 	TouchableOpacity,
 	Image,
 } from "react-native";
-import { HStack, NativeBaseProvider, VStack } from "native-base";
+import { HStack, NativeBaseProvider } from "native-base";
 import { MaterialCommunityIcons, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 import AssetBox from "../components/AssetBox";
 import AppText from "../components/AppText";
-import { BAD_COLOR, LINK_COLOR, MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { BAD_COLOR, LINK_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR, MAIN_BACKGROUND_COLOR } from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
 		width: 52,
 		height: 52,
 		borderRadius: 52 / 2,
-		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 	},
 	linkAccountButton: {
 		justifyContent: "center",
@@ -206,6 +205,10 @@ const styles = StyleSheet.create({
 		width: 52,
 		height: 52,
 		borderRadius: 52 / 2,
-		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		shadowOffset: { width: 0, height: 0 },
+		shadowColor: LIGHT_GREY_COLOR,
+		shadowOpacity: 0.3,
+		elevation: 3,
+		backgroundColor: "black",
 	},
 });
