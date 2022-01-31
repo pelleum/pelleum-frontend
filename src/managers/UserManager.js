@@ -6,6 +6,7 @@ import { authError, login, restoreToken } from "../redux/actions/AuthActions";
 import RationalesManager from "../managers/RationalesManager";
 import { refreshLibrary } from "../redux/actions/RationaleActions";
 import LinkAccountsManager from "./LinkAccountsManager";
+import { USER_BASE_PATH, USER_LOGIN_PATH } from "@env"
 
 class UserManager {
 
@@ -13,7 +14,7 @@ class UserManager {
         var qs = require("query-string");
         const response = await pelleumClient({
             method: "post",
-            url: "/public/auth/users/login",
+            url: USER_LOGIN_PATH,
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             data: qs.stringify({ username, password }),
             onLogin: true
@@ -40,7 +41,7 @@ class UserManager {
     static signup = async (data) => {
         const response = await pelleumClient({
             method: "post",
-            url: "/public/auth/users",
+            url: USER_BASE_PATH,
             data: data
         });
 
@@ -65,7 +66,7 @@ class UserManager {
     static getUser = async () => {
         const authorizedResponse = await pelleumClient({
             method: 'get',
-            url: '/public/auth/users'
+            url: USER_BASE_PATH
         });
         if (authorizedResponse) {
             if (authorizedResponse.status == 200) {

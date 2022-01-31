@@ -1,13 +1,14 @@
 import pelleumClient from "../api/clients/PelleumClient";
 import { store } from "../redux/Store";
 import { addToLibrary, removeFromLibrary } from "../redux/actions/RationaleActions";
+import { RATIONALES_BASE_PATH, GET_MANY_RATIONALES_PATH } from "@env"
 
 class RationalesManager {
 
 	static retrieveRationales = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: '/public/theses/rationales/retrieve/many',
+			url: GET_MANY_RATIONALES_PATH,
 			queryParams: queryParams
 		});
 
@@ -23,7 +24,7 @@ class RationalesManager {
 	static addRationale = async (thesis) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: '/public/theses/rationales',
+			url: RATIONALES_BASE_PATH,
 			data: { thesis_id: thesis.thesis_id },
 		});
 
@@ -40,7 +41,7 @@ class RationalesManager {
 	static removeRationale = async (rationale) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `/public/theses/rationales/${rationale.rationale_id}`,
+			url: `${RATIONALES_BASE_PATH}/${rationale.rationale_id}`,
 		});
 
 		if (authorizedResponse) {
