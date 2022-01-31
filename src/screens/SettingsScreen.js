@@ -1,11 +1,11 @@
 // Import Installed Libraries
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import AppText from '../components/AppText';
 import { useDispatch } from 'react-redux';
 import { logout } from "../redux/actions/AuthActions";
+import { MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors"
 
 const SettingsScreen = ({ navigation }) => {
 
@@ -16,7 +16,7 @@ const SettingsScreen = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView forceInset={{ top: 'always' }}>
+        <SafeAreaView alignItems="center" marginTop={1} >
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.navigate("LinkedStatus")}
@@ -37,10 +37,12 @@ export default SettingsScreen;
 
 const styles = StyleSheet.create({
     button: {
-        borderWidth: 0.5,
-        borderColor: '#00A8FC',
-        backgroundColor: '#dedfe3',
-        alignItems: 'center',
+        alignItems: "center",
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		borderRadius: 30,
+		width: '85%',
+        paddingVertical: 6,
+        marginTop: 5,
     },
     buttonText: {
         fontSize: 16,

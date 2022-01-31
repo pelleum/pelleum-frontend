@@ -30,6 +30,7 @@ import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
+import { MAIN_BACKGROUND_COLOR } from "./src/styles/Colors";
 
 // Redux
 import { Provider } from 'react-redux';
@@ -77,7 +78,10 @@ const EducationFlow = () => (
 		<EducationStack.Screen
 			name="Education"
 			component={EdScreen}
-			options={{ headerTitle: "Pelleum Learn" }}
+			options={{
+				headerTitle: "Pelleum Learn",
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+			}}
 		/>
 	</EducationStack.Navigator>
 );
@@ -97,22 +101,34 @@ const ProfileFlow = () => (
 		<ProfileStack.Screen
 			name="Settings"
 			component={SettingsScreen}
-			options={{ headerTitle: "Settings" }}
+			options={{
+				headerTitle: "Settings",
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+			}}
 		/>
 		<ProfileStack.Screen
 			name="Link"
 			component={LinkAccount}
-			options={{ headerTitle: "Link an Account" }}
+			options={{
+				headerTitle: "Link an Account",
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+			}}
 		/>
 		<ProfileStack.Screen
 			name="LinkedStatus"
 			component={LinkedAccountsStatus}
-			options={{ headerTitle: "Linked Accounts" }}
+			options={{
+				headerTitle: "Linked Accounts",
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+			}}
 		/>
 		<ProfileStack.Screen
 			name="Authored"
 			component={AuthoredThesesScreen}
-			options={{ headerTitle: "Authored Theses" }}
+			options={{
+				headerTitle: "Authored Theses",
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+			}}
 		/>
 	</ProfileStack.Navigator>
 );
@@ -226,32 +242,50 @@ const RootStackFlow = () => {
 					<RootStack.Screen
 						name="CreateThesis"
 						component={CreateThesisScreen}
-						options={{ headerTitle: "Create a Thesis" }}
+						options={{
+							headerTitle: "Create a Thesis",
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+						}}
 					/>
 					<RootStack.Screen
 						name="CreatePost"
 						component={CreatePostScreen}
-						options={{ headerTitle: "Create a Post" }}
+						options={{
+							headerTitle: "Create a Post",
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+						}}
 					/>
 					<RootStack.Screen
 						name="PortfolioInsight"
 						component={PortfolioInsightScreen}
-						options={{ headerTitle: "Portfolio Insight" }}
+						options={{
+							headerTitle: "Portfolio Insight",
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+						}}
 					/>
 					<RootStack.Screen
 						name="Post"
 						component={PostDetailScreen}
-						options={{ headerTitle: "Post Detail" }}
+						options={{
+							headerTitle: "Post Detail",
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+						}}
 					/>
 					<RootStack.Screen
 						name="Thesis"
 						component={ThesisDetailScreen}
-						options={{ headerTitle: "Thesis Detail" }}
+						options={{
+							headerTitle: "Thesis Detail",
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+						}}
 					/>
 					<RootStack.Screen
 						name="Rationales"
 						component={RationaleScreen}
-						options={{ headerTitle: "Rationale Library" }}
+						options={{
+							headerTitle: "Rationale Library",
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+						}}
 					/>
 				</>
 			)}
