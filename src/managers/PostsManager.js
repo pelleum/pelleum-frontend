@@ -2,6 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import { store } from "../redux/Store";
 import pelleumClient from "../api/clients/PelleumClient";
 import { addLike, removeLike } from "../redux/actions/PostReactionsActions";
+import { POSTS_BASE_PATH, GET_MANY_POSTS_PATH, GET_MANY_POST_REACTIONS_PATH, POST_REACTIONS_BASE_PATH } from "@env"
 
 class PostsManager {
 
@@ -9,7 +10,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: "/public/posts",
+			url: POSTS_BASE_PATH,
 			data: data
 		});
 
@@ -25,7 +26,7 @@ class PostsManager {
 	static getPosts = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: "/public/posts/retrieve/many",
+			url: GET_MANY_POSTS_PATH,
 			queryParams: queryParams
 		});
 
@@ -41,7 +42,7 @@ class PostsManager {
 	static getPost = async (post_id) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `/public/posts/${post_id}`,
+			url: `${POSTS_BASE_PATH}/${post_id}`,
 		});
 
 		if (authorizedResponse) {
@@ -69,7 +70,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: "/public/posts/retrieve/many",
+			url: GET_MANY_POSTS_PATH,
 			queryParams: params,
 		});
 
@@ -89,7 +90,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: "/public/posts/reactions/retrieve/many",
+			url: GET_MANY_POST_REACTIONS_PATH,
 			queryParams: {
 				user_id: userObject.user_id,
 				start_time: timeRange.oldestPostCreatedAt,
@@ -111,7 +112,7 @@ class PostsManager {
 		) {
 			const authorizedResponse = await pelleumClient({
 				method: "delete",
-				url: `/public/posts/reactions/${item.post_id}`,
+				url: `${POST_REACTIONS_BASE_PATH}/${item.post_id}`,
 			});
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 204) {
@@ -123,7 +124,7 @@ class PostsManager {
 		} else {
 			const authorizedResponse = await pelleumClient({
 				method: "post",
-				url: `/public/posts/reactions/${item.post_id}`,
+				url: `${POST_REACTIONS_BASE_PATH}/${item.post_id}`,
 				data: { reaction: 1 },
 			});
 			if (authorizedResponse) {

@@ -11,3 +11,11 @@ web-build/
 
 # macOS
 .DS_Store
+
+# environments
+.venv/
+venv/
+.env
+.env.*
+venv
+env/

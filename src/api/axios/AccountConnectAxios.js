@@ -1,12 +1,13 @@
 // Import Installed Libraries
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { ACCOUNT_CONNECTIONS_BASE_URL, ACCOUNT_CONNECTIONS_PORT } from "@env"
 
 const accountConnectAxios = axios.create({
     //use localhost for iPhone simulator
     //use 10.0.2.2 for Android emulator
     //use local IP address instead of localhost to prevent issues with locally-run server
-    baseURL: 'http://192.168.1.8:1201',
+    baseURL: `${ACCOUNT_CONNECTIONS_BASE_URL}:${ACCOUNT_CONNECTIONS_PORT}`,
 });
 
 accountConnectAxios.interceptors.request.use(
