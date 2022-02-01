@@ -10,10 +10,13 @@ import {
 import { Box, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import AppText from "../components/AppText";
-import { MAIN_BACKGROUND_COLOR, LIGHT_GREY_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
+import {
+	MAIN_BACKGROUND_COLOR,
+	LIGHT_GREY_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
+} from "../styles/Colors";
 
 const EdScreen = () => {
-
 	const handleSourceLink = async (sourceLink) => {
 		await WebBrowser.openBrowserAsync(sourceLink);
 	};
@@ -42,7 +45,8 @@ const EdScreen = () => {
 			fullBlogText:
 				"Disclaimer: The content in this blog is for informational purposes only. It is not, in any way, financial advice. Under no conditions or circumstances should it be construed or interpreted as financial advice. \n\nWhile there are many ways to build wealth from scratch, this article purposely focuses on illuminating guiding principles and practical first steps, rather than specific investment vehicles. There’s some ground work to lay, so let’s get right into it. \n\nBuilding wealth, through investments, starts with one guiding principle: do what benefits your future self. This means regularly making the choice to forego instant gratification for the benefit of “future you”. Many people may find this difficult, but this is crucial to internalize if you want to build wealth. Now, there is certainly a balance to be had here; you don’t want to spend your whole life forgoing in-the-moment gratification just to increase the value of your portfolio (for obvious reasons). That said, getting comfortable with making decisions for the betterment of your future self is a must when it comes to building wealth. \n\nNow that we’ve covered that, let’s talk about the first (and arguably most important) step that one must take on the journey to financial independence. Simple as it may be, the first step is to spend less money than you make. Without this, there is no investing. Investing requires capital (also known as, money). Now, while money, itself, will not increase in value over time, you need it to purchase property that will. For example, you need money to purchase: stocks (ownership in companies), real estate (buildings), Bitcoin, and any other form of property. Let this sink in for a moment. In order to build wealth, one must figure out how to consistently spend less than she makes. \n\nEveryone’s situation is different, so there is no “one size fits all” advice on how to achieve this, but let’s cover a few ideas that may, at the very least, be helpful to think about. First and foremost, let’s talk about rental expenses. For most renters, rent is the largest monthly expense, so if possible, it makes sense to reduce it. A renter could consider moving in with roommates (to reduce her share of rent), renting out unused rooms on Airbnb, or simply choosing a less expensive apartment. Next, let’s consider car payments. If you’re in a city with good public transportation alternatives, it may make sense for you to not even own a car. This would make a material impact on the amount of money you could save. If, however, you need a car, you could consider car rental services, like Turo, to make a few extra bucks when you’re not using it. Next, it would probably be worth your time to make a list of all of the monthly subscriptions you’re paying for and cancel any that you don’t use; these subscriptions can add up! Lastly, food is a large expense that could potentially be reduced. It is typically cheaper to buy food from grocery stores and cook at home. \n\nUp until this point, we’ve only discussed ways to reduce one’s expenses. However, there is another way to spend less than you make, and that’s to increase your income! This can be achieved in a variety of ways, and similar to the above, everyone’s situation is different. One can increase her income by switching jobs, starting a side hustle, or picking up “gig-work” (e.g., DoorDash, Uber, etc.). Switching jobs is probably the most direct way to accomplish an increase in income. \n\nNow that you’re a master at spending less than you make and making decisions that benefit your future self, you’re well on your way to financial independence! We’ll discuss next steps in next week’s Pelleum blog post.",
 			blog_id: "2",
-			linkToBlog: "https://www.pelleum.com/learn/starting-from-scratch-spend-less-than-you-make",
+			linkToBlog:
+				"https://www.pelleum.com/learn/starting-from-scratch-spend-less-than-you-make",
 		},
 		{
 			title: "Set Up an Emergency Fund",
@@ -97,13 +101,13 @@ const EdScreen = () => {
 				keyExtractor={(item) => item.blog_id}
 				renderItem={({ item }) => (
 					<NativeBaseProvider>
-						<TouchableOpacity onPress={() => handleSourceLink(item.linkToBlog)} >
+						<TouchableOpacity onPress={() => handleSourceLink(item.linkToBlog)}>
 							<Box style={styles.blogPostBox}>
 								<VStack>
 									<Image
 										style={{ width: dimensions.width, height: imageHeight }}
 										source={item.imageLocation}
-									//resizeMode={"contain"}
+										//resizeMode={"contain"}
 									/>
 									<AppText style={styles.titleText}>{item.title}</AppText>
 									<AppText style={styles.previewText}>{item.preview}</AppText>
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 15,
 		overflow: "hidden",
-		marginTop: 9
+		marginTop: 9,
 	},
 	titleText: {
 		fontWeight: "bold",
@@ -147,5 +151,5 @@ const styles = StyleSheet.create({
 		marginVertical: 5,
 		paddingHorizontal: 15,
 		paddingBottom: 5,
-	}
+	},
 });

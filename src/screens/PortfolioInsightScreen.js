@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-	StyleSheet,
-	View,
-	FlatList,
-	Image,
-} from "react-native";
+import { StyleSheet, View, FlatList, Image } from "react-native";
 import { NativeBaseProvider } from "native-base";
 import PortfolioManager from "../managers/PortfolioManager";
 import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import AssetBox from "../components/AssetBox";
-
-//*****************************************************************
-////*******BEFORE USING AssetBox, we need to take into account 
-////*******the disableRemoveRationale parameter that we pass to RationaleScreen
-//*****************************************************************
 
 const PortfolioInsightScreen = ({ navigation, route }) => {
 	// state
@@ -61,12 +51,11 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 						</View>
 					}
 					ListFooterComponent={
-						<View alignItems={'center'} paddingVertical={20}>
+						<View alignItems={"center"} paddingVertical={20}>
 							<AppText>We can add more stuff here.</AppText>
 						</View>
 					}
-				>
-				</FlatList>
+				></FlatList>
 			</NativeBaseProvider>
 		</View>
 	);
@@ -79,10 +68,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	listHeaderView: {
-		margin: 15
+		margin: 15,
 	},
 	usernameText: {
-		marginTop: 10
+		marginTop: 10,
 	},
 	listHeaderText: {
 		fontWeight: "bold",
@@ -95,6 +84,3 @@ const styles = StyleSheet.create({
 		borderRadius: 60 / 2,
 	},
 });
-
-
-

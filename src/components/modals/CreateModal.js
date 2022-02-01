@@ -1,6 +1,16 @@
 import React from "react";
-import { Alert, Modal, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../../styles/Colors";
+import {
+	Alert,
+	Modal,
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+} from "react-native";
+import {
+	MAIN_SECONDARY_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
+} from "../../styles/Colors";
 
 const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 	return (
@@ -20,26 +30,26 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 				}}
 			>
 				<TouchableOpacity onPress={() => {}} activeOpacity={1}>
-						<View style={styles.modalView}>
-							<TouchableOpacity
-								style={[styles.button, styles.buttonOpen]}
-								onPress={() => {
-									makeModalDisappear();
-									onNavigate("CreatePost");
-								}}
-							>
-								<Text style={styles.textStyle}>Post</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={[styles.button, styles.buttonOpen]}
-								onPress={() => {
-									makeModalDisappear();
-									onNavigate("CreateThesis");
-								}}
-							>
-								<Text style={styles.textStyle}>Thesis</Text>
-							</TouchableOpacity>
-						</View>
+					<View style={styles.modalView}>
+						<TouchableOpacity
+							style={[styles.button, styles.buttonOpen]}
+							onPress={() => {
+								makeModalDisappear();
+								onNavigate("CreatePost");
+							}}
+						>
+							<Text style={styles.textStyle}>Post</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[styles.button, styles.buttonOpen]}
+							onPress={() => {
+								makeModalDisappear();
+								onNavigate("CreateThesis");
+							}}
+						>
+							<Text style={styles.textStyle}>Thesis</Text>
+						</TouchableOpacity>
+					</View>
 				</TouchableOpacity>
 			</TouchableOpacity>
 		</Modal>

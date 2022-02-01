@@ -50,7 +50,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							<SentimentPill item={item} sentiment={Sentiment.Bear} />
 						)}
 					</HStack>
-						<AppText style={styles.thesisTitleText}>{item.title}</AppText>
+					<AppText style={styles.thesisTitleText}>{item.title}</AppText>
 					<HStack justifyContent="space-between">
 						{item.asset_symbol ? (
 							<TouchableOpacity

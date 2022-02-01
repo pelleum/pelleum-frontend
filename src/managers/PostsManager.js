@@ -2,32 +2,37 @@ import * as SecureStore from "expo-secure-store";
 import { store } from "../redux/Store";
 import pelleumClient from "../api/clients/PelleumClient";
 import { addLike, removeLike } from "../redux/actions/PostReactionsActions";
-import { POSTS_BASE_PATH, GET_MANY_POSTS_PATH, GET_MANY_POST_REACTIONS_PATH, POST_REACTIONS_BASE_PATH } from "@env"
+import {
+	POSTS_BASE_PATH,
+	GET_MANY_POSTS_PATH,
+	GET_MANY_POST_REACTIONS_PATH,
+	POST_REACTIONS_BASE_PATH,
+} from "@env";
 
 class PostsManager {
-
 	static createPost = async (data) => {
-
 		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: POSTS_BASE_PATH,
-			data: data
+			data: data,
 		});
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
 				return authorizedResponse.data;
 			} else {
-				console.log("An unexpected error occured. Your content was not shared.");
+				console.log(
+					"An unexpected error occured. Your content was not shared."
+				);
 			}
 		}
-	}
+	};
 
 	static getPosts = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
 			url: GET_MANY_POSTS_PATH,
-			queryParams: queryParams
+			queryParams: queryParams,
 		});
 
 		if (authorizedResponse) {
@@ -36,7 +41,7 @@ class PostsManager {
 			}
 			// need to display "an unexpected error occured"
 			console.log("There was an error obtaining posts.");
-		};
+		}
 	};
 
 	static getPost = async (post_id) => {

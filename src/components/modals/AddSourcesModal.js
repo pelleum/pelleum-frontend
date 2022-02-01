@@ -12,7 +12,11 @@ import {
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../../styles/Colors";
+import {
+	MAIN_DIFFERENTIATOR_COLOR,
+	LIGHT_GREY_COLOR,
+	MAIN_SECONDARY_COLOR,
+} from "../../styles/Colors";
 import AppText from "../AppText";
 
 const AddSourcesModal = ({
@@ -66,13 +70,11 @@ const AddSourcesModal = ({
 					style={styles.modalContainer}
 					onPress={() => {
 						// 1. Change non-valid sources to: ""
-						Object.entries(sourceInputValidity).forEach(
-							([key, value]) => {
-								if (value == false) {
-									changeSource("", key);
-								}
+						Object.entries(sourceInputValidity).forEach(([key, value]) => {
+							if (value == false) {
+								changeSource("", key);
 							}
-						);
+						});
 						// 2. Tally up valid sources
 						tallySources();
 						// 3. Make Modal Disapper
@@ -83,10 +85,7 @@ const AddSourcesModal = ({
 						behavior={"padding"}
 						style={styles.centeredView}
 					>
-						<TouchableOpacity
-							onPress={() => {}}
-							activeOpacity={1}
-						>
+						<TouchableOpacity onPress={() => {}} activeOpacity={1}>
 							<View style={styles.modalView}>
 								<AppText style={styles.ModalTitle}>
 									Add sources to substantiate your investment thesis!🎉
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-end",
 	},
 	descriptionText: {
-		marginBottom: 20
+		marginBottom: 20,
 	},
 	modalView: {
 		margin: 20,

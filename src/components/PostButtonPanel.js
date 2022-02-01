@@ -1,15 +1,10 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
-import {
-	EvilIcons,
-	Fontisto,
-	Ionicons,
-	FontAwesome,
-} from "@expo/vector-icons";
+import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import PostsManager from "../managers/PostsManager";
-import { TEXT_COLOR } from "../styles/Colors";
+import { LIGHT_GREY_COLOR } from "../styles/Colors";
 
 const PostButtonPanel = ({ item, nav }) => {
 	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
@@ -20,7 +15,7 @@ const PostButtonPanel = ({ item, nav }) => {
 		try {
 			const result = await Share.share({
 				message:
-					'React Native | A framework for building native apps using React',
+					"React Native | A framework for building native apps using React",
 			});
 			if (result.action === Share.sharedAction) {
 				if (result.activityType) {
@@ -45,7 +40,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						nav.navigate("Post", item);
 					}}
 				>
-					<Fontisto name="comment" size={16} color={TEXT_COLOR} />
+					<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -53,7 +48,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						console.log("Retweet button worked.");
 					}}
 				>
-					<EvilIcons name="retweet" size={30} color={TEXT_COLOR} />
+					<EvilIcons name="retweet" size={30} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -63,7 +58,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						name={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
-								locallyLikedPosts.includes(item.post_id)
+							locallyLikedPosts.includes(item.post_id)
 								? "md-heart"
 								: "md-heart-outline"
 						}
@@ -71,17 +66,14 @@ const PostButtonPanel = ({ item, nav }) => {
 						color={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
-								locallyLikedPosts.includes(item.post_id)
+							locallyLikedPosts.includes(item.post_id)
 								? "#F82057"
-								: TEXT_COLOR
+								: LIGHT_GREY_COLOR
 						}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.iconButton}
-					onPress={onShare}
-				>
-					<FontAwesome name="send-o" size={16} color={TEXT_COLOR} />
+				<TouchableOpacity style={styles.iconButton} onPress={onShare}>
+					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 			</HStack>
 		</NativeBaseProvider>

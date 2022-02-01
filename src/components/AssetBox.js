@@ -1,7 +1,10 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import { MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import {
+	MAIN_DIFFERENTIATOR_COLOR,
+	MAIN_SECONDARY_COLOR,
+} from "../styles/Colors";
 import AppText from "./AppText";
 import { useSelector } from "react-redux";
 
@@ -34,8 +37,8 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 							</AppText>
 						</TouchableOpacity>
 						<TouchableOpacity
-							style={ hasRationales ? styles.thesisButton : styles.disabledThesisButton}
-							disabled={ hasRationales ? false : true}
+							style={hasRationales ? styles.thesisButton : styles.disabledThesisButton}
+							disabled={hasRationales ? false : true}
 							onPress={() => {
 								nav.navigate("Rationales", {
 									asset: item.asset_symbol,
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		padding: 14,
 		overflow: "hidden",
-		marginVertical: 2
+		marginVertical: 2,
 	},
 	assetButton: {
 		overflow: "hidden",

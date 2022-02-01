@@ -10,7 +10,7 @@ import {
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
@@ -20,13 +20,12 @@ import {
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 	BAD_COLOR,
-}
-	from "../styles/Colors";
+} from "../styles/Colors";
 
 // Login Screen Functional Component
 const LoginScreen = ({ navigation }) => {
 	// State Management
-	const { errorMessage } = useSelector(state => state.authReducer);
+	const { errorMessage } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -87,7 +86,7 @@ const LoginScreen = ({ navigation }) => {
 		<DismissKeyboard>
 			<KeyboardAvoidingView
 				style={styles.container}
-			//behavior="padding"       //ensures text fields do not get blocked by keyboard
+				//behavior="padding"       //ensures text fields do not get blocked by keyboard
 			>
 				<AppText style={styles.titleText}>Welcome to Pelleum.</AppText>
 				<View style={styles.inputContainer}>
@@ -210,7 +209,7 @@ const styles = StyleSheet.create({
 	signUpButton: {
 		fontSize: 16,
 		color: MAIN_SECONDARY_COLOR,
-		marginLeft: 10
+		marginLeft: 10,
 	},
 	titleText: {
 		fontSize: 22,

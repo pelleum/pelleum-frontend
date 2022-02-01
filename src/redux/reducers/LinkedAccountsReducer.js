@@ -3,27 +3,26 @@ import { UPDATE_ACCOUNTS_STATUS } from "../actions/LinkedAccountsActions";
 
 // Declare initial state
 const initialState = {
-    activeAccounts: [],
-    institutionLogin: false,
-    updatedAt: null,
+	activeAccounts: [],
+	institutionLogin: false,
+	updatedAt: null,
 };
 
 function linkedAccountsReducer(state = initialState, action) {
-    switch (action.type) {
-        case UPDATE_ACCOUNTS_STATUS:
-            const nowIsoString = new Date().toISOString();
-            const nowStringWithNoZ = nowIsoString.slice(0, -1);
-            const now = new Date(nowStringWithNoZ).getTime();
+	switch (action.type) {
+		case UPDATE_ACCOUNTS_STATUS:
+			const nowIsoString = new Date().toISOString();
+			const nowStringWithNoZ = nowIsoString.slice(0, -1);
+			const now = new Date(nowStringWithNoZ).getTime();
 
-            return {
-                ...state,
-                activeAccounts: action.payload,
-                updatedAt: now,
-
-            };
-        default:
-            return state;
-    };
-};
+			return {
+				...state,
+				activeAccounts: action.payload,
+				updatedAt: now,
+			};
+		default:
+			return state;
+	}
+}
 
 export default linkedAccountsReducer;

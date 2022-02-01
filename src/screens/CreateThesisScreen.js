@@ -6,7 +6,7 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
-	Alert
+	Alert,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -19,8 +19,14 @@ import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
 import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
-import { TEXT_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR, BAD_COLOR, GOOD_COLOR } from "../styles/Colors";
-
+import {
+	TEXT_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
+	LIGHT_GREY_COLOR,
+	MAIN_SECONDARY_COLOR,
+	BAD_COLOR,
+	GOOD_COLOR,
+} from "../styles/Colors";
 
 const CreateThesisScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");
@@ -30,7 +36,7 @@ const CreateThesisScreen = ({ navigation }) => {
 	const [source1, setSource1] = useState("");
 	const [source2, setSource2] = useState("");
 	const [source3, setSource3] = useState("");
-	const [error, setError] = useState(null);    // Migrate to Redux
+	const [error, setError] = useState(null); // Migrate to Redux
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbolValidity: false,
 		contentValidity: false,
@@ -93,7 +99,12 @@ const CreateThesisScreen = ({ navigation }) => {
 				`Your thesis was added to your ${createdThesis.asset_symbol} Rationale Library 🎉`,
 				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
 				[
-					{ text: "Got it!", onPress: () => {/* do nothing */ } },
+					{
+						text: "Got it!",
+						onPress: () => {
+							/* do nothing */
+						},
+					},
 				]
 			);
 		} else if (response.status == 403) {
@@ -101,19 +112,25 @@ const CreateThesisScreen = ({ navigation }) => {
 				`${createdThesis.asset_symbol} ${createdThesis.sentiment} Rationale Limit Reached`,
 				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${createdThesis.sentiment} theses per asset. To add this thesis to your ${createdThesis.asset_symbol} ${createdThesis.sentiment} library, please remove one.`,
 				[
-					{ text: "Got it!", onPress: () => {/* do nothing */ } },
 					{
-						text: "Remove now", onPress: async () => {
+						text: "Got it!",
+						onPress: () => {
+							/* do nothing */
+						},
+					},
+					{
+						text: "Remove now",
+						onPress: async () => {
 							navigation.navigate("Rationales", {
 								thesisToAddAfterRemoval: createdThesis,
 								asset: createdThesis.asset_symbol,
 								userId: createdThesis.user_id,
-							})
-						}
-					}
+							});
+						},
+					},
 				]
 			);
-		};
+		}
 	};
 
 	const shareButtonPressed = async () => {
@@ -133,16 +150,16 @@ const CreateThesisScreen = ({ navigation }) => {
 			handleAddRationale(createdThesis);
 			const createdPost = await PostsManager.createPost({
 				content: `Just wrote a thesis on ${createdThesis.asset_symbol}! ✍️`,
-				thesis_id: createdThesis.thesis_id
+				thesis_id: createdThesis.thesis_id,
 			});
 			if (createdPost) {
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
-				createdPost.thesis = createdThesis
+				createdPost.thesis = createdThesis;
 				navigation.navigate("Feed", { newPost: createdPost });
-			};
-		};
+			}
+		}
 	};
 
 	const handleChangeText = ({
@@ -279,7 +296,7 @@ const CreateThesisScreen = ({ navigation }) => {
 										if (value === sentiment) {
 											//do nothing
 										} else {
-											setSentiment(value)
+											setSentiment(value);
 										}
 									}}
 									height={40}
@@ -297,7 +314,11 @@ const CreateThesisScreen = ({ navigation }) => {
 								style={styles.iconButton}
 								onPress={() => setModalVisible(true)}
 							>
-								<MaterialIcons name="add-link" size={40} color={MAIN_SECONDARY_COLOR} />
+								<MaterialIcons
+									name="add-link"
+									size={40}
+									color={MAIN_SECONDARY_COLOR}
+								/>
 							</TouchableOpacity>
 							<AppText style={{ marginLeft: 20 }}>
 								{validSources.length} linked sources

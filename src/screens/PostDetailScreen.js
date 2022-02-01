@@ -17,7 +17,6 @@ import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
 import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
 
-
 const PostDetailScreen = ({ navigation, route }) => {
 	// Local State Management
 	const [commentContent, setCommentContent] = useState("");
@@ -68,11 +67,15 @@ const PostDetailScreen = ({ navigation, route }) => {
 			is_post_comment_on: detailedPost.post_id,
 		});
 		if (detailedPost.is_post_comment_on) {
-			const retrievedPost = await PostsManager.getPost(detailedPost.is_post_comment_on);
+			const retrievedPost = await PostsManager.getPost(
+				detailedPost.is_post_comment_on
+			);
 			setPostCommentedOn(retrievedPost);
 			setThesisCommentedOn(null);
 		} else if (detailedPost.is_thesis_comment_on) {
-			const retrievedThesis = await ThesesManager.getThesis(detailedPost.is_thesis_comment_on);
+			const retrievedThesis = await ThesesManager.getThesis(
+				detailedPost.is_thesis_comment_on
+			);
 			setThesisCommentedOn(retrievedThesis);
 			setPostCommentedOn(null);
 		} else {
@@ -121,23 +124,16 @@ const PostDetailScreen = ({ navigation, route }) => {
 				refreshing={refreshing}
 				ListHeaderComponent={
 					<View style={styles.mainContainer}>
-						{postCommentedOn ?
-							(
-								<PostBox
-									postBoxType={PostBoxType.PostCommentedOn}
-									item={postCommentedOn}
-									nav={navigation}
-								/>
-							)
-							: null}
-						{thesisCommentedOn ?
-							(
-								<ThesisBox
-									item={thesisCommentedOn}
-									nav={navigation}
-								/>
-							)
-							: null}
+						{postCommentedOn ? (
+							<PostBox
+								postBoxType={PostBoxType.PostCommentedOn}
+								item={postCommentedOn}
+								nav={navigation}
+							/>
+						) : null}
+						{thesisCommentedOn ? (
+							<ThesisBox item={thesisCommentedOn} nav={navigation} />
+						) : null}
 						<View style={styles.postContainer}>
 							<PostBox
 								postBoxType={PostBoxType.PostDetail}
@@ -164,7 +160,9 @@ const PostDetailScreen = ({ navigation, route }) => {
 							>
 								<AppText style={styles.buttonTextStyle}>Reply</AppText>
 							</TouchableOpacity>
-							{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
+							{error ? (
+								<AppText style={styles.errorText}>{error}</AppText>
+							) : null}
 						</VStack>
 					</View>
 				}

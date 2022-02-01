@@ -10,16 +10,23 @@ import { TEXT_COLOR } from '../styles/Colors';
 const RationaleScreen = ({ navigation, route }) => {
     //State Management
     const [rationaleArray, setRationaleArray] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');   // Migrate to Redux
+    const [errorMessage, setErrorMessage] = useState(""); // Migrate to Redux
     const [refreshFlatlist, setRefreshFlatList] = useState(false);
 
     const asset = route.params.asset ? route.params.asset : null;
     const userId = route.params.userId ? route.params.userId : null;
-    const disableRemoveRationale = route.params.disableRemoveRationale ? route.params.disableRemoveRationale : false;
-    const thesisToAddAfterRemoval = route.params.thesisToAddAfterRemoval ? route.params.thesisToAddAfterRemoval : null;
+    const disableRemoveRationale = route.params.disableRemoveRationale
+        ? route.params.disableRemoveRationale
+        : false;
+    const thesisToAddAfterRemoval = route.params.thesisToAddAfterRemoval
+        ? route.params.thesisToAddAfterRemoval
+        : null;
 
     const getRationales = async () => {
-        const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userId, asset_symbol: asset });
+        const retrievedRationales = await RationalesManager.retrieveRationales({
+            user_id: userId,
+            asset_symbol: asset,
+        });
         if (retrievedRationales) {
             setRationaleArray(retrievedRationales.records.rationales);
         } else {
@@ -32,14 +39,16 @@ const RationaleScreen = ({ navigation, route }) => {
         if (responseStatus) {
             if (responseStatus == 204) {
                 const rationaleArrayCopy = rationaleArray;
-                const index = rationaleArrayCopy.findIndex(rationale => rationale.thesis_id === item.thesis_id);
+                const index = rationaleArrayCopy.findIndex(
+                    (rationale) => rationale.thesis_id === item.thesis_id
+                );
                 if (index > -1) {
                     rationaleArrayCopy.splice(index, 1);
                     setRationaleArray(rationaleArrayCopy);
                     setRefreshFlatList(!refreshFlatlist);
-                };
-            };
-        };
+                }
+            }
+        }
     };
 
     const alertBeforeDelete = async (item) => {
@@ -103,37 +112,30 @@ const RationaleScreen = ({ navigation, route }) => {
     return (
         <View style={styles.mainContainer}>
             <AppText style={styles.title}>{asset}</AppText>
-            {errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
+            {errorMessage ? (
+                <AppText style={styles.error}>{errorMessage}</AppText>
+            ) : null}
             <FlatList
                 width={"100%"}
                 data={rationaleArray}
                 //maybe we should use rationale_id as the key extractor for the RationaleScreen only
                 keyExtractor={(item) => item.rationale_id}
                 renderItem={({ item }) => {
-                    return (
-                        disableRemoveRationale ? (
-                            <ThesisBox
-                                item={item.thesis}
-                                nav={navigation}
-                            />
-                        ) : (
-                            <Swipeable
-                                renderRightActions={() => swipeRight(item)}
-                                rightThreshold={-200}
-                            >
-                                <Animated.View>
-                                    <ThesisBox
-                                        item={item.thesis}
-                                        nav={navigation}
-                                    />
-                                </Animated.View>
-                            </Swipeable>
-                        )
+                    return disableRemoveRationale ? (
+                        <ThesisBox item={item.thesis} nav={navigation} />
+                    ) : (
+                        <Swipeable
+                            renderRightActions={() => swipeRight(item)}
+                            rightThreshold={-200}
+                        >
+                            <Animated.View>
+                                <ThesisBox item={item.thesis} nav={navigation} />
+                            </Animated.View>
+                        </Swipeable>
                     );
                 }}
                 extraData={refreshFlatlist}
-            >
-            </FlatList>
+            ></FlatList>
         </View>
     );
 };
@@ -148,10 +150,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         alignSelf: "center",
-
     },
     error: {
-        color: 'red',
+        color: "red",
         marginTop: 15,
         marginBottom: 25,
         fontSize: 14,

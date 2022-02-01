@@ -2,7 +2,6 @@ export const ADD_REACTION = "ADD_REACTION";
 export const REMOVE_REACTION = "REMOVE_REACTION";
 export const RESET_REACTIONS = "RESET_REACTIONS";
 
-
 export class ReactionType {
 	static Like = new ReactionType("like");
 	static Dislike = new ReactionType("dislike");
@@ -11,7 +10,6 @@ export class ReactionType {
 		this.type = type;
 	}
 }
-
 
 export const addReaction = (thesisId, reactionType) => (dispatch) => {
 	dispatch({

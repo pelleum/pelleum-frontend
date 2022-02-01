@@ -33,17 +33,17 @@ const PostBox = ({ postBoxType, item, nav }) => {
 	const now = new Date(nowStringWithNoZ).getTime();
 	const createdAt = new Date(item.created_at).getTime();
 	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
-	
+
 	// Calculate elapsed time figure to present
 	let elapsedTime;
 	if (elapsedTimeMinutes > 60 && elapsedTimeMinutes <= 60 * 24) {
-		const elapsedHours = Math.round((elapsedTimeMinutes) / 60);
+		const elapsedHours = Math.round(elapsedTimeMinutes / 60);
 		elapsedTime = `${elapsedHours}h`;
 	} else if (elapsedTimeMinutes > 60 * 24) {
-		const elapsedDays = Math.round((elapsedTimeMinutes) / (60 * 24));
-		elapsedTime = `${elapsedDays}d`
+		const elapsedDays = Math.round(elapsedTimeMinutes / (60 * 24));
+		elapsedTime = `${elapsedDays}d`;
 	} else {
-		elapsedTime = `${elapsedTimeMinutes} min`
+		elapsedTime = `${elapsedTimeMinutes} min`;
 	}
 
 	if (
