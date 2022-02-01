@@ -5,7 +5,7 @@ import {
 	TouchableOpacity,
 	FlatList,
 	RefreshControl,
-	Keyboard
+	Keyboard,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
@@ -26,7 +26,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
 	const [disableStatus, setDisableStatus] = useState(true);
-	const [error, setError] = useState("");     //Migrate to redux
+	const [error, setError] = useState(""); //Migrate to redux
 	const [refreshing, setRefreshing] = useState(false);
 	const [comments, setComments] = useState([]);
 
@@ -74,7 +74,6 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		}
 	};
 
-
 	const onRefresh = async () => {
 		setRefreshing(true);
 		const commentsResponseData = await PostsManager.getComments({
@@ -117,7 +116,9 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				ListHeaderComponent={
 					<View style={styles.mainContainer}>
 						<View style={styles.thesisContainer}>
-							<AppText style={styles.thesisTitle}>{detailedThesis.title}</AppText>
+							<AppText style={styles.thesisTitle}>
+								{detailedThesis.title}
+							</AppText>
 							<HStack justifyContent="space-between" marginBottom={5}>
 								<AppText style={commonTextStyles.usernameText}>
 									Investor: @{detailedThesis.username}
@@ -138,9 +139,15 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									</AppText>
 								</TouchableOpacity>
 								{detailedThesis.sentiment === "Bull" ? (
-									<SentimentPill item={detailedThesis} sentiment={Sentiment.Bull} />
+									<SentimentPill
+										item={detailedThesis}
+										sentiment={Sentiment.Bull}
+									/>
 								) : (
-									<SentimentPill item={detailedThesis} sentiment={Sentiment.Bear} />
+									<SentimentPill
+										item={detailedThesis}
+										sentiment={Sentiment.Bear}
+									/>
 								)}
 							</HStack>
 							<TouchableOpacity
@@ -158,9 +165,15 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 							</TouchableOpacity>
 							<ThesisButtonPanel item={detailedThesis} nav={navigation} />
 							<AppText style={styles.subTitle}>Thesis</AppText>
-							<AppText style={styles.contentText}>{detailedThesis.content}</AppText>
+							<AppText style={styles.contentText}>
+								{detailedThesis.content}
+							</AppText>
 							<AppText style={styles.subTitle}>Sources</AppText>
-							{detailedThesis.sources.length > 0 ? sourcesToDisplay : <AppText>This thesis has no linked sources😕</AppText>}
+							{detailedThesis.sources.length > 0 ? (
+								sourcesToDisplay
+							) : (
+								<AppText>This thesis has no linked sources😕</AppText>
+							)}
 						</View>
 						<VStack>
 							<CommentInput
@@ -173,14 +186,18 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 							/>
 							<TouchableOpacity
 								style={
-									disableStatus ? styles.replyButtonDisabled : styles.replyButtonEnabled
+									disableStatus
+										? styles.replyButtonDisabled
+										: styles.replyButtonEnabled
 								}
 								onPress={() => replyButtonPressed()}
 								disabled={disableStatus}
 							>
 								<AppText style={styles.buttonTextStyle}>Reply</AppText>
 							</TouchableOpacity>
-							{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
+							{error ? (
+								<AppText style={styles.errorText}>{error}</AppText>
+							) : null}
 						</VStack>
 					</View>
 				}
@@ -245,7 +262,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		marginTop: 20,
-		marginBottom: 10
+		marginBottom: 10,
 	},
 	thesisTitle: {
 		fontSize: 25,

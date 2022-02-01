@@ -1,11 +1,14 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
-import { MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import {
+	MAIN_DIFFERENTIATOR_COLOR,
+	MAIN_SECONDARY_COLOR,
+} from "../styles/Colors";
 import AppText from "./AppText";
 import { useSelector } from "react-redux";
 
-const AssetBox = ({ item, nav, disableRemoveRationale=false }) => {
+const AssetBox = ({ item, nav, disableRemoveRationale = false }) => {
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
 	return (
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		padding: 14,
 		overflow: "hidden",
-        marginVertical: 2
+		marginVertical: 2,
 	},
 	assetButton: {
 		overflow: "hidden",

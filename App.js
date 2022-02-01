@@ -1,12 +1,12 @@
 // Import Installed Libraries
 import * as React from "react";
-import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 //import { createDrawerNavigator } from "@react-navigation/drawer";
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 
 // Local Files
 import SignupScreen from "./src/screens/SignupScreen";
@@ -32,16 +32,24 @@ import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 
 // Redux
-import { Provider } from 'react-redux';
-import { store } from './src/redux/Store';
-import { useSelector, useDispatch } from 'react-redux';
+import { Provider } from "react-redux";
+import { store } from "./src/redux/Store";
+import { useSelector, useDispatch } from "react-redux";
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
 const AuthFlow = () => (
 	<AuthStack.Navigator>
-		<AuthStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-		<AuthStack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }} />
+		<AuthStack.Screen
+			name="Login"
+			component={LoginScreen}
+			options={{ headerShown: false }}
+		/>
+		<AuthStack.Screen
+			name="SignUp"
+			component={SignupScreen}
+			options={{ headerShown: false }}
+		/>
 	</AuthStack.Navigator>
 );
 
@@ -52,7 +60,11 @@ const FeedFlow = () => (
 		initialRouteName="Feed"
 		screenOptions={{ headerBackTitleVisible: false }}
 	>
-		<FeedStack.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }} />
+		<FeedStack.Screen
+			name="Feed"
+			component={FeedScreen}
+			options={{ headerShown: false }}
+		/>
 	</FeedStack.Navigator>
 );
 
@@ -63,7 +75,11 @@ const SearchFlow = () => (
 		initialRouteName="Search"
 		screenOptions={{ headerBackTitleVisible: false }}
 	>
-		<SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
+		<SearchStack.Screen
+			name="Search"
+			component={SearchScreen}
+			options={{ headerShown: false }}
+		/>
 	</SearchStack.Navigator>
 );
 
@@ -123,19 +139,19 @@ const AppFlow = () => (
 	<AppTabs.Navigator
 		screenOptions={{
 			tabBarShowLabel: false,
-			tabBarInactiveTintColor: '#858585',
-			tabBarActiveTintColor: 'white',
+			tabBarInactiveTintColor: "#858585",
+			tabBarActiveTintColor: "white",
 		}}
 	>
 		<AppTabs.Screen
 			name="FeedFlow"
 			component={FeedFlow}
-			headerMode='none'
+			headerMode="none"
 			options={{
 				tabBarIcon: ({ color }) => (
 					<Foundation name="home" size={26} color={color} />
 				),
-				headerShown: false
+				headerShown: false,
 			}}
 		/>
 		<AppTabs.Screen
@@ -145,7 +161,7 @@ const AppFlow = () => (
 				tabBarIcon: ({ color }) => (
 					<FontAwesome name="search" size={25} color={color} />
 				),
-				headerShown: false
+				headerShown: false,
 			}}
 		/>
 		<AppTabs.Screen
@@ -155,7 +171,7 @@ const AppFlow = () => (
 				tabBarIcon: ({ color }) => (
 					<Ionicons name="book" size={24.5} color={color} />
 				),
-				headerShown: false
+				headerShown: false,
 			}}
 		/>
 		<AppTabs.Screen
@@ -173,17 +189,21 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
-	const { isLoading, hasUserToken } = useSelector(state => state.authReducer);
+	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 
 	const getRationaleLibrary = async () => {
-		const userObjectString = await SecureStore.getItemAsync('userObject');
+		const userObjectString = await SecureStore.getItemAsync("userObject");
 		const userObject = JSON.parse(userObjectString);
-		const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userObject.user_id });
+		const retrievedRationales = await RationalesManager.retrieveRationales({
+			user_id: userObject.user_id,
+		});
 		if (retrievedRationales) {
-			const rationaleInfo = await RationalesManager.extractRationaleInfo(retrievedRationales.records.rationales);
+			const rationaleInfo = await RationalesManager.extractRationaleInfo(
+				retrievedRationales.records.rationales
+			);
 			dispatch(refreshLibrary(rationaleInfo));
-		};
+		}
 	};
 
 	const validateToken = async () => {
@@ -191,7 +211,7 @@ const RootStackFlow = () => {
 		if (user) {
 			await getRationaleLibrary();
 			await LinkAccountsManager.getLinkedAccountsStatus();
-		};
+		}
 	};
 
 	React.useEffect(() => {
@@ -262,7 +282,7 @@ const RootStackFlow = () => {
 export default () => {
 	return (
 		<Provider store={store}>
-			<NavigationContainer theme={DarkTheme} >
+			<NavigationContainer theme={DarkTheme}>
 				<RootStackFlow />
 			</NavigationContainer>
 		</Provider>

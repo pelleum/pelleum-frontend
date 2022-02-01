@@ -11,7 +11,14 @@ import SwitchSelector from "react-native-switch-selector";
 import PostsManager from "../managers/PostsManager";
 import DismissKeyboard from "../components/DismissKeyboard";
 import AppText from "../components/AppText";
-import { LIGHT_GREY_COLOR, MAIN_DIFFERENTIATOR_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR, BAD_COLOR, GOOD_COLOR } from "../styles/Colors";
+import {
+	LIGHT_GREY_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
+	MAIN_SECONDARY_COLOR,
+	TEXT_COLOR,
+	BAD_COLOR,
+	GOOD_COLOR,
+} from "../styles/Colors";
 
 const CreatePostScreen = ({ navigation }) => {
 	const [content, setContent] = useState("");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	SafeAreaView,
@@ -10,7 +10,7 @@ import {
 import CreateModal from "../components/modals/CreateModal";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 import AppText from "../components/AppText";
 import { BAD_COLOR } from "../styles/Colors";
@@ -43,8 +43,10 @@ const FeedScreen = ({ navigation, route }) => {
 			setTotalPages(postResponseData.meta_data.total_pages);
 			dispatch(resetLikes());
 		} else {
-			setErrorMessage("There was an error retrieving posts. Please try again later.");
-		};
+			setErrorMessage(
+				"There was an error retrieving posts. Please try again later."
+			);
+		}
 		setRefreshing(false);
 	};
 
@@ -59,11 +61,23 @@ const FeedScreen = ({ navigation, route }) => {
 			queryParams = { records_per_page: RECORDS_PER_PAGE, page: newPageNumber };
 			responseData = await PostsManager.getPosts(queryParams);
 			if (responseData) {
-				setPosts(currentPosts => [...currentPosts, ...responseData.records.posts]);
+				// Append new posts to currentPosts
+				const currentPosts = posts;
+				currentPosts.push(...responseData.records.posts);
+				// Filter out duplicate values
+				const uniquePostsSet = new Set();
+				uniquePosts = currentPosts.filter(function (post) {
+					const isPresentInSet = uniquePostsSet.has(post.post_id);
+					uniquePostsSet.add(post.post_id);
+					return !isPresentInSet;
+				});
+				setPosts(uniquePosts);
 			} else {
-				setErrorMessage("There was an error retrieving posts. Please try again later.");
-			};
-		};
+				setErrorMessage(
+					"There was an error retrieving posts. Please try again later."
+				);
+			}
+		}
 		setRefreshing(false);
 	};
 
@@ -79,8 +93,8 @@ const FeedScreen = ({ navigation, route }) => {
 			postsCopy.unshift(newCreatedPost);
 			setPosts(postsCopy);
 			route.params.newPost = null;
-		};
-	};
+		}
+	}
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
@@ -100,9 +114,11 @@ const FeedScreen = ({ navigation, route }) => {
 				refreshing={refreshing}
 				onRefresh={onRefresh}
 				onEndReached={getMorePosts}
-				onEndReachedThreshold={2.5}
+				onEndReachedThreshold={1}
 			></FlatList>
-			{errorMessage ? <AppText style={styles.error}>{errorMessage}</AppText> : null}
+			{errorMessage ? (
+				<AppText style={styles.error}>{errorMessage}</AppText>
+			) : null}
 			<CreateModal
 				modalVisible={modalVisible}
 				makeModalDisappear={() => setModalVisible(false)}
@@ -198,11 +214,11 @@ const styles = StyleSheet.create({
 	},
 	//Floating Action Button
 	fab: {
-		position: 'absolute',
+		position: "absolute",
 		width: 56,
 		height: 56,
-		alignItems: 'center',
-		justifyContent: 'center',
+		alignItems: "center",
+		justifyContent: "center",
 		right: 20,
 		bottom: 20,
 		backgroundColor: "#49E131",
@@ -211,8 +227,8 @@ const styles = StyleSheet.create({
 	},
 	fabIcon: {
 		fontSize: 40,
-		color: 'white',
-		fontWeight: 'bold',
+		color: "white",
+		fontWeight: "bold",
 		paddingHorizontal: 5,
 		paddingBottom: 3,
 	},

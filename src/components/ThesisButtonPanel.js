@@ -28,7 +28,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 		state.locallyDislikedTheses.includes(item.thesis_id);
 
 	const getUserObject = async () => {
-		const userObjectString = await SecureStore.getItemAsync('userObject');
+		const userObjectString = await SecureStore.getItemAsync("userObject");
 		return JSON.parse(userObjectString);
 	};
 
@@ -39,21 +39,27 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
 				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one.`,
 				[
-					{ text: "Remove later", onPress: () => {/* do nothing */ } },
 					{
-						text: "Remove now", onPress: async () => {
+						text: "Remove later",
+						onPress: () => {
+							/* do nothing */
+						},
+					},
+					{
+						text: "Remove now",
+						onPress: async () => {
 							const userObject = await getUserObject();
 							const userId = userObject.user_id;
 							nav.navigate("Rationales", {
 								thesisToAddAfterRemoval: item,
 								asset: item.asset_symbol,
 								userId: userId,
-							})
-						}
-					}
+							});
+						},
+					},
 				]
 			);
-		};
+		}
 	};
 
 	return (
@@ -61,7 +67,9 @@ const ThesisButtonPanel = ({ item, nav }) => {
 			<HStack style={styles.buttonBox}>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Like)}
+					onPress={() =>
+						ThesesManager.sendThesisReaction(item, ReactionType.Like)
+					}
 				>
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
@@ -71,7 +79,9 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Dislike)}
+					onPress={() =>
+						ThesesManager.sendThesisReaction(item, ReactionType.Dislike)
+					}
 				>
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
@@ -80,9 +90,21 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? styles.disabledIconButton : styles.iconButton}
+					style={
+						rationaleLibrary.some(
+							(rationale) => rationale.thesisID === item.thesis_id
+						)
+							? styles.disabledIconButton
+							: styles.iconButton
+					}
 					onPress={() => handleAddRationale(item)}
-					disabled={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? true : false}
+					disabled={
+						rationaleLibrary.some(
+							(rationale) => rationale.thesisID === item.thesis_id
+						)
+							? true
+							: false
+					}
 				>
 					<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
@@ -117,6 +139,6 @@ const styles = StyleSheet.create({
 	disabledIconButton: {
 		paddingHorizontal: 13,
 		paddingTop: 8,
-		opacity: 0.2
+		opacity: 0.2,
 	},
 });

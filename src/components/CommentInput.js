@@ -2,7 +2,6 @@ import React from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 import { LIGHT_GREY_COLOR } from "../styles/Colors";
 
-
 const CommentInput = ({
 	commentContent,
 	commentContentValidity,
@@ -41,7 +40,7 @@ const CommentInput = ({
 
 const styles = StyleSheet.create({
 	textArea: {
-		marginVertical: 30
+		marginVertical: 30,
 	},
 });
 

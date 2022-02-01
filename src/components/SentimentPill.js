@@ -3,7 +3,6 @@ import React from "react";
 import AppText from "./AppText";
 import { LinearGradient } from "expo-linear-gradient";
 
-
 export class Sentiment {
 	static Bull = new Sentiment("bull");
 	static Bear = new Sentiment("bear");
@@ -13,9 +12,7 @@ export class Sentiment {
 	}
 }
 
-
 const SentimentPill = ({ item, sentiment }) => {
-
 	let colors;
 	let style;
 
@@ -34,9 +31,7 @@ const SentimentPill = ({ item, sentiment }) => {
 			start={{ y: 0.0, x: 0.0 }}
 			end={{ y: 1.0, x: 1.0 }}
 		>
-			<AppText style={style}>
-				{item.sentiment.toUpperCase()}
-			</AppText>
+			<AppText style={style}>{item.sentiment.toUpperCase()}</AppText>
 		</LinearGradient>
 	);
 };
@@ -47,7 +42,7 @@ const styles = StyleSheet.create({
 	linearGradient: {
 		borderRadius: 15,
 		width: 70,
-		padding: 5
+		padding: 5,
 	},
 	bullSentimentText: {
 		textAlign: "center",

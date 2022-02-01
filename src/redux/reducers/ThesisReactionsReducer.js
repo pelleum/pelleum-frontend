@@ -22,8 +22,10 @@ function thesisReactionsReducer(state = initialState, action) {
 	switch (action.type) {
 		case ADD_REACTION:
 			// Add to locallyLikedTheses or locallyDislikedTheses, remove from every other array
-			var reactionTypeIsLike = (action.payload.reactionType == ReactionType.Like);
-			arrayToAddTo = (reactionTypeIsLike) ? "locallyLikedTheses" : "locallyDislikedTheses";
+			var reactionTypeIsLike = action.payload.reactionType == ReactionType.Like;
+			arrayToAddTo = reactionTypeIsLike
+				? "locallyLikedTheses"
+				: "locallyDislikedTheses";
 
 			Object.entries(state).forEach(([key, value]) => {
 				if (key != arrayToAddTo) {
@@ -38,17 +40,22 @@ function thesisReactionsReducer(state = initialState, action) {
 
 			return {
 				...state,
-				locallyLikedTheses: (reactionTypeIsLike) ? [...state.locallyLikedTheses, action.payload.thesisId] : stateCopy.locallyLikedTheses,
+				locallyLikedTheses: reactionTypeIsLike
+					? [...state.locallyLikedTheses, action.payload.thesisId]
+					: stateCopy.locallyLikedTheses,
 				locallyUnlikedTheses: stateCopy.locallyUnlikedTheses,
-				locallyDislikedTheses: (reactionTypeIsLike) ? stateCopy.locallyDislikedTheses : [...state.locallyDislikedTheses, action.payload.thesisId],
+				locallyDislikedTheses: reactionTypeIsLike
+					? stateCopy.locallyDislikedTheses
+					: [...state.locallyDislikedTheses, action.payload.thesisId],
 				locallyRemovedDislikedTheses: stateCopy.locallyRemovedDislikedTheses,
 			};
 
 		case REMOVE_REACTION:
 			// Add to locallyUnlikedTheses or locallyRemovedDislikedTheses, remove from every other array
-			var reactionTypeIsLike = (action.payload.reactionType == ReactionType.Like);
-			arrayToAddTo = (reactionTypeIsLike) ? "locallyUnlikedTheses" : "locallyRemovedDislikedTheses";
-			
+			var reactionTypeIsLike = action.payload.reactionType == ReactionType.Like;
+			arrayToAddTo = reactionTypeIsLike
+				? "locallyUnlikedTheses"
+				: "locallyRemovedDislikedTheses";
 
 			Object.entries(state).forEach(([key, value]) => {
 				if (key != arrayToAddTo) {
@@ -64,9 +71,13 @@ function thesisReactionsReducer(state = initialState, action) {
 			return {
 				...state,
 				locallyLikedTheses: stateCopy.locallyLikedTheses,
-				locallyUnlikedTheses: (reactionTypeIsLike) ? [...state.locallyUnlikedTheses, action.payload.thesisId] : stateCopy.locallyUnlikedTheses,
+				locallyUnlikedTheses: reactionTypeIsLike
+					? [...state.locallyUnlikedTheses, action.payload.thesisId]
+					: stateCopy.locallyUnlikedTheses,
 				locallyDislikedTheses: stateCopy.locallyDislikedTheses,
-				locallyRemovedDislikedTheses: (reactionTypeIsLike) ? stateCopy.locallyRemovedDislikedTheses : [...state.locallyRemovedDislikedTheses, action.payload.thesisId],
+				locallyRemovedDislikedTheses: reactionTypeIsLike
+					? stateCopy.locallyRemovedDislikedTheses
+					: [...state.locallyRemovedDislikedTheses, action.payload.thesisId],
 			};
 
 		case RESET_REACTIONS:

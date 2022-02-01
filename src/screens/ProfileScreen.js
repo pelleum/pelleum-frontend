@@ -8,28 +8,43 @@ import {
 	Image,
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
-import { MaterialCommunityIcons, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+import {
+	MaterialCommunityIcons,
+	Ionicons,
+	SimpleLineIcons,
+} from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 import AssetBox from "../components/AssetBox";
 import AppText from "../components/AppText";
-import { BAD_COLOR, LINK_COLOR, MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR, MAIN_BACKGROUND_COLOR } from "../styles/Colors";
+import {
+	BAD_COLOR,
+	LINK_COLOR,
+	MAIN_DIFFERENTIATOR_COLOR,
+	LIGHT_GREY_COLOR,
+	MAIN_SECONDARY_COLOR,
+	MAIN_BACKGROUND_COLOR,
+} from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
 	const [assetList, setAssetList] = useState([]);
-	const [username, setUsername] = useState('');
-	const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
+	const [username, setUsername] = useState("");
+	const { activeAccounts } = useSelector(
+		(state) => state.linkedAccountsReducer
+	);
 
 	const getUserObject = async () => {
-		const userObjectString = await SecureStore.getItemAsync('userObject');
+		const userObjectString = await SecureStore.getItemAsync("userObject");
 		return JSON.parse(userObjectString);
 	};
 
 	const onRefresh = async () => {
 		const userObject = await getUserObject();
 		setUsername(userObject.username);
-		const retrievedAssets = await PortfolioManager.retrieveAssets(userObject.user_id);
+		const retrievedAssets = await PortfolioManager.retrieveAssets(
+			userObject.user_id
+		);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
 		}
@@ -53,12 +68,7 @@ const ProfileScreen = ({ navigation, route }) => {
 					showsVerticalScrollIndicator={false}
 					data={assetList}
 					keyExtractor={(item) => item.asset_symbol}
-					renderItem={({ item }) => (
-						<AssetBox
-							item={item}
-							nav={navigation}
-						/>
-					)}
+					renderItem={({ item }) => <AssetBox item={item} nav={navigation} />}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
 							<HStack justifyContent={"space-between"}>
@@ -70,15 +80,25 @@ const ProfileScreen = ({ navigation, route }) => {
 									style={styles.settingsButton}
 									onPress={() => navigation.navigate("Settings")}
 								>
-									<SimpleLineIcons name="settings" size={28} color={MAIN_SECONDARY_COLOR} />
+									<SimpleLineIcons
+										name="settings"
+										size={28}
+										color={MAIN_SECONDARY_COLOR}
+									/>
 								</TouchableOpacity>
 							</HStack>
 							<AppText style={styles.usernameText}>@{username}</AppText>
-							{activeAccounts.some(account => account.is_active) == false ? (
+							{activeAccounts.some((account) => account.is_active) == false ? (
 								<>
-									<AppText style={styles.inactiveAccountWarning}>There was an error validating your linked account(s).</AppText>
-									<TouchableOpacity onPress={() => navigation.navigate("LinkedStatus")}>
-										<AppText style={styles.inactiveLinkButtonText}>Check the status of your linked account(s).</AppText>
+									<AppText style={styles.inactiveAccountWarning}>
+										There was an error validating your linked account(s).
+									</AppText>
+									<TouchableOpacity
+										onPress={() => navigation.navigate("LinkedStatus")}
+									>
+										<AppText style={styles.inactiveLinkButtonText}>
+											Check the status of your linked account(s).
+										</AppText>
 									</TouchableOpacity>
 								</>
 							) : null}
@@ -88,13 +108,17 @@ const ProfileScreen = ({ navigation, route }) => {
 									style={styles.linkAccountButton}
 									onPress={() => navigation.navigate("Link")}
 								>
-									<MaterialCommunityIcons name="bank-plus" size={26} color={MAIN_SECONDARY_COLOR} />
+									<MaterialCommunityIcons
+										name="bank-plus"
+										size={26}
+										color={MAIN_SECONDARY_COLOR}
+									/>
 								</TouchableOpacity>
 							</HStack>
 						</View>
 					}
 					ListFooterComponent={
-						<View alignItems={'center'} paddingVertical={20}>
+						<View alignItems={"center"} paddingVertical={20}>
 							<TouchableOpacity
 								style={styles.buttonGroup}
 								onPress={async () => {
@@ -104,8 +128,14 @@ const ProfileScreen = ({ navigation, route }) => {
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
-									<Ionicons name="md-file-tray-full-outline" size={25} color={MAIN_SECONDARY_COLOR} />
-									<AppText style={styles.buttonGroupText}>Rationale Library</AppText>
+									<Ionicons
+										name="md-file-tray-full-outline"
+										size={25}
+										color={MAIN_SECONDARY_COLOR}
+									/>
+									<AppText style={styles.buttonGroupText}>
+										Rationale Library
+									</AppText>
 								</HStack>
 							</TouchableOpacity>
 							<TouchableOpacity
@@ -117,14 +147,19 @@ const ProfileScreen = ({ navigation, route }) => {
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
-									<MaterialCommunityIcons name="book-open-outline" size={25} color={MAIN_SECONDARY_COLOR} />
-									<AppText style={styles.buttonGroupText}>Authored Theses</AppText>
+									<MaterialCommunityIcons
+										name="book-open-outline"
+										size={25}
+										color={MAIN_SECONDARY_COLOR}
+									/>
+									<AppText style={styles.buttonGroupText}>
+										Authored Theses
+									</AppText>
 								</HStack>
 							</TouchableOpacity>
 						</View>
 					}
-				>
-				</FlatList>
+				></FlatList>
 			</NativeBaseProvider>
 		</SafeAreaView>
 	);
@@ -137,7 +172,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	listHeaderView: {
-		margin: 13
+		margin: 13,
 	},
 	listHeaderText: {
 		marginLeft: 3,
@@ -159,17 +194,17 @@ const styles = StyleSheet.create({
 		borderWidth: 0.5,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 30,
-		width: '80%',
+		width: "80%",
 		marginTop: 6,
 	},
 	buttonGroupText: {
 		fontSize: 16,
-		fontWeight: 'bold',
+		fontWeight: "bold",
 		marginLeft: 25,
 	},
 	buttonGroupTextContainer: {
-		alignItems: 'center',
-		justifyContent: 'flex-start',
+		alignItems: "center",
+		justifyContent: "flex-start",
 		paddingLeft: 15,
 		paddingVertical: 10,
 	},

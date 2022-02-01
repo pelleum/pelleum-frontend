@@ -1,4 +1,8 @@
-import { ADD_LIKE, REMOVE_LIKE, RESET_LIKES } from "../actions/PostReactionsActions";
+import {
+	ADD_LIKE,
+	REMOVE_LIKE,
+	RESET_LIKES,
+} from "../actions/PostReactionsActions";
 
 // Declare initial state
 const initialState = {
@@ -15,8 +19,8 @@ function postReactionsReducer(state = initialState, action) {
 			if (unLikeIndex > -1) {
 				newlyAddedUnlikedPostsCopy.splice(unLikeIndex, 1);
 			}
-			
-            // Add post_id to locallyLikedPosts
+
+			// Add post_id to locallyLikedPosts
 			const newlyAddedLikedPostsUpdated = [
 				...state.locallyLikedPosts,
 				action.payload,
@@ -33,8 +37,8 @@ function postReactionsReducer(state = initialState, action) {
 			if (likeIndex > -1) {
 				newlyAddedLikedPostsCopy.splice(likeIndex, 1);
 			}
-			
-            // Add post_id to locallyUnlikedPosts
+
+			// Add post_id to locallyUnlikedPosts
 			const newlyAddedUnlikedPostsUpdated = [
 				...state.locallyUnlikedPosts,
 				action.payload,
