@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { NativeBaseProvider } from "native-base";
 import PortfolioManager from "../managers/PortfolioManager";
-import { useSelector } from "react-redux";
+import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import AssetBox from "../components/AssetBox";
 
@@ -19,15 +19,18 @@ import AssetBox from "../components/AssetBox";
 const PortfolioInsightScreen = ({ navigation, route }) => {
 	// state
 	const [assetList, setAssetList] = useState([]);
-	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
-
-    const { username, userId } = route.params;
+	const [rationales, setRationales] = useState([]);
+	const { username, userId } = route.params;
 
 	const onRefresh = async () => {
 		const retrievedAssets = await PortfolioManager.retrieveAssets(userId);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
-		}
+		};
+		const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userId });
+		if (retrievedRationales) {
+			setRationales(retrievedRationales.records.rationales);
+		};
 	};
 
 	useEffect(() => {
@@ -42,18 +45,18 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 					keyExtractor={(item) => item.asset_symbol}
 					renderItem={({ item }) => (
 						<AssetBox
-						item={item}
-						nav={navigation}
-						disableRemoveRationale={true}
+							item={item}
+							nav={navigation}
+							portfolioInsightRationales={rationales}
 						/>
 					)}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
-								<Image
-									style={styles.image}
-									source={require("../../assets/forest.jpg")}
-								/>
-                            <AppText style={styles.usernameText}>@{username}</AppText>
+							<Image
+								style={styles.image}
+								source={require("../../assets/forest.jpg")}
+							/>
+							<AppText style={styles.usernameText}>@{username}</AppText>
 							<AppText style={styles.listHeaderText}>Assets</AppText>
 						</View>
 					}
@@ -69,25 +72,18 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 	);
 };
 
-// Does this work? I still see a header.
-PortfolioInsightScreen.navigationOptions = () => {
-    return {
-        headerShown: false,
-    };
-};
-
 export default PortfolioInsightScreen;
 
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
 	},
-    listHeaderView: {
-        margin: 15
-    },
-    usernameText: {
-        marginTop: 10
-    },
+	listHeaderView: {
+		margin: 15
+	},
+	usernameText: {
+		marginTop: 10
+	},
 	listHeaderText: {
 		fontWeight: "bold",
 		fontSize: 16,

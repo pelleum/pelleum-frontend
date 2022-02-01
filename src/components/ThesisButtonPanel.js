@@ -7,7 +7,7 @@ import RationalesManager from "../managers/RationalesManager";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { useSelector } from "react-redux";
 import * as SecureStore from "expo-secure-store";
-import { LIGHT_GREY_COLOR } from "../styles/Colors";
+import { TEXT_COLOR } from "../styles/Colors";
 
 const ThesisButtonPanel = ({ item, nav }) => {
 	const state = useSelector((state) => state.thesisReactionsReducer);
@@ -34,10 +34,18 @@ const ThesisButtonPanel = ({ item, nav }) => {
 
 	const handleAddRationale = async (item) => {
 		const response = await RationalesManager.addRationale(item);
-		if (response.status == 403) {
+		if (response.status == 201) {
+			Alert.alert(
+				`This thesis was added to your ${item.asset_symbol} Rationale Library 🎉`,
+				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
+				[
+					{ text: "Got it!", onPress: () => {/* do nothing */ } },
+				]
+			);
+		} else if (response.status == 403) {
 			Alert.alert(
 				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
-				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one.`,
+				`To keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one by swiping left.`,
 				[
 					{ text: "Remove later", onPress: () => {/* do nothing */ } },
 					{
@@ -66,7 +74,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
 						size={20}
-						color={thesisIsLiked ? "#F82057" : LIGHT_GREY_COLOR}
+						color={thesisIsLiked ? "#F82057" : TEXT_COLOR}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -76,7 +84,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
 						size={20}
-						color={thesisIsDisliked ? "#F82057" : LIGHT_GREY_COLOR}
+						color={thesisIsDisliked ? "#F82057" : TEXT_COLOR}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -84,7 +92,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					onPress={() => handleAddRationale(item)}
 					disabled={rationaleLibrary.some(rationale => rationale.thesisID === item.thesis_id) ? true : false}
 				>
-					<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
+					<MaterialIcons name="post-add" size={24} color={TEXT_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -92,7 +100,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 						console.log("Share button worked.");
 					}}
 				>
-					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
+					<FontAwesome name="send-o" size={16} color={TEXT_COLOR} />
 				</TouchableOpacity>
 			</HStack>
 		</NativeBaseProvider>
@@ -117,6 +125,6 @@ const styles = StyleSheet.create({
 	disabledIconButton: {
 		paddingHorizontal: 13,
 		paddingTop: 8,
-		opacity: 0.2
+		opacity: 0.375,
 	},
 });

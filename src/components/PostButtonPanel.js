@@ -9,7 +9,7 @@ import {
 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import PostsManager from "../managers/PostsManager";
-import { LIGHT_GREY_COLOR } from "../styles/Colors";
+import { TEXT_COLOR } from "../styles/Colors";
 
 const PostButtonPanel = ({ item, nav }) => {
 	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
@@ -45,7 +45,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						nav.navigate("Post", item);
 					}}
 				>
-					<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
+					<Fontisto name="comment" size={16} color={TEXT_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -53,7 +53,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						console.log("Retweet button worked.");
 					}}
 				>
-					<EvilIcons name="retweet" size={30} color={LIGHT_GREY_COLOR} />
+					<EvilIcons name="retweet" size={30} color={TEXT_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -73,7 +73,7 @@ const PostButtonPanel = ({ item, nav }) => {
 								!locallyUnlikedPosts.includes(item.post_id)) ||
 								locallyLikedPosts.includes(item.post_id)
 								? "#F82057"
-								: LIGHT_GREY_COLOR
+								: TEXT_COLOR
 						}
 					/>
 				</TouchableOpacity>
@@ -81,7 +81,7 @@ const PostButtonPanel = ({ item, nav }) => {
 					style={styles.iconButton}
 					onPress={onShare}
 				>
-					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
+					<FontAwesome name="send-o" size={16} color={TEXT_COLOR} />
 				</TouchableOpacity>
 			</HStack>
 		</NativeBaseProvider>

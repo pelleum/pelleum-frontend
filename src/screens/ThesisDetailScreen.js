@@ -30,10 +30,13 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [comments, setComments] = useState([]);
 
+	//We need to set the error message
+
 	const detailedThesis = route.params;
 	const dateWritten = new Date(detailedThesis.created_at);
 
-	let sourcesToDisplay = detailedThesis.sources.map((source, index) => (
+	const sources = detailedThesis.sources ? detailedThesis.sources : [];
+	let sourcesToDisplay = sources.map((source, index) => (
 		<TouchableOpacity key={index} onPress={() => handleSourceLink(source)}>
 			<AppText style={styles.linkText}>{source}</AppText>
 		</TouchableOpacity>
@@ -160,7 +163,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 							<AppText style={styles.subTitle}>Thesis</AppText>
 							<AppText style={styles.contentText}>{detailedThesis.content}</AppText>
 							<AppText style={styles.subTitle}>Sources</AppText>
-							{detailedThesis.sources.length > 0 ? sourcesToDisplay : <AppText>This thesis has no linked sources😕</AppText>}
+							{sources.length > 0 ? sourcesToDisplay : <AppText>This thesis has no linked sources😕</AppText>}
 						</View>
 						<VStack>
 							<CommentInput

@@ -4,6 +4,8 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ThesisBox from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
 import AppText from '../components/AppText';
+import { Ionicons } from "@expo/vector-icons";
+import { TEXT_COLOR } from '../styles/Colors';
 
 const RationaleScreen = ({ navigation, route }) => {
     //State Management
@@ -43,32 +45,40 @@ const RationaleScreen = ({ navigation, route }) => {
     const alertBeforeDelete = async (item) => {
         Alert.alert(
             "Confirm Deletion",
-            `Are you sure you want permanently remove this thesis from your Rationale Library?\n\n"${item.thesis.title}"`,
+            `Are you sure you want remove this thesis from your Rationale Library?\n\n"${item.thesis.title}"`,
             [
-                { text: "No", onPress: () => {/* do nothing */ } },
+                {
+                    text: "No", onPress: () => { /* Do nothing */ }
+                },
                 {
                     text: "Yes", onPress: async () => {
-                        deleteRationale(item)
+                        handleRemove(item);
                     }
                 }
             ]
         );
     };
 
-    //need to call alertBeforeDelete, but we need to figure out how to handle if the user taps "No" on the alert.
-    const addRationaleAfterRemoval = async (item) => {
+    const handleRemove = async (item) => {
+        // This function is called when user confirms deletion
+        // 1. Delete rationale
         await deleteRationale(item);
-        const response = await RationalesManager.addRationale(thesisToAddAfterRemoval);
-        if (response.data.rationale_id) {
-            const rationaleArrayCopy = rationaleArray;
-            rationaleArrayCopy.unshift(response.data);
-            setRationaleArray(rationaleArrayCopy);
-            route.params.thesisToAddAfterRemoval = null;
-            Alert.alert(
-                `Rationale Library Updated`,
-                `A new ${response.data.thesis.asset_symbol} ${response.data.thesis.sentiment} thesis was added to your library!\n\n“${response.data.thesis.title}”`,
-                { text: "OK", onPress: () => {/* do nothing */ } }
-            );
+        // 2. If deleting to add a new rationale, add new rationale
+        if (thesisToAddAfterRemoval) {
+            const response = await RationalesManager.addRationale(thesisToAddAfterRemoval);
+            if (response.data.rationale_id) {
+                const rationaleArrayCopy = rationaleArray;
+                rationaleArrayCopy.unshift(response.data);
+                setRationaleArray(rationaleArrayCopy);
+                route.params.thesisToAddAfterRemoval = null;
+                Alert.alert(
+                    `Rationale Library Updated 🎉`,
+                    `A new ${response.data.thesis.asset_symbol} ${response.data.thesis.sentiment} thesis was added to your library!\n\n“${response.data.thesis.title}”🙂`,
+                    [
+                        { text: "Got it!", onPress: () => {/* do nothing */ } },
+                    ]
+                );
+            };
         };
     };
 
@@ -77,16 +87,9 @@ const RationaleScreen = ({ navigation, route }) => {
             <Animated.View style={{ backgroundColor: '#cc0000', width: "30%", justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
                     style={{ paddingVertical: '50%', paddingHorizontal: '7%' }}
-                    onPress={() => {
-                        if (thesisToAddAfterRemoval) {
-                            addRationaleAfterRemoval(item)
-                        } else {
-                            alertBeforeDelete(item);
-                            console.log("\n\nJust deleted item with thesis_id", item.thesis_id)
-                        }
-                    }}
+                    onPress={() => alertBeforeDelete(item)}
                 >
-                    <Animated.Text style={{ fontSize: 16, fontWeight: 'bold' }}>REMOVE</Animated.Text>
+                    <Ionicons name="trash-outline" size={30} color={TEXT_COLOR} />
                 </TouchableOpacity>
             </Animated.View>
         );
