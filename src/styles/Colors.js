@@ -1,7 +1,7 @@
 // Global styles for components
 
 // Main Color Theme
-export const MAIN_BACKGROUND_COLOR = "#0000"; //invisible
+export const MAIN_BACKGROUND_COLOR = "#000000"; //black
 export const MAIN_SECONDARY_COLOR = "#30D325"; //currently this is green
 export const MAIN_DIFFERENTIATOR_COLOR = "#1D1D1D"; //lighter black
 

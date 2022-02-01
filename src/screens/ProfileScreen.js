@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
 	},
 	buttonGroup: {
 		overflow: "hidden",
-		borderWidth: 0.5,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 30,
 		width: "80%",

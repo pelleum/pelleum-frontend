@@ -6,7 +6,6 @@ import {
 	Animated,
 	TouchableOpacity,
 	Alert,
-	Text,
 } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import ThesisBox from "../components/ThesisBox";
@@ -57,6 +56,28 @@ const RationaleScreen = ({ navigation, route }) => {
 		}
 	};
 
+	const alertBeforeDelete = async (item) => {
+		Alert.alert(
+			"Confirm Deletion",
+			`Are you sure you want permanently remove this thesis from your Rationale Library?\n\n"${item.thesis.title}"`,
+			[
+				{
+					text: "No",
+					onPress: () => {
+						/* do nothing */
+					},
+				},
+				{
+					text: "Yes",
+					onPress: async () => {
+						deleteRationale(item);
+					},
+				},
+			]
+		);
+	};
+
+	//need to call alertBeforeDelete, but we need to figure out how to handle if the user taps "No" on the alert.
 	const addRationaleAfterRemoval = async (item) => {
 		await deleteRationale(item);
 		const response = await RationalesManager.addRationale(
@@ -69,7 +90,7 @@ const RationaleScreen = ({ navigation, route }) => {
 			route.params.thesisToAddAfterRemoval = null;
 			Alert.alert(
 				`Rationale Library Updated`,
-				`A new ${response.data.thesis.asset_symbol} ${response.data.thesis.sentiment} thesis was added to your library! \n\n“${response.data.thesis.title}”`,
+				`A new ${response.data.thesis.asset_symbol} ${response.data.thesis.sentiment} thesis was added to your library!\n\n“${response.data.thesis.title}”`,
 				{
 					text: "OK",
 					onPress: () => {
@@ -96,7 +117,7 @@ const RationaleScreen = ({ navigation, route }) => {
 						if (thesisToAddAfterRemoval) {
 							addRationaleAfterRemoval(item);
 						} else {
-							deleteRationale(item);
+							alertBeforeDelete(item);
 							console.log(
 								"\n\nJust deleted item with thesis_id",
 								item.thesis_id
@@ -119,7 +140,7 @@ const RationaleScreen = ({ navigation, route }) => {
 
 	return (
 		<View style={styles.mainContainer}>
-			<AppText style={styles.title}>{asset} Rationale Library</AppText>
+			<AppText style={styles.title}>{asset}</AppText>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}
