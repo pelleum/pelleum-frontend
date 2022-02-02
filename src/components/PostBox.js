@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 import ThesisBox, { ThesesBoxType } from "./ThesisBox";
+import { Entypo } from "@expo/vector-icons";
 import {
 	MAIN_BACKGROUND_COLOR,
 	LIGHT_GREY_COLOR,
@@ -75,13 +76,23 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									• {elapsedTime}
 								</AppText>
 							</HStack>
-							{item.sentiment ? (
-								item.sentiment === "Bull" ? (
-									<SentimentPill item={item} sentiment={Sentiment.Bull} />
-								) : (
-									<SentimentPill item={item} sentiment={Sentiment.Bear} />
-								)
-							) : null}
+							<HStack>
+								{item.sentiment ? (
+									item.sentiment === "Bull" ? (
+										<SentimentPill item={item} sentiment={Sentiment.Bull} />
+									) : (
+										<SentimentPill item={item} sentiment={Sentiment.Bear} />
+									)
+								) : null}
+								<TouchableOpacity
+									style={styles.iconButton}
+									onPress={() => {
+										console.log("Retweet button worked.");
+									}}
+								>
+									<Entypo name="dots-three-horizontal" size={30} color={LIGHT_GREY_COLOR} />
+								</TouchableOpacity>
+							</HStack>
 						</HStack>
 						{postBoxType == PostBoxType.Feed ? (
 							item.asset_symbol ? (
