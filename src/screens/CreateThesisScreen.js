@@ -96,8 +96,8 @@ const CreateThesisScreen = ({ navigation }) => {
 		const response = await RationalesManager.addRationale(createdThesis);
 		if (response.status == 201) {
 			Alert.alert(
-				`Your thesis was added to your ${createdThesis.asset_symbol} Rationale Library🎉`,
-				`You can use your Rationale Library, accessible in your profile, to keep track of your investment thinking and reasoning. You can add or remove theses anytime🙂`,
+				`Your thesis was added to your ${createdThesis.asset_symbol} Rationale Library 🎉`,
+				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
 				[
 					{
 						text: "Got it!",

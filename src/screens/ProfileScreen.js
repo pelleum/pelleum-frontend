@@ -6,6 +6,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
+	Alert,
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import {
@@ -47,7 +48,22 @@ const ProfileScreen = ({ navigation, route }) => {
 		);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
-		}
+		};
+		if (activeAccounts.length > 0) {
+			{ activeAccounts.some(account => account.is_active) == false ? await relinkAlert() : null }
+		};
+
+	};
+
+	const relinkAlert = async () => {
+		Alert.alert(
+			"Linked Account Error 😦",
+			"It looks like one (or more) of your accounts needs to be relinked to Pelleum. Please check the status of your linked account(s)",
+			[
+				{ text: "Later", onPress: () => {/* do nothing */ } },
+				{ text: "View Status", onPress: () => navigation.navigate("LinkedStatus") },
+			]
+		);
 	};
 
 	useEffect(() => {
@@ -58,8 +74,8 @@ const ProfileScreen = ({ navigation, route }) => {
 		if (route.params.accountLinked) {
 			onRefresh();
 			route.params.accountLinked = false;
-		}
-	}
+		};
+	};
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
@@ -88,20 +104,6 @@ const ProfileScreen = ({ navigation, route }) => {
 								</TouchableOpacity>
 							</HStack>
 							<AppText style={styles.usernameText}>@{username}</AppText>
-							{activeAccounts.some((account) => account.is_active) == false ? (
-								<>
-									<AppText style={styles.inactiveAccountWarning}>
-										There was an error validating your linked account(s).
-									</AppText>
-									<TouchableOpacity
-										onPress={() => navigation.navigate("LinkedStatus")}
-									>
-										<AppText style={styles.inactiveLinkButtonText}>
-											Check the status of your linked account(s).
-										</AppText>
-									</TouchableOpacity>
-								</>
-							) : null}
 							<HStack style={styles.headerStyle}>
 								<AppText style={styles.listHeaderText}>Assets</AppText>
 								<TouchableOpacity

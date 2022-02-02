@@ -8,8 +8,18 @@ import {
 import AppText from "./AppText";
 import { useSelector } from "react-redux";
 
-const AssetBox = ({ item, nav, disableRemoveRationale = false }) => {
+const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
+
+	const hasRationales = portfolioInsightRationales ? (
+		portfolioInsightRationales.some(
+			(rationale) => rationale.thesis.asset_symbol === item.asset_symbol
+		)
+	) : (
+		rationaleLibrary.some(
+			(rationale) => rationale.asset === item.asset_symbol
+		)
+	)
 
 	return (
 		<NativeBaseProvider>
@@ -27,25 +37,13 @@ const AssetBox = ({ item, nav, disableRemoveRationale = false }) => {
 							</AppText>
 						</TouchableOpacity>
 						<TouchableOpacity
-							style={
-								rationaleLibrary.some(
-									(rationale) => rationale.asset === item.asset_symbol
-								)
-									? styles.thesisButton
-									: styles.disabledThesisButton
-							}
-							disabled={
-								rationaleLibrary.some(
-									(rationale) => rationale.asset === item.asset_symbol
-								)
-									? false
-									: true
-							}
+							style={hasRationales ? styles.thesisButton : styles.disabledThesisButton}
+							disabled={hasRationales ? false : true}
 							onPress={() => {
 								nav.navigate("Rationales", {
 									asset: item.asset_symbol,
 									userId: item.user_id,
-									disableRemoveRationale: disableRemoveRationale,
+									disableRemoveRationale: portfolioInsightRationales ? true : false,
 								});
 							}}
 						>

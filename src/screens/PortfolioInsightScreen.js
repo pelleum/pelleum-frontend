@@ -2,27 +2,25 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, FlatList, Image } from "react-native";
 import { NativeBaseProvider } from "native-base";
 import PortfolioManager from "../managers/PortfolioManager";
-import { useSelector } from "react-redux";
+import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import AssetBox from "../components/AssetBox";
-
-//*****************************************************************
-////*******BEFORE USING AssetBox, we need to take into account
-////*******the disableRemoveRationale parameter that we pass to RationaleScreen
-//*****************************************************************
 
 const PortfolioInsightScreen = ({ navigation, route }) => {
 	// state
 	const [assetList, setAssetList] = useState([]);
-	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
-
+	const [rationales, setRationales] = useState([]);
 	const { username, userId } = route.params;
 
 	const onRefresh = async () => {
 		const retrievedAssets = await PortfolioManager.retrieveAssets(userId);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
-		}
+		};
+		const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userId });
+		if (retrievedRationales) {
+			setRationales(retrievedRationales.records.rationales);
+		};
 	};
 
 	useEffect(() => {
@@ -39,7 +37,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 						<AssetBox
 							item={item}
 							nav={navigation}
-							disableRemoveRationale={true}
+							portfolioInsightRationales={rationales}
 						/>
 					)}
 					ListHeaderComponent={
@@ -61,13 +59,6 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 			</NativeBaseProvider>
 		</View>
 	);
-};
-
-// Does this work? I still see a header.
-PortfolioInsightScreen.navigationOptions = () => {
-	return {
-		headerShown: false,
-	};
 };
 
 export default PortfolioInsightScreen;

@@ -34,10 +34,18 @@ const ThesisButtonPanel = ({ item, nav }) => {
 
 	const handleAddRationale = async (item) => {
 		const response = await RationalesManager.addRationale(item);
-		if (response.status == 403) {
+		if (response.status == 201) {
+			Alert.alert(
+				`This thesis was added to your ${item.asset_symbol} Rationale Library 🎉`,
+				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
+				[
+					{ text: "Got it!", onPress: () => {/* do nothing */ } },
+				]
+			);
+		} else if (response.status == 403) {
 			Alert.alert(
 				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
-				`In order to keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one.`,
+				`To keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one by swiping left.`,
 				[
 					{
 						text: "Remove later",
@@ -139,6 +147,6 @@ const styles = StyleSheet.create({
 	disabledIconButton: {
 		paddingHorizontal: 13,
 		paddingTop: 8,
-		opacity: 0.2,
+		opacity: 0.375,
 	},
 });

@@ -8,11 +8,6 @@ import { logout } from "../redux/actions/AuthActions";
 import { MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
 
 const SettingsScreen = ({ navigation }) => {
-	const dispatch = useDispatch();
-	const logOut = async () => {
-		await SecureStore.deleteItemAsync("userObject");
-		dispatch(logout());
-	};
 
 	const dispatch = useDispatch();
 	const logOut = async () => {
