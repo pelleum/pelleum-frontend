@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	StyleSheet,
 	View,
@@ -19,6 +19,7 @@ import {
 } from "../styles/Colors";
 
 const LinkedAccountsStatus = ({ navigation }) => {
+	const [errorMessage, setErrorMessage] = useState("");
 	const { activeAccounts } = useSelector(
 		(state) => state.linkedAccountsReducer
 	);
@@ -33,9 +34,16 @@ const LinkedAccountsStatus = ({ navigation }) => {
 			"By unlinking, the asset information related to this acount will be removed from your Pelleum portfolio. You can always relink if you choose to.",
 			[
 				{ text: "Cancel", style: 'cancel', onPress: () => {/* do nothing */ } },
-				{ text: "Unlink", style: 'destructive', onPress: async () => {
-					await LinkAccountsManager.unlinkAccount();
-				}},
+				{
+					text: "Unlink", style: 'destructive', onPress: async () => {
+						const response = await LinkAccountsManager.unlinkAccount();
+						if (response.status == 204) {
+							navigation.navigate("Profile", { onUnlink: true })
+						} else {
+							setErrorMessage("An unexpected error occurred. Please try again later.")
+						}
+					}
+				},
 			]
 		);
 	};
@@ -83,6 +91,13 @@ const LinkedAccountsStatus = ({ navigation }) => {
 							)}
 						</HStack>
 					)}
+					ListHeaderComponent={
+						<>
+							{errorMessage ? (
+								<AppText style={styles.error}>{errorMessage}</AppText>
+							) : null}
+						</>
+					}
 				></FlatList>
 			</NativeBaseProvider>
 		</View>
@@ -130,5 +145,12 @@ const styles = StyleSheet.create({
 	relinkUnlinkButton: {
 		fontSize: 15,
 		padding: 8,
+	},
+	error: {
+		alignSelf: "center",
+		color: BAD_COLOR,
+		marginTop: 15,
+		marginBottom: 25,
+		fontSize: 14,
 	},
 });
