@@ -28,6 +28,17 @@ class PostsManager {
 		}
 	};
 
+	static deletePost = async (postId) => {
+		const authorizedResponse = await pelleumClient({
+			method: "delete",
+			url: `${POSTS_BASE_PATH}/${postId}`,
+		});
+
+		if (authorizedResponse) {
+			return authorizedResponse;
+		}
+	};
+
 	static getPosts = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",

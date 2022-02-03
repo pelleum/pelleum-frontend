@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 import ThesisBox, { ThesesBoxType } from "./ThesisBox";
@@ -9,10 +9,14 @@ import {
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 } from "../styles/Colors";
+import PostsManager from "../managers/PostsManager";
 import AppText from "./AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
+import { useDispatch } from "react-redux";
+import { removePost } from "../redux/actions/PostActions";
+
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -27,6 +31,8 @@ export class PostBoxType {
 }
 
 const PostBox = ({ postBoxType, item, nav }) => {
+	// Universal State
+	const dispatch = useDispatch();
 	// new Date() gives time in device's time zone, but we need it in UTC
 	// To do this, we get the ISO string, remove the Z from the end, and create a new date
 	const nowIsoString = new Date().toISOString();
@@ -55,6 +61,26 @@ const PostBox = ({ postBoxType, item, nav }) => {
 		item["needsRefresh"] = true;
 	}
 
+	const alertBeforeDelete = async (item) => {
+        Alert.alert(
+            "Delete Post",
+            "Are you sure you want to delete this post?",
+            [
+                {
+                    text: "Cancel", onPress: () => { /* Do nothing */ }
+                },
+                {
+                    text: "Delete", style: 'destructive', onPress: async () => {
+                        const response = await PostsManager.deletePost(item.post_id);
+						if (response.status == 204) {
+							dispatch(removePost(item));
+						}
+                    }
+                }
+            ]
+        );
+    };
+
 	return (
 		<NativeBaseProvider>
 			<TouchableOpacity
@@ -76,7 +102,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									• {elapsedTime}
 								</AppText>
 							</HStack>
-							<HStack>
+							<HStack justifyContent="space-between" alignItems="center">
 								{item.sentiment ? (
 									item.sentiment === "Bull" ? (
 										<SentimentPill item={item} sentiment={Sentiment.Bull} />
@@ -85,12 +111,12 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									)
 								) : null}
 								<TouchableOpacity
-									style={styles.iconButton}
+									style={styles.dotsButton}
 									onPress={() => {
-										console.log("Retweet button worked.");
+										alertBeforeDelete(item);
 									}}
 								>
-									<Entypo name="dots-three-horizontal" size={30} color={LIGHT_GREY_COLOR} />
+									<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
 								</TouchableOpacity>
 							</HStack>
 						</HStack>
@@ -151,9 +177,10 @@ const styles = StyleSheet.create({
 	},
 	feedPost: {
 		width: "100%",
-		paddingHorizontal: 25,
+		paddingLeft: 25,
+		paddingRight: 10,
 		paddingBottom: 7,
-		paddingTop: 10,
+		paddingTop: 5,
 		fontSize: 16,
 		backgroundColor: MAIN_BACKGROUND_COLOR,
 		borderBottomWidth: 0.17,
@@ -184,4 +211,12 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 15,
 	},
+	dotsButton: {
+		
+		// borderWidth: 1,
+		// borderColor: 'red',
+		paddingVertical: 15,
+		paddingLeft: 20,
+		paddingRight: 10
+	}
 });

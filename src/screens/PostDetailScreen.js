@@ -15,9 +15,12 @@ import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
+import { useSelector } from "react-redux";
 import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
 
 const PostDetailScreen = ({ navigation, route }) => {
+	// Universal State
+	const { posts } = useSelector((state) => state.postReducer);
 	// Local State Management
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
@@ -134,36 +137,46 @@ const PostDetailScreen = ({ navigation, route }) => {
 						{thesisCommentedOn ? (
 							<ThesisBox item={thesisCommentedOn} nav={navigation} />
 						) : null}
-						<View style={styles.postContainer}>
-							<PostBox
-								postBoxType={PostBoxType.PostDetail}
-								item={detailedPost}
-								nav={navigation}
-							/>
-						</View>
-						<PostButtonPanel item={detailedPost} nav={navigation} />
-						<VStack>
-							<CommentInput
-								commentContent={commentContent}
-								commentContentValidity={commentContentValidity}
-								changeContent={handleChangeContent}
-								changeCommentContentValidity={
-									handleChangeCommentContentValidity
-								}
-							/>
-							<TouchableOpacity
-								style={
-									disableStatus ? styles.buttonDisabled : styles.buttonEnabled
-								}
-								onPress={() => replyButtonPressed()}
-								disabled={disableStatus}
-							>
-								<AppText style={styles.buttonTextStyle}>Reply</AppText>
-							</TouchableOpacity>
-							{error ? (
-								<AppText style={styles.errorText}>{error}</AppText>
-							) : null}
-						</VStack>
+						{posts.some((post) => post.post_id === detailedPost.post_id) ? (
+							<View>
+								<View style={styles.postContainer}>
+									<PostBox
+										postBoxType={PostBoxType.PostDetail}
+										item={detailedPost}
+										nav={navigation}
+									/>
+								</View>
+								<PostButtonPanel item={detailedPost} nav={navigation} />
+								<VStack>
+									<CommentInput
+										commentContent={commentContent}
+										commentContentValidity={commentContentValidity}
+										changeContent={handleChangeContent}
+										changeCommentContentValidity={
+											handleChangeCommentContentValidity
+										}
+									/>
+									<TouchableOpacity
+										style={
+											disableStatus
+												? styles.buttonDisabled
+												: styles.buttonEnabled
+										}
+										onPress={() => replyButtonPressed()}
+										disabled={disableStatus}
+									>
+										<AppText style={styles.buttonTextStyle}>Reply</AppText>
+									</TouchableOpacity>
+									{error ? (
+										<AppText style={styles.errorText}>{error}</AppText>
+									) : null}
+								</VStack>
+							</View>
+						) : (
+							<AppText style={styles.deletedPost}>
+								This post has been deleted.
+							</AppText>
+						)}
 					</View>
 				}
 			></FlatList>
@@ -288,6 +301,10 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2,
 		borderBottomColor: "#bfc6c9",
 		overflow: "hidden",
+	},
+	deletedPost: {
+		alignSelf: "center",
+		marginVertical: 15,
 	},
 });
 
