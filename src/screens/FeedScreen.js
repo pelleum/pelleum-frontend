@@ -10,19 +10,20 @@ import {
 import CreateModal from "../components/modals/CreateModal";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
-import { useDispatch } from "react-redux";
-import { resetLikes } from "../redux/actions/PostReactionsActions";
 import AppText from "../components/AppText";
 import { BAD_COLOR } from "../styles/Colors";
+import { useSelector, useDispatch } from "react-redux";
+import { resetLikes } from "../redux/actions/PostReactionsActions";
+import { setPosts } from "../redux/actions/PostActions";
 
 const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
+	const { posts } = useSelector((state) => state.postReducer);
 	const dispatch = useDispatch();
 
 	// Local State Management
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
-	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const [errorMessage, setErrorMessage] = useState("");
@@ -39,7 +40,7 @@ const FeedScreen = ({ navigation, route }) => {
 		const postResponseData = await PostsManager.getPosts(queryParams);
 		if (postResponseData) {
 			setErrorMessage("");
-			setPosts(postResponseData.records.posts);
+			dispatch(setPosts(postResponseData.records.posts));
 			setTotalPages(postResponseData.meta_data.total_pages);
 			dispatch(resetLikes());
 		} else {
@@ -71,7 +72,7 @@ const FeedScreen = ({ navigation, route }) => {
 					uniquePostsSet.add(post.post_id);
 					return !isPresentInSet;
 				});
-				setPosts(uniquePosts);
+				dispatch(setPosts(uniquePosts));
 			} else {
 				setErrorMessage(
 					"There was an error retrieving posts. Please try again later."
@@ -84,17 +85,6 @@ const FeedScreen = ({ navigation, route }) => {
 	useEffect(() => {
 		onRefresh();
 	}, []);
-
-	if (route.params) {
-		const newCreatedPost = route.params.newPost ? route.params.newPost : null;
-
-		if (newCreatedPost) {
-			const postsCopy = posts;
-			postsCopy.unshift(newCreatedPost);
-			setPosts(postsCopy);
-			route.params.newPost = null;
-		};
-	};
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>

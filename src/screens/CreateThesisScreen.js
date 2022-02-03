@@ -19,6 +19,8 @@ import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
 import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
+import { useDispatch } from "react-redux";
+import { addPost } from "../redux/actions/PostActions";
 import {
 	TEXT_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
@@ -29,6 +31,10 @@ import {
 } from "../styles/Colors";
 
 const CreateThesisScreen = ({ navigation }) => {
+	// Universal State
+	const dispatch = useDispatch();
+
+	// Local State
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [title, setTitle] = useState("");
@@ -153,11 +159,12 @@ const CreateThesisScreen = ({ navigation }) => {
 				thesis_id: createdThesis.thesis_id,
 			});
 			if (createdPost) {
+				createdPost.thesis = createdThesis;
+				dispatch(addPost(createdPost));
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
-				createdPost.thesis = createdThesis;
-				navigation.navigate("Feed", { newPost: createdPost });
+				navigation.navigate("Feed");
 			}
 		}
 	};

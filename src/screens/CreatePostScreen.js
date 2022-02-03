@@ -19,17 +19,25 @@ import {
 	BAD_COLOR,
 	GOOD_COLOR,
 } from "../styles/Colors";
+import { useDispatch } from "react-redux";
+import { addPost } from "../redux/actions/PostActions";
+
 
 const CreatePostScreen = ({ navigation }) => {
+	// Universal state
+	const dispatch = useDispatch();
+	// Local state
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
-	const [error, setError] = useState(null); // Migrate this to reusable, universally accessable state
+	const [error, setError] = useState(null);
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbolValidity: false,
 		contentValidity: false,
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
+
+	
 
 	const sentimentOptions = [
 		{ label: "Bull", value: "Bull" },
@@ -43,10 +51,11 @@ const CreatePostScreen = ({ navigation }) => {
 			sentiment,
 		});
 		if (createdPost) {
+			dispatch(addPost(createdPost));
 			setContent("");
 			setAssetSymbol("");
 			setDisableStatus(true);
-			navigation.navigate("Feed", { newPost: createdPost });
+			navigation.navigate("Feed");
 		}
 	};
 

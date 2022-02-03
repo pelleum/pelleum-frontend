@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TextInput } from "react-native";
-import { LIGHT_GREY_COLOR } from "../styles/Colors";
+import { LIGHT_GREY_COLOR, TEXT_COLOR } from "../styles/Colors";
 
 const CommentInput = ({
 	commentContent,
@@ -25,6 +25,7 @@ const CommentInput = ({
 	return (
 		<View>
 			<TextInput
+				color={TEXT_COLOR}
 				placeholder="Reply with your thoughts here"
 				placeholderTextColor={LIGHT_GREY_COLOR}
 				multiline={true}
