@@ -7,7 +7,7 @@ import { BAD_COLOR } from "../styles/Colors";
 
 const AuthoredThesesScreen = ({ navigation, route }) => {
 	const [thesesArray, setThesesArray] = useState([]);
-	const [errorMessage, setErrorMessage] = useState(""); // Migrate to Redux
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const userId = route.params.userId ? route.params.userId : null;
 

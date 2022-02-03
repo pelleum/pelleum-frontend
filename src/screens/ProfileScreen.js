@@ -13,6 +13,7 @@ import {
 	MaterialCommunityIcons,
 	Ionicons,
 	SimpleLineIcons,
+	Octicons,
 } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
@@ -26,6 +27,7 @@ import {
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 	MAIN_BACKGROUND_COLOR,
+	TEXT_COLOR,
 } from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
@@ -145,7 +147,7 @@ const ProfileScreen = ({ navigation, route }) => {
 								onPress={async () => {
 									const userObject = await getUserObject();
 									const userId = userObject.user_id;
-									navigation.navigate("Authored", { userId: userId });
+									navigation.navigate("AuthoredTheses", { userId: userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
@@ -155,7 +157,27 @@ const ProfileScreen = ({ navigation, route }) => {
 										color={MAIN_SECONDARY_COLOR}
 									/>
 									<AppText style={styles.buttonGroupText}>
-										Authored Theses
+										My Theses
+									</AppText>
+								</HStack>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.buttonGroup}
+								onPress={async () => {
+									const userObject = await getUserObject();
+									const userId = userObject.user_id;
+									navigation.navigate("AuthoredPosts", { userId: userId });
+								}}
+							>
+								<HStack style={styles.buttonGroupTextContainer}>
+									<Octicons
+										name="note"
+										size={26}
+										color={MAIN_SECONDARY_COLOR}
+										style={styles.postIcon}
+									/>
+									<AppText style={styles.buttonGroupText}>
+										My Posts
 									</AppText>
 								</HStack>
 							</TouchableOpacity>
@@ -195,19 +217,23 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 30,
-		width: "80%",
+		width: "65%",
 		marginTop: 6,
 	},
 	buttonGroupText: {
 		fontSize: 16,
 		fontWeight: "bold",
-		marginLeft: 25,
+		marginLeft: 15,
 	},
 	buttonGroupTextContainer: {
 		alignItems: "center",
 		justifyContent: "flex-start",
 		paddingLeft: 15,
 		paddingVertical: 10,
+		marginLeft: 20,
+	},
+	postIcon: {
+		marginLeft: 1.75
 	},
 	inactiveAccountWarning: {
 		fontSize: 15,

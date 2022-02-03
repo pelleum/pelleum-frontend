@@ -46,7 +46,7 @@ const FeedScreen = ({ navigation, route }) => {
 			setErrorMessage(
 				"There was an error retrieving posts. Please try again later."
 			);
-		}
+		};
 		setRefreshing(false);
 	};
 
@@ -76,8 +76,8 @@ const FeedScreen = ({ navigation, route }) => {
 				setErrorMessage(
 					"There was an error retrieving posts. Please try again later."
 				);
-			}
-		}
+			};
+		};
 		setRefreshing(false);
 	};
 
@@ -93,8 +93,8 @@ const FeedScreen = ({ navigation, route }) => {
 			postsCopy.unshift(newCreatedPost);
 			setPosts(postsCopy);
 			route.params.newPost = null;
-		}
-	}
+		};
+	};
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>

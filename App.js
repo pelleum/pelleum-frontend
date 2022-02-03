@@ -26,6 +26,7 @@ import LinkAccount from "./src/screens/LinkAccount";
 import LinkedAccountsStatus from "./src/screens/LinkedAccountsStatus";
 import RationaleScreen from "./src/screens/RationaleScreen";
 import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
+import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
@@ -139,10 +140,18 @@ const ProfileFlow = () => (
 			}}
 		/>
 		<ProfileStack.Screen
-			name="Authored"
+			name="AuthoredTheses"
 			component={AuthoredThesesScreen}
 			options={{
-				headerTitle: "Authored Theses",
+				headerTitle: "My Theses",
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+			}}
+		/>
+		<ProfileStack.Screen
+			name="AuthoredPosts"
+			component={AuthoredPostsScreen}
+			options={{
+				headerTitle: "My Posts",
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
 			}}
 		/>

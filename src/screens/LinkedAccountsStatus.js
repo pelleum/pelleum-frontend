@@ -5,6 +5,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
+	Alert,
 } from "react-native";
 import { NativeBaseProvider, HStack } from "native-base";
 import LinkAccountsManager from "../managers/LinkAccountsManager";
@@ -24,6 +25,19 @@ const LinkedAccountsStatus = ({ navigation }) => {
 
 	const getAccountsStatus = async () => {
 		await LinkAccountsManager.getLinkedAccountsStatus();
+	};
+
+	const unlinkAlert = async () => {
+		Alert.alert(
+			"Are you sure you want to unlink?",
+			"By unlinking, the asset information related to this acount will be removed from your Pelleum portfolio. You can always relink if you choose to.",
+			[
+				{ text: "Cancel", style: 'cancel', onPress: () => {/* do nothing */ } },
+				{ text: "Unlink", style: 'destructive', onPress: async () => {
+					await LinkAccountsManager.unlinkAccount();
+				}},
+			]
+		);
 	};
 
 	useEffect(() => {
@@ -47,11 +61,19 @@ const LinkedAccountsStatus = ({ navigation }) => {
 								<AppText style={styles.accountNameText}>{item.name}</AppText>
 							</HStack>
 							{item.is_active ? (
-								<AppText style={styles.activeText}>ACTIVE</AppText>
+								<HStack alignItems="center">
+									<TouchableOpacity
+										style={styles.relinkUnlinkButton}
+										onPress={() => unlinkAlert()}
+									>
+										<AppText style={styles.linkButtonText}>Unlink</AppText>
+									</TouchableOpacity>
+									<AppText style={styles.activeText}>ACTIVE</AppText>
+								</HStack>
 							) : (
 								<HStack alignItems="center">
 									<TouchableOpacity
-										style={styles.reLinkButton}
+										style={styles.relinkUnlinkButton}
 										onPress={() => navigation.navigate("Link")}
 									>
 										<AppText style={styles.linkButtonText}>Relink</AppText>
@@ -105,7 +127,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: LINK_COLOR,
 	},
-	reLinkButton: {
+	relinkUnlinkButton: {
 		fontSize: 15,
 		padding: 8,
 	},
