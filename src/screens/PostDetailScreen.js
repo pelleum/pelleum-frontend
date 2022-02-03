@@ -6,6 +6,7 @@ import {
 	Keyboard,
 	FlatList,
 	RefreshControl,
+	KeyboardAvoidingView,
 } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
 import CommentInput from "../components/CommentInput";
@@ -126,7 +127,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 				}
 				refreshing={refreshing}
 				ListHeaderComponent={
-					<View style={styles.mainContainer}>
+					<KeyboardAvoidingView style={styles.mainContainer} behavior='position' keyboardVerticalOffset={100}>
 						{postCommentedOn ? (
 							<PostBox
 								postBoxType={PostBoxType.PostCommentedOn}
@@ -177,10 +178,11 @@ const PostDetailScreen = ({ navigation, route }) => {
 								This post has been deleted.
 							</AppText>
 						)}
-					</View>
+					</KeyboardAvoidingView>
 				}
 			></FlatList>
 		</NativeBaseProvider>
+
 	);
 };
 

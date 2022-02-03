@@ -6,6 +6,7 @@ import {
 	FlatList,
 	RefreshControl,
 	Keyboard,
+	KeyboardAvoidingView,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
@@ -117,7 +118,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				}
 				refreshing={refreshing}
 				ListHeaderComponent={
-					<View style={styles.mainContainer}>
+					<KeyboardAvoidingView style={styles.mainContainer} behavior='position' keyboardVerticalOffset={100}>
 						<View style={styles.thesisContainer}>
 							<AppText style={styles.thesisTitle}>
 								{detailedThesis.title}
@@ -198,7 +199,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 								<AppText style={styles.errorText}>{error}</AppText>
 							) : null}
 						</VStack>
-					</View>
+					</KeyboardAvoidingView>
 				}
 			></FlatList>
 		</NativeBaseProvider>
