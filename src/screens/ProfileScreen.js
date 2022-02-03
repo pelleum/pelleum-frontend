@@ -76,7 +76,10 @@ const ProfileScreen = ({ navigation, route }) => {
 		if (route.params.accountLinked) {
 			onRefresh();
 			route.params.accountLinked = false;
-		};
+		} else if (route.params.onUnlink) {
+			onRefresh();
+			route.params.onUnlink = false;
+		}
 	};
 
 	return (
