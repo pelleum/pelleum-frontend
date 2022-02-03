@@ -57,11 +57,10 @@ const ThesisButtonPanel = ({ item, nav }) => {
 						text: "Remove now",
 						onPress: async () => {
 							const userObject = await getUserObject();
-							const userId = userObject.user_id;
 							nav.navigate("Rationales", {
 								thesisToAddAfterRemoval: item,
 								asset: item.asset_symbol,
-								userId: userId,
+								userId: userObject.user_id,
 							});
 						},
 					},
