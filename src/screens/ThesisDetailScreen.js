@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	StyleSheet,
 	View,
@@ -32,6 +32,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [comments, setComments] = useState([]);
 
 	//We need to set the error message
+
+	const listRef = useRef(null);
+	const handleScrollToTop = () => {
+		listRef.current.scrollToOffset({ offset: 0, animated: false });
+	};
 
 	const detailedThesis = route.params;
 	const dateWritten = new Date(detailedThesis.created_at);
@@ -97,6 +102,8 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	return (
 		<NativeBaseProvider>
 			<FlatList
+				ref={listRef}
+				showsVerticalScrollIndicator={false}
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id.toString()}
@@ -177,6 +184,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 						</View>
 						<VStack>
 							<CommentInput
+								scrollToTop={handleScrollToTop}
 								commentContent={commentContent}
 								commentContentValidity={commentContentValidity}
 								changeContent={handleChangeContent}

@@ -21,6 +21,7 @@ import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
+import * as Haptics from 'expo-haptics';
 import {
 	TEXT_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
@@ -164,6 +165,7 @@ const CreateThesisScreen = ({ navigation }) => {
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 				navigation.navigate("Feed");
 			}
 		}
@@ -175,7 +177,7 @@ const CreateThesisScreen = ({ navigation }) => {
 		checkSymbol = false,
 		checkTitle = false,
 	} = {}) => {
-		// Executed asset symbol, thesis title, or content's text is changed
+		// Executed ticker symbol, thesis title, or content's text is changed
 		setError(null);
 		const newInputValidity = inputValidity;
 
@@ -267,7 +269,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							}
 							style={styles.assetSymbolInput}
 						/>
-						<AppText>Asset Symbol</AppText>
+						<AppText>Ticker Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="Your Thesis Title"

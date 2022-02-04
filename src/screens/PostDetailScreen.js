@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	StyleSheet,
 	View,
@@ -33,6 +33,11 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const [comments, setComments] = useState([]);
 
 	const detailedPost = route.params;
+
+	const listRef = useRef(null);
+	const handleScrollToTop = () => {
+		listRef.current.scrollToOffset({ offset: 0, animated: false });
+	};
 
 	// Might not need these separate functions?
 	const handleChangeContent = (newContent) => {
@@ -106,6 +111,8 @@ const PostDetailScreen = ({ navigation, route }) => {
 	return (
 		<NativeBaseProvider>
 			<FlatList
+				ref={listRef}
+				showsVerticalScrollIndicator={false}
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id.toString()}
@@ -150,6 +157,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 								<PostButtonPanel item={detailedPost} nav={navigation} />
 								<VStack>
 									<CommentInput
+										scrollToTop={handleScrollToTop}
 										commentContent={commentContent}
 										commentContentValidity={commentContentValidity}
 										changeContent={handleChangeContent}
@@ -160,8 +168,8 @@ const PostDetailScreen = ({ navigation, route }) => {
 									<TouchableOpacity
 										style={
 											disableStatus
-												? styles.buttonDisabled
-												: styles.buttonEnabled
+												? styles.replyButtonDisabled
+												: styles.replyButtonEnabled
 										}
 										onPress={() => replyButtonPressed()}
 										disabled={disableStatus}
@@ -265,21 +273,23 @@ const styles = StyleSheet.create({
 		marginHorizontal: 15,
 		marginBottom: 30,
 	},
-	buttonEnabled: {
-		alignSelf: "center",
+	replyButtonEnabled: {
+		alignSelf: "flex-end",
 		borderRadius: 30,
-		padding: 11,
+		paddingVertical: 8,
+		paddingHorizontal: 11,
 		marginBottom: 5,
-		width: "100%",
+		width: "22%",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 	},
-	buttonDisabled: {
-		alignSelf: "center",
+	replyButtonDisabled: {
+		alignSelf: "flex-end",
 		borderRadius: 30,
-		padding: 11,
+		paddingVertical: 8,
+		paddingHorizontal: 11,
 		marginBottom: 5,
-		width: "100%",
+		width: "22%",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 		opacity: 0.33,
