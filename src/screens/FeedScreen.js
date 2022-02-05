@@ -15,6 +15,7 @@ import { BAD_COLOR } from "../styles/Colors";
 import { useSelector, useDispatch } from "react-redux";
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 import { setPosts } from "../redux/actions/PostActions";
+import { set } from "react-native-reanimated";
 
 const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
@@ -28,7 +29,7 @@ const FeedScreen = ({ navigation, route }) => {
 	const [totalPages, setTotalPages] = useState(1);
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const RECORDS_PER_PAGE = 10;
+	const RECORDS_PER_PAGE = 15;
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
@@ -41,6 +42,7 @@ const FeedScreen = ({ navigation, route }) => {
 		if (postResponseData) {
 			setErrorMessage("");
 			dispatch(setPosts(postResponseData.records.posts));
+			setCurrentPage(1);
 			setTotalPages(postResponseData.meta_data.total_pages);
 			dispatch(resetLikes());
 		} else {

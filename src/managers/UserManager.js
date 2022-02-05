@@ -1,7 +1,7 @@
 import { store } from "../redux/Store";
 import * as SecureStore from "expo-secure-store";
 import pelleumClient from "../api/clients/PelleumClient";
-import { authError, login, restoreToken } from "../redux/actions/AuthActions";
+import { authError, login, restoreToken, storeUserObject } from "../redux/actions/AuthActions";
 import RationalesManager from "../managers/RationalesManager";
 import { refreshLibrary } from "../redux/actions/RationaleActions";
 import LinkAccountsManager from "./LinkAccountsManager";
@@ -24,9 +24,14 @@ class UserManager {
 				"userObject",
 				JSON.stringify(response.data)
 			);
-			// 2. dispatch login action
+            // 2. dispatch storeUserObject action
+            store.dispatch(storeUserObject({
+                username: response.data.username,
+                userId: response.data.user_id
+            }));
+			// 3. dispatch login action
 			store.dispatch(login());
-			// 3. retrieve rationales from backend and update rationaleLibrary
+			// 4. retrieve rationales from backend and update rationaleLibrary
 			const retrievedRationales = await RationalesManager.retrieveRationales({
 				user_id: response.data.user_id,
 			});
@@ -56,9 +61,14 @@ class UserManager {
 				"userObject",
 				JSON.stringify(response.data)
 			);
-			// 2. dispatch login action
+            // 2. dispatch storeUserObject action
+            store.dispatch(storeUserObject({
+                username: response.data.username,
+                userId: response.data.user_id
+            }));
+			// 3. dispatch login action
 			store.dispatch(login());
-			// 3. retrieve rationales from backend and update rationaleLibrary
+			// 4. retrieve rationales from backend and update rationaleLibrary
 			const retrievedRationales = await RationalesManager.retrieveRationales({
 				user_id: response.data.user_id,
 			});
@@ -68,7 +78,7 @@ class UserManager {
 				);
 				store.dispatch(refreshLibrary(rationaleInfo));
 			}
-			//4. update linked brokerage accounts status
+			//5. update linked brokerage accounts status
 			await LinkAccountsManager.getLinkedAccountsStatus();
 		} else {
 			store.dispatch(authError(response.data.detail));

@@ -63,7 +63,9 @@ class PostsManager {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-				return authorizedResponse.data;
+				return {postExists: true, post: authorizedResponse.data};
+			} else if (authorizedResponse.status == 400) {
+				return {postExists: false, post: null}
 			}
 			// need to display "an unexpected error occured"
 			console.log("There was an error obtaining the post.");

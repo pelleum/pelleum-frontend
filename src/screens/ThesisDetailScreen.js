@@ -17,19 +17,26 @@ import CommentInput from "../components/CommentInput";
 import AppText from "../components/AppText";
 import SentimentPill, { Sentiment } from "../components/SentimentPill";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { setComments, addComment } from "../redux/actions/PostActions";
+
 // Universal Styles
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
+	// Universal State
+	const { comments } = useSelector((state) => state.postReducer);
+	const dispatch = useDispatch();
+
 	// State Management
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
 	const [disableStatus, setDisableStatus] = useState(true);
-	const [error, setError] = useState(""); //Migrate to redux
+	const [error, setError] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
-	const [comments, setComments] = useState([]);
 
 	//We need to set the error message
 
@@ -70,9 +77,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		});
 
 		if (createdComment) {
-			const commentsCopy = comments;
-			commentsCopy.splice(0, 0, createdComment);
-			setComments(commentsCopy);
+			dispatch(addComment(createdComment));
 			setCommentContent("");
 			setDisableStatus(true);
 		}
@@ -84,7 +89,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 			is_thesis_comment_on: detailedThesis.thesis_id,
 		});
 		if (commentsResponseData) {
-			setComments(commentsResponseData.records.posts);
+			dispatch(setComments(commentsResponseData.records.posts));
 		}
 
 		setRefreshing(false);

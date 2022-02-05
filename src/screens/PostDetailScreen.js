@@ -16,12 +16,16 @@ import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
-import { useSelector } from "react-redux";
 import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { setComments, addComment } from "../redux/actions/PostActions";
 
 const PostDetailScreen = ({ navigation, route }) => {
 	// Universal State
-	const { posts } = useSelector((state) => state.postReducer);
+	const { comments, deleted } = useSelector((state) => state.postReducer);
+	const dispatch = useDispatch();
 	// Local State Management
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
@@ -30,9 +34,13 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [postCommentedOn, setPostCommentedOn] = useState(null);
 	const [thesisCommentedOn, setThesisCommentedOn] = useState(null);
-	const [comments, setComments] = useState([]);
 
 	const detailedPost = route.params;
+
+	// Determine whether post exists (in the case of deleting while on postDetail page)
+	const postExists = !deleted.some(
+		(post) => post.post_id === detailedPost.post_id
+	);
 
 	// Might not need these separate functions?
 	const handleChangeContent = (newContent) => {
@@ -57,9 +65,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 		});
 
 		if (createdComment) {
-			const commentsCopy = comments;
-			commentsCopy.splice(0, 0, createdComment);
-			setComments(commentsCopy);
+			dispatch(addComment(createdComment));
 			setCommentContent("");
 			setDisableStatus(true);
 		}
@@ -71,11 +77,15 @@ const PostDetailScreen = ({ navigation, route }) => {
 			is_post_comment_on: detailedPost.post_id,
 		});
 		if (detailedPost.is_post_comment_on) {
-			const retrievedPost = await PostsManager.getPost(
+			const response = await PostsManager.getPost(
 				detailedPost.is_post_comment_on
 			);
-			setPostCommentedOn(retrievedPost);
-			setThesisCommentedOn(null);
+			if (response.postExists) {
+				setPostCommentedOn(response.post);
+				setThesisCommentedOn(null);
+			} else {
+				setPostCommentedOn("deleted");
+			}
 		} else if (detailedPost.is_thesis_comment_on) {
 			const retrievedThesis = await ThesesManager.getThesis(
 				detailedPost.is_thesis_comment_on
@@ -88,7 +98,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 		}
 
 		if (commentsResponseData) {
-			setComments(commentsResponseData.records.posts);
+			dispatch(setComments(commentsResponseData.records.posts));
 		}
 
 		setRefreshing(false);
@@ -127,18 +137,28 @@ const PostDetailScreen = ({ navigation, route }) => {
 				}
 				refreshing={refreshing}
 				ListHeaderComponent={
-					<KeyboardAvoidingView style={styles.mainContainer} behavior='position' keyboardVerticalOffset={100}>
+					<KeyboardAvoidingView
+						style={styles.mainContainer}
+						behavior="position"
+						keyboardVerticalOffset={100}
+					>
 						{postCommentedOn ? (
-							<PostBox
-								postBoxType={PostBoxType.PostCommentedOn}
-								item={postCommentedOn}
-								nav={navigation}
-							/>
+							postCommentedOn != "deleted" ? (
+								<PostBox
+									postBoxType={PostBoxType.PostCommentedOn}
+									item={postCommentedOn}
+									nav={navigation}
+								/>
+							) : (
+								<AppText style={styles.deletedPost}>
+									This post has been deleted.
+								</AppText>
+							)
 						) : null}
 						{thesisCommentedOn ? (
 							<ThesisBox item={thesisCommentedOn} nav={navigation} />
 						) : null}
-						{posts.some((post) => post.post_id === detailedPost.post_id) ? (
+						{postExists ? (
 							<View>
 								<View style={styles.postContainer}>
 									<PostBox
@@ -182,7 +202,6 @@ const PostDetailScreen = ({ navigation, route }) => {
 				}
 			></FlatList>
 		</NativeBaseProvider>
-
 	);
 };
 

@@ -14,8 +14,10 @@ import AppText from "./AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
-import { useDispatch } from "react-redux";
-import { removePost } from "../redux/actions/PostActions";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { removePost, removeAuthoredPost, removeComment } from "../redux/actions/PostActions";
 
 
 export class PostBoxType {
@@ -24,15 +26,14 @@ export class PostBoxType {
 	static PostDetail = new PostBoxType("postDetail");
 	static PostCommentedOn = new PostBoxType("postCommentedOn");
 	static ThesisCommentedOn = new PostBoxType("thesisCommentedOn");
+	static UserAuthored = new PostBoxType("userAuthored");
 
 	constructor(type) {
 		this.type = type;
 	}
 }
 
-const PostBox = ({ postBoxType, item, nav }) => {
-	// Universal State
-	const dispatch = useDispatch();
+const getTimeElapsed = (item) => {
 	// new Date() gives time in device's time zone, but we need it in UTC
 	// To do this, we get the ISO string, remove the Z from the end, and create a new date
 	const nowIsoString = new Date().toISOString();
@@ -42,17 +43,27 @@ const PostBox = ({ postBoxType, item, nav }) => {
 	const elapsedTimeMinutes = Math.round((now - createdAt) / (1000 * 60));
 
 	// Calculate elapsed time figure to present
-	let elapsedTime;
 	if (elapsedTimeMinutes > 60 && elapsedTimeMinutes <= 60 * 24) {
 		const elapsedHours = Math.round(elapsedTimeMinutes / 60);
-		elapsedTime = `${elapsedHours}h`;
+		return `${elapsedHours}h`;
 	} else if (elapsedTimeMinutes > 60 * 24) {
 		const elapsedDays = Math.round(elapsedTimeMinutes / (60 * 24));
-		elapsedTime = `${elapsedDays}d`;
+		return `${elapsedDays}d`;
 	} else {
-		elapsedTime = `${elapsedTimeMinutes} min`;
+		return `${elapsedTimeMinutes} min`;
 	}
+}
 
+
+const PostBox = ({ postBoxType, item, nav }) => {
+	// Universal State
+	const dispatch = useDispatch();
+	const { userObject } = useSelector((state) => state.authReducer);
+
+	// Get the time elapsed since post was created
+	elapsedTime = getTimeElapsed(item);
+
+	// Determine whether a refresh is needed
 	if (
 		postBoxType == PostBoxType.Comment ||
 		postBoxType == PostBoxType.PostCommentedOn ||
@@ -73,6 +84,11 @@ const PostBox = ({ postBoxType, item, nav }) => {
                     text: "Delete", style: 'destructive', onPress: async () => {
                         const response = await PostsManager.deletePost(item.post_id);
 						if (response.status == 204) {
+							if (postBoxType.type == "userAuthored") {
+								dispatch(removeAuthoredPost(item));
+							} else if (postBoxType.type == "comment") {
+								dispatch(removeComment(item));
+							}
 							dispatch(removePost(item));
 						}
                     }
@@ -111,7 +127,8 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									)
 								) : null}
 								<TouchableOpacity
-									style={styles.dotsButton}
+									disabled={userObject.userId == item.user_id ? false : true}
+									style={userObject.userId == item.user_id ? styles.enabledDotsButton : styles.disabledDotsButton}
 									onPress={() => {
 										alertBeforeDelete(item);
 									}}
@@ -200,6 +217,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		borderRadius: 30,
 		padding: 11,
+		marginTop: 5,
 		marginBottom: 5,
 		width: "100%",
 		backgroundColor: MAIN_SECONDARY_COLOR,
@@ -211,12 +229,15 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 15,
 	},
-	dotsButton: {
-		
-		// borderWidth: 1,
-		// borderColor: 'red',
+	enabledDotsButton: {
 		paddingVertical: 15,
 		paddingLeft: 20,
 		paddingRight: 10
+	},
+	disabledDotsButton: {
+		paddingVertical: 15,
+		paddingLeft: 20,
+		paddingRight: 10,
+		opacity: 0.3
 	}
 });

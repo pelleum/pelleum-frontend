@@ -29,7 +29,6 @@ import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
-import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 import { MAIN_BACKGROUND_COLOR } from "./src/styles/Colors";
 
@@ -37,6 +36,8 @@ import { MAIN_BACKGROUND_COLOR } from "./src/styles/Colors";
 import { Provider } from "react-redux";
 import { store } from "./src/redux/Store";
 import { useSelector, useDispatch } from "react-redux";
+import { refreshLibrary } from "./src/redux/actions/RationaleActions";
+import { storeUserObject } from "./src/redux/actions/AuthActions";
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
@@ -217,9 +218,8 @@ const RootStackFlow = () => {
 	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 
-	const getRationaleLibrary = async () => {
-		const userObjectString = await SecureStore.getItemAsync("userObject");
-		const userObject = JSON.parse(userObjectString);
+	const getRationaleLibrary = async (userObject) => {
+		
 		const retrievedRationales = await RationalesManager.retrieveRationales({
 			user_id: userObject.user_id,
 		});
@@ -234,8 +234,18 @@ const RootStackFlow = () => {
 	const validateToken = async () => {
 		const user = await UserManager.getUser();
 		if (user) {
-			await getRationaleLibrary();
+			// 1. Get user object from secure store
+			const userObjectString = await SecureStore.getItemAsync("userObject");
+			const userObject = JSON.parse(userObjectString);
+			// 2. Get user's raionales to store in universal state
+			await getRationaleLibrary(userObject);
+			// 3. Get account linkage statues, and store them in universal state
 			await LinkAccountsManager.getLinkedAccountsStatus();
+			// // 4. Store *some* of the user object in universal state
+			dispatch(storeUserObject({
+				username: userObject.username,
+				userId: userObject.user_id
+			}));
 		}
 	};
 
