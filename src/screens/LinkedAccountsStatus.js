@@ -52,45 +52,47 @@ const LinkedAccountsStatus = ({ navigation }) => {
 		getAccountsStatus();
 	}, []);
 
+	renderItem = ({ item }) => (
+		<HStack style={styles.itemBox}>
+			<HStack alignItems="center">
+				<Image
+					style={styles.accountImage}
+					source={require("../../assets/robinhood.png")}
+				/>
+				<AppText style={styles.accountNameText}>{item.name}</AppText>
+			</HStack>
+			{item.is_active ? (
+				<HStack alignItems="center">
+					<TouchableOpacity
+						style={styles.relinkUnlinkButton}
+						onPress={() => unlinkAlert()}
+					>
+						<AppText style={styles.linkButtonText}>Unlink</AppText>
+					</TouchableOpacity>
+					<AppText style={styles.activeText}>ACTIVE</AppText>
+				</HStack>
+			) : (
+				<HStack alignItems="center">
+					<TouchableOpacity
+						style={styles.relinkUnlinkButton}
+						onPress={() => navigation.navigate("Link")}
+					>
+						<AppText style={styles.linkButtonText}>Relink</AppText>
+					</TouchableOpacity>
+					<AppText style={styles.inactiveText}>NOT ACTIVE</AppText>
+				</HStack>
+			)}
+		</HStack>
+	);
+
 	return (
 		<View style={styles.mainContainer}>
 			<NativeBaseProvider>
 				<FlatList
 					width={"100%"}
 					data={activeAccounts}
-					keyExtractor={(item) => item.connection_id}
-					renderItem={({ item }) => (
-						<HStack style={styles.itemBox}>
-							<HStack alignItems="center">
-								<Image
-									style={styles.accountImage}
-									source={require("../../assets/robinhood.png")}
-								/>
-								<AppText style={styles.accountNameText}>{item.name}</AppText>
-							</HStack>
-							{item.is_active ? (
-								<HStack alignItems="center">
-									<TouchableOpacity
-										style={styles.relinkUnlinkButton}
-										onPress={() => unlinkAlert()}
-									>
-										<AppText style={styles.linkButtonText}>Unlink</AppText>
-									</TouchableOpacity>
-									<AppText style={styles.activeText}>ACTIVE</AppText>
-								</HStack>
-							) : (
-								<HStack alignItems="center">
-									<TouchableOpacity
-										style={styles.relinkUnlinkButton}
-										onPress={() => navigation.navigate("Link")}
-									>
-										<AppText style={styles.linkButtonText}>Relink</AppText>
-									</TouchableOpacity>
-									<AppText style={styles.inactiveText}>NOT ACTIVE</AppText>
-								</HStack>
-							)}
-						</HStack>
-					)}
+					keyExtractor={(item, index) => item.connection_id}
+					renderItem={renderItem}
 					ListHeaderComponent={
 						<>
 							{errorMessage ? (

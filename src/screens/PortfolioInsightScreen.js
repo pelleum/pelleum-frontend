@@ -27,19 +27,15 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 		onRefresh();
 	}, []);
 
+	renderItem = ({ item }) => (<AssetBox item={item} nav={navigation} portfolioInsightRationales={rationales} />);
+
 	return (
 		<View style={styles.mainContainer}>
 			<NativeBaseProvider>
 				<FlatList
 					data={assetList}
-					keyExtractor={(item) => item.asset_symbol}
-					renderItem={({ item }) => (
-						<AssetBox
-							item={item}
-							nav={navigation}
-							portfolioInsightRationales={rationales}
-						/>
-					)}
+					keyExtractor={(item, index) => item.asset_symbol}
+					renderItem={renderItem}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
 							<Image

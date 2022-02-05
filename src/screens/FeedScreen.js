@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	SafeAreaView,
-	FlatList,
+	VirtualizedList,
 	TouchableOpacity,
 } from "react-native";
 
@@ -28,7 +28,7 @@ const FeedScreen = ({ navigation, route }) => {
 	const [totalPages, setTotalPages] = useState(1);
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const RECORDS_PER_PAGE = 10;
+	const RECORDS_PER_PAGE = 20;
 
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
@@ -41,6 +41,7 @@ const FeedScreen = ({ navigation, route }) => {
 		if (postResponseData) {
 			setErrorMessage("");
 			dispatch(setPosts(postResponseData.records.posts));
+			setCurrentPage(1);
 			setTotalPages(postResponseData.meta_data.total_pages);
 			dispatch(resetLikes());
 		} else {
@@ -86,26 +87,22 @@ const FeedScreen = ({ navigation, route }) => {
 		onRefresh();
 	}, []);
 
+	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Feed} item={item} nav={navigation} />);
+
 	return (
 		<SafeAreaView style={styles.mainContainer}>
-			<FlatList
+			<VirtualizedList
 				width={"100%"}
 				data={posts}
-				keyExtractor={(item) => item.post_id.toString()}
-				renderItem={({ item }) => {
-					return (
-						<PostBox
-							postBoxType={PostBoxType.Feed}
-							item={item}
-							nav={navigation}
-						/>
-					);
-				}}
+				keyExtractor={(item, index) => item.post_id}
+				renderItem={renderItem}
+				getItem={(data, index) => data[index]}
+				getItemCount={data => data.length}
 				refreshing={refreshing}
 				onRefresh={onRefresh}
 				onEndReached={getMorePosts}
 				onEndReachedThreshold={1}
-			></FlatList>
+			></VirtualizedList>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}

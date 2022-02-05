@@ -3,7 +3,7 @@ import {
 	StyleSheet,
 	View,
 	SafeAreaView,
-	FlatList,
+	VirtualizedList,
 	TouchableOpacity,
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
@@ -88,7 +88,7 @@ const SearchScreen = ({ navigation }) => {
 	};
 
 	async function getResults({ discoveryPage = false } = {}) {
-		// Gets results to populate the FlatList
+		// Gets results to populate the list
 		let successfulResponses = [];
 		const retrievedThesesArrayLengths = { bull: 0, bear: 0 };
 		for (const sent of ["Bull", "Bear"]) {
@@ -155,7 +155,7 @@ const SearchScreen = ({ navigation }) => {
 				}
 			}
 		}
-		// If theses were retrieved properly, scroll to the top of the FlatList
+		// If theses were retrieved properly, scroll to the top of the list
 		const thesesArrayLength =
 			sentiment === "Bull"
 				? retrievedThesesArrayLengths.bull
@@ -260,6 +260,8 @@ const SearchScreen = ({ navigation }) => {
 		}
 	};
 
+	renderItem = ({ item }) => (<ThesisBox item={item} nav={navigation} />);
+
 	return (
 		<DismissKeyboard>
 			<SafeAreaView style={styles.mainContainer}>
@@ -351,13 +353,13 @@ const SearchScreen = ({ navigation }) => {
 						{message ? (
 							<AppText style={styles.message}>{message}</AppText>
 						) : null}
-						<FlatList
+						<VirtualizedList
 							width={"100%"}
 							data={sentiment === "Bull" ? bullResults : bearResults}
-							keyExtractor={(item) => item.thesis_id}
-							renderItem={({ item }) => {
-								return <ThesisBox item={item} nav={navigation} />;
-							}}
+							keyExtractor={(item, index) => item.thesis_id}
+							renderItem={renderItem}
+							getItem={(data, index) => data[index]}
+							getItemCount={data => data.length}
 							onEndReached={getMoreResults}
 							onEndReachedThreshold={1}
 							onViewableItemsChanged={viewableItemsRef}
@@ -369,7 +371,7 @@ const SearchScreen = ({ navigation }) => {
 								index,
 							})}
 							ref={flatListRef}
-						></FlatList>
+						></VirtualizedList>
 					</Center>
 				</NativeBaseProvider>
 			</SafeAreaView>

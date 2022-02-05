@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, VirtualizedList } from 'react-native';
 import PostBox, { PostBoxType } from "../components/PostBox";
 import AppText from "../components/AppText";
 import PostsManager from '../managers/PostsManager';
 import { BAD_COLOR } from "../styles/Colors";
 
 const AuthoredPostsScreen = ({ navigation, route }) => {
-    const [postsArray, setPostsArray] = useState([]);
+	const [postsArray, setPostsArray] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const userId = route.params.userId ? route.params.userId : null;
@@ -25,27 +25,29 @@ const AuthoredPostsScreen = ({ navigation, route }) => {
 		getAuthoredPosts();
 	}, []);
 
-    return (
-        <View style={styles.mainContainer}>
+	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Feed} item={item} nav={navigation} />)
+
+	return (
+		<View style={styles.mainContainer}>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}
-			<FlatList
+			<VirtualizedList
 				width={"100%"}
 				data={postsArray}
-				keyExtractor={(item) => item.post_id}
-				renderItem={({ item }) => {
-					return <PostBox postBoxType={PostBoxType.Feed} item={item} nav={navigation} />;
-				}}
-			></FlatList>
+				keyExtractor={(item, index) => item.post_id}
+				renderItem={renderItem}
+				getItem={(data, index) => data[index]}
+				getItemCount={data => data.length}
+			></VirtualizedList>
 		</View>
-    );
+	);
 };
 
 export default AuthoredPostsScreen;
 
 const styles = StyleSheet.create({
-    mainContainer: {
+	mainContainer: {
 		flex: 1,
 	},
 	title: {

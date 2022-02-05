@@ -4,7 +4,7 @@ import {
 	View,
 	TouchableOpacity,
 	Keyboard,
-	FlatList,
+	VirtualizedList,
 	RefreshControl,
 	KeyboardAvoidingView,
 } from "react-native";
@@ -108,23 +108,19 @@ const PostDetailScreen = ({ navigation, route }) => {
 		detailedPost.needsRefresh = false;
 	}
 
+	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Comment} item={item} nav={navigation} />);
+
 	return (
 		<NativeBaseProvider>
-			<FlatList
+			<VirtualizedList
 				ref={listRef}
 				showsVerticalScrollIndicator={false}
 				width={"100%"}
 				data={comments}
-				keyExtractor={(item) => item.post_id.toString()}
-				renderItem={({ item }) => {
-					return (
-						<PostBox
-							postBoxType={PostBoxType.Comment}
-							item={item}
-							nav={navigation}
-						/>
-					);
-				}}
+				keyExtractor={(item, index) => item.post_id}
+				renderItem={renderItem}
+				getItem={(data, index) => data[index]}
+				getItemCount={data => data.length}
 				refreshControl={
 					<RefreshControl
 						enabled={true}
@@ -188,7 +184,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 						)}
 					</KeyboardAvoidingView>
 				}
-			></FlatList>
+			></VirtualizedList>
 		</NativeBaseProvider>
 
 	);

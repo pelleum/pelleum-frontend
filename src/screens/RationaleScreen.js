@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, VirtualizedList, Animated, TouchableOpacity, Alert } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ThesisBox from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
@@ -109,33 +109,36 @@ const RationaleScreen = ({ navigation, route }) => {
         getRationales();
     }, []);
 
+    renderItem = ({ item }) => (
+        disableRemoveRationale ? (
+            <ThesisBox item={item.thesis} nav={navigation} />
+        ) : (
+            <Swipeable
+                renderRightActions={() => swipeRight(item)}
+                rightThreshold={-200}
+            >
+                <Animated.View>
+                    <ThesisBox item={item.thesis} nav={navigation} />
+                </Animated.View>
+            </Swipeable>
+        )
+    );
+
     return (
         <View style={styles.mainContainer}>
             <AppText style={styles.title}>{asset}</AppText>
             {errorMessage ? (
                 <AppText style={styles.error}>{errorMessage}</AppText>
             ) : null}
-            <FlatList
+            <VirtualizedList
                 width={"100%"}
                 data={rationaleArray}
-                //maybe we should use rationale_id as the key extractor for the RationaleScreen only
-                keyExtractor={(item) => item.rationale_id}
-                renderItem={({ item }) => {
-                    return disableRemoveRationale ? (
-                        <ThesisBox item={item.thesis} nav={navigation} />
-                    ) : (
-                        <Swipeable
-                            renderRightActions={() => swipeRight(item)}
-                            rightThreshold={-200}
-                        >
-                            <Animated.View>
-                                <ThesisBox item={item.thesis} nav={navigation} />
-                            </Animated.View>
-                        </Swipeable>
-                    );
-                }}
+                keyExtractor={(item, index) => item.rationale_id}
+                getItem={(data, index) => data[index]}
+                getItemCount={data => data.length}
+                renderItem={renderItem}
                 extraData={refreshFlatlist}
-            ></FlatList>
+            ></VirtualizedList>
         </View>
     );
 };
