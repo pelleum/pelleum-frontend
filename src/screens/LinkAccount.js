@@ -7,6 +7,7 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
+import * as Haptics from 'expo-haptics';
 import DismissKeyboard from "../components/DismissKeyboard";
 import { NativeBaseProvider } from "native-base";
 import LinkAccountsManager from "../managers/LinkAccountsManager";
@@ -42,6 +43,7 @@ const LinkAccount = ({ navigation }) => {
 			setErrorMessage("");
 			if (response.data.account_connection_status == "connected") {
 				await LinkAccountsManager.getLinkedAccountsStatus();
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 				navigation.navigate("Profile", { accountLinked: true });
 			} else {
 				setInstitutionLogin(true);
@@ -71,6 +73,7 @@ const LinkAccount = ({ navigation }) => {
 		if (response.status == 201) {
 			setErrorMessage("");
 			await LinkAccountsManager.getLinkedAccountsStatus();
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 			navigation.navigate("Profile", { accountLinked: true });
 		} else {
 			if (response.data.detail.includes("Please enter a valid code.")) {

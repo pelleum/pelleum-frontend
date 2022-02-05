@@ -1,10 +1,18 @@
-import { store } from "../redux/Store";
 import * as SecureStore from "expo-secure-store";
 import pelleumClient from "../api/clients/PelleumClient";
-import { authError, login, restoreToken, storeUserObject } from "../redux/actions/AuthActions";
 import RationalesManager from "../managers/RationalesManager";
-import { refreshLibrary } from "../redux/actions/RationaleActions";
 import LinkAccountsManager from "./LinkAccountsManager";
+import * as Haptics from "expo-haptics";
+
+// Redux
+import { store } from "../redux/Store";
+import {
+	authError,
+	login,
+	restoreToken,
+	storeUserObject,
+} from "../redux/actions/AuthActions";
+import { refreshLibrary } from "../redux/actions/RationaleActions";
 import { USER_BASE_PATH, USER_LOGIN_PATH } from "@env";
 
 class UserManager {
@@ -24,13 +32,16 @@ class UserManager {
 				"userObject",
 				JSON.stringify(response.data)
 			);
-            // 2. dispatch storeUserObject action
-            store.dispatch(storeUserObject({
-                username: response.data.username,
-                userId: response.data.user_id
-            }));
+			// 2. dispatch storeUserObject action
+			store.dispatch(
+				storeUserObject({
+					username: response.data.username,
+					userId: response.data.user_id,
+				})
+			);
 			// 3. dispatch login action
 			store.dispatch(login());
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			// 4. retrieve rationales from backend and update rationaleLibrary
 			const retrievedRationales = await RationalesManager.retrieveRationales({
 				user_id: response.data.user_id,
@@ -61,13 +72,16 @@ class UserManager {
 				"userObject",
 				JSON.stringify(response.data)
 			);
-            // 2. dispatch storeUserObject action
-            store.dispatch(storeUserObject({
-                username: response.data.username,
-                userId: response.data.user_id
-            }));
+			// 2. dispatch storeUserObject action
+			store.dispatch(
+				storeUserObject({
+					username: response.data.username,
+					userId: response.data.user_id,
+				})
+			);
 			// 3. dispatch login action
 			store.dispatch(login());
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			// 4. retrieve rationales from backend and update rationaleLibrary
 			const retrievedRationales = await RationalesManager.retrieveRationales({
 				user_id: response.data.user_id,
