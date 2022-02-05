@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, VirtualizedList } from "react-native";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
@@ -25,19 +25,21 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
 		getAuthoredTheses();
 	}, []);
 
+	renderItem = ({ item }) => (<ThesisBox item={item} nav={navigation} />);
+
 	return (
 		<View style={styles.mainContainer}>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}
-			<FlatList
+			<VirtualizedList
 				width={"100%"}
 				data={thesesArray}
-				keyExtractor={(item) => item.thesis_id}
-				renderItem={({ item }) => {
-					return <ThesisBox item={item} nav={navigation} />;
-				}}
-			></FlatList>
+				keyExtractor={(item, index) => item.thesis_id}
+				renderItem={renderItem}
+				getItem={(data, index) => data[index]}
+				getItemCount={data => data.length}
+			></VirtualizedList>
 		</View>
 	);
 };

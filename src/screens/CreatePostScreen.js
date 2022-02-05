@@ -21,6 +21,7 @@ import {
 } from "../styles/Colors";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
+import * as Haptics from 'expo-haptics';
 
 
 const CreatePostScreen = ({ navigation }) => {
@@ -55,6 +56,7 @@ const CreatePostScreen = ({ navigation }) => {
 			setContent("");
 			setAssetSymbol("");
 			setDisableStatus(true);
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 			navigation.navigate("Feed");
 		}
 	};
@@ -133,7 +135,7 @@ const CreatePostScreen = ({ navigation }) => {
 							}
 							style={styles.assetSymbolInput}
 						/>
-						<AppText>Asset Symbol</AppText>
+						<AppText>Ticker Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="What's your valuable insight?"

@@ -82,14 +82,16 @@ const ProfileScreen = ({ navigation, route }) => {
 		}
 	};
 
+	renderItem = ({ item }) => (<AssetBox item={item} nav={navigation} />);
+
 	return (
 		<SafeAreaView style={styles.mainContainer}>
 			<NativeBaseProvider>
 				<FlatList
 					showsVerticalScrollIndicator={false}
 					data={assetList}
-					keyExtractor={(item) => item.asset_symbol}
-					renderItem={({ item }) => <AssetBox item={item} nav={navigation} />}
+					keyExtractor={(item, index) => item.asset_symbol}
+					renderItem={renderItem}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
 							<HStack justifyContent={"space-between"}>

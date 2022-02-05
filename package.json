@@ -15,6 +15,7 @@
     "@stream-io/flat-list-mvcp": "^0.10.1",
     "axios": "^0.24.0",
     "expo": "^43.0.3",
+    "expo-haptics": "~11.0.3",
     "expo-linear-gradient": "~10.0.3",
     "expo-secure-store": "~11.0.3",
     "expo-web-browser": "^10.0.3",

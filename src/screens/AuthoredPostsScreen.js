@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, VirtualizedList } from 'react-native';
 import PostBox, { PostBoxType } from "../components/PostBox";
 import AppText from "../components/AppText";
 import PostsManager from "../managers/PostsManager";
@@ -32,25 +32,21 @@ const AuthoredPostsScreen = ({ navigation, route }) => {
 		getAuthoredPosts();
 	}, []);
 
+	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Feed} item={item} nav={navigation} />)
+
 	return (
 		<View style={styles.mainContainer}>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}
-			<FlatList
+			<VirtualizedList
 				width={"100%"}
-				data={userAuthoredPosts}
-				keyExtractor={(item) => item.post_id}
-				renderItem={({ item }) => {
-					return (
-						<PostBox
-							postBoxType={PostBoxType.UserAuthored}
-							item={item}
-							nav={navigation}
-						/>
-					);
-				}}
-			></FlatList>
+				data={postsArray}
+				keyExtractor={(item, index) => item.post_id}
+				renderItem={renderItem}
+				getItem={(data, index) => data[index]}
+				getItemCount={data => data.length}
+			></VirtualizedList>
 		</View>
 	);
 };

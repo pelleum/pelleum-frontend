@@ -1,8 +1,9 @@
 import React from "react";
-import { View, StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import { LIGHT_GREY_COLOR, TEXT_COLOR } from "../styles/Colors";
 
 const CommentInput = ({
+	scrollToTop,
 	commentContent,
 	commentContentValidity,
 	changeContent,
@@ -23,19 +24,18 @@ const CommentInput = ({
 	};
 
 	return (
-		<View>
-			<TextInput
-				color={TEXT_COLOR}
-				placeholder="Reply with your thoughts here"
-				placeholderTextColor={LIGHT_GREY_COLOR}
-				multiline={true}
-				numberOfLines={20}
-				style={styles.textArea}
-				maxLength={512}
-				value={commentContent}
-				onChangeText={(newValue) => handleChangeText(newValue)}
-			/>
-		</View>
+		<TextInput
+			onFocus={scrollToTop}
+			color={TEXT_COLOR}
+			placeholder="Reply with your thoughts here"
+			placeholderTextColor={LIGHT_GREY_COLOR}
+			multiline={true}
+			numberOfLines={20}
+			style={styles.textArea}
+			maxLength={512}
+			value={commentContent}
+			onChangeText={(newValue) => handleChangeText(newValue)}
+		/>
 	);
 };
 

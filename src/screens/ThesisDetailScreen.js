@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
-	FlatList,
+	VirtualizedList,
 	RefreshControl,
 	Keyboard,
 	KeyboardAvoidingView,
@@ -39,6 +39,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 
 	//We need to set the error message
+
+	const listRef = useRef(null);
+	const handleScrollToTop = () => {
+		listRef.current.scrollToOffset({ offset: 0, animated: false });
+	};
 
 	const detailedThesis = route.params;
 	const dateWritten = new Date(detailedThesis.created_at);
@@ -99,21 +104,19 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		onRefresh();
 	}, []);
 
+	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Comment} item={item} nav={navigation} />);
+
 	return (
 		<NativeBaseProvider>
-			<FlatList
+			<VirtualizedList
+				ref={listRef}
+				showsVerticalScrollIndicator={false}
 				width={"100%"}
 				data={comments}
-				keyExtractor={(item) => item.post_id.toString()}
-				renderItem={({ item }) => {
-					return (
-						<PostBox
-							postBoxType={PostBoxType.Comment}
-							item={item}
-							nav={navigation}
-						/>
-					);
-				}}
+				keyExtractor={(item, index) => item.post_id}
+				getItem={(data, index) => data[index]}
+				getItemCount={data => data.length}
+				renderItem={renderItem}
 				refreshControl={
 					<RefreshControl
 						enabled={true}
@@ -182,6 +185,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 						</View>
 						<VStack>
 							<CommentInput
+								scrollToTop={handleScrollToTop}
 								commentContent={commentContent}
 								commentContentValidity={commentContentValidity}
 								changeContent={handleChangeContent}
@@ -206,7 +210,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 						</VStack>
 					</KeyboardAvoidingView>
 				}
-			></FlatList>
+			></VirtualizedList>
 		</NativeBaseProvider>
 	);
 };

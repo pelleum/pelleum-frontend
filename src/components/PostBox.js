@@ -73,16 +73,16 @@ const PostBox = ({ postBoxType, item, nav }) => {
 	}
 
 	const alertBeforeDelete = async (item) => {
-        Alert.alert(
-            "Delete Post",
-            "Are you sure you want to delete this post?",
-            [
-                {
-                    text: "Cancel", onPress: () => { /* Do nothing */ }
-                },
-                {
-                    text: "Delete", style: 'destructive', onPress: async () => {
-                        const response = await PostsManager.deletePost(item.post_id);
+		Alert.alert(
+			"Delete Post",
+			"Are you sure you want to delete this post?",
+			[
+				{
+					text: "Cancel", onPress: () => { /* Do nothing */ }
+				},
+				{
+					text: "Delete", style: 'destructive', onPress: async () => {
+						const response = await PostsManager.deletePost(item.post_id);
 						if (response.status == 204) {
 							if (postBoxType.type == "userAuthored") {
 								dispatch(removeAuthoredPost(item));
@@ -91,11 +91,11 @@ const PostBox = ({ postBoxType, item, nav }) => {
 							}
 							dispatch(removePost(item));
 						}
-                    }
-                }
-            ]
-        );
-    };
+					}
+				}
+			]
+		);
+	};
 
 	return (
 		<NativeBaseProvider>
@@ -137,6 +137,18 @@ const PostBox = ({ postBoxType, item, nav }) => {
 								</TouchableOpacity>
 							</HStack>
 						</HStack>
+						{((postBoxType == PostBoxType.PostDetail || postBoxType == PostBoxType.PostCommentedOn) && !item.thesis && !item.is_post_comment_on) ? (
+							<TouchableOpacity
+								style={commonButtonStyles.assetButton}
+								onPress={() => {
+									console.log("Asset button worked.");
+								}}
+							>
+								<AppText style={commonButtonStyles.assetText}>
+									#{item.asset_symbol}
+								</AppText>
+							</TouchableOpacity>
+						) : null}
 						{postBoxType == PostBoxType.Feed ? (
 							item.asset_symbol ? (
 								<TouchableOpacity
