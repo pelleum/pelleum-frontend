@@ -6,6 +6,7 @@ import {
 	View,
 	KeyboardAvoidingView,
 	TouchableOpacity,
+	SafeAreaView,
 } from "react-native";
 
 // Import Local Files
@@ -84,40 +85,37 @@ const LoginScreen = ({ navigation }) => {
 
 	return (
 		<DismissKeyboard>
-			<KeyboardAvoidingView
-				style={styles.container}
-				//behavior="padding"       //ensures text fields do not get blocked by keyboard
-			>
-				<AppText style={styles.titleText}>Welcome to Pelleum.</AppText>
-				<View style={styles.inputContainer}>
-					<TextInput
-						placeholder="Username"
-						placeholderTextColor={LIGHT_GREY_COLOR}
-						value={username}
-						onChangeText={(newValue) =>
-							handleChangeText({ newValue: newValue, checkUsername: true })
-						}
-						style={styles.input}
-						autoCapitalize="none"
-						autoCorrect={false}
-					/>
-					<TextInput
-						placeholder="Password"
-						placeholderTextColor={LIGHT_GREY_COLOR}
-						value={password}
-						onChangeText={(newValue) =>
-							handleChangeText({ newValue: newValue, checkPassword: true })
-						}
-						style={styles.input}
-						autoCapitalize="none"
-						autoCorrect={false}
-						secureTextEntry={true}
-					/>
-					{errorMessage ? (
-						<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-					) : null}
-				</View>
-				<View style={styles.buttonContainer}>
+			<SafeAreaView style={styles.container}>
+				<KeyboardAvoidingView width={"100%"} alignItems={"center"} behavior={"padding"}>
+					<AppText style={styles.titleText}>Log In</AppText>
+					<View style={styles.inputContainer}>
+						<TextInput
+							placeholder="Username"
+							placeholderTextColor={LIGHT_GREY_COLOR}
+							value={username}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, checkUsername: true })
+							}
+							style={styles.input}
+							autoCapitalize="none"
+							autoCorrect={false}
+						/>
+						<TextInput
+							placeholder="Password"
+							placeholderTextColor={LIGHT_GREY_COLOR}
+							value={password}
+							onChangeText={(newValue) =>
+								handleChangeText({ newValue: newValue, checkPassword: true })
+							}
+							style={styles.input}
+							autoCapitalize="none"
+							autoCorrect={false}
+							secureTextEntry={true}
+						/>
+						{errorMessage ? (
+							<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+						) : null}
+					</View>
 					<TouchableOpacity
 						onPress={() => UserManager.login({ username, password })}
 						style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
@@ -125,14 +123,14 @@ const LoginScreen = ({ navigation }) => {
 					>
 						<AppText style={styles.buttonText}>Log In</AppText>
 					</TouchableOpacity>
-					<View style={styles.loginContainer}>
-						<AppText style={styles.already}>Don't have an account?</AppText>
-						<TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-							<AppText style={styles.signUpButton}>Sign up</AppText>
-						</TouchableOpacity>
-					</View>
+				</KeyboardAvoidingView>
+				<View style={styles.signupInsteadContainer}>
+					<AppText style={styles.signupInsteadText}>Don't have an account?</AppText>
+					<TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+						<AppText style={styles.signupInsteadButton}>Sign up</AppText>
+					</TouchableOpacity>
 				</View>
-			</KeyboardAvoidingView>
+			</SafeAreaView>
 		</DismissKeyboard>
 	);
 };
@@ -158,29 +156,23 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		marginTop: 5,
 	},
-	buttonContainer: {
-		width: "60%",
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: 40,
-	},
 	buttonEnabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
+		justifyContent: "center",
+		alignItems: "center",
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		margin: 15,
-		justifyContent: "center",
-		alignItems: "center",
+		marginTop: 20,
 	},
 	buttonDisabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
+		justifyContent: "center",
+		alignItems: "center",
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		margin: 15,
-		justifyContent: "center",
-		alignItems: "center",
+		marginTop: 20,
 		opacity: 0.33,
 	},
 	buttonText: {
@@ -190,32 +182,30 @@ const styles = StyleSheet.create({
 	},
 	errorMessage: {
 		fontSize: 16,
+		marginTop: 20,
+		alignSelf: "center",
 		color: BAD_COLOR,
-		paddingVertical: 10,
-		marginTop: 30,
-		marginHorizontal: 10,
 	},
-	loginContainer: {
-		paddingVertical: 10,
-		marginTop: 30,
+	signupInsteadContainer: {
+		marginTop: 75,
 		justifyContent: "space-evenly",
 		width: "100%",
 		flexDirection: "row",
 	},
-	already: {
+	signupInsteadText: {
 		fontSize: 16,
 		color: LIGHT_GREY_COLOR,
 	},
-	signUpButton: {
+	signupInsteadButton: {
 		fontSize: 16,
 		color: MAIN_SECONDARY_COLOR,
 		marginLeft: 10,
 	},
 	titleText: {
-		fontSize: 22,
-		color: TEXT_COLOR,
-		padding: 5,
 		alignSelf: "center",
+		color: TEXT_COLOR,
+		fontSize: 22,
+		padding: 5,
 		marginBottom: 15,
 	},
 });

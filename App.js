@@ -30,7 +30,7 @@ import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
-import { MAIN_BACKGROUND_COLOR } from "./src/styles/Colors";
+import { LIGHT_GREY_COLOR, MAIN_BACKGROUND_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "./src/styles/Colors";
 
 // Redux
 import { Provider } from "react-redux";
@@ -61,7 +61,7 @@ const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
 	<FeedStack.Navigator
 		initialRouteName="Feed"
-		screenOptions={{ headerBackTitleVisible: false }}
+		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<FeedStack.Screen
 			name="Feed"
@@ -76,7 +76,7 @@ const SearchStack = createNativeStackNavigator();
 const SearchFlow = () => (
 	<SearchStack.Navigator
 		initialRouteName="Search"
-		screenOptions={{ headerBackTitleVisible: false }}
+		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<SearchStack.Screen
 			name="Search"
@@ -91,14 +91,15 @@ const EducationStack = createNativeStackNavigator();
 const EducationFlow = () => (
 	<EducationStack.Navigator
 		initialRouteName="Education"
-		screenOptions={{ headerBackTitleVisible: false }}
+		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<EducationStack.Screen
 			name="Education"
 			component={EdScreen}
 			options={{
 				headerTitle: "Pelleum Learn",
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
 			}}
 		/>
 	</EducationStack.Navigator>
@@ -109,7 +110,7 @@ const ProfileStack = createNativeStackNavigator();
 const ProfileFlow = () => (
 	<ProfileStack.Navigator
 		initialRouteName="Profile"
-		screenOptions={{ headerBackTitleVisible: false }}
+		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<ProfileStack.Screen
 			name="Profile"
@@ -121,7 +122,8 @@ const ProfileFlow = () => (
 			component={SettingsScreen}
 			options={{
 				headerTitle: "Settings",
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
 			}}
 		/>
 		<ProfileStack.Screen
@@ -129,7 +131,8 @@ const ProfileFlow = () => (
 			component={LinkAccount}
 			options={{
 				headerTitle: "Link an Account",
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
 			}}
 		/>
 		<ProfileStack.Screen
@@ -137,7 +140,8 @@ const ProfileFlow = () => (
 			component={LinkedAccountsStatus}
 			options={{
 				headerTitle: "Linked Accounts",
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
 			}}
 		/>
 		<ProfileStack.Screen
@@ -145,7 +149,8 @@ const ProfileFlow = () => (
 			component={AuthoredThesesScreen}
 			options={{
 				headerTitle: "My Theses",
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
 			}}
 		/>
 		<ProfileStack.Screen
@@ -153,7 +158,8 @@ const ProfileFlow = () => (
 			component={AuthoredPostsScreen}
 			options={{
 				headerTitle: "My Posts",
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
 			}}
 		/>
 	</ProfileStack.Navigator>
@@ -165,8 +171,8 @@ const AppFlow = () => (
 	<AppTabs.Navigator
 		screenOptions={{
 			tabBarShowLabel: false,
-			tabBarInactiveTintColor: "#858585",
-			tabBarActiveTintColor: "white",
+			tabBarInactiveTintColor: LIGHT_GREY_COLOR,
+			tabBarActiveTintColor: TEXT_COLOR,
 		}}
 	>
 		<AppTabs.Screen
@@ -219,7 +225,7 @@ const RootStackFlow = () => {
 	const dispatch = useDispatch();
 
 	const getRationaleLibrary = async (userObject) => {
-		
+
 		const retrievedRationales = await RationalesManager.retrieveRationales({
 			user_id: userObject.user_id,
 		});
@@ -258,7 +264,7 @@ const RootStackFlow = () => {
 	}
 
 	return (
-		<RootStack.Navigator screenOptions={{ headerBackTitleVisible: false }}>
+		<RootStack.Navigator screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}>
 			{hasUserToken == false ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen
@@ -283,7 +289,8 @@ const RootStackFlow = () => {
 						component={CreateThesisScreen}
 						options={{
 							headerTitle: "Create a Thesis",
-							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
 					<RootStack.Screen
@@ -291,7 +298,8 @@ const RootStackFlow = () => {
 						component={CreatePostScreen}
 						options={{
 							headerTitle: "Create a Post",
-							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
 					<RootStack.Screen
@@ -299,7 +307,8 @@ const RootStackFlow = () => {
 						component={PortfolioInsightScreen}
 						options={{
 							headerTitle: "Portfolio Insight",
-							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
 					<RootStack.Screen
@@ -307,7 +316,8 @@ const RootStackFlow = () => {
 						component={PostDetailScreen}
 						options={{
 							headerTitle: "Post Detail",
-							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
 					<RootStack.Screen
@@ -315,7 +325,8 @@ const RootStackFlow = () => {
 						component={ThesisDetailScreen}
 						options={{
 							headerTitle: "Thesis Detail",
-							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
 					<RootStack.Screen
@@ -323,7 +334,8 @@ const RootStackFlow = () => {
 						component={RationaleScreen}
 						options={{
 							headerTitle: "Rationale Library",
-							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR }
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
 				</>

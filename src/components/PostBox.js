@@ -118,39 +118,19 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									• {elapsedTime}
 								</AppText>
 							</HStack>
-							<HStack justifyContent="space-between" alignItems="center">
-								{item.sentiment ? (
-									item.sentiment === "Bull" ? (
-										<SentimentPill item={item} sentiment={Sentiment.Bull} />
-									) : (
-										<SentimentPill item={item} sentiment={Sentiment.Bear} />
-									)
-								) : null}
-								<TouchableOpacity
-									disabled={userObject.userId == item.user_id ? false : true}
-									style={userObject.userId == item.user_id ? styles.enabledDotsButton : styles.disabledDotsButton}
-									onPress={() => {
-										alertBeforeDelete(item);
-									}}
-								>
-									<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
-								</TouchableOpacity>
-							</HStack>
-						</HStack>
-						{((postBoxType == PostBoxType.PostDetail || postBoxType == PostBoxType.PostCommentedOn) && !item.thesis && !item.is_post_comment_on) ? (
 							<TouchableOpacity
-								style={commonButtonStyles.assetButton}
+								disabled={userObject.userId == item.user_id ? false : true}
+								style={userObject.userId == item.user_id ? styles.enabledDotsButton : styles.disabledDotsButton}
 								onPress={() => {
-									console.log("Asset button worked.");
+									alertBeforeDelete(item);
 								}}
 							>
-								<AppText style={commonButtonStyles.assetText}>
-									#{item.asset_symbol}
-								</AppText>
+								<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
 							</TouchableOpacity>
-						) : null}
-						{postBoxType == PostBoxType.Feed ? (
-							item.asset_symbol ? (
+						</HStack>
+						{((item.is_post_comment_on || item.is_thesis_comment_on) && (postBoxType == PostBoxType.Feed || postBoxType == PostBoxType.PostDetail)) ? <AppText style={styles.commentFlagText}>Left a comment:</AppText> : null}
+						<HStack justifyContent="space-between" alignItems="center">
+							{item.asset_symbol ? (
 								<TouchableOpacity
 									style={commonButtonStyles.assetButton}
 									onPress={() => {
@@ -161,8 +141,15 @@ const PostBox = ({ postBoxType, item, nav }) => {
 										#{item.asset_symbol}
 									</AppText>
 								</TouchableOpacity>
-							) : null
-						) : null}
+							) : null}
+							{item.sentiment ? (
+								item.sentiment === "Bull" ? (
+									<SentimentPill item={item} sentiment={Sentiment.Bull} />
+								) : (
+									<SentimentPill item={item} sentiment={Sentiment.Bear} />
+								)
+							) : null}
+						</HStack>
 						<AppText style={styles.contentText}>{item.content}</AppText>
 						{item.thesis ? (
 							<ThesisBox
@@ -251,5 +238,8 @@ const styles = StyleSheet.create({
 		paddingLeft: 20,
 		paddingRight: 10,
 		opacity: 0.3
-	}
+	},
+	commentFlagText: {
+		color: LIGHT_GREY_COLOR,
+	},
 });

@@ -3,7 +3,7 @@ import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
-	VirtualizedList,
+	FlatList,
 	RefreshControl,
 	Keyboard,
 	KeyboardAvoidingView,
@@ -24,7 +24,7 @@ import { setComments, addComment } from "../redux/actions/PostActions";
 // Universal Styles
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
-import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
+import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// Universal State
@@ -108,14 +108,13 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	return (
 		<NativeBaseProvider>
-			<VirtualizedList
+			<FlatList
 				ref={listRef}
 				showsVerticalScrollIndicator={false}
+				keyboardShouldPersistTaps={'handled'}
 				width={"100%"}
 				data={comments}
-				keyExtractor={(item, index) => item.post_id}
-				getItem={(data, index) => data[index]}
-				getItemCount={data => data.length}
+				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
 				refreshControl={
 					<RefreshControl
@@ -210,7 +209,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 						</VStack>
 					</KeyboardAvoidingView>
 				}
-			></VirtualizedList>
+			></FlatList>
 		</NativeBaseProvider>
 	);
 };
@@ -225,7 +224,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		marginBottom: 15,
 		borderBottomWidth: 0.5,
-		borderBottomColor: MAIN_SECONDARY_COLOR,
+		borderBottomColor: LIGHT_GREY_COLOR,
 	},
 	buttonBox: {
 		paddingTop: 5,
@@ -280,23 +279,25 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 	},
 	replyButtonEnabled: {
-		alignSelf: "center",
+		alignSelf: "flex-end",
 		borderRadius: 30,
-		padding: 11,
+		paddingVertical: 8,
+		paddingHorizontal: 11,
 		marginBottom: 5,
-		width: "100%",
+		width: "22%",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
 	},
 	replyButtonDisabled: {
-		alignSelf: "center",
+		alignSelf: "flex-end",
 		borderRadius: 30,
-		padding: 11,
+		paddingVertical: 8,
+		paddingHorizontal: 11,
 		marginBottom: 5,
-		width: "100%",
+		width: "22%",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
-		opacity: 0.2,
+		opacity: 0.33,
 	},
 	errorText: {
 		color: BAD_COLOR,

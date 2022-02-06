@@ -5,6 +5,7 @@ import {
 	TextInput,
 	View,
 	KeyboardAvoidingView,
+	SafeAreaView,
 	TouchableOpacity,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
@@ -222,156 +223,155 @@ const SignupScreen = ({ navigation }) => {
 	return (
 		<NativeBaseProvider>
 			<DismissKeyboard>
-				<KeyboardAvoidingView
-					style={styles.container}
-					//behavior="padding"       //ensures text fields do not get blocked by keyboard on iOS
-				>
-					<AppText style={styles.titleText}>Welcome to Pelleum!</AppText>
-					<View style={styles.inputContainer}>
-						<TextInput
-							placeholder="Email"
-							placeholderTextColor={LIGHT_GREY_COLOR}
-							keyboardType="email-address"
-							value={email}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkEmail: true })
-							}
-							style={styles.input}
-							autoCapitalize="none"
-							autoCorrect={false}
-						/>
-						<TextInput
-							placeholder="Username"
-							placeholderTextColor={LIGHT_GREY_COLOR}
-							value={username}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkUsername: true })
-							}
-							style={styles.input}
-							autoCapitalize="none"
-							autoCorrect={false}
-						/>
-						<TextInput
-							placeholder="Password"
-							placeholderTextColor={LIGHT_GREY_COLOR}
-							value={password}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkPassword: true })
-							}
-							style={styles.input}
-							autoCapitalize="none"
-							autoCorrect={false}
-							secureTextEntry={true}
-						/>
-						<TextInputMask
-							placeholder="MM/DD/YYYY"
-							placeholderTextColor={LIGHT_GREY_COLOR}
-							type={"datetime"}
-							style={styles.input}
-							options={{ format: "MM/DD/YYYY" }}
-							value={birthDate}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkBirthDate: true })
-							}
-						/>
-						{errorMessage ? (
-							<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-						) : null}
-					</View>
-					<View style={styles.validationMessageView}>
-						<HStack alignItems="center">
-							{!emailValidation(email) ? (
-								<Feather name="x-circle" size={24} color={BAD_COLOR} />
-							) : (
-								<Ionicons
-									name="shield-checkmark"
-									size={24}
-									color={GOOD_COLOR}
-								/>
-							)}
-							<AppText style={styles.validationMessageText}>
-								Email is valid.
-							</AppText>
-						</HStack>
-						<HStack alignItems="center">
-							{!usernameValidation(username) ? (
-								<Feather name="x-circle" size={24} color={BAD_COLOR} />
-							) : (
-								<Ionicons
-									name="shield-checkmark"
-									size={24}
-									color={GOOD_COLOR}
-								/>
-							)}
-							<AppText style={styles.validationMessageText}>
-								Username is valid.
-							</AppText>
-						</HStack>
-						<HStack alignItems="center">
-							{!passwordValidation({
-								passwordText: password,
-								checkLength: true,
-							}) ? (
-								<Feather name="x-circle" size={24} color={BAD_COLOR} />
-							) : (
-								<Ionicons
-									name="shield-checkmark"
-									size={24}
-									color={GOOD_COLOR}
-								/>
-							)}
-							<AppText style={styles.validationMessageText}>
-								Password must be at least 8 characters long.
-							</AppText>
-						</HStack>
-						<HStack>
-							{!passwordValidation({
-								passwordText: password,
-								checkCharacters: true,
-							}) ? (
-								<Feather name="x-circle" size={24} color={BAD_COLOR} />
-							) : (
-								<Ionicons
-									name="shield-checkmark"
-									size={24}
-									color={GOOD_COLOR}
-								/>
-							)}
-							<AppText style={styles.validationMessageText}>
-								Password must contain at least one uppercase character, one
-								lowercase character, one numerical character, and one special
-								character.
-							</AppText>
-						</HStack>
-						<HStack alignItems="center">
-							{!dateValidation(birthDate) ? (
-								<Feather name="x-circle" size={24} color={BAD_COLOR} />
-							) : (
-								<Ionicons
-									name="shield-checkmark"
-									size={24}
-									color={GOOD_COLOR}
-								/>
-							)}
-							<AppText style={styles.validationMessageText}>
-								Birthdate is valid, and you are at least 18 years old.
-							</AppText>
-						</HStack>
-					</View>
-					<TouchableOpacity
-						onPress={() => UserManager.signup({ email, username, password })}
-						style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
-						disabled={disableStatus}
-					>
-						<AppText style={styles.buttonText}>Create Account</AppText>
-					</TouchableOpacity>
-					<HStack style={styles.alreadyHaveAccount}>
-						<AppText style={styles.dontHave}>Already have an account? </AppText>
-						<TouchableOpacity onPress={() => navigation.navigate("Login")}>
-							<AppText style={styles.LoginText}>Log in</AppText>
+				<SafeAreaView style={styles.container}>
+					<KeyboardAvoidingView width={"100%"} alignItems={"center"} behavior={"padding"}>
+						<AppText style={styles.titleText}>Welcome to Pelleum</AppText>
+						<View style={styles.inputContainer}>
+							<TextInput
+								placeholder="Email"
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								keyboardType="email-address"
+								value={email}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkEmail: true })
+								}
+								style={styles.input}
+								autoCapitalize="none"
+								autoCorrect={false}
+							/>
+							<TextInput
+								placeholder="Username"
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								value={username}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkUsername: true })
+								}
+								style={styles.input}
+								autoCapitalize="none"
+								autoCorrect={false}
+							/>
+							<TextInput
+								placeholder="Password"
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								value={password}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkPassword: true })
+								}
+								style={styles.input}
+								autoCapitalize="none"
+								autoCorrect={false}
+								secureTextEntry={true}
+							/>
+							<TextInputMask
+								placeholder="MM/DD/YYYY"
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								type={"datetime"}
+								style={styles.input}
+								options={{ format: "MM/DD/YYYY" }}
+								value={birthDate}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkBirthDate: true })
+								}
+							/>
+							{errorMessage ? (
+								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+							) : null}
+						</View>
+						<View style={styles.validationMessageView}>
+							<HStack alignItems="center">
+								{!emailValidation(email) ? (
+									<Feather name="x-circle" size={24} color={BAD_COLOR} />
+								) : (
+									<Ionicons
+										name="shield-checkmark"
+										size={24}
+										color={GOOD_COLOR}
+									/>
+								)}
+								<AppText style={styles.validationMessageText}>
+									Email is valid.
+								</AppText>
+							</HStack>
+							<HStack alignItems="center">
+								{!usernameValidation(username) ? (
+									<Feather name="x-circle" size={24} color={BAD_COLOR} />
+								) : (
+									<Ionicons
+										name="shield-checkmark"
+										size={24}
+										color={GOOD_COLOR}
+									/>
+								)}
+								<AppText style={styles.validationMessageText}>
+									Username is valid.
+								</AppText>
+							</HStack>
+							<HStack alignItems="center">
+								{!passwordValidation({
+									passwordText: password,
+									checkLength: true,
+								}) ? (
+									<Feather name="x-circle" size={24} color={BAD_COLOR} />
+								) : (
+									<Ionicons
+										name="shield-checkmark"
+										size={24}
+										color={GOOD_COLOR}
+									/>
+								)}
+								<AppText style={styles.validationMessageText}>
+									Password must be at least 8 characters long.
+								</AppText>
+							</HStack>
+							<HStack>
+								{!passwordValidation({
+									passwordText: password,
+									checkCharacters: true,
+								}) ? (
+									<Feather name="x-circle" size={24} color={BAD_COLOR} />
+								) : (
+									<Ionicons
+										name="shield-checkmark"
+										size={24}
+										color={GOOD_COLOR}
+									/>
+								)}
+								<AppText style={styles.validationMessageText}>
+									Password must contain at least one uppercase character, one
+									lowercase character, one numerical character, and one special
+									character.
+								</AppText>
+							</HStack>
+							<HStack alignItems="center">
+								{!dateValidation(birthDate) ? (
+									<Feather name="x-circle" size={24} color={BAD_COLOR} />
+								) : (
+									<Ionicons
+										name="shield-checkmark"
+										size={24}
+										color={GOOD_COLOR}
+									/>
+								)}
+								<AppText style={styles.validationMessageText}>
+									Birthdate is valid, and you are at least 18 years old.
+								</AppText>
+							</HStack>
+						</View>
+						<TouchableOpacity
+							onPress={() => UserManager.signup({ email, username, password })}
+							style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
+							disabled={disableStatus}
+						>
+							<AppText style={styles.buttonText}>Create Account</AppText>
 						</TouchableOpacity>
-					</HStack>
-				</KeyboardAvoidingView>
+					</KeyboardAvoidingView>
+					<View style={styles.loginInsteadContainer}>
+						<AppText style={styles.loginInsteadText}>Already have an account? </AppText>
+						<TouchableOpacity onPress={() => navigation.navigate("Login")}>
+							<AppText style={styles.loginInsteadButton}>Log in</AppText>
+						</TouchableOpacity>
+					</View>
+				</SafeAreaView>
 			</DismissKeyboard>
 		</NativeBaseProvider>
 	);
@@ -383,7 +383,7 @@ export default SignupScreen;
 //--------------------------/
 const styles = StyleSheet.create({
 	container: {
-		flex: 1, //this ensures that the container (view) fills up max vertical space
+		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -404,21 +404,21 @@ const styles = StyleSheet.create({
 	},
 	buttonEnabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
+		justifyContent: "center",
+		alignItems: "center",
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		margin: 15,
-		justifyContent: "center",
-		alignItems: "center",
+		marginTop: 10,
 	},
 	buttonDisabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
+		justifyContent: "center",
+		alignItems: "center",
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		margin: 15,
-		justifyContent: "center",
-		alignItems: "center",
+		marginTop: 10,
 		opacity: 0.33,
 	},
 	buttonText: {
@@ -440,15 +440,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		flexDirection: "row",
 	},
-	dontHave: {
-		fontSize: 16,
-		color: LIGHT_GREY_COLOR,
-	},
-	LoginText: {
-		fontSize: 16,
-		color: MAIN_SECONDARY_COLOR,
-		marginLeft: 10,
-	},
 	titleText: {
 		fontSize: 22,
 		color: TEXT_COLOR,
@@ -458,13 +449,24 @@ const styles = StyleSheet.create({
 	},
 	validationMessageView: {
 		width: "95%",
-		marginVertical: 20,
+		marginTop: 10,
 	},
 	validationMessageText: {
 		marginLeft: 5,
 	},
-	alreadyHaveAccount: {
-		position: "absolute",
-		bottom: 100,
+	loginInsteadContainer: {
+		marginTop: 75,
+		justifyContent: "space-evenly",
+		width: "100%",
+		flexDirection: "row",
+	},
+	loginInsteadText: {
+		fontSize: 16,
+		color: LIGHT_GREY_COLOR,
+	},
+	loginInsteadButton: {
+		fontSize: 16,
+		color: MAIN_SECONDARY_COLOR,
+		marginLeft: 10,
 	},
 });

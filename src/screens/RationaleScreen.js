@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, VirtualizedList, Animated, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, FlatList, Animated, TouchableOpacity, Alert } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ThesisBox from '../components/ThesisBox';
 import RationalesManager from '../managers/RationalesManager';
@@ -130,15 +130,13 @@ const RationaleScreen = ({ navigation, route }) => {
             {errorMessage ? (
                 <AppText style={styles.error}>{errorMessage}</AppText>
             ) : null}
-            <VirtualizedList
+            <FlatList
                 width={"100%"}
                 data={rationaleArray}
-                keyExtractor={(item, index) => item.rationale_id}
-                getItem={(data, index) => data[index]}
-                getItemCount={data => data.length}
+                keyExtractor={(item) => item.rationale_id}
                 renderItem={renderItem}
                 extraData={refreshFlatlist}
-            ></VirtualizedList>
+            ></FlatList>
         </View>
     );
 };

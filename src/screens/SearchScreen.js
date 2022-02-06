@@ -3,7 +3,7 @@ import {
 	StyleSheet,
 	View,
 	SafeAreaView,
-	VirtualizedList,
+	FlatList,
 	TouchableOpacity,
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
@@ -21,6 +21,7 @@ import {
 	LIGHT_GREY_COLOR,
 	BAD_COLOR,
 	GOOD_COLOR,
+	MAIN_SECONDARY_COLOR,
 } from "../styles/Colors";
 import { THESIS_BOX_HEIGHT } from "../components/ThesisBox";
 
@@ -280,7 +281,7 @@ const SearchScreen = ({ navigation }) => {
 									<MaterialIcons
 										name="arrow-back-ios"
 										size={25}
-										color="#00A8FC"
+										color={MAIN_SECONDARY_COLOR}
 									/>
 								</TouchableOpacity>
 							) : null}
@@ -353,13 +354,11 @@ const SearchScreen = ({ navigation }) => {
 						{message ? (
 							<AppText style={styles.message}>{message}</AppText>
 						) : null}
-						<VirtualizedList
+						<FlatList
 							width={"100%"}
 							data={sentiment === "Bull" ? bullResults : bearResults}
-							keyExtractor={(item, index) => item.thesis_id}
+							keyExtractor={(item) => item.thesis_id}
 							renderItem={renderItem}
-							getItem={(data, index) => data[index]}
-							getItemCount={data => data.length}
 							onEndReached={getMoreResults}
 							onEndReachedThreshold={1}
 							onViewableItemsChanged={viewableItemsRef}
@@ -371,7 +370,7 @@ const SearchScreen = ({ navigation }) => {
 								index,
 							})}
 							ref={flatListRef}
-						></VirtualizedList>
+						></FlatList>
 					</Center>
 				</NativeBaseProvider>
 			</SafeAreaView>
