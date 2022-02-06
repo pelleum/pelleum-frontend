@@ -4,7 +4,7 @@ import {
 	View,
 	TouchableOpacity,
 	Keyboard,
-	VirtualizedList,
+	FlatList,
 	RefreshControl,
 	KeyboardAvoidingView,
 } from "react-native";
@@ -16,7 +16,7 @@ import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
-import { MAIN_SECONDARY_COLOR, BAD_COLOR } from "../styles/Colors";
+import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -123,15 +123,14 @@ const PostDetailScreen = ({ navigation, route }) => {
 
 	return (
 		<NativeBaseProvider>
-			<VirtualizedList
+			<FlatList
 				ref={listRef}
 				showsVerticalScrollIndicator={false}
+				keyboardShouldPersistTaps={'handled'}
 				width={"100%"}
 				data={comments}
-				keyExtractor={(item, index) => item.post_id}
+				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
-				getItem={(data, index) => data[index]}
-				getItemCount={data => data.length}
 				refreshControl={
 					<RefreshControl
 						enabled={true}
@@ -205,7 +204,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 						)}
 					</KeyboardAvoidingView>
 				}
-			></VirtualizedList>
+			></FlatList>
 		</NativeBaseProvider>
 	);
 };
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
 	postContainer: {
 		paddingTop: 20,
 		borderBottomWidth: 0.5,
-		borderBottomColor: "#00A8FC",
+		borderBottomColor: LIGHT_GREY_COLOR,
 	},
 	bullSentimentText: {
 		textAlign: "center",

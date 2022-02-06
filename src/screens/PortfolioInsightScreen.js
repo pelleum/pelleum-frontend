@@ -34,7 +34,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 			<NativeBaseProvider>
 				<FlatList
 					data={assetList}
-					keyExtractor={(item, index) => item.asset_symbol}
+					keyExtractor={(item) => item.asset_symbol}
 					renderItem={renderItem}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>

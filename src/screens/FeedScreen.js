@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	SafeAreaView,
-	VirtualizedList,
+	FlatList,
 	TouchableOpacity,
 } from "react-native";
 
@@ -94,18 +94,16 @@ const FeedScreen = ({ navigation, route }) => {
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
-			<VirtualizedList
+			<FlatList
 				width={"100%"}
 				data={posts}
-				keyExtractor={(item, index) => item.post_id}
+				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
-				getItem={(data, index) => data[index]}
-				getItemCount={data => data.length}
 				refreshing={refreshing}
 				onRefresh={onRefresh}
 				onEndReached={getMorePosts}
 				onEndReachedThreshold={1}
-			></VirtualizedList>
+			></FlatList>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}

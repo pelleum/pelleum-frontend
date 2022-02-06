@@ -91,7 +91,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 				<FlatList
 					width={"100%"}
 					data={activeAccounts}
-					keyExtractor={(item, index) => item.connection_id}
+					keyExtractor={(item) => item.connection_id}
 					renderItem={renderItem}
 					ListHeaderComponent={
 						<>

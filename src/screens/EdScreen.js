@@ -104,7 +104,7 @@ const EdScreen = () => {
 			<FlatList
 				width={"100%"}
 				data={blogList}
-				keyExtractor={(item, index) => item.blog_id}
+				keyExtractor={(item) => item.blog_id}
 				renderItem={renderItem}
 			></FlatList>
 		</SafeAreaView>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, VirtualizedList } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import PostBox, { PostBoxType } from "../components/PostBox";
 import AppText from "../components/AppText";
 import PostsManager from "../managers/PostsManager";
@@ -39,14 +39,12 @@ const AuthoredPostsScreen = ({ navigation, route }) => {
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}
-			<VirtualizedList
+			<FlatList
 				width={"100%"}
 				data={postsArray}
-				keyExtractor={(item, index) => item.post_id}
+				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
-				getItem={(data, index) => data[index]}
-				getItemCount={data => data.length}
-			></VirtualizedList>
+			></FlatList>
 		</View>
 	);
 };
