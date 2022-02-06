@@ -43,12 +43,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 								source={require("../../assets/forest.jpg")}
 							/>
 							<AppText style={styles.usernameText}>@{username}</AppText>
-							<AppText style={styles.listHeaderText}>Assets</AppText>
-						</View>
-					}
-					ListFooterComponent={
-						<View alignItems={"center"} paddingVertical={20}>
-							<AppText>We can add more stuff here.</AppText>
+							<AppText style={styles.listHeaderText}>Author's Skin in the Game</AppText>
 						</View>
 					}
 				></FlatList>
@@ -68,15 +63,18 @@ const styles = StyleSheet.create({
 	},
 	usernameText: {
 		marginTop: 10,
+		alignSelf: "center"
 	},
 	listHeaderText: {
 		fontWeight: "bold",
-		fontSize: 16,
-		marginTop: 15,
+		fontSize: 20,
+		marginTop: 30,
+		alignSelf: "center"
 	},
 	image: {
 		width: 60,
 		height: 60,
 		borderRadius: 60 / 2,
+		alignSelf: "center"
 	},
 });

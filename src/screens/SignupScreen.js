@@ -230,6 +230,7 @@ const SignupScreen = ({ navigation }) => {
 					<View style={styles.inputContainer}>
 						<TextInput
 							placeholder="Email"
+							maxLength={100}
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							keyboardType="email-address"
 							value={email}
@@ -242,6 +243,7 @@ const SignupScreen = ({ navigation }) => {
 						/>
 						<TextInput
 							placeholder="Username"
+							maxLength={15}
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={username}
 							onChangeText={(newValue) =>
@@ -253,6 +255,7 @@ const SignupScreen = ({ navigation }) => {
 						/>
 						<TextInput
 							placeholder="Password"
+							maxLength={100}
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={password}
 							onChangeText={(newValue) =>

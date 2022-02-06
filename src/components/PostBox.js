@@ -106,7 +106,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				}}
 			>
 				<Box
-					style={postBoxType != PostBoxType.PostDetail ? styles.feedPost : null}
+					style={postBoxType == PostBoxType.PostCommentedOn ? styles.postCommentedOn : (postBoxType != PostBoxType.PostDetail ? styles.feedPost : null) }
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
@@ -215,6 +215,12 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 0.17,
 		borderBottomColor: LIGHT_GREY_COLOR,
 		overflow: "hidden",
+	},
+	postCommentedOn: {
+		width: "100%",
+		borderBottomColor: LIGHT_GREY_COLOR, 
+		borderBottomWidth: 0.17,
+		paddingBottom: 7,
 	},
 	timeElapsedText: {
 		color: LIGHT_GREY_COLOR,

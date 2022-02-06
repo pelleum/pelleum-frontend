@@ -11,11 +11,13 @@ import CreateModal from "../components/modals/CreateModal";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import AppText from "../components/AppText";
-import { BAD_COLOR } from "../styles/Colors";
+import { BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { resetLikes } from "../redux/actions/PostReactionsActions";
 import { setPosts } from "../redux/actions/PostActions";
-import { set } from "react-native-reanimated";
+
 
 const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
@@ -211,7 +213,10 @@ const styles = StyleSheet.create({
 		bottom: 20,
 		backgroundColor: "#49E131",
 		borderRadius: 30,
-		elevation: 8,
+		shadowOffset: { width: 0, height: 0 },
+		shadowColor: LIGHT_GREY_COLOR,
+		shadowRadius: 10,
+		shadowOpacity: 0.7,
 	},
 	fabIcon: {
 		fontSize: 40,

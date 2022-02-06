@@ -94,22 +94,20 @@ const ProfileScreen = ({ navigation, route }) => {
 					renderItem={renderItem}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
-							<HStack justifyContent={"space-between"}>
-								<Image
-									style={styles.image}
-									source={require("../../assets/forest.jpg")}
+							<TouchableOpacity
+								style={styles.settingsButton}
+								onPress={() => navigation.navigate("Settings")}
+							>
+								<SimpleLineIcons
+									name="settings"
+									size={28}
+									color={MAIN_SECONDARY_COLOR}
 								/>
-								<TouchableOpacity
-									style={styles.settingsButton}
-									onPress={() => navigation.navigate("Settings")}
-								>
-									<SimpleLineIcons
-										name="settings"
-										size={28}
-										color={MAIN_SECONDARY_COLOR}
-									/>
-								</TouchableOpacity>
-							</HStack>
+							</TouchableOpacity>
+							<Image
+								style={styles.image}
+								source={require("../../assets/forest.jpg")}
+							/>
 							<AppText style={styles.usernameText}>@{username}</AppText>
 							<HStack style={styles.headerStyle}>
 								<AppText style={styles.listHeaderText}>Assets</AppText>
@@ -211,9 +209,11 @@ const styles = StyleSheet.create({
 	usernameText: {
 		fontSize: 15,
 		marginTop: 10,
-		color: LINK_COLOR,
+		fontWeight: "bold",
+		alignSelf: "center"
 	},
 	image: {
+		alignSelf: "center",
 		width: 60,
 		height: 60,
 		borderRadius: 60 / 2,
@@ -259,8 +259,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	settingsButton: {
-		justifyContent: "center",
-		alignItems: "center",
+		alignSelf: "flex-end",
 		width: 52,
 		height: 52,
 		borderRadius: 52 / 2,

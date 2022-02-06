@@ -4,7 +4,6 @@ import { HStack, NativeBaseProvider, Box } from "native-base";
 import {
 	MAIN_BACKGROUND_COLOR,
 	LIGHT_GREY_COLOR,
-	MAIN_DIFFERENTIATOR_COLOR,
 } from "../styles/Colors";
 import AppText from "../components/AppText";
 import commonTextStyles from "../styles/CommonText";
@@ -51,7 +50,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 						)}
 					</HStack>
 					<AppText style={styles.thesisTitleText}>{item.title}</AppText>
-					<HStack justifyContent="space-between">
+					<HStack justifyContent="space-between" alignItems="center">
 						{item.asset_symbol ? (
 							<TouchableOpacity
 								style={commonButtonStyles.assetButton}
