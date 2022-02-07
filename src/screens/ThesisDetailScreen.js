@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 	},
 	linkText: {
-		color: "blue",
+		color: MAIN_SECONDARY_COLOR,
 		marginTop: 10,
 	},
 	subTitle: {

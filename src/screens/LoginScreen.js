@@ -7,6 +7,8 @@ import {
 	KeyboardAvoidingView,
 	TouchableOpacity,
 	SafeAreaView,
+	Platform,
+	StatusBar,
 } from "react-native";
 
 // Import Local Files
@@ -144,6 +146,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	inputContainer: {
 		width: "80%",
@@ -151,8 +154,8 @@ const styles = StyleSheet.create({
 	input: {
 		color: TEXT_COLOR,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		height: 37,
 		paddingHorizontal: 15,
-		paddingVertical: 10,
 		borderRadius: 10,
 		marginTop: 5,
 	},

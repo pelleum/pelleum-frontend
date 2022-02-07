@@ -4,6 +4,8 @@ import {
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
+	Platform,
+	StatusBar,
 } from "react-native";
 
 // File imports
@@ -11,7 +13,7 @@ import CreateModal from "../components/modals/CreateModal";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import AppText from "../components/AppText";
-import { BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+import { BAD_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -127,6 +129,7 @@ export default FeedScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
+		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	feedPost: {
 		width: "100%",
@@ -209,12 +212,12 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		right: 20,
 		bottom: 20,
-		backgroundColor: "#49E131",
+		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
 		shadowOffset: { width: 0, height: 0 },
 		shadowColor: LIGHT_GREY_COLOR,
 		shadowRadius: 10,
-		shadowOpacity: 0.7,
+		shadowOpacity: 0.6,
 	},
 	fabIcon: {
 		fontSize: 40,

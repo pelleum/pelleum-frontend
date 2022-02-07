@@ -5,6 +5,8 @@ import {
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
+	Platform,
+	StatusBar,
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, HStack } from "native-base";
@@ -298,6 +300,7 @@ const SearchScreen = ({ navigation }) => {
 									getResults();
 								}}
 								color={TEXT_COLOR}
+								selectionColor={TEXT_COLOR}
 								placeholder="Search by ticker symbol"
 								placeholderTextColor={LIGHT_GREY_COLOR}
 								returnKeyType="search"
@@ -305,7 +308,7 @@ const SearchScreen = ({ navigation }) => {
 								width="75%"
 								marginBottom={1}
 								borderRadius="20"
-								borderColor="gray.400"
+								borderColor={LIGHT_GREY_COLOR}
 								py="3"
 								px="1"
 								fontSize="16"
@@ -314,11 +317,13 @@ const SearchScreen = ({ navigation }) => {
 										m="2"
 										ml="3"
 										size="6"
-										color="gray.400"
+										color={LIGHT_GREY_COLOR}
 										as={<MaterialIcons name="search" />}
 									/>
 								}
 								enablesReturnKeyAutomatically={true} //this only works on iOS -> we need an Android equivalent!
+								marginTop={3}
+								paddingVertical={0}
 							></Input>
 						</HStack>
 						<View style={styles.switchSelectorContainer}>
@@ -383,6 +388,7 @@ export default SearchScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
+		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	switchSelectorContainer: {
 		width: "85%",

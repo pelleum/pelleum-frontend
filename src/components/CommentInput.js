@@ -42,6 +42,8 @@ const CommentInput = ({
 const styles = StyleSheet.create({
 	textArea: {
 		marginVertical: 30,
+		maxHeight: 100,
+		textAlignVertical: 'top',
 	},
 });
 

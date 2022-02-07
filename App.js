@@ -97,7 +97,8 @@ const EducationFlow = () => (
 			name="Education"
 			component={EdScreen}
 			options={{
-				headerTitle: "Pelleum Learn",
+				title: "Pelleum Learn",
+				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
 			}}
@@ -121,7 +122,8 @@ const ProfileFlow = () => (
 			name="Settings"
 			component={SettingsScreen}
 			options={{
-				headerTitle: "Settings",
+				title: "Settings",
+				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
 			}}
@@ -130,7 +132,8 @@ const ProfileFlow = () => (
 			name="Link"
 			component={LinkAccount}
 			options={{
-				headerTitle: "Link an Account",
+				title: "Link an Account",
+				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
 			}}
@@ -139,7 +142,8 @@ const ProfileFlow = () => (
 			name="LinkedStatus"
 			component={LinkedAccountsStatus}
 			options={{
-				headerTitle: "Linked Accounts",
+				title: "Linked Accounts",
+				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
 			}}
@@ -148,7 +152,8 @@ const ProfileFlow = () => (
 			name="AuthoredTheses"
 			component={AuthoredThesesScreen}
 			options={{
-				headerTitle: "My Theses",
+				title: "My Theses",
+				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
 			}}
@@ -157,7 +162,8 @@ const ProfileFlow = () => (
 			name="AuthoredPosts"
 			component={AuthoredPostsScreen}
 			options={{
-				headerTitle: "My Posts",
+				title: "My Posts",
+				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
 			}}
@@ -288,7 +294,8 @@ const RootStackFlow = () => {
 						name="CreateThesis"
 						component={CreateThesisScreen}
 						options={{
-							headerTitle: "Create a Thesis",
+							title: "Create a Thesis",
+							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
@@ -297,7 +304,8 @@ const RootStackFlow = () => {
 						name="CreatePost"
 						component={CreatePostScreen}
 						options={{
-							headerTitle: "Create a Post",
+							title: "Create a Post",
+							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
@@ -306,7 +314,8 @@ const RootStackFlow = () => {
 						name="PortfolioInsight"
 						component={PortfolioInsightScreen}
 						options={{
-							headerTitle: "Portfolio Insight",
+							title: "Portfolio Insight",
+							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
@@ -315,7 +324,8 @@ const RootStackFlow = () => {
 						name="Post"
 						component={PostDetailScreen}
 						options={{
-							headerTitle: "Post Detail",
+							title: "Post Detail",
+							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
@@ -324,7 +334,8 @@ const RootStackFlow = () => {
 						name="Thesis"
 						component={ThesisDetailScreen}
 						options={{
-							headerTitle: "Thesis Detail",
+							title: "Thesis Detail",
+							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
@@ -333,7 +344,8 @@ const RootStackFlow = () => {
 						name="Rationales"
 						component={RationaleScreen}
 						options={{
-							headerTitle: "Rationale Library",
+							title: "Rationale Library",
+							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
