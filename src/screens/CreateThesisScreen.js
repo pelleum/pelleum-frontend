@@ -349,8 +349,9 @@ const styles = StyleSheet.create({
 	textArea: {
 		marginTop: 10,
 		borderBottomWidth: 0.5,
-		borderBottomColor: MAIN_SECONDARY_COLOR,
+		borderBottomColor: LIGHT_GREY_COLOR,
 		height: 250,
+		textAlignVertical: 'top',
 	},
 	image: {
 		width: 44,
@@ -396,7 +397,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: MAIN_SECONDARY_COLOR,
+		borderBottomColor: LIGHT_GREY_COLOR,
 		marginBottom: 5,
 		width: "25%",
 	},
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: MAIN_SECONDARY_COLOR,
+		borderBottomColor: LIGHT_GREY_COLOR,
 		marginTop: 10,
 		marginBottom: 5,
 		width: "100%",

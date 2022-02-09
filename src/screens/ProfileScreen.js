@@ -7,6 +7,8 @@ import {
 	TouchableOpacity,
 	Image,
 	Alert,
+	Platform,
+	StatusBar,
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import {
@@ -197,6 +199,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
+		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	listHeaderView: {
 		margin: 13,

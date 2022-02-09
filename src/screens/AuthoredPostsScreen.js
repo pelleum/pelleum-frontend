@@ -41,7 +41,7 @@ const AuthoredPostsScreen = ({ navigation, route }) => {
 			) : null}
 			<FlatList
 				width={"100%"}
-				data={postsArray}
+				data={userAuthoredPosts}
 				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
 			></FlatList>

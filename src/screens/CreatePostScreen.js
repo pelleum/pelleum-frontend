@@ -189,7 +189,8 @@ const styles = StyleSheet.create({
 		height: 250,
 		marginTop: 20,
 		borderBottomWidth: 0.5,
-		borderBottomColor: MAIN_SECONDARY_COLOR,
+		borderBottomColor: LIGHT_GREY_COLOR,
+		textAlignVertical: 'top',
 	},
 	image: {
 		width: 44,
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: MAIN_SECONDARY_COLOR,
+		borderBottomColor: LIGHT_GREY_COLOR,
 		marginBottom: 5,
 		marginTop: 10,
 		width: "25%",

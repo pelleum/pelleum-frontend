@@ -7,6 +7,8 @@ import {
 	KeyboardAvoidingView,
 	SafeAreaView,
 	TouchableOpacity,
+	Platform,
+	StatusBar,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
@@ -389,6 +391,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	inputContainer: {
 		width: "80%",
@@ -396,14 +399,10 @@ const styles = StyleSheet.create({
 	input: {
 		color: TEXT_COLOR,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		height: 37,
 		paddingHorizontal: 15,
-		paddingVertical: 10,
 		borderRadius: 10,
 		marginTop: 5,
-	},
-	buttonContainer: {
-		justifyContent: "center",
-		alignItems: "center",
 	},
 	buttonEnabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
