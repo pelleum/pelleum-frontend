@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 0 },
 		shadowColor: LIGHT_GREY_COLOR,
 		shadowRadius: 10,
-		shadowOpacity: 0.7,
+		shadowOpacity: 0.6,
 	},
 	fabIcon: {
 		fontSize: 40,
