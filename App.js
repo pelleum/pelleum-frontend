@@ -8,7 +8,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
-import { StatusBar, Platform } from 'react-native';
 
 // Local Files
 import SignupScreen from "./src/screens/SignupScreen";
