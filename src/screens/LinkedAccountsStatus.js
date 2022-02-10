@@ -16,6 +16,7 @@ import {
 	GOOD_COLOR,
 	LINK_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
+	MAIN_SECONDARY_COLOR
 } from "../styles/Colors";
 
 const LinkedAccountsStatus = ({ navigation }) => {
@@ -33,16 +34,26 @@ const LinkedAccountsStatus = ({ navigation }) => {
 			"Are you sure you want to unlink?",
 			"By unlinking, the asset information related to this acount will be removed from your Pelleum portfolio. You can always relink if you choose to.",
 			[
-				{ text: "Cancel", style: 'cancel', onPress: () => {/* do nothing */ } },
 				{
-					text: "Unlink", style: 'destructive', onPress: async () => {
+					text: "Cancel",
+					style: "cancel",
+					onPress: () => {
+						/* do nothing */
+					},
+				},
+				{
+					text: "Unlink",
+					style: "destructive",
+					onPress: async () => {
 						const response = await LinkAccountsManager.unlinkAccount();
 						if (response.status == 204) {
-							navigation.navigate("Profile", { onUnlink: true })
+							navigation.navigate("Profile", { onUnlink: true });
 						} else {
-							setErrorMessage("An unexpected error occurred. Please try again later.")
+							setErrorMessage(
+								"An unexpected error occurred. Please try again later."
+							);
 						}
-					}
+					},
 				},
 			]
 		);
@@ -88,19 +99,38 @@ const LinkedAccountsStatus = ({ navigation }) => {
 	return (
 		<View style={styles.mainContainer}>
 			<NativeBaseProvider>
-				<FlatList
-					width={"100%"}
-					data={activeAccounts}
-					keyExtractor={(item) => item.connection_id}
-					renderItem={renderItem}
-					ListHeaderComponent={
-						<>
-							{errorMessage ? (
-								<AppText style={styles.error}>{errorMessage}</AppText>
-							) : null}
-						</>
-					}
-				></FlatList>
+				{activeAccounts.length == 0 ? (
+					<View>
+						<AppText style={styles.noAccountsLinkedText}>
+							You have no linked brokerage accounts. Add your skin in the game
+							by linking your brokerage account!💥
+						</AppText>
+						<TouchableOpacity
+							style={styles.linkAccountButton}
+							onPress={() =>
+								navigation.navigate("Link")
+							}
+						>
+							<AppText style={styles.buttonTextStyle}>
+								Link a Brokerage Account
+							</AppText>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<FlatList
+						width={"100%"}
+						data={activeAccounts}
+						keyExtractor={(item) => item.connection_id}
+						renderItem={renderItem}
+						ListHeaderComponent={
+							<>
+								{errorMessage ? (
+									<AppText style={styles.error}>{errorMessage}</AppText>
+								) : null}
+							</>
+						}
+					></FlatList>
+				)}
 			</NativeBaseProvider>
 		</View>
 	);
@@ -114,6 +144,7 @@ const styles = StyleSheet.create({
 	},
 	itemBox: {
 		marginVertical: 2,
+		alignSelf: "center",
 		borderRadius: 23,
 		width: "98%",
 		justifyContent: "space-between",
@@ -154,5 +185,25 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		marginBottom: 25,
 		fontSize: 14,
+	},
+	noAccountsLinkedText: {
+		alignSelf: "center",
+		marginTop: 80,
+		marginHorizontal: 40,
+	},
+	buttonTextStyle: {
+		color: "white",
+		fontWeight: "bold",
+		textAlign: "center",
+		fontSize: 15,
+	},
+	linkAccountButton: {
+		alignSelf: "center",
+		borderRadius: 30,
+		padding: 11,
+		marginTop: 30,
+		width: "84%",
+		backgroundColor: MAIN_SECONDARY_COLOR,
+		elevation: 2,
 	},
 });

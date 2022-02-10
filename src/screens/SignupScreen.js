@@ -342,8 +342,8 @@ const SignupScreen = ({ navigation }) => {
 									/>
 								)}
 								<AppText style={styles.validationMessageText}>
-									Password must contain at least one uppercase character, one
-									lowercase character, one numerical character, and one special
+									Password must contain one uppercase, lowercase, 
+									numerical, and special
 									character.
 								</AppText>
 							</HStack>
@@ -392,9 +392,10 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+		marginHorizontal: 30
 	},
 	inputContainer: {
-		width: "80%",
+		width: "100%",
 	},
 	input: {
 		color: TEXT_COLOR,
@@ -435,13 +436,6 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 		marginHorizontal: 10,
 	},
-	signupContainer: {
-		paddingVertical: 10,
-		marginTop: 30,
-		justifyContent: "space-evenly",
-		width: "100%",
-		flexDirection: "row",
-	},
 	titleText: {
 		fontSize: 22,
 		color: TEXT_COLOR,
@@ -450,16 +444,15 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	validationMessageView: {
-		width: "95%",
 		marginTop: 10,
+
 	},
 	validationMessageText: {
 		marginLeft: 5,
 	},
 	loginInsteadContainer: {
 		marginTop: 75,
-		justifyContent: "space-evenly",
-		width: "100%",
+		alignSelf: "center",
 		flexDirection: "row",
 	},
 	loginInsteadText: {

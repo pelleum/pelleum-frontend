@@ -263,9 +263,16 @@ const styles = StyleSheet.create({
 	},
 	settingsButton: {
 		alignSelf: "flex-end",
+		alignItems: "center",
+		justifyContent: "center",
 		width: 52,
 		height: 52,
 		borderRadius: 52 / 2,
+		shadowOffset: { width: 0, height: 0 },
+		shadowColor: LIGHT_GREY_COLOR,
+		shadowOpacity: 0.3,
+		elevation: 3,
+		backgroundColor: "black",
 	},
 	linkAccountButton: {
 		justifyContent: "center",

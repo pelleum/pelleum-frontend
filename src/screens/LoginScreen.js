@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		marginTop: 20,
+		marginTop: 45,
 	},
 	buttonDisabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		marginTop: 20,
+		marginTop: 45,
 		opacity: 0.33,
 	},
 	buttonText: {
@@ -191,8 +191,7 @@ const styles = StyleSheet.create({
 	},
 	signupInsteadContainer: {
 		marginTop: 75,
-		justifyContent: "space-evenly",
-		width: "100%",
+		alignSelf: "center",
 		flexDirection: "row",
 	},
 	signupInsteadText: {
