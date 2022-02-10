@@ -1,5 +1,6 @@
 // Import Installed Libraries
 import * as React from "react";
+import { StatusBar, Platform } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -228,6 +229,7 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
+	
 	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 
@@ -254,7 +256,7 @@ const RootStackFlow = () => {
 			await getRationaleLibrary(userObject);
 			// 3. Get account linkage statues, and store them in universal state
 			await LinkAccountsManager.getLinkedAccountsStatus();
-			// // 4. Store *some* of the user object in universal state
+			// 4. Store *some* of the user object in universal state
 			dispatch(storeUserObject({
 				username: userObject.username,
 				userId: userObject.user_id
