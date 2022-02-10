@@ -5,8 +5,11 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
+	SafeAreaView,
+	KeyboardAvoidingView,
+
 } from "react-native";
-import { HStack, VStack, NativeBaseProvider } from "native-base";
+import { HStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
 import PostsManager from "../managers/PostsManager";
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -38,7 +41,7 @@ const CreatePostScreen = ({ navigation }) => {
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
 
-	
+
 
 	const sentimentOptions = [
 		{ label: "Bull", value: "Bull" },
@@ -102,7 +105,8 @@ const CreatePostScreen = ({ navigation }) => {
 		<DismissKeyboard>
 			<View style={styles.mainContainer}>
 				<NativeBaseProvider>
-					<VStack>
+					<KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={100}>
+						{/* <KeyboardAvoidingView width={"100%"} behavior={"padding"}> */}
 						<HStack alignItems="center" justifyContent="space-between" my="15">
 							<Image
 								style={styles.image}
@@ -149,6 +153,7 @@ const CreatePostScreen = ({ navigation }) => {
 								handleChangeText({ newValue: newValue, checkContent: true })
 							}
 						/>
+						{/* </KeyboardAvoidingView> */}
 
 						<View style={styles.switchSelectorContainer}>
 							<SwitchSelector
@@ -173,7 +178,7 @@ const CreatePostScreen = ({ navigation }) => {
 							/>
 						</View>
 						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
-					</VStack>
+					</KeyboardAvoidingView>
 				</NativeBaseProvider>
 			</View>
 		</DismissKeyboard>

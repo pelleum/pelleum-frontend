@@ -258,6 +258,7 @@ const CreateThesisScreen = ({ navigation }) => {
 						</HStack>
 						<TextInput
 							color={TEXT_COLOR}
+							selectionColor={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							autoCapitalize="characters"
@@ -272,6 +273,7 @@ const CreateThesisScreen = ({ navigation }) => {
 						<AppText>Ticker Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
+							selectionColor={TEXT_COLOR}
 							placeholder="Your Thesis Title"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={title}
@@ -285,7 +287,8 @@ const CreateThesisScreen = ({ navigation }) => {
 						<AppText>Thesis Title</AppText>
 						<TextInput
 							color={TEXT_COLOR}
-							placeholder="An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."
+							selectionColor={TEXT_COLOR}
+							placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							multiline={true}
 							numberOfLines={30}

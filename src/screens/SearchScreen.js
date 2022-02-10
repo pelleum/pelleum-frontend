@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	Platform,
 	StatusBar,
+	Keyboard,
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, HStack } from "native-base";
@@ -294,10 +295,14 @@ const SearchScreen = ({ navigation }) => {
 								autoCapitalize="characters"
 								autoCorrect={false}
 								onSubmitEditing={() => {
+									if(term.length > 0) {
 									setGetMoreResultsTerm(term);
 									setCurrentBullPage(1);
 									setCurrentBearPage(1);
 									getResults();
+									} else {
+										Keyboard.dismiss();
+									};
 								}}
 								color={TEXT_COLOR}
 								selectionColor={TEXT_COLOR}

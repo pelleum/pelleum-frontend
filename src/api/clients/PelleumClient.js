@@ -17,19 +17,20 @@ async function pelleumClient({
 
 	if (headers) {
 		requestConfig["headers"] = headers;
-	}
+	};
 	if (data) {
 		requestConfig["data"] = data;
-	}
+	};
 	if (queryParams) {
 		requestConfig["params"] = queryParams;
-	}
+	};
 
 	let response;
 
 	try {
 		response = await pelleumAxios(requestConfig);
 	} catch (err) {
+		console.log(err)
 		response = err.response;
 	}
 
