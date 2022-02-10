@@ -24,6 +24,7 @@ import { addPost } from "../redux/actions/PostActions";
 import * as Haptics from 'expo-haptics';
 import {
 	TEXT_COLOR,
+	CREATE_PLACEHOLDER_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -260,7 +261,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							color={TEXT_COLOR}
 							selectionColor={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -275,7 +276,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							color={TEXT_COLOR}
 							selectionColor={TEXT_COLOR}
 							placeholder="Your Thesis Title"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							value={title}
 							onChangeText={(newValue) =>
 								handleChangeText({ newValue: newValue, checkTitle: true })
@@ -287,9 +288,9 @@ const CreateThesisScreen = ({ navigation }) => {
 						<AppText>Thesis Title</AppText>
 						<TextInput
 							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
+							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							multiline={true}
 							numberOfLines={30}
 							style={styles.textArea}

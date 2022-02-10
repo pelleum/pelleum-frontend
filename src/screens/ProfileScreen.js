@@ -28,8 +28,6 @@ import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
-	MAIN_BACKGROUND_COLOR,
-	TEXT_COLOR,
 } from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
@@ -52,20 +50,31 @@ const ProfileScreen = ({ navigation, route }) => {
 		);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
-		};
+		}
 		if (activeAccounts.length > 0) {
-			{ activeAccounts.some(account => account.is_active) == false ? await relinkAlert() : null }
-		};
-
+			{
+				activeAccounts.some((account) => account.is_active) == false
+					? await relinkAlert()
+					: null;
+			}
+		}
 	};
 
 	const relinkAlert = async () => {
 		Alert.alert(
-			"Linked Account Error 😦",
-			"It looks like one (or more) of your accounts needs to be relinked to Pelleum. Please check the status of your linked account(s)",
+			"Brokerage Account Sync Needed",
+			"One (or more) of your accounts needs to be relinked to Pelleum. Please check the status of your linked account(s)",
 			[
-				{ text: "Later", onPress: () => {/* do nothing */ } },
-				{ text: "View Status", onPress: () => navigation.navigate("LinkedStatus") },
+				{
+					text: "Later",
+					onPress: () => {
+						/* do nothing */
+					},
+				},
+				{
+					text: "View Status",
+					onPress: () => navigation.navigate("LinkedStatus"),
+				},
 			]
 		);
 	};
@@ -82,9 +91,9 @@ const ProfileScreen = ({ navigation, route }) => {
 			onRefresh();
 			route.params.onUnlink = false;
 		}
-	};
+	}
 
-	renderItem = ({ item }) => (<AssetBox item={item} nav={navigation} />);
+	renderItem = ({ item }) => <AssetBox item={item} nav={navigation} />;
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
@@ -111,8 +120,18 @@ const ProfileScreen = ({ navigation, route }) => {
 								source={require("../../assets/forest.jpg")}
 							/>
 							<AppText style={styles.usernameText}>@{username}</AppText>
+							{assetList.length == 0 ? (
+								<AppText style={styles.noBrokerageLinkedText}>
+									Put your money where your mouth is - link an account to show
+									your skin in the game!💥
+								</AppText>
+							) : null}
 							<HStack style={styles.headerStyle}>
-								<AppText style={styles.listHeaderText}>Assets</AppText>
+								{assetList.length == 0 ? (
+									<View></View>
+								) : (
+									<AppText style={styles.listHeaderText}>Assets</AppText>
+								)}
 								<TouchableOpacity
 									style={styles.linkAccountButton}
 									onPress={() => navigation.navigate("Link")}
@@ -161,9 +180,7 @@ const ProfileScreen = ({ navigation, route }) => {
 										size={25}
 										color={MAIN_SECONDARY_COLOR}
 									/>
-									<AppText style={styles.buttonGroupText}>
-										My Theses
-									</AppText>
+									<AppText style={styles.buttonGroupText}>My Theses</AppText>
 								</HStack>
 							</TouchableOpacity>
 							<TouchableOpacity
@@ -181,9 +198,7 @@ const ProfileScreen = ({ navigation, route }) => {
 										color={MAIN_SECONDARY_COLOR}
 										style={styles.postIcon}
 									/>
-									<AppText style={styles.buttonGroupText}>
-										My Posts
-									</AppText>
+									<AppText style={styles.buttonGroupText}>My Posts</AppText>
 								</HStack>
 							</TouchableOpacity>
 						</View>
@@ -213,7 +228,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		marginTop: 10,
 		fontWeight: "bold",
-		alignSelf: "center"
+		alignSelf: "center",
 	},
 	image: {
 		alignSelf: "center",
@@ -241,7 +256,7 @@ const styles = StyleSheet.create({
 		marginLeft: 20,
 	},
 	postIcon: {
-		marginLeft: 1.75
+		marginLeft: 1.75,
 	},
 	inactiveAccountWarning: {
 		fontSize: 15,
@@ -286,5 +301,11 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.3,
 		elevation: 3,
 		backgroundColor: "black",
+	},
+	noBrokerageLinkedText: {
+		alignSelf: "center",
+		marginTop: 60,
+		//fontSize: 15,
+		marginHorizontal: 20,
 	},
 });

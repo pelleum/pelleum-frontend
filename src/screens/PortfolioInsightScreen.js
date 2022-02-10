@@ -16,18 +16,26 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 		const retrievedAssets = await PortfolioManager.retrieveAssets(userId);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
-		};
-		const retrievedRationales = await RationalesManager.retrieveRationales({ user_id: userId });
+		}
+		const retrievedRationales = await RationalesManager.retrieveRationales({
+			user_id: userId,
+		});
 		if (retrievedRationales) {
 			setRationales(retrievedRationales.records.rationales);
-		};
+		}
 	};
 
 	useEffect(() => {
 		onRefresh();
 	}, []);
 
-	renderItem = ({ item }) => (<AssetBox item={item} nav={navigation} portfolioInsightRationales={rationales} />);
+	renderItem = ({ item }) => (
+		<AssetBox
+			item={item}
+			nav={navigation}
+			portfolioInsightRationales={rationales}
+		/>
+	);
 
 	return (
 		<View style={styles.mainContainer}>
@@ -43,7 +51,15 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 								source={require("../../assets/forest.jpg")}
 							/>
 							<AppText style={styles.usernameText}>@{username}</AppText>
-							<AppText style={styles.listHeaderText}>Author's Skin in the Game</AppText>
+							{assetList.length == 0 ? (
+								<AppText style={styles.noBrokerageLinkedText}>
+									Author has not yet linked a brokerage account😕
+								</AppText>
+							) : (
+								<AppText style={styles.listHeaderText}>
+									Author's Skin in the Game
+								</AppText>
+							)}
 						</View>
 					}
 				></FlatList>
@@ -63,18 +79,24 @@ const styles = StyleSheet.create({
 	},
 	usernameText: {
 		marginTop: 10,
-		alignSelf: "center"
+		alignSelf: "center",
+	},
+	noBrokerageLinkedText: {
+		alignSelf: "center",
+		marginTop: 30,
+		fontSize: 15,
+		fontWeight: "bold",
 	},
 	listHeaderText: {
 		fontWeight: "bold",
 		fontSize: 20,
 		marginTop: 30,
-		alignSelf: "center"
+		alignSelf: "center",
 	},
 	image: {
 		width: 60,
 		height: 60,
 		borderRadius: 60 / 2,
-		alignSelf: "center"
+		alignSelf: "center",
 	},
 });

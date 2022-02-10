@@ -5,7 +5,6 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
-	SafeAreaView,
 	KeyboardAvoidingView,
 
 } from "react-native";
@@ -16,6 +15,7 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import AppText from "../components/AppText";
 import {
 	LIGHT_GREY_COLOR,
+	CREATE_PLACEHOLDER_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,
 	TEXT_COLOR,
@@ -129,7 +129,7 @@ const CreatePostScreen = ({ navigation }) => {
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -143,7 +143,7 @@ const CreatePostScreen = ({ navigation }) => {
 						<TextInput
 							color={TEXT_COLOR}
 							placeholder="What's your valuable insight?"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							multiline={true}
 							numberOfLines={20}
 							style={styles.textArea}
