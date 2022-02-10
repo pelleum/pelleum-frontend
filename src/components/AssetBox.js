@@ -1,6 +1,6 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { Box, Center, VStack, HStack, NativeBaseProvider } from "native-base";
+import { Center, VStack, HStack, NativeBaseProvider } from "native-base";
 import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -23,47 +23,45 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 
 	return (
 		<NativeBaseProvider>
-			<Center>
-				<Box style={styles.assetTableBox}>
-					<VStack>
-						<TouchableOpacity
-							style={styles.assetButton}
-							onPress={() => {
-								console.log("Asset button worked.");
-							}}
-						>
-							<AppText style={styles.assetButtonText}>
-								{item.asset_symbol}
-							</AppText>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={hasRationales ? styles.thesisButton : styles.disabledThesisButton}
-							disabled={hasRationales ? false : true}
-							onPress={() => {
-								nav.navigate("Rationales", {
-									asset: item.asset_symbol,
-									userId: item.user_id,
-									disableRemoveRationale: portfolioInsightRationales ? true : false,
-								});
-							}}
-						>
-							<AppText style={styles.thesisButtonText}>Rationales</AppText>
-						</TouchableOpacity>
-					</VStack>
-					<VStack>
-						<HStack>
-							<AppText style={styles.valueText}>Shares Owned:</AppText>
-							<AppText style={styles.valueNumbers}>{item.quantity}</AppText>
-						</HStack>
-						<HStack>
-							<AppText style={styles.valueText}>Avg Buy Price:</AppText>
-							<AppText style={styles.valueNumbers}>
-								${item.average_buy_price.toFixed(2)}
-							</AppText>
-						</HStack>
-					</VStack>
-				</Box>
-			</Center>
+			<View style={styles.assetTableBox}>
+				<VStack>
+					<TouchableOpacity
+						style={styles.assetButton}
+						onPress={() => {
+							console.log("Asset button worked.");
+						}}
+					>
+						<AppText style={styles.assetButtonText}>
+							{item.asset_symbol}
+						</AppText>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={hasRationales ? styles.thesisButton : styles.disabledThesisButton}
+						disabled={hasRationales ? false : true}
+						onPress={() => {
+							nav.navigate("Rationales", {
+								asset: item.asset_symbol,
+								userId: item.user_id,
+								disableRemoveRationale: portfolioInsightRationales ? true : false,
+							});
+						}}
+					>
+						<AppText style={styles.thesisButtonText}>Rationales</AppText>
+					</TouchableOpacity>
+				</VStack>
+				<VStack>
+					<HStack>
+						<AppText style={styles.valueText}>Shares Owned:</AppText>
+						<AppText style={styles.valueNumbers}>{item.quantity.toFixed(2)}</AppText>
+					</HStack>
+					<HStack>
+						<AppText style={styles.valueText}>Contribution:</AppText>
+						<AppText style={styles.valueNumbers}>
+							${(item.quantity * item.average_buy_price).toFixed(2)}
+						</AppText>
+					</HStack>
+				</VStack>
+			</View>
 		</NativeBaseProvider>
 	);
 };
@@ -77,11 +75,10 @@ const styles = StyleSheet.create({
 		width: "98%",
 		overflow: "hidden",
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "center",
 		alignItems: "center",
 		padding: 14,
-		overflow: "hidden",
-		marginVertical: 2,
+		marginTop: 2,
 	},
 	assetButton: {
 		overflow: "hidden",
@@ -102,6 +99,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 23,
+		marginRight: 10,
 		marginVertical: 3,
 		height: 30,
 		width: 100,
@@ -112,6 +110,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
+		marginRight: 10,
 		marginVertical: 3,
 		height: 30,
 		width: 100,
@@ -125,16 +124,17 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	valueText: {
-		width: 105,
 		fontSize: 15,
 		paddingVertical: 5,
 		marginVertical: 3,
+		width: 110,
+		textAlign: "left",
 	},
 	valueNumbers: {
-		width: 130,
-		textAlign: "right",
 		fontSize: 15,
 		fontWeight: "bold",
 		marginVertical: 8,
+		width: 100,
+		textAlign: "right",
 	},
 });

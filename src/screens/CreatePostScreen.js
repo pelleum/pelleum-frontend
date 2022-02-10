@@ -103,7 +103,7 @@ const CreatePostScreen = ({ navigation }) => {
 
 	return (
 		<DismissKeyboard>
-			<View style={styles.mainContainer}>
+			<SafeAreaView style={styles.mainContainer}>
 				<NativeBaseProvider>
 					<KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={100}>
 						{/* <KeyboardAvoidingView width={"100%"} behavior={"padding"}> */}
@@ -128,6 +128,7 @@ const CreatePostScreen = ({ navigation }) => {
 						</HStack>
 						<TextInput
 							color={TEXT_COLOR}
+							selectionColor={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							autoCapitalize="characters"
@@ -142,6 +143,7 @@ const CreatePostScreen = ({ navigation }) => {
 						<AppText>Ticker Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
+							selectionColor={TEXT_COLOR}
 							placeholder="What's your valuable insight?"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							multiline={true}
@@ -180,7 +182,7 @@ const CreatePostScreen = ({ navigation }) => {
 						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 					</KeyboardAvoidingView>
 				</NativeBaseProvider>
-			</View>
+			</SafeAreaView>
 		</DismissKeyboard>
 	);
 };
@@ -191,7 +193,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 15,
 	},
 	textArea: {
-		height: 250,
+		height: 225,
 		marginTop: 20,
 		borderBottomWidth: 0.5,
 		borderBottomColor: LIGHT_GREY_COLOR,
