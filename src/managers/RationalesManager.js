@@ -1,10 +1,13 @@
 import pelleumClient from "../api/clients/PelleumClient";
+import { REACT_APP_RATIONALES_BASE_PATH, REACT_APP_GET_MANY_RATIONALES_PATH } from "@env";
+import * as Haptics from "expo-haptics";
+
+// Redux
 import { store } from "../redux/Store";
 import {
 	addToLibrary,
 	removeFromLibrary,
 } from "../redux/actions/RationaleActions";
-import { REACT_APP_RATIONALES_BASE_PATH, REACT_APP_GET_MANY_RATIONALES_PATH } from "@env";
 
 class RationalesManager {
 	static retrieveRationales = async (queryParams) => {
@@ -40,6 +43,7 @@ class RationalesManager {
 						asset: thesis.asset_symbol,
 					})
 				);
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
 				console.log("There was an error adding the thesis to your library.");
 			}

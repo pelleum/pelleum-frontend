@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { Center, VStack, HStack, NativeBaseProvider } from "native-base";
+import { VStack, HStack, NativeBaseProvider } from "native-base";
 import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -11,15 +11,13 @@ import { useSelector } from "react-redux";
 const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
-	const hasRationales = portfolioInsightRationales ? (
-		portfolioInsightRationales.some(
-			(rationale) => rationale.thesis.asset_symbol === item.asset_symbol
-		)
-	) : (
-		rationaleLibrary.some(
-			(rationale) => rationale.asset === item.asset_symbol
-		)
-	)
+	const hasRationales = portfolioInsightRationales
+		? portfolioInsightRationales.some(
+				(rationale) => rationale.thesis.asset_symbol === item.asset_symbol
+		  )
+		: rationaleLibrary.some(
+				(rationale) => rationale.asset === item.asset_symbol
+		  );
 
 	return (
 		<NativeBaseProvider>
@@ -36,13 +34,17 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 						</AppText>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={hasRationales ? styles.thesisButton : styles.disabledThesisButton}
+						style={
+							hasRationales ? styles.thesisButton : styles.disabledThesisButton
+						}
 						disabled={hasRationales ? false : true}
 						onPress={() => {
 							nav.navigate("Rationales", {
 								asset: item.asset_symbol,
 								userId: item.user_id,
-								disableRemoveRationale: portfolioInsightRationales ? true : false,
+								disableRemoveRationale: portfolioInsightRationales
+									? true
+									: false,
 							});
 						}}
 					>
@@ -52,7 +54,9 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 				<VStack>
 					<HStack>
 						<AppText style={styles.valueText}>Shares:</AppText>
-						<AppText style={styles.valueNumbers}>{item.quantity.toFixed(2)}</AppText>
+						<AppText style={styles.valueNumbers}>
+							{item.quantity.toFixed(2)}
+						</AppText>
 					</HStack>
 					<HStack>
 						<AppText style={styles.valueText}>Avg Buy Price:</AppText>
@@ -75,7 +79,8 @@ const styles = StyleSheet.create({
 		width: "98%",
 		overflow: "hidden",
 		flexDirection: "row",
-		justifyContent: "center",
+		//justifyContent: "center",
+		alignSelf: "center",
 		alignItems: "center",
 		padding: 14,
 		marginTop: 2,
@@ -126,6 +131,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		marginVertical: 3,
 		marginLeft: 27,
+		alignSelf: "center",
 		width: 110,
 		textAlign: "left",
 	},

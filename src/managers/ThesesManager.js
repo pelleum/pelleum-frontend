@@ -42,6 +42,7 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 204) {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
 				console.log("There was an error un-liking a thesis.");
 			}
@@ -72,6 +73,7 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 204) {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
 				console.log("There was an error un-liking a thesis.");
 			}

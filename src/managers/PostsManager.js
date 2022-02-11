@@ -137,6 +137,7 @@ class PostsManager {
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 204) {
 					store.dispatch(removeLike(item.post_id));
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 				} else {
 					console.log("There was an error un-liking a post.");
 				}
