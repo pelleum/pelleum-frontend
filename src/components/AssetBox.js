@@ -51,13 +51,13 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 				</VStack>
 				<VStack>
 					<HStack>
-						<AppText style={styles.valueText}>Shares Owned:</AppText>
+						<AppText style={styles.valueText}>Shares:</AppText>
 						<AppText style={styles.valueNumbers}>{item.quantity.toFixed(2)}</AppText>
 					</HStack>
 					<HStack>
-						<AppText style={styles.valueText}>Contribution:</AppText>
+						<AppText style={styles.valueText}>Avg Buy Price:</AppText>
 						<AppText style={styles.valueNumbers}>
-							${(item.quantity * item.average_buy_price).toFixed(2)}
+							${item.average_buy_price.toFixed(2)}
 						</AppText>
 					</HStack>
 				</VStack>
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 23,
-		marginRight: 10,
 		marginVertical: 3,
 		height: 30,
 		width: 100,
@@ -110,7 +109,6 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		borderRadius: 30,
-		marginRight: 10,
 		marginVertical: 3,
 		height: 30,
 		width: 100,
@@ -127,6 +125,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		paddingVertical: 5,
 		marginVertical: 3,
+		marginLeft: 27,
 		width: 110,
 		textAlign: "left",
 	},
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		fontWeight: "bold",
 		marginVertical: 8,
-		width: 100,
+		width: 85,
 		textAlign: "right",
 	},
 });

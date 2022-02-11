@@ -5,8 +5,8 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
-	SafeAreaView,
 	KeyboardAvoidingView,
+	SafeAreaView
 
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
@@ -16,6 +16,7 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import AppText from "../components/AppText";
 import {
 	LIGHT_GREY_COLOR,
+	CREATE_PLACEHOLDER_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,
 	TEXT_COLOR,
@@ -130,7 +131,7 @@ const CreatePostScreen = ({ navigation }) => {
 							color={TEXT_COLOR}
 							selectionColor={TEXT_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -145,7 +146,7 @@ const CreatePostScreen = ({ navigation }) => {
 							color={TEXT_COLOR}
 							selectionColor={TEXT_COLOR}
 							placeholder="What's your valuable insight?"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							multiline={true}
 							numberOfLines={20}
 							style={styles.textArea}
@@ -155,7 +156,7 @@ const CreatePostScreen = ({ navigation }) => {
 								handleChangeText({ newValue: newValue, checkContent: true })
 							}
 						/>
-						{/* </KeyboardAvoidingView> */}
+						</KeyboardAvoidingView>
 
 						<View style={styles.switchSelectorContainer}>
 							<SwitchSelector
@@ -180,7 +181,6 @@ const CreatePostScreen = ({ navigation }) => {
 							/>
 						</View>
 						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
-					</KeyboardAvoidingView>
 				</NativeBaseProvider>
 			</SafeAreaView>
 		</DismissKeyboard>
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 15,
 	},
 	textArea: {
-		height: 225,
+		height: 190,
 		marginTop: 20,
 		borderBottomWidth: 0.5,
 		borderBottomColor: LIGHT_GREY_COLOR,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
 		height: 45,
 		alignSelf: "flex-start",
 		justifyContent: "center",
-		marginTop: 5,
+		marginTop: 10,
 	},
 	hStack: {
 		marginTop: 5,

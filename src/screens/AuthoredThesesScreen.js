@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
-import { BAD_COLOR } from "../styles/Colors";
+import { BAD_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 const AuthoredThesesScreen = ({ navigation, route }) => {
 	const [thesesArray, setThesesArray] = useState([]);
@@ -32,12 +32,28 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>
 			) : null}
+			{thesesArray.length == 0 ? (
+				<View>
+					<AppText style={styles.noThesesText}>
+						You haven't created a thesis yet. When you do, they'll show up here!💥
+					</AppText>
+					<TouchableOpacity
+						style={styles.createThesisButton}
+						onPress={() => navigation.navigate("CreateThesis")}
+					>
+						<AppText style={styles.buttonTextStyle}>
+							Create Thesis
+						</AppText>
+					</TouchableOpacity>
+				</View>
+			) : (
 			<FlatList
 				width={"100%"}
 				data={thesesArray}
 				keyExtractor={(item) => item.thesis_id}
 				renderItem={renderItem}
 			></FlatList>
+			)}
 		</View>
 	);
 };
@@ -59,5 +75,25 @@ const styles = StyleSheet.create({
 		marginBottom: 25,
 		fontSize: 14,
 		alignSelf: "center",
+	},
+	createThesisButton: {
+		alignSelf: "center",
+		borderRadius: 30,
+		padding: 11,
+		marginTop: 30,
+		width: "84%",
+		backgroundColor: MAIN_SECONDARY_COLOR,
+		elevation: 2,
+	},
+	noThesesText: {
+		alignSelf: "center",
+		marginTop: 80,
+		marginHorizontal: 40,
+	},
+	buttonTextStyle: {
+		color: "white",
+		fontWeight: "bold",
+		textAlign: "center",
+		fontSize: 15,
 	},
 });
