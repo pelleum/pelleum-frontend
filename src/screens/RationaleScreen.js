@@ -44,7 +44,7 @@ const RationaleScreen = ({ navigation, route }) => {
 	const deleteRationale = async (item) => {
 		const responseStatus = await RationalesManager.removeRationale(item);
 		if (responseStatus) {
-			if (responseStatus == 204) {
+			if (responseStatus == 200) {
 				const rationaleArrayCopy = rationaleArray;
 				const index = rationaleArrayCopy.findIndex(
 					(rationale) => rationale.thesis_id === item.thesis_id

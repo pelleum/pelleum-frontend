@@ -46,7 +46,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 					style: "destructive",
 					onPress: async () => {
 						const response = await LinkAccountsManager.unlinkAccount();
-						if (response.status == 204) {
+						if (response.status == 200) {
 							navigation.navigate("Profile", { onUnlink: true });
 						} else {
 							setErrorMessage(

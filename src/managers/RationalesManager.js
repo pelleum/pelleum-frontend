@@ -58,7 +58,7 @@ class RationalesManager {
 		});
 
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 204) {
+			if (authorizedResponse.status == 200) {
 				store.dispatch(
 					removeFromLibrary({
 						thesisID: rationale.thesis_id,

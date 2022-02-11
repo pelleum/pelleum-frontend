@@ -40,7 +40,7 @@ class ThesesManager {
 			url: `${REACT_APP_THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
 		});
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 204) {
+			if (authorizedResponse.status == 200) {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
@@ -71,7 +71,7 @@ class ThesesManager {
 			url: `${REACT_APP_THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
 		});
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 204) {
+			if (authorizedResponse.status == 200) {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
