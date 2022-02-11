@@ -132,10 +132,10 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 							</AppText>
 							<HStack justifyContent="space-between" marginBottom={5}>
 								<AppText style={commonTextStyles.usernameText}>
-									Investor: @{detailedThesis.username}
+									@{detailedThesis.username}
 								</AppText>
 								<AppText style={commonTextStyles.dateText}>
-									Written: {dateWritten.toLocaleDateString()}
+									{dateWritten.toLocaleDateString()}
 								</AppText>
 							</HStack>
 							<HStack style={styles.topThesisBox}>

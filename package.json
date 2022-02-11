@@ -13,7 +13,7 @@
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@stream-io/flat-list-mvcp": "^0.10.1",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "expo": "^43.0.3",
     "expo-haptics": "~11.0.3",
     "expo-linear-gradient": "~10.0.3",

@@ -95,6 +95,9 @@ const styles = StyleSheet.create({
 	},
 	iconButton: {
 		paddingHorizontal: 13,
-		paddingTop: 8,
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		width: 58,
 	},
 });

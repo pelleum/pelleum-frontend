@@ -65,9 +65,9 @@ class PostsManager {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-				return {postExists: true, post: authorizedResponse.data};
+				return { postExists: true, post: authorizedResponse.data };
 			} else if (authorizedResponse.status == 400) {
-				return {postExists: false, post: null}
+				return { postExists: false, post: null }
 			}
 			// need to display "an unexpected error occured"
 			console.log("There was an error obtaining the post.");
@@ -134,6 +134,7 @@ class PostsManager {
 				method: "delete",
 				url: `${REACT_APP_POST_REACTIONS_BASE_PATH}/${item.post_id}`,
 			});
+
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 204) {
 					store.dispatch(removeLike(item.post_id));
