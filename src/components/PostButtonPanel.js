@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
 import PostsManager from "../managers/PostsManager";
 import { LIGHT_GREY_COLOR } from "../styles/Colors";
+
+// Redux
+import { useSelector } from "react-redux";
 
 const PostButtonPanel = ({ item, nav }) => {
 	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(

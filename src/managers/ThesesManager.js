@@ -1,15 +1,15 @@
-import { store } from "../redux/Store";
 import pelleumClient from "../api/clients/PelleumClient";
-import { ReactionType } from "../redux/actions/ThesisReactionsActions";
-import {
-	removeReaction,
-	addReaction,
-} from "../redux/actions/ThesisReactionsActions";
 import {
 	THESES_BASE_PATH,
 	THESES_REACTIONS_BASE_PATH,
 	GET_MANY_THESES_PATH,
 } from "@env";
+import * as Haptics from "expo-haptics";
+
+// Redux
+import { ReactionType } from "../redux/actions/ThesisReactionsActions";
+import { removeReaction, addReaction } from "../redux/actions/ThesisReactionsActions";
+import { store } from "../redux/Store";
 
 class ThesesManager {
 	static getState = () => {
@@ -27,6 +27,7 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
 				store.dispatch(addReaction(item.thesis_id, reactionType));
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
 				console.log("There was an error liking a post.");
 			}
@@ -56,6 +57,7 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
 				store.dispatch(addReaction(item.thesis_id, reactionType));
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
 				console.log("There was an error liking a post.");
 			}

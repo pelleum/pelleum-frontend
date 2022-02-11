@@ -1,13 +1,15 @@
 import * as SecureStore from "expo-secure-store";
-import { store } from "../redux/Store";
 import pelleumClient from "../api/clients/PelleumClient";
-import { addLike, removeLike } from "../redux/actions/PostReactionsActions";
 import {
 	POSTS_BASE_PATH,
 	GET_MANY_POSTS_PATH,
 	GET_MANY_POST_REACTIONS_PATH,
 	POST_REACTIONS_BASE_PATH,
 } from "@env";
+import * as Haptics from "expo-haptics";
+
+import { store } from "../redux/Store";
+import { addLike, removeLike } from "../redux/actions/PostReactionsActions";
 
 class PostsManager {
 	static createPost = async (data) => {
@@ -148,6 +150,7 @@ class PostsManager {
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 201) {
 					store.dispatch(addLike(item.post_id));
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 				} else {
 					console.log("There was an error liking a post.");
 				}

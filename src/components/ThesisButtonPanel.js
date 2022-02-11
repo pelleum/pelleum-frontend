@@ -4,10 +4,12 @@ import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
 import RationalesManager from "../managers/RationalesManager";
-import { ReactionType } from "../redux/actions/ThesisReactionsActions";
-import { useSelector } from "react-redux";
-import * as SecureStore from "expo-secure-store";
 import { LIGHT_GREY_COLOR } from "../styles/Colors";
+
+// Redux
+import { useSelector } from "react-redux";
+import { ReactionType } from "../redux/actions/ThesisReactionsActions";
+import * as SecureStore from "expo-secure-store";
 
 const ThesisButtonPanel = ({ item, nav }) => {
 	const state = useSelector((state) => state.thesisReactionsReducer);
