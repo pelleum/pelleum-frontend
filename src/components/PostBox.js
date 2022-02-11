@@ -83,7 +83,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				{
 					text: "Delete", style: 'destructive', onPress: async () => {
 						const response = await PostsManager.deletePost(item.post_id);
-						if (response.status == 204) {
+						if (response.status == 200) {
 							if (postBoxType.type == "userAuthored") {
 								dispatch(removeAuthoredPost(item));
 							} else if (postBoxType.type == "comment") {

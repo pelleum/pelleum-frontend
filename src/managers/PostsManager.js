@@ -135,7 +135,7 @@ class PostsManager {
 				url: `${REACT_APP_POST_REACTIONS_BASE_PATH}/${item.post_id}`,
 			});
 			if (authorizedResponse) {
-				if (authorizedResponse.status == 204) {
+				if (authorizedResponse.status == 200) {
 					store.dispatch(removeLike(item.post_id));
 					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 				} else {
