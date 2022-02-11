@@ -27,6 +27,7 @@ const CommentInput = ({
 		<TextInput
 			onFocus={scrollToTop}
 			color={TEXT_COLOR}
+			selectionColor={TEXT_COLOR}
 			placeholder="Reply with your thoughts here"
 			placeholderTextColor={LIGHT_GREY_COLOR}
 			multiline={true}

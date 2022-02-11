@@ -1,10 +1,10 @@
 import * as SecureStore from "expo-secure-store";
 import pelleumClient from "../api/clients/PelleumClient";
 import {
-	POSTS_BASE_PATH,
-	GET_MANY_POSTS_PATH,
-	GET_MANY_POST_REACTIONS_PATH,
-	POST_REACTIONS_BASE_PATH,
+	REACT_APP_POSTS_BASE_PATH,
+	REACT_APP_GET_MANY_POSTS_PATH,
+	REACT_APP_GET_MANY_POST_REACTIONS_PATH,
+	REACT_APP_POST_REACTIONS_BASE_PATH,
 } from "@env";
 import * as Haptics from "expo-haptics";
 
@@ -15,7 +15,7 @@ class PostsManager {
 	static createPost = async (data) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: POSTS_BASE_PATH,
+			url: REACT_APP_POSTS_BASE_PATH,
 			data: data,
 		});
 
@@ -33,7 +33,7 @@ class PostsManager {
 	static deletePost = async (postId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${POSTS_BASE_PATH}/${postId}`,
+			url: `${REACT_APP_POSTS_BASE_PATH}/${postId}`,
 		});
 
 		if (authorizedResponse) {
@@ -44,7 +44,7 @@ class PostsManager {
 	static getPosts = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: GET_MANY_POSTS_PATH,
+			url: REACT_APP_GET_MANY_POSTS_PATH,
 			queryParams: queryParams,
 		});
 
@@ -60,7 +60,7 @@ class PostsManager {
 	static getPost = async (post_id) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${POSTS_BASE_PATH}/${post_id}`,
+			url: `${REACT_APP_POSTS_BASE_PATH}/${post_id}`,
 		});
 
 		if (authorizedResponse) {
@@ -90,7 +90,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: GET_MANY_POSTS_PATH,
+			url: REACT_APP_GET_MANY_POSTS_PATH,
 			queryParams: params,
 		});
 
@@ -110,7 +110,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: GET_MANY_POST_REACTIONS_PATH,
+			url: REACT_APP_GET_MANY_POST_REACTIONS_PATH,
 			queryParams: {
 				user_id: userObject.user_id,
 				start_time: timeRange.oldestPostCreatedAt,
@@ -132,7 +132,7 @@ class PostsManager {
 		) {
 			const authorizedResponse = await pelleumClient({
 				method: "delete",
-				url: `${POST_REACTIONS_BASE_PATH}/${item.post_id}`,
+				url: `${REACT_APP_POST_REACTIONS_BASE_PATH}/${item.post_id}`,
 			});
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 204) {
@@ -144,7 +144,7 @@ class PostsManager {
 		} else {
 			const authorizedResponse = await pelleumClient({
 				method: "post",
-				url: `${POST_REACTIONS_BASE_PATH}/${item.post_id}`,
+				url: `${REACT_APP_POST_REACTIONS_BASE_PATH}/${item.post_id}`,
 				data: { reaction: 1 },
 			});
 			if (authorizedResponse) {

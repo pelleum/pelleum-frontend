@@ -7,6 +7,8 @@ import {
 	TouchableOpacity,
 	View,
 	Alert,
+	SafeAreaView,
+	KeyboardAvoidingView,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -44,7 +46,6 @@ const CreateThesisScreen = ({ navigation }) => {
 	const [source1, setSource1] = useState("");
 	const [source2, setSource2] = useState("");
 	const [source3, setSource3] = useState("");
-	const [error, setError] = useState(null); // Migrate to Redux
 	const [inputValidity, setInputValidity] = useState({
 		assetSymbolValidity: false,
 		contentValidity: false,
@@ -178,8 +179,7 @@ const CreateThesisScreen = ({ navigation }) => {
 		checkSymbol = false,
 		checkTitle = false,
 	} = {}) => {
-		// Executed ticker symbol, thesis title, or content's text is changed
-		setError(null);
+
 		const newInputValidity = inputValidity;
 
 		if (checkContent) {
@@ -224,7 +224,7 @@ const CreateThesisScreen = ({ navigation }) => {
 
 	return (
 		<DismissKeyboard>
-			<View style={styles.mainContainer}>
+			<SafeAreaView style={styles.mainContainer}>
 				<AddSourcesModal
 					modalVisible={modalVisible}
 					makeModalDisappear={() => setModalVisible(false)}
@@ -238,68 +238,70 @@ const CreateThesisScreen = ({ navigation }) => {
 				/>
 				<NativeBaseProvider>
 					<VStack>
-						<HStack alignItems="center" justifyContent="space-between" my="15">
-							<Image
-								style={styles.image}
-								source={require("../../assets/forest.jpg")}
-							/>
-							<TouchableOpacity
-								style={
-									disableStatus
-										? styles.shareButtonDisabled
-										: styles.shareButtonEnabled
+						<KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={30}>
+							<HStack alignItems="center" justifyContent="space-between" my="15">
+								<Image
+									style={styles.image}
+									source={require("../../assets/forest.jpg")}
+								/>
+								<TouchableOpacity
+									style={
+										disableStatus
+											? styles.shareButtonDisabled
+											: styles.shareButtonEnabled
+									}
+									disabled={disableStatus}
+									onPress={() => {
+										shareButtonPressed();
+									}}
+								>
+									<AppText style={styles.buttonText}>Share</AppText>
+								</TouchableOpacity>
+							</HStack>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder="Ex: GOOGL"
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								autoCapitalize="characters"
+								autoCorrect={false}
+								maxLength={5}
+								value={asset_symbol}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkSymbol: true })
 								}
-								disabled={disableStatus}
-								onPress={() => {
-									shareButtonPressed();
-								}}
-							>
-								<AppText style={styles.buttonText}>Share</AppText>
-							</TouchableOpacity>
-						</HStack>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
-							placeholder="Ex: GOOGL"
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-							autoCapitalize="characters"
-							autoCorrect={false}
-							maxLength={5}
-							value={asset_symbol}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkSymbol: true })
-							}
-							style={styles.assetSymbolInput}
-						/>
-						<AppText>Ticker Symbol</AppText>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
-							placeholder="Your Thesis Title"
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-							value={title}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkTitle: true })
-							}
-							style={styles.titleInput}
-							maxLength={256}
-							autoCorrect={true}
-						/>
-						<AppText>Thesis Title</AppText>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={MAIN_SECONDARY_COLOR}
-							placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-							multiline={true}
-							numberOfLines={30}
-							style={styles.textArea}
-							maxLength={30000}
-							value={content}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkContent: true })
-							}
-						/>
+								style={styles.assetSymbolInput}
+							/>
+							<AppText>Ticker Symbol</AppText>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder="Your Thesis Title"
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								value={title}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkTitle: true })
+								}
+								style={styles.titleInput}
+								maxLength={256}
+								autoCorrect={true}
+							/>
+							<AppText>Thesis Title</AppText>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								multiline={true}
+								numberOfLines={30}
+								style={styles.textArea}
+								maxLength={30000}
+								value={content}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkContent: true })
+								}
+							/>
+						</KeyboardAvoidingView>
 						<HStack style={styles.hStack} alignItems="center">
 							<View style={styles.switchSelectorContainer}>
 								<SwitchSelector
@@ -337,10 +339,9 @@ const CreateThesisScreen = ({ navigation }) => {
 								{validSources.length} linked sources
 							</AppText>
 						</HStack>
-						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 					</VStack>
 				</NativeBaseProvider>
-			</View>
+			</SafeAreaView>
 		</DismissKeyboard>
 	);
 };
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		borderBottomWidth: 0.5,
 		borderBottomColor: LIGHT_GREY_COLOR,
-		height: 250,
+		height: 225,
 		textAlignVertical: 'top',
 	},
 	image: {
@@ -392,10 +393,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	hStack: {
-		marginTop: 5,
-	},
-	errorText: {
-		color: BAD_COLOR,
+		marginTop: 10,
 	},
 	assetSymbolInput: {
 		backgroundColor: "transparent",

@@ -92,6 +92,8 @@ const LoginScreen = ({ navigation }) => {
 					<AppText style={styles.titleText}>Log In</AppText>
 					<View style={styles.inputContainer}>
 						<TextInput
+							color={TEXT_COLOR}
+							selectionColor={TEXT_COLOR}
 							placeholder="Username"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={username}
@@ -103,6 +105,8 @@ const LoginScreen = ({ navigation }) => {
 							autoCorrect={false}
 						/>
 						<TextInput
+							color={TEXT_COLOR}
+							selectionColor={TEXT_COLOR}
 							placeholder="Password"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={password}

@@ -62,7 +62,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
 	const relinkAlert = async () => {
 		Alert.alert(
-			"Brokerage Account Sync Needed",
+			"Linked Account Error",
 			"One (or more) of your accounts needs to be relinked to Pelleum. Please check the status of your linked account(s)",
 			[
 				{

@@ -3,7 +3,6 @@ import {
 	Alert,
 	Modal,
 	StyleSheet,
-	Text,
 	View,
 	TextInput,
 	KeyboardAvoidingView,
@@ -13,6 +12,7 @@ import {
 import { HStack, NativeBaseProvider } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import {
+	TEXT_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -85,7 +85,7 @@ const AddSourcesModal = ({
 						behavior={"padding"}
 						style={styles.centeredView}
 					>
-						<TouchableOpacity onPress={() => {}} activeOpacity={1}>
+						<TouchableOpacity onPress={() => { }} activeOpacity={1}>
 							<View style={styles.modalView}>
 								<AppText style={styles.ModalTitle}>
 									Add sources to substantiate your investment thesis!🎉
@@ -96,7 +96,8 @@ const AddSourcesModal = ({
 								</AppText>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
-										color="white"
+										color={TEXT_COLOR}
+										selectionColor={TEXT_COLOR}
 										placeholder="https://www.examplesource1.com"
 										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source1}
@@ -117,7 +118,8 @@ const AddSourcesModal = ({
 								</HStack>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
-										color="white"
+										color={TEXT_COLOR}
+										selectionColor={TEXT_COLOR}
 										placeholder="https://www.examplesource2.com"
 										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source2}
@@ -138,7 +140,8 @@ const AddSourcesModal = ({
 								</HStack>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
-										color="white"
+										color={TEXT_COLOR}
+										selectionColor={TEXT_COLOR}
 										placeholder="https://www.examplesource3.com"
 										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source3}

@@ -230,6 +230,8 @@ const SignupScreen = ({ navigation }) => {
 						<AppText style={styles.titleText}>Welcome to Pelleum</AppText>
 						<View style={styles.inputContainer}>
 							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={TEXT_COLOR}
 								placeholder="Email"
 								maxLength={100}
 								placeholderTextColor={LIGHT_GREY_COLOR}
@@ -243,6 +245,8 @@ const SignupScreen = ({ navigation }) => {
 								autoCorrect={false}
 							/>
 							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={TEXT_COLOR}
 								placeholder="Username"
 								maxLength={15}
 								placeholderTextColor={LIGHT_GREY_COLOR}
@@ -255,6 +259,8 @@ const SignupScreen = ({ navigation }) => {
 								autoCorrect={false}
 							/>
 							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={TEXT_COLOR}
 								placeholder="Password"
 								maxLength={100}
 								placeholderTextColor={LIGHT_GREY_COLOR}
@@ -268,6 +274,8 @@ const SignupScreen = ({ navigation }) => {
 								secureTextEntry={true}
 							/>
 							<TextInputMask
+								color={TEXT_COLOR}
+								selectionColor={TEXT_COLOR}
 								placeholder="MM/DD/YYYY"
 								placeholderTextColor={LIGHT_GREY_COLOR}
 								type={"datetime"}

@@ -6,6 +6,7 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity,
+	SafeAreaView,
 } from "react-native";
 import * as Haptics from 'expo-haptics';
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -143,100 +144,105 @@ const LinkAccount = ({ navigation }) => {
 
 	return (
 		<DismissKeyboard>
-			<KeyboardAvoidingView style={styles.mainContainer} behavior="padding">
-				<NativeBaseProvider>
-					<View style={styles.header}>
-						<Image
-							style={styles.headerImage}
-							source={require("../../assets/robinhood.png")}
-						/>
-						<AppText style={styles.headerText}>
-							Link a Robinhood account.
-						</AppText>
-					</View>
-					{institutionLogin == false ? (
-						<>
-							<AppText style={styles.instruction}>
-								Log into your Robinhood brokerage account.
+			<SafeAreaView style={styles.mainContainer}>
+				<KeyboardAvoidingView behavior="padding">
+					<NativeBaseProvider>
+						<View style={styles.header}>
+							<Image
+								style={styles.headerImage}
+								source={require("../../assets/robinhood.png")}
+							/>
+							<AppText style={styles.headerText}>
+								Link a Robinhood account.
 							</AppText>
-							<TextInput
-								placeholder="Username or Email"
-								color={TEXT_COLOR}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								value={userCredential}
-								onChangeText={(newValue) =>
-									handleChangeText({
-										newValue: newValue,
-										checkUserCredential: true,
-									})
-								}
-								style={styles.input}
-								autoCapitalize="none"
-								autoCorrect={false}
-								keyboardType="email-address"
-							/>
-							<TextInput
-								placeholder="Password"
-								color={TEXT_COLOR}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								value={password}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkPassword: true })
-								}
-								style={styles.input}
-								autoCapitalize="none"
-								autoCorrect={false}
-								secureTextEntry={true}
-							/>
-							{errorMessage ? (
-								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-							) : null}
-							<TouchableOpacity
-								onPress={() => onAccountLogin()}
-								style={
-									credentialsDisableStatus
-										? styles.buttonDisabled
-										: styles.buttonEnabled
-								}
-								disabled={credentialsDisableStatus}
-							>
-								<AppText style={styles.buttonText}>Log In</AppText>
-							</TouchableOpacity>
-						</>
-					) : (
-						<>
-							<AppText style={styles.instruction}>
-								Enter the SMS code you received.
-							</AppText>
-							<TextInput
-								style={styles.input}
-								placeholder="Ex: 123456"
-								color={TEXT_COLOR}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkSMSCode: true })
-								}
-								keyboardType="number-pad"
-								maxLength={6}
-							/>
-							{errorMessage ? (
-								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-							) : null}
-							<TouchableOpacity
-								onPress={() => onVerifyAccount(sms_code)}
-								style={
-									smsDisableStatus
-										? styles.buttonDisabled
-										: styles.buttonEnabled
-								}
-								disabled={smsDisableStatus}
-							>
-								<AppText style={styles.buttonText}>Verify Account</AppText>
-							</TouchableOpacity>
-						</>
-					)}
-				</NativeBaseProvider>
-			</KeyboardAvoidingView>
+						</View>
+						{institutionLogin == false ? (
+							<>
+								<AppText style={styles.instruction}>
+									Log into your Robinhood brokerage account.
+								</AppText>
+								<TextInput
+									placeholder="Username or Email"
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									value={userCredential}
+									onChangeText={(newValue) =>
+										handleChangeText({
+											newValue: newValue,
+											checkUserCredential: true,
+										})
+									}
+									style={styles.input}
+									autoCapitalize="none"
+									autoCorrect={false}
+									keyboardType="email-address"
+								/>
+								<TextInput
+									placeholder="Password"
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									value={password}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkPassword: true })
+									}
+									style={styles.input}
+									autoCapitalize="none"
+									autoCorrect={false}
+									secureTextEntry={true}
+								/>
+								{errorMessage ? (
+									<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+								) : null}
+								<TouchableOpacity
+									onPress={() => onAccountLogin()}
+									style={
+										credentialsDisableStatus
+											? styles.buttonDisabled
+											: styles.buttonEnabled
+									}
+									disabled={credentialsDisableStatus}
+								>
+									<AppText style={styles.buttonText}>Log In</AppText>
+								</TouchableOpacity>
+							</>
+						) : (
+							<>
+								<AppText style={styles.instruction}>
+									Enter the SMS code you received.
+								</AppText>
+								<TextInput
+									style={styles.input}
+									placeholder="Ex: 123456"
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkSMSCode: true })
+									}
+									keyboardType="number-pad"
+									maxLength={6}
+								/>
+								{errorMessage ? (
+									<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+								) : null}
+								<TouchableOpacity
+									onPress={() => onVerifyAccount(sms_code)}
+									style={
+										smsDisableStatus
+											? styles.buttonDisabled
+											: styles.buttonEnabled
+									}
+									disabled={smsDisableStatus}
+								>
+									<AppText style={styles.buttonText}>Verify Account</AppText>
+								</TouchableOpacity>
+							</>
+						)}
+					</NativeBaseProvider>
+				</KeyboardAvoidingView>
+			</SafeAreaView>
 		</DismissKeyboard>
 	);
 };
