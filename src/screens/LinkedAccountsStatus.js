@@ -9,15 +9,19 @@ import {
 } from "react-native";
 import { NativeBaseProvider, HStack } from "native-base";
 import LinkAccountsManager from "../managers/LinkAccountsManager";
-import { useSelector } from "react-redux";
+import { Entypo } from "@expo/vector-icons";
 import AppText from "../components/AppText";
 import {
 	BAD_COLOR,
 	GOOD_COLOR,
 	LINK_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
-	MAIN_SECONDARY_COLOR
+	MAIN_SECONDARY_COLOR,
+	LIGHT_GREY_COLOR,
 } from "../styles/Colors";
+
+// Redux
+import { useSelector } from "react-redux";
 
 const LinkedAccountsStatus = ({ navigation }) => {
 	const [errorMessage, setErrorMessage] = useState("");
@@ -31,8 +35,8 @@ const LinkedAccountsStatus = ({ navigation }) => {
 
 	const unlinkAlert = async () => {
 		Alert.alert(
-			"Are you sure you want to unlink?",
-			"By unlinking, the asset information related to this acount will be removed from your Pelleum portfolio. You can always relink if you choose to.",
+			"Unlink Brokerage Account",
+			"Are you sure you want to unlink? By unlinking, the asset information related to this acount will be removed from your Pelleum portfolio. You can always relink if you choose to.",
 			[
 				{
 					text: "Cancel",
@@ -74,13 +78,19 @@ const LinkedAccountsStatus = ({ navigation }) => {
 			</HStack>
 			{item.is_active ? (
 				<HStack alignItems="center">
-					<TouchableOpacity
-						style={styles.relinkUnlinkButton}
-						onPress={() => unlinkAlert()}
-					>
-						<AppText style={styles.linkButtonText}>Unlink</AppText>
-					</TouchableOpacity>
 					<AppText style={styles.activeText}>ACTIVE</AppText>
+					<TouchableOpacity
+						style={styles.enabledDotsButton}
+						onPress={() => {
+							unlinkAlert();
+						}}
+					>
+						<Entypo
+							name="dots-three-horizontal"
+							size={18}
+							color={LIGHT_GREY_COLOR}
+						/>
+					</TouchableOpacity>
 				</HStack>
 			) : (
 				<HStack alignItems="center">
@@ -90,7 +100,19 @@ const LinkedAccountsStatus = ({ navigation }) => {
 					>
 						<AppText style={styles.linkButtonText}>Relink</AppText>
 					</TouchableOpacity>
-					<AppText style={styles.inactiveText}>NOT ACTIVE</AppText>
+					<AppText style={styles.inactiveText}>INACTIVE</AppText>
+					<TouchableOpacity
+						style={styles.enabledDotsButton}
+						onPress={() => {
+							unlinkAlert();
+						}}
+					>
+						<Entypo
+							name="dots-three-horizontal"
+							size={18}
+							color={LIGHT_GREY_COLOR}
+						/>
+					</TouchableOpacity>
 				</HStack>
 			)}
 		</HStack>
@@ -107,9 +129,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 						</AppText>
 						<TouchableOpacity
 							style={styles.linkAccountButton}
-							onPress={() =>
-								navigation.navigate("Link")
-							}
+							onPress={() => navigation.navigate("Link")}
 						>
 							<AppText style={styles.buttonTextStyle}>
 								Link a Brokerage Account
@@ -205,5 +225,10 @@ const styles = StyleSheet.create({
 		width: "84%",
 		backgroundColor: MAIN_SECONDARY_COLOR,
 		elevation: 2,
+	},
+	enabledDotsButton: {
+		paddingVertical: 15,
+		paddingLeft: 20,
+		paddingRight: 10,
 	},
 });
