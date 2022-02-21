@@ -3,32 +3,31 @@
 This repository contains the frontend source code for the Pelleum mobile application (iOS and Android).
 
 **Codebase:** JavaScript
-
 **Framework:** React Native
-
 **Workflow:** Expo
 
 ## Setup
 
 [React Native Setup Docs](https://reactnative.dev/docs/environment-setup)
 
-1. Set environment variables in .env file (get from senior engineer).
+1. Set environment variables in `.env` file in project's root directory (get from senior engineer).
 2. Install [Node LTS](https://nodejs.org/en/download/).
-3. Install [Expo CLI](https://docs.expo.dev/).  
-    (You must be logged into your machine as root/administrator).  
-    `npm install -g expo-cli`
-4. In the project directory, run `npm install` in your terminal to install all dependencies specified in the package.json file.
+3. Run `npm install -g expo-cli` to install [Expo CLI](https://docs.expo.dev/) (You must be logged into your machine as root/administrator)    
+4. run `npm install` in the project directory to install all dependencies specified in the `package.json` file.
 5. To test the application on your mobile device, install the [Expo Go](https://expo.dev/client) app.
-6. To test the application on computer, you will have to use the [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) or the [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/).
+6. To test the application on your computer, you will have to use the [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) or the [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/).
+7. Before running the app for testing, be sure that both [pelleum-api](https://github.com/pelleum/pelleum-api) and [account-connections](https://github.com/pelleum/account-connections) are running locally on your machine (see directions on how to run them in their READMEs.
+8. If you are using the Expo Go app, update `REACT_APP_PELLEUM_API_BASE_URL` in the `.env` file with your Wi-Fi network IP (i.e., `192.165.2.4`).
+9. If you are using the iOS Simulator or Android Emulator, you can use `localhost` as your base URL.
 
 ## Usage
-- Before running the app for testing, make sure you run the backend ([pelleum-api](https://github.com/pelleum/pelleum-api) and [account-connections](https://github.com/pelleum/account-connections)).
-- If you are using the Expo Go app, update `REACT_APP_ACCOUNT_CONNECTIONS_BASE_URL` and `REACT_APP_PELLEUM_API_BASE_URL` in the .env file with your Wi-Fi network IP (i.e., 192.165.2.4).
-- If you are using the iOS Simulator or Android Emulator, you can use localhost as your base URL.
-- In the project directory, run `expo start` or `npm start` in your terminal to run the app.
-- If you are using the Expo Go app, your mobile device must be connected to the same Wi-Fi network as your computer!
+
+- Run `expo start` or `npm start` in the project's root directory to run the app.
+- If you are using the Expo Go app, your mobile device must be connected to the same Wi-Fi network as your computer
 - Running the app will generate a QR code, which you can scan with the camera on your mobile device to host the app in the Expo Go app.
-- If the app gets stuck on the "Welcome to Pelleum" loading screen, set the `baseURL` variable directly (don't use env variables) in [PelleumAxios.js](./src/api/axios/PelleumAxios.js).
+- If the app gets stuck on the "Welcome to Pelleum" loading screen, hard code the `baseURL` variable directly (don't use environment variables) in [PelleumAxios.js](./src/api/axios/PelleumAxios.js).
+
+## Useful Terminal Commands
 - To open the app on the iOS Simulator, press `i` in your terminal.
 - To open the app on the Android Emulator, press `a` in your terminal.
 - To open the app on the web, press `w` in your terminal.
