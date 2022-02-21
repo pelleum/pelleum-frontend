@@ -44,15 +44,14 @@ class LinkAccountsManager {
 		return response;
 	};
 
-	static verifyAccount = async (queryParams) => {
+	static verifyAccount = async (requestBody) => {
 		//we should have a .env type file to store institution IDs
 		const ROBINHOOD_ID = "d75e2cf4-a4ee-4869-88c3-14bfadf7c196";
 		const response = await accountConnectClient({
 			method: "post",
 			url: `${REACT_APP_AC_LOGIN_BASE_PATH}/${ROBINHOOD_ID}/verify`,
-			data: queryParams,
+			data: requestBody,
 		});
-
 		return response;
 	};
 }

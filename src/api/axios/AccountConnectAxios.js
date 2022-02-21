@@ -5,6 +5,7 @@ import * as SecureStore from "expo-secure-store";
 
 const accountConnectAxios = axios.create({
 	baseURL: `${REACT_APP_ACCOUNT_CONNECTIONS_BASE_URL}:${REACT_APP_ACCOUNT_CONNECTIONS_PORT}`,
+	// baseURL: `http://192.168.1.8:1201`,
 });
 
 accountConnectAxios.interceptors.request.use(

@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
+// import { createClient } from '@segment/analytics-react-native';
 
 // Local Files
 import SignupScreen from "./src/screens/SignupScreen";
@@ -39,6 +40,13 @@ import { store } from "./src/redux/Store";
 import { useSelector, useDispatch } from "react-redux";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import { storeUserObject } from "./src/redux/actions/AuthActions";
+
+// // Segment client
+// const segmentClient = createClient({
+// 	writeKey: "oTZCqJQA3K2CVRfHBgghbxBF5b9BU5Oj",
+// 	trackAppLifecycleEvents: true,
+// 	//additional config options
+// });
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();
@@ -228,7 +236,7 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
-	
+
 	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 
@@ -360,11 +368,13 @@ const RootStackFlow = () => {
 
 export default () => {
 	return (
-		<Provider store={store}>
-			<NavigationContainer theme={DarkTheme}>
-				{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
-				<RootStackFlow />
-			</NavigationContainer>
-		</Provider>
+		// <AnalyticsProvider client={segmentClient}>
+			<Provider store={store}>
+				<NavigationContainer theme={DarkTheme}>
+					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
+					<RootStackFlow />
+				</NavigationContainer>
+			</Provider>
+		// </AnalyticsProvider>
 	);
 };

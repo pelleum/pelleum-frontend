@@ -26,9 +26,9 @@ const LinkAccount = ({ navigation }) => {
 	const [password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [sms_code, setSMSCode] = useState("");
+	const [challenge_id, setChallengeId] = useState("");
 	const [institutionLogin, setInstitutionLogin] = useState(false);
-	const [credentialsDisableStatus, setCredentialsDisableStatus] =
-		useState(true);
+	const [credentialsDisableStatus, setCredentialsDisableStatus] = useState(true);
 	const [smsDisableStatus, setSMSDisableStatus] = useState(true);
 	const [credentialsValidity, setCredentialsValidity] = useState({
 		userCredentialValidity: false,
@@ -42,13 +42,16 @@ const LinkAccount = ({ navigation }) => {
 		});
 		if (response.status == 200) {
 			setErrorMessage("");
-			if (response.data.account_connection_status == "connected") {
+			if (response.data.challenge) {
+				setChallengeId(response.data.challenge.id)
+				setInstitutionLogin(true);
+			} else if (response.data.account_connection_status == "connected") {
 				await LinkAccountsManager.getLinkedAccountsStatus();
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 				navigation.navigate("Profile", { accountLinked: true });
 			} else {
 				setInstitutionLogin(true);
-			}
+			};
 		} else {
 			// we should probably make this a switch statement
 			if (
@@ -64,13 +67,18 @@ const LinkAccount = ({ navigation }) => {
 			) {
 				setErrorMessage("Your Robinhood account is already linked to Pelleum.");
 			} else {
-				setErrorMessage("There was an error logging into your account.");
+				setErrorMessage("There was an error logging into your account. Please try again later.");
 			}
 		}
 	};
 
 	const onVerifyAccount = async (sms_code) => {
-		const response = await LinkAccountsManager.verifyAccount({ sms_code });
+		// If there's no challenge_id, then only send sms_code; otherwise, send both
+		const requestBody = challenge_id != "" ? (
+			{ with_challenge: { sms_code: sms_code, challenge_id: challenge_id } }
+		) :
+			({ without_challenge: { sms_code: sms_code } });
+		const response = await LinkAccountsManager.verifyAccount(requestBody);
 		if (response.status == 201) {
 			setErrorMessage("");
 			await LinkAccountsManager.getLinkedAccountsStatus();
@@ -80,9 +88,10 @@ const LinkAccount = ({ navigation }) => {
 			if (response.data.detail.includes("Please enter a valid code.")) {
 				setErrorMessage("Invalid code. Please enter a valid code.");
 			} else {
-				setErrorMessage("There was an error validating your account.");
+				setErrorMessage("There was an error validating your account. Please try again later.");
 			}
-		}
+		};
+		challenge_id != "" ? setChallengeId("") : null;
 	};
 
 	useEffect(() => {
