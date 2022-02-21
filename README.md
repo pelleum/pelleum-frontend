@@ -35,28 +35,14 @@ This repository contains the frontend source code for the Pelleum mobile applica
 - To show all Expo commands, press `?` in your terminal.
 
 ## Major Libraries Used
-[react-navigation](https://reactnavigation.org/docs/getting-started)
-- Allows us to implement the app's navigation functionality.
-- The pelleum-frontend is using **react-navigation v6**.
-[axios](https://github.com/axios/axios)
-- A promise-based HTTP Client for node.js and the browser (same codebase).
-- We use this to make network requests to APIs.
-[expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/)
-- Provides a way **encrypt** and securely store key–value pairs locally on the device.
-[async-storage](https://docs.expo.dev/versions/latest/sdk/async-storage/)
-- Provides a way to store **unencrypted** key–value pairs locally on the device.
-[segment/analytics-react-native](https://github.com/segmentio/analytics-react-native#readme)
-- Allows us to track how our users interact with the Pelleum app.
-[expo-web-browser](https://docs.expo.dev/versions/latest/sdk/webbrowser/)
-- Provides access to the system's web browser and supports handling redirects.
-[expo-haptics](https://docs.expo.dev/versions/latest/sdk/haptics/)
-- Allows us to provide haptic feedback when a user performs certain actions in the Pelleum app.
-[expo-linear-gradient](https://docs.expo.dev/versions/latest/sdk/linear-gradient/)
-- Provides a way to create linear color gradients.
-[native-base](https://docs.nativebase.io/)
-- A library that offers out-of-the-box components.
-- This can be useful if you don't want to build custom components from scratch (using primitive React Native components).
-[dotenv](https://github.com/motdotla/dotenv)
-- Provides a way to store sensitive information in environment variables.
-[redux](https://github.com/reduxjs/redux)
-- Allows us to manage some state variables globally.
+- [react-navigation](https://reactnavigation.org/docs/getting-started): Allows us to implement the app's navigation functionality (currently using **react-navigation v6**).
+- [axios](https://github.com/axios/axios): A promise-based HTTP Client for node.js and the browser (same codebase). We use this to make network requests to APIs.
+- [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/): Provides a way **encrypt** and securely store key–value pairs locally on the device.
+- [async-storage](https://docs.expo.dev/versions/latest/sdk/async-storage/): Provides a way to store **unencrypted** key–value pairs locally on the device.
+- [segment/analytics-react-native](https://github.com/segmentio/analytics-react-native#readme): Allows us to track how our users interact with the Pelleum app.
+- [expo-web-browser](https://docs.expo.dev/versions/latest/sdk/webbrowser/): Provides access to the system's web browser and supports handling redirects.
+- [expo-haptics](https://docs.expo.dev/versions/latest/sdk/haptics/): Allows us to provide haptic feedback when a user performs certain actions in the Pelleum app.
+- [expo-linear-gradient](https://docs.expo.dev/versions/latest/sdk/linear-gradient/): Provides a way to create linear color gradients.
+- [native-base](https://docs.nativebase.io/): A library that offers out-of-the-box components. This can be useful if you don't want to build custom components from scratch (using primitive React Native components).
+- [dotenv](https://github.com/motdotla/dotenv): Provides a way to store sensitive information in environment variables.
+- [redux](https://github.com/reduxjs/redux): Allows us to manage some state variables globally.
