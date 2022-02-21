@@ -2,8 +2,8 @@
 
 This repository contains the frontend source code for the Pelleum mobile application (iOS and Android).
 
-**Codebase:** JavaScript
-**Framework:** React Native
+**Codebase:** JavaScript__
+**Framework:** React Native__
 **Workflow:** Expo
 
 ## Setup
