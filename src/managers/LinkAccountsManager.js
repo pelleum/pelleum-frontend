@@ -1,13 +1,12 @@
-import accountConnectClient from "../api/clients/AccountConnectClient";
+import pelleumClient from "../api/clients/PelleumClient";
 import { store } from "../redux/Store";
 import { updateAccountsStatus } from "../redux/actions/LinkedAccountsActions";
-import { REACT_APP_AC_GET_CONNECTIONS_PATH, REACT_APP_AC_LOGIN_BASE_PATH, REACT_APP_AC_DEACTIVATE_BASE_PATH } from "@env";
 
 class LinkAccountsManager {
 	static getLinkedAccountsStatus = async () => {
-		const response = await accountConnectClient({
+		const response = await pelleumClient({
 			method: "get",
-			url: REACT_APP_AC_GET_CONNECTIONS_PATH,
+			url: process.env.AC_GET_CONNECTIONS_PATH,
 		});
 
 		if (response.status == 200) {
@@ -22,11 +21,9 @@ class LinkAccountsManager {
 	};
 
 	static accountLogin = async (queryParams) => {
-		//we should have a .env type file to store institution IDs
-		const ROBINHOOD_ID = "d75e2cf4-a4ee-4869-88c3-14bfadf7c196";
-		const response = await accountConnectClient({
+		const response = await pelleumClient({
 			method: "post",
-			url: `${REACT_APP_AC_LOGIN_BASE_PATH}/${ROBINHOOD_ID}`,
+			url: `${process.env.AC_LOGIN_BASE_PATH}/${process.env.ROBINHOOD_ID}`,
 			data: queryParams,
 		});
 
@@ -35,10 +32,9 @@ class LinkAccountsManager {
 
 	static unlinkAccount = async () => {
 		//we should have a .env type file to store institution IDs
-		const ROBINHOOD_ID = "d75e2cf4-a4ee-4869-88c3-14bfadf7c196";
-		const response = await accountConnectClient({
+		const response = await pelleumClient({
 			method: "delete",
-			url: `${REACT_APP_AC_DEACTIVATE_BASE_PATH}/${ROBINHOOD_ID}`,
+			url: `${process.env.AC_DEACTIVATE_BASE_PATH}/${process.env.ROBINHOOD_ID}`,
 		});
 
 		return response;
@@ -46,10 +42,9 @@ class LinkAccountsManager {
 
 	static verifyAccount = async (requestBody) => {
 		//we should have a .env type file to store institution IDs
-		const ROBINHOOD_ID = "d75e2cf4-a4ee-4869-88c3-14bfadf7c196";
-		const response = await accountConnectClient({
+		const response = await pelleumClient({
 			method: "post",
-			url: `${REACT_APP_AC_LOGIN_BASE_PATH}/${ROBINHOOD_ID}/verify`,
+			url: `${process.env.AC_LOGIN_BASE_PATH}/${process.env.ROBINHOOD_ID}/verify`,
 			data: requestBody,
 		});
 		return response;

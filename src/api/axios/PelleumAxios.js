@@ -1,10 +1,9 @@
 // Import Installed Libraries
-import { REACT_APP_PELLEUM_API_BASE_URL, REACT_APP_PELLEUM_API_PORT } from "@env";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 const pelleumAxios = axios.create({
-	baseURL: `${REACT_APP_PELLEUM_API_BASE_URL}:${REACT_APP_PELLEUM_API_PORT}`,
+	baseURL: `${process.env.PELLEUM_API_BASE_URL}:${process.env.PELLEUM_API_PORT}`,
 	// baseURL: `http://192.168.1.8:8000`,
 });
 

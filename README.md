@@ -17,7 +17,7 @@ This repository contains the frontend source code for the Pelleum mobile applica
 5. To test the application on your mobile device, install the [Expo Go](https://expo.dev/client) app.
 6. To test the application on your computer, you will have to use the [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) or the [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/).
 7. Before running the app for testing, be sure that both [pelleum-api](https://github.com/pelleum/pelleum-api) and [account-connections](https://github.com/pelleum/account-connections) are running locally on your machine (see directions on how to run them in their READMEs.
-8. If you are using the Expo Go app, update `REACT_APP_PELLEUM_API_BASE_URL` in the `.env` file with your Wi-Fi network IP (i.e., `192.165.2.4`).
+8. If you are using the Expo Go app, update `PELLEUM_API_BASE_URL` in the `.env.development` file with your Wi-Fi network IP (i.e., `192.165.2.4`).
 9. If you are using the iOS Simulator or Android Emulator, you can use `localhost` as your base URL.
 
 ## Usage

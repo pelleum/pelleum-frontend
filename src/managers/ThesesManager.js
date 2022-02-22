@@ -1,9 +1,4 @@
 import pelleumClient from "../api/clients/PelleumClient";
-import {
-	REACT_APP_THESES_BASE_PATH,
-	REACT_APP_THESES_REACTIONS_BASE_PATH,
-	REACT_APP_GET_MANY_THESES_PATH,
-} from "@env";
 import * as Haptics from "expo-haptics";
 
 // Redux
@@ -21,7 +16,7 @@ class ThesesManager {
 	static likeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: `${REACT_APP_THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
 			data: { reaction: 1 },
 		});
 		if (authorizedResponse) {
@@ -37,7 +32,7 @@ class ThesesManager {
 	static unlikeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${REACT_APP_THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
 		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -52,7 +47,7 @@ class ThesesManager {
 	static dislikeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: `${REACT_APP_THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
 			data: { reaction: -1 },
 		});
 		if (authorizedResponse) {
@@ -68,7 +63,7 @@ class ThesesManager {
 	static removeDislikeOnThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${REACT_APP_THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
 		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -83,7 +78,7 @@ class ThesesManager {
 	static getThesis = async (thesis_id) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${REACT_APP_THESES_BASE_PATH}/${thesis_id}`,
+			url: `${process.env.THESES_BASE_PATH}/${thesis_id}`,
 		});
 
 		if (authorizedResponse) {
@@ -138,7 +133,7 @@ class ThesesManager {
 	static getTheses = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: REACT_APP_GET_MANY_THESES_PATH,
+			url: process.env.GET_MANY_THESES_PATH,
 			queryParams: queryParams,
 		});
 		if (authorizedResponse) {
@@ -153,7 +148,7 @@ class ThesesManager {
 	static createThesis = async (data) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: REACT_APP_THESES_BASE_PATH,
+			url: process.env.THESES_BASE_PATH,
 			data: data,
 		});
 
