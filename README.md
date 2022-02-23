@@ -44,6 +44,6 @@ This repository contains the frontend source code for the Pelleum mobile applica
 - [expo-haptics](https://docs.expo.dev/versions/latest/sdk/haptics/): Allows us to provide haptic feedback when a user performs certain actions in the Pelleum app.
 - [expo-linear-gradient](https://docs.expo.dev/versions/latest/sdk/linear-gradient/): Provides a way to create linear color gradients.
 - [native-base](https://docs.nativebase.io/): A library that offers out-of-the-box components. This can be useful if you don't want to build custom components from scratch (using primitive React Native components).
-- [dotenv](https://github.com/motdotla/dotenv): Provides a way to store sensitive information in environment variables.
+- [dotenv](https://github.com/motdotla/dotenv): Provides a way to store sensitive information in environment variables. Since we use a [babel.config.js](/Users/Ernesto/Pelleum/pelleum-frontend/babel.config.js) file, we also need [babel-plugin-inline-dotenv](https://github.com/brysgo/babel-plugin-inline-dotenv#readme). For more info, refer to the [Expo docs](https://docs.expo.dev/guides/environment-variables/).
 - [redux](https://github.com/reduxjs/redux): Allows us to manage some state variables globally.
 - [expo/vector-icons](https://docs.expo.dev/guides/icons/): An icon library included with Expo. To browse all icons, you can use [icons.expo.fyi](https://icons.expo.fyi/) or [oblador](https://oblador.github.io/react-native-vector-icons/).
