@@ -30,7 +30,6 @@ async function pelleumClient({
 	try {
 		response = await pelleumAxios(requestConfig);
 	} catch (err) {
-		console.log(err)
 		response = err.response;
 	}
 

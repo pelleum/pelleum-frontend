@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
 import PostsManager from "../managers/PostsManager";
-import { LIGHT_GREY_COLOR } from "../styles/Colors";
+import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -69,7 +69,7 @@ const PostButtonPanel = ({ item, nav }) => {
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
 							locallyLikedPosts.includes(item.post_id)
-								? "#F82057"
+								? MAIN_SECONDARY_COLOR
 								: LIGHT_GREY_COLOR
 						}
 					/>

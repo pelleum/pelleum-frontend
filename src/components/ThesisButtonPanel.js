@@ -4,7 +4,7 @@ import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
 import RationalesManager from "../managers/RationalesManager";
-import { LIGHT_GREY_COLOR } from "../styles/Colors";
+import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -83,7 +83,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
 						size={20}
-						color={thesisIsLiked ? "#F82057" : LIGHT_GREY_COLOR}
+						color={thesisIsLiked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -95,7 +95,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
 						size={20}
-						color={thesisIsDisliked ? "#F82057" : LIGHT_GREY_COLOR}
+						color={thesisIsDisliked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity

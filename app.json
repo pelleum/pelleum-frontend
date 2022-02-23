@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ernesto1034.pelleumfrontend"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +26,10 @@
         "backgroundColor": "#FFFFFF"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "permissions": ["ACCESS_NETWORK_STATE"]
+      "permissions": [
+        "ACCESS_NETWORK_STATE"
+      ],
+      "package": "com.ernesto1034.pelleumfrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"

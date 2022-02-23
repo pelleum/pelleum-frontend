@@ -1,4 +1,5 @@
 // Import Installed Libraries
+import 'expo-dev-client';
 import * as React from "react";
 import { StatusBar, Platform } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
@@ -8,7 +9,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
-// import { createClient } from '@segment/analytics-react-native';
+import { createClient } from '@segment/analytics-react-native';
 
 // Local Files
 import SignupScreen from "./src/screens/SignupScreen";
@@ -41,12 +42,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import { storeUserObject } from "./src/redux/actions/AuthActions";
 
-// // Segment client
-// const segmentClient = createClient({
-// 	writeKey: "oTZCqJQA3K2CVRfHBgghbxBF5b9BU5Oj",
-// 	trackAppLifecycleEvents: true,
-// 	//additional config options
-// });
+// Segment client
+const segmentClient = createClient({
+	writeKey: "oTZCqJQA3K2CVRfHBgghbxBF5b9BU5Oj",
+	trackAppLifecycleEvents: true,
+	//additional config options
+});
 
 // Authentication Flow
 const AuthStack = createNativeStackNavigator();

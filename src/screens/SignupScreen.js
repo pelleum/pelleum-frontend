@@ -14,6 +14,7 @@ import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
+import * as WebBrowser from "expo-web-browser";
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -55,6 +56,10 @@ const SignupScreen = ({ navigation }) => {
 		});
 		return unsubscribe;
 	}, [navigation]);
+
+	const handleWebLink = async (webLink) => {
+		await WebBrowser.openBrowserAsync(webLink);
+	};
 
 	// Input Validation
 	const emailValidation = (emailText) => {
@@ -350,7 +355,7 @@ const SignupScreen = ({ navigation }) => {
 									/>
 								)}
 								<AppText style={styles.validationMessageText}>
-									Password must contain one uppercase, lowercase, 
+									Password must contain one uppercase, lowercase,
 									numerical, and special
 									character.
 								</AppText>
@@ -378,8 +383,22 @@ const SignupScreen = ({ navigation }) => {
 							<AppText style={styles.buttonText}>Create Account</AppText>
 						</TouchableOpacity>
 					</KeyboardAvoidingView>
+					<View style={styles.termsContainer}>
+
+						<AppText style={styles.bottomText}>By signing up, you agree to Pelleum's </AppText>
+						<HStack>
+							<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}>
+								<AppText style={styles.termsButton}>Terms of Service </AppText>
+							</TouchableOpacity>
+							<AppText style={styles.bottomText}>and </AppText>
+							<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/privacy-policy")}>
+								<AppText style={styles.termsButton}>Priacy Policy</AppText>
+							</TouchableOpacity>
+							<AppText style={styles.bottomText}>.</AppText>
+						</HStack>
+					</View>
 					<View style={styles.loginInsteadContainer}>
-						<AppText style={styles.loginInsteadText}>Already have an account? </AppText>
+						<AppText style={styles.bottomText}>Already have an account? </AppText>
 						<TouchableOpacity onPress={() => navigation.navigate("Login")}>
 							<AppText style={styles.loginInsteadButton}>Log in</AppText>
 						</TouchableOpacity>
@@ -459,11 +478,11 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 	},
 	loginInsteadContainer: {
-		marginTop: 75,
+		marginTop: 37.5,
 		alignSelf: "center",
 		flexDirection: "row",
 	},
-	loginInsteadText: {
+	bottomText: {
 		fontSize: 16,
 		color: LIGHT_GREY_COLOR,
 	},
@@ -471,5 +490,13 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: MAIN_SECONDARY_COLOR,
 		marginLeft: 10,
+	},
+	termsContainer: {
+		marginTop: 37.5,
+		alignSelf: "center",
+	},
+	termsButton: {
+		fontSize: 16,
+		color: MAIN_SECONDARY_COLOR,
 	},
 });
