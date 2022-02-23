@@ -46,3 +46,4 @@ This repository contains the frontend source code for the Pelleum mobile applica
 - [native-base](https://docs.nativebase.io/): A library that offers out-of-the-box components. This can be useful if you don't want to build custom components from scratch (using primitive React Native components).
 - [dotenv](https://github.com/motdotla/dotenv): Provides a way to store sensitive information in environment variables.
 - [redux](https://github.com/reduxjs/redux): Allows us to manage some state variables globally.
+- [expo/vector-icons](https://docs.expo.dev/guides/icons/): An icon library included with Expo. To browse all icons, you can use [icons.expo.fyi](https://icons.expo.fyi/) or [oblador](https://oblador.github.io/react-native-vector-icons/).
