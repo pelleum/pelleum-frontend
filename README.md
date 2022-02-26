@@ -7,7 +7,7 @@ This repository contains the frontend source code for the Pelleum mobile applica
 
 ## Setup
 [React Native Setup Docs](https://reactnative.dev/docs/environment-setup)
-1. Create `.env.development` and `.env.production` files in the project's root directory and set all environment variables (get from senior engineer). Refer to [this document](https://docs.expo.dev/workflow/development-mode/) to understand the difference between Development and Production Mode for an Expo-managed React Native application).
+1. Create `.env.development` and `.env.production` files in the project's root directory and set all environment variables (get from senior engineer). Refer to [this document](https://docs.expo.dev/workflow/development-mode/) to understand the difference between Development and Production Mode for an Expo-managed React Native application.
 2. Install [Node LTS](https://nodejs.org/en/download/).
 3. Run `npm install -g expo-cli` to install [Expo CLI](https://docs.expo.dev/) (You must be logged into your machine as root/administrator).
 4. Run `npm install -g eas-cli` to install [EAS CLI](https://docs.expo.dev/build/setup/) (You must be logged into your machine as root/administrator).
