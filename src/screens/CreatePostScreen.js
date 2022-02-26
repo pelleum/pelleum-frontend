@@ -26,11 +26,15 @@ import {
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
 import * as Haptics from 'expo-haptics';
+import { useAnalytics } from '@segment/analytics-react-native';
 
 
 const CreatePostScreen = ({ navigation }) => {
 	// Universal state
 	const dispatch = useDispatch();
+	// Segment Tracking
+	const { track } = useAnalytics();
+
 	// Local state
 	const [content, setContent] = useState("");
 	const [asset_symbol, setAssetSymbol] = useState("");
@@ -62,6 +66,7 @@ const CreatePostScreen = ({ navigation }) => {
 			setDisableStatus(true);
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 			navigation.navigate("Feed");
+			track('Post Created')
 		}
 	};
 
@@ -111,7 +116,7 @@ const CreatePostScreen = ({ navigation }) => {
 						<HStack alignItems="center" justifyContent="space-between" my="15">
 							<Image
 								style={styles.image}
-								source={require("../../assets/forest.jpg")}
+								source={require("../../assets/defaultProfileImage.png")}
 							/>
 							<TouchableOpacity
 								style={
@@ -135,6 +140,7 @@ const CreatePostScreen = ({ navigation }) => {
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
+							textTransform="uppercase"
 							value={asset_symbol}
 							onChangeText={(newValue) =>
 								handleChangeText({ newValue: newValue, checkSymbol: true })

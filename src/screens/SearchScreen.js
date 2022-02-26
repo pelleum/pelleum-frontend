@@ -306,6 +306,7 @@ const SearchScreen = ({ navigation }) => {
 								}}
 								color={TEXT_COLOR}
 								selectionColor={TEXT_COLOR}
+								textTransform="uppercase"
 								placeholder="Theses by ticker symbol"
 								placeholderTextColor={LIGHT_GREY_COLOR}
 								returnKeyType="search"

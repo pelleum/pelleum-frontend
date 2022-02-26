@@ -48,7 +48,7 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 						<View style={styles.listHeaderView}>
 							<Image
 								style={styles.image}
-								source={require("../../assets/forest.jpg")}
+								source={require("../../assets/defaultProfileImage.png")}
 							/>
 							<AppText style={styles.usernameText}>@{username}</AppText>
 							{assetList.length == 0 ? (

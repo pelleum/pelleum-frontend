@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
 		width: "80%",
 	},
 	input: {
-		color: TEXT_COLOR,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		fontSize: 14,
 		height: 37,
 		paddingHorizontal: 15,
 		borderRadius: 10,

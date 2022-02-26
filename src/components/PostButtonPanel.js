@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Share } from "react-native";
+import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
 import PostsManager from "../managers/PostsManager";
@@ -33,6 +33,21 @@ const PostButtonPanel = ({ item, nav }) => {
 		}
 	};
 
+	const onRepost = async () => {
+		Alert.alert(
+			`Coming soon!`,
+			`We are still developing the Repost feature. We'll let you know when it's ready!`,
+			[
+				{
+					text: "Got it!",
+					onPress: () => {
+						/* do nothing */
+					},
+				},
+			]
+		);
+	};
+
 	return (
 		<NativeBaseProvider>
 			<HStack style={styles.buttonBox}>
@@ -46,9 +61,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => {
-						console.log("Retweet button worked.");
-					}}
+					onPress={() => onRepost()}
 				>
 					<EvilIcons name="retweet" size={30} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
@@ -60,7 +73,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						name={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
-							locallyLikedPosts.includes(item.post_id)
+								locallyLikedPosts.includes(item.post_id)
 								? "md-heart"
 								: "md-heart-outline"
 						}
@@ -68,7 +81,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						color={
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
-							locallyLikedPosts.includes(item.post_id)
+								locallyLikedPosts.includes(item.post_id)
 								? MAIN_SECONDARY_COLOR
 								: LIGHT_GREY_COLOR
 						}

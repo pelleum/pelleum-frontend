@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
 import { Ionicons, Feather } from "@expo/vector-icons";
-import { HStack, NativeBaseProvider } from "native-base";
+import { HStack, NativeBaseProvider, Select } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import * as WebBrowser from "expo-web-browser";
 
@@ -23,6 +23,7 @@ import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
 import {
 	TEXT_COLOR,
+	MAIN_BACKGROUND_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -37,6 +38,7 @@ const SignupScreen = ({ navigation }) => {
 	const [password, setPassword] = useState("");
 	const [birthDate, setBirthDate] = useState("");
 	const [username, setUsername] = useState("");
+	const [gender, setGender] = useState("");
 	const [inputValidity, setInputValidity] = useState({
 		emailValidity: false,
 		passwordLength: false,
@@ -291,6 +293,28 @@ const SignupScreen = ({ navigation }) => {
 									handleChangeText({ newValue: newValue, checkBirthDate: true })
 								}
 							/>
+							<Select
+								placeholder="Gender"
+								color={TEXT_COLOR}
+								selectionColor={TEXT_COLOR}
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								borderColor={MAIN_BACKGROUND_COLOR}
+								background={MAIN_DIFFERENTIATOR_COLOR}
+								fontSize="14"
+								height="39.5"
+								px="15"
+								borderRadius="10"
+								my="0.5"
+								selectedValue={gender}
+								onValueChange={(genderOption) => setGender(genderOption)}
+							>
+								<Select.Item label="Female" value="key0" />
+								<Select.Item label="Male" value="key1" />
+								<Select.Item label="Transgender" value="key2" />
+								<Select.Item label="Non-binary" value="key3" />
+								<Select.Item label="Other" value="key4" />
+								<Select.Item label="I prefer not to say" value="key4" />
+							</Select>
 							{errorMessage ? (
 								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
 							) : null}
@@ -384,7 +408,6 @@ const SignupScreen = ({ navigation }) => {
 						</TouchableOpacity>
 					</KeyboardAvoidingView>
 					<View style={styles.termsContainer}>
-
 						<AppText style={styles.bottomText}>By signing up, you agree to Pelleum's </AppText>
 						<HStack>
 							<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}>
@@ -405,7 +428,7 @@ const SignupScreen = ({ navigation }) => {
 					</View>
 				</SafeAreaView>
 			</DismissKeyboard>
-		</NativeBaseProvider>
+		</NativeBaseProvider >
 	);
 };
 
@@ -425,8 +448,8 @@ const styles = StyleSheet.create({
 		width: "100%",
 	},
 	input: {
-		color: TEXT_COLOR,
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		fontSize: 14,
 		height: 37,
 		paddingHorizontal: 15,
 		borderRadius: 10,

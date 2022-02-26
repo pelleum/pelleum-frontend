@@ -1,5 +1,5 @@
 // installed libraries
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	TextInput,
@@ -101,6 +101,47 @@ const CreateThesisScreen = ({ navigation }) => {
 		}
 	};
 
+	const hasUnsavedChanges = (
+		Boolean(content) ||
+		Boolean(asset_symbol) ||
+		Boolean(title) ||
+		Boolean(source1) ||
+		Boolean(source2) ||
+		Boolean(source3)
+		);
+
+	// Alert user they have unsaved changes
+	// https://reactnavigation.org/docs/preventing-going-back/
+	React.useEffect(
+		() =>
+			navigation.addListener('beforeRemove', (e) => {
+				if (!hasUnsavedChanges) {
+					// If we don't have unsaved changes, then we don't need to do anything
+					return;
+				}
+
+				// Prevent default behavior of leaving the screen
+				e.preventDefault();
+
+				// Prompt the user before leaving the screen
+				Alert.alert(
+					'Discard changes?',
+					'You have unsaved changes. Are you sure to discard them and leave the screen?',
+					[
+						{ text: "Don't leave", style: 'cancel', onPress: () => { } },
+						{
+							text: 'Discard',
+							style: 'destructive',
+							// If the user confirmed, then we dispatch the action we blocked earlier
+							// This will continue the action that had triggered the removal of the screen
+							onPress: () => navigation.dispatch(e.data.action),
+						},
+					]
+				);
+			}),
+		[navigation, hasUnsavedChanges]
+	);
+	
 	const handleAddRationale = async (createdThesis) => {
 		const response = await RationalesManager.addRationale(createdThesis);
 		if (response.status == 201) {
@@ -242,7 +283,7 @@ const CreateThesisScreen = ({ navigation }) => {
 							<HStack alignItems="center" justifyContent="space-between" my="15">
 								<Image
 									style={styles.image}
-									source={require("../../assets/forest.jpg")}
+									source={require("../../assets/defaultProfileImage.png")}
 								/>
 								<TouchableOpacity
 									style={
@@ -264,6 +305,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								placeholder="Ex: GOOGL"
 								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 								autoCapitalize="characters"
+								textTransform="uppercase"
 								autoCorrect={false}
 								maxLength={5}
 								value={asset_symbol}
