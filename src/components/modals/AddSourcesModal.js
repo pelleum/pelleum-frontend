@@ -1,6 +1,5 @@
 import React from "react";
 import {
-	Alert,
 	Modal,
 	StyleSheet,
 	View,
@@ -61,7 +60,6 @@ const AddSourcesModal = ({
 			transparent={true}
 			visible={modalVisible}
 			onRequestClose={() => {
-				Alert.alert("Modal has been closed.");
 				makeModalDisappear();
 			}}
 		>

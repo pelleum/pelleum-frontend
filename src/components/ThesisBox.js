@@ -9,6 +9,7 @@ import AppText from "../components/AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
+import { MAXIMUM_THESIS_VISIBLE_LINES, THESIS_BOX_HEIGHT } from "../constants/ThesesConstants";
 
 export class ThesesBoxType {
 	static Contained = new ThesesBoxType("contained");
@@ -16,10 +17,8 @@ export class ThesesBoxType {
 
 	constructor(type) {
 		this.type = type;
-	}
-}
-
-export const THESIS_BOX_HEIGHT = 200;
+	};
+};
 
 // StandAlone is the default thesisBoxType
 const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
@@ -67,7 +66,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							{dateWritten.toLocaleDateString()}
 						</AppText>
 					</HStack>
-					<AppText numberOfLines={5}>{item.content}...</AppText>
+					<AppText numberOfLines={MAXIMUM_THESIS_VISIBLE_LINES}>{item.content}...</AppText>
 				</Box>
 			</TouchableOpacity>
 		</NativeBaseProvider>

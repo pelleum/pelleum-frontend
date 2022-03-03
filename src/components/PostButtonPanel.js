@@ -4,6 +4,7 @@ import { HStack, NativeBaseProvider } from "native-base";
 import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
 import PostsManager from "../managers/PostsManager";
 import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { useDebouncedCallback } from 'use-debounce';
 
 // Redux
 import { useSelector } from "react-redux";
@@ -48,6 +49,17 @@ const PostButtonPanel = ({ item, nav }) => {
 		);
 	};
 
+	// Prevent user from tapping "Like" multiple times before API response promise gets fulfilled
+	// Debounce callback
+	const likeDebounced = useDebouncedCallback(
+		// function
+		(item) => {
+			PostsManager.sendPostReaction(item);
+		},
+		// delay in ms
+		1000
+	);
+
 	return (
 		<NativeBaseProvider>
 			<HStack style={styles.buttonBox}>
@@ -67,7 +79,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => PostsManager.sendPostReaction(item)}
+					onPress={() => likeDebounced(item)}
 				>
 					<Ionicons
 						name={

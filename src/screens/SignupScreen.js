@@ -11,10 +11,11 @@ import {
 	StatusBar,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { Ionicons, Feather, FontAwesome5 } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider, Select } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import * as WebBrowser from "expo-web-browser";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -36,7 +37,7 @@ const SignupScreen = ({ navigation }) => {
 	// State Management
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [birthDate, setBirthDate] = useState("");
+	const [birthdate, setBirthdate] = useState("");
 	const [username, setUsername] = useState("");
 	const [gender, setGender] = useState("");
 	const [inputValidity, setInputValidity] = useState({
@@ -45,11 +46,16 @@ const SignupScreen = ({ navigation }) => {
 		passwordCharacters: false,
 		usernameValidity: false,
 		birthDateValidity: false,
+		genderValidity: false,
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
+	const [isFocused, setIsFocused] = useState("");
 	// Redux
 	const { errorMessage } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
+
+	// Segment Tracking
+	const { identify, track } = useAnalytics();
 
 	useEffect(() => {
 		const unsubscribe = navigation.addListener("focus", () => {
@@ -61,6 +67,49 @@ const SignupScreen = ({ navigation }) => {
 
 	const handleWebLink = async (webLink) => {
 		await WebBrowser.openBrowserAsync(webLink);
+	};
+
+	const getAge = dateOfBirth => Math.floor((new Date() - new Date(dateOfBirth).getTime()) / 3.15576e+10);
+
+	const handleSignup = async (email, username, password, birthdate, gender) => {
+		// 1. Convert date format
+		const reformattedBirthdate = new Date(birthdate);
+
+		// 2. Attempt to create an account
+		const response = await UserManager.signup({
+			"email": email,
+			"username": username,
+			"password": password,
+			"birthdate": reformattedBirthdate,
+			"gender": gender,
+		});
+
+		// 3. If account creation was successful, identify the user and track the event
+		if (response.status == 201) {
+			identify(response.data.user_id, {
+				email: response.data.email,
+				username: response.data.username,
+				age: getAge(response.data.birthdate),
+				birthday: response.data.birthdate,
+				gender: response.data.gender,
+				createdAt: response.data.created_at,
+				plan: "basic",
+			});
+
+			track('Account Created', {
+				email: response.data.email,
+				username: response.data.username,
+				age: getAge(response.data.birthdate),
+				birthday: response.data.birthdate,
+				gender: response.data.gender,
+				createdAt: response.data.created_at,
+				plan: "basic",
+			});
+
+		} else {
+			// signup was unsuccessful
+			// do not identify user or track the signup event
+		};
 	};
 
 	// Input Validation
@@ -159,6 +208,7 @@ const SignupScreen = ({ navigation }) => {
 		checkPassword = false,
 		checkUsername = false,
 		checkBirthDate = false,
+		checkGender = false,
 	} = {}) => {
 		var newInputValidity = inputValidity;
 
@@ -212,12 +262,23 @@ const SignupScreen = ({ navigation }) => {
 		}
 
 		if (checkBirthDate) {
-			setBirthDate(newValue);
+			setBirthdate(newValue);
 			if (dateValidation(newValue)) {
 				newInputValidity["birthDateValidity"] = true;
 				setInputValidity(newInputValidity);
 			} else {
 				newInputValidity["birthDateValidity"] = false;
+				setInputValidity(newInputValidity);
+			}
+		}
+
+		if (checkGender) {
+			setGender(newValue);
+			if (newValue) {
+				newInputValidity["genderValidity"] = true;
+				setInputValidity(newInputValidity);
+			} else {
+				newInputValidity["genderValidity"] = false;
 				setInputValidity(newInputValidity);
 			}
 		}
@@ -236,63 +297,90 @@ const SignupScreen = ({ navigation }) => {
 					<KeyboardAvoidingView width={"100%"} alignItems={"center"} behavior={"padding"}>
 						<AppText style={styles.titleText}>Welcome to Pelleum</AppText>
 						<View style={styles.inputContainer}>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={TEXT_COLOR}
-								placeholder="Email"
-								maxLength={100}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								keyboardType="email-address"
-								value={email}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkEmail: true })
-								}
-								style={styles.input}
-								autoCapitalize="none"
-								autoCorrect={false}
-							/>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={TEXT_COLOR}
-								placeholder="Username"
-								maxLength={15}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								value={username}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkUsername: true })
-								}
-								style={styles.input}
-								autoCapitalize="none"
-								autoCorrect={false}
-							/>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={TEXT_COLOR}
-								placeholder="Password"
-								maxLength={100}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								value={password}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkPassword: true })
-								}
-								style={styles.input}
-								autoCapitalize="none"
-								autoCorrect={false}
-								secureTextEntry={true}
-							/>
-							<TextInputMask
-								color={TEXT_COLOR}
-								selectionColor={TEXT_COLOR}
-								placeholder="MM/DD/YYYY"
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								type={"datetime"}
-								style={styles.input}
-								options={{ format: "MM/DD/YYYY" }}
-								value={birthDate}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkBirthDate: true })
-								}
-							/>
+							<View style={styles.inputIconContainer}>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholder="Email"
+									maxLength={100}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									keyboardType="email-address"
+									value={email}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkEmail: true })
+									}
+									style={styles.inputWithIcon}
+									autoCapitalize="none"
+									autoCorrect={false}
+									onFocus={() => console.log("email is focused")}
+									onBlur={() => console.log("email unfocused")}
+								/>
+								{emailValidation(email) ? (
+									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								) : null}
+							</View>
+							<View style={styles.inputIconContainer}>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholder="Username"
+									maxLength={15}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									value={username}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkUsername: true })
+									}
+									style={styles.inputWithIcon}
+									autoCapitalize="none"
+									autoCorrect={false}
+									onFocus={() => console.log("username is focused")}
+									onBlur={() => console.log("username unfocused")}
+								/>
+								{usernameValidation(username) ? (
+									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								) : null}
+							</View>
+							<View style={styles.inputIconContainer}>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholder="Password"
+									maxLength={100}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									value={password}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkPassword: true })
+									}
+									style={styles.inputWithIcon}
+									autoCapitalize="none"
+									autoCorrect={false}
+									secureTextEntry={true}
+								/>
+								{passwordValidation({
+									passwordText: password,
+									checkCharacters: true,
+								}) ? (
+									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								) : null}
+							</View>
+							<View style={styles.inputIconContainer}>
+								<TextInputMask
+									color={TEXT_COLOR}
+									selectionColor={TEXT_COLOR}
+									placeholder="MM/DD/YYYY"
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									type={"datetime"}
+									style={styles.inputWithIcon}
+									options={{ format: "MM/DD/YYYY" }}
+									value={birthdate}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkBirthDate: true })
+									}
+								/>
+								{dateValidation(birthdate) ? (
+									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								) : null}
+							</View>
 							<Select
 								placeholder="Gender"
 								color={TEXT_COLOR}
@@ -306,20 +394,20 @@ const SignupScreen = ({ navigation }) => {
 								borderRadius="10"
 								my="0.5"
 								selectedValue={gender}
-								onValueChange={(genderOption) => setGender(genderOption)}
+								onValueChange={(newValue) =>
+									handleChangeText({ newValue: newValue, checkGender: true })
+								}
 							>
-								<Select.Item label="Female" value="key0" />
-								<Select.Item label="Male" value="key1" />
-								<Select.Item label="Transgender" value="key2" />
-								<Select.Item label="Non-binary" value="key3" />
-								<Select.Item label="Other" value="key4" />
-								<Select.Item label="I prefer not to say" value="key4" />
+								<Select.Item label="Female" value="FEMALE" />
+								<Select.Item label="Male" value="MALE" />
+								<Select.Item label="Other" value="OTHER" />
+								<Select.Item label="I prefer not to say" value="UNDISCLOSED" />
 							</Select>
 							{errorMessage ? (
 								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
 							) : null}
 						</View>
-						<View style={styles.validationMessageView}>
+						{/* <View style={styles.validationMessageView}>
 							<HStack alignItems="center">
 								{!emailValidation(email) ? (
 									<Feather name="x-circle" size={24} color={BAD_COLOR} />
@@ -385,7 +473,7 @@ const SignupScreen = ({ navigation }) => {
 								</AppText>
 							</HStack>
 							<HStack alignItems="center">
-								{!dateValidation(birthDate) ? (
+								{!dateValidation(birthdate) ? (
 									<Feather name="x-circle" size={24} color={BAD_COLOR} />
 								) : (
 									<Ionicons
@@ -398,30 +486,30 @@ const SignupScreen = ({ navigation }) => {
 									Birthdate is valid, and you are at least 18 years old.
 								</AppText>
 							</HStack>
+						</View> */}
+						<View style={styles.termsContainer}>
+							<AppText style={styles.bottomTextSmall}>By signing up, you agree to Pelleum's </AppText>
+							<HStack>
+								<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}>
+									<AppText style={styles.termsButton}>Terms of Service </AppText>
+								</TouchableOpacity>
+								<AppText style={styles.bottomTextSmall}>and </AppText>
+								<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/privacy-policy")}>
+									<AppText style={styles.termsButton}>Privacy Policy</AppText>
+								</TouchableOpacity>
+								<AppText style={styles.bottomTextSmall}>.</AppText>
+							</HStack>
 						</View>
 						<TouchableOpacity
-							onPress={() => UserManager.signup({ email, username, password })}
+							onPress={() => handleSignup(email, username, password, birthdate, gender)}
 							style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
 							disabled={disableStatus}
 						>
 							<AppText style={styles.buttonText}>Create Account</AppText>
 						</TouchableOpacity>
 					</KeyboardAvoidingView>
-					<View style={styles.termsContainer}>
-						<AppText style={styles.bottomText}>By signing up, you agree to Pelleum's </AppText>
-						<HStack>
-							<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}>
-								<AppText style={styles.termsButton}>Terms of Service </AppText>
-							</TouchableOpacity>
-							<AppText style={styles.bottomText}>and </AppText>
-							<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/privacy-policy")}>
-								<AppText style={styles.termsButton}>Priacy Policy</AppText>
-							</TouchableOpacity>
-							<AppText style={styles.bottomText}>.</AppText>
-						</HStack>
-					</View>
 					<View style={styles.loginInsteadContainer}>
-						<AppText style={styles.bottomText}>Already have an account? </AppText>
+						<AppText style={styles.bottomTextLarge}>Already have an account? </AppText>
 						<TouchableOpacity onPress={() => navigation.navigate("Login")}>
 							<AppText style={styles.loginInsteadButton}>Log in</AppText>
 						</TouchableOpacity>
@@ -462,7 +550,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		marginTop: 10,
+		marginTop: 25,
 	},
 	buttonDisabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
@@ -471,7 +559,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		marginTop: 10,
+		marginTop: 25,
 		opacity: 0.33,
 	},
 	buttonText: {
@@ -501,12 +589,16 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 	},
 	loginInsteadContainer: {
-		marginTop: 37.5,
+		marginTop: 25,
 		alignSelf: "center",
 		flexDirection: "row",
 	},
-	bottomText: {
+	bottomTextLarge: {
 		fontSize: 16,
+		color: LIGHT_GREY_COLOR,
+	},
+	bottomTextSmall: {
+		fontSize: 14,
 		color: LIGHT_GREY_COLOR,
 	},
 	loginInsteadButton: {
@@ -515,11 +607,33 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 	},
 	termsContainer: {
-		marginTop: 37.5,
+		marginTop: 25,
 		alignSelf: "center",
 	},
 	termsButton: {
-		fontSize: 16,
+		fontSize: 14,
 		color: MAIN_SECONDARY_COLOR,
+	},
+
+
+
+	inputIconContainer: {
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		height: 37,
+		paddingHorizontal: 15,
+		borderRadius: 10,
+		marginTop: 5,
+	},
+	inputIcon: {
+		paddingLeft: 10,
+	},
+	inputWithIcon: {
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		fontSize: 14,
+		height: "100%",
+		width: "90%",
 	},
 });

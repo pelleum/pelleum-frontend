@@ -51,11 +51,13 @@ class UserManager {
 				);
 				store.dispatch(refreshLibrary(rationaleInfo));
 			}
-			//4. update linked brokerage accounts status
+			//5. update linked brokerage accounts status
 			await LinkAccountsManager.getLinkedAccountsStatus();
 		} else {
 			store.dispatch(authError(response.data.detail));
-		}
+		};
+		// return response to handle event tracking in LoginScreen
+		return response;
 	};
 
 	static signup = async (data) => {
@@ -95,7 +97,9 @@ class UserManager {
 			await LinkAccountsManager.getLinkedAccountsStatus();
 		} else {
 			store.dispatch(authError(response.data.detail));
-		}
+		};
+		// return response to handle event tracking in SingupScreen
+		return response;
 	};
 
 	static getUser = async () => {

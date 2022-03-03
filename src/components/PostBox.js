@@ -14,6 +14,7 @@ import AppText from "./AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
+import { MAXIMUM_POST_VISIBLE_LINES } from "../constants/PostsConstants";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -70,7 +71,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 		postBoxType == PostBoxType.ThesisCommentedOn
 	) {
 		item["needsRefresh"] = true;
-	}
+	};
 
 	const alertBeforeDelete = async (item) => {
 		Alert.alert(
@@ -106,7 +107,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				}}
 			>
 				<Box
-					style={postBoxType == PostBoxType.PostCommentedOn ? styles.postCommentedOn : (postBoxType != PostBoxType.PostDetail ? styles.feedPost : null) }
+					style={postBoxType == PostBoxType.PostCommentedOn ? styles.postCommentedOn : (postBoxType != PostBoxType.PostDetail ? styles.feedPost : null)}
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
@@ -150,7 +151,15 @@ const PostBox = ({ postBoxType, item, nav }) => {
 								)
 							) : null}
 						</HStack>
-						<AppText style={styles.contentText}>{item.content}</AppText>
+						{postBoxType != PostBoxType.PostDetail ?
+							(<AppText
+								numberOfLines={MAXIMUM_POST_VISIBLE_LINES}
+								style={styles.contentText}>
+								{item.content}</AppText>) :
+							(<AppText
+								style={styles.contentText}>{item.content}
+							</AppText>)
+						}
 						{item.thesis ? (
 							<ThesisBox
 								item={item.thesis}
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
 	},
 	postCommentedOn: {
 		width: "100%",
-		borderBottomColor: LIGHT_GREY_COLOR, 
+		borderBottomColor: LIGHT_GREY_COLOR,
 		borderBottomWidth: 0.17,
 		paddingBottom: 7,
 	},

@@ -5,6 +5,8 @@ import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
 import RationalesManager from "../managers/RationalesManager";
 import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { useDebouncedCallback } from 'use-debounce';
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
 import { useSelector } from "react-redux";
@@ -14,6 +16,9 @@ import * as SecureStore from "expo-secure-store";
 const ThesisButtonPanel = ({ item, nav }) => {
 	const state = useSelector((state) => state.thesisReactionsReducer);
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	const thesisIsLiked =
 		(item.user_reaction_value == 1 &&
@@ -37,6 +42,12 @@ const ThesisButtonPanel = ({ item, nav }) => {
 	const handleAddRationale = async (item) => {
 		const response = await RationalesManager.addRationale(item);
 		if (response.status == 201) {
+			track('Rationale Added', {
+				author_user_id: item.user_id,
+				asset_symbol: item.asset_symbol,
+				sentiment: item.sentiment,
+				organic: true,
+			});
 			Alert.alert(
 				`This thesis was added to your ${item.asset_symbol} Rationale Library 🎉`,
 				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
@@ -71,14 +82,31 @@ const ThesisButtonPanel = ({ item, nav }) => {
 		}
 	};
 
+	// Prevent user from tapping "Like" or "Dislike" multiple times before API response promise gets fulfilled
+	// Debounce callback
+	const likeDebounced = useDebouncedCallback(
+		// function
+		(item) => {
+			ThesesManager.sendThesisReaction(item, ReactionType.Like)
+		},
+		// delay in ms
+		1000
+	);
+	const dislikeDebounced = useDebouncedCallback(
+		// function
+		(item) => {
+			ThesesManager.sendThesisReaction(item, ReactionType.Dislike)
+		},
+		// delay in ms
+		1000
+	);
+
 	return (
 		<NativeBaseProvider>
 			<HStack style={styles.buttonBox}>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() =>
-						ThesesManager.sendThesisReaction(item, ReactionType.Like)
-					}
+					onPress={() => likeDebounced(item)}
 				>
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
@@ -88,9 +116,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() =>
-						ThesesManager.sendThesisReaction(item, ReactionType.Dislike)
-					}
+					onPress={() => dislikeDebounced(item)}
 				>
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}

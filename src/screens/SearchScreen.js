@@ -26,13 +26,14 @@ import {
 	GOOD_COLOR,
 	MAIN_SECONDARY_COLOR,
 } from "../styles/Colors";
-import { THESIS_BOX_HEIGHT } from "../components/ThesisBox";
+import { THESIS_BOX_HEIGHT } from "../constants/ThesesConstants";
+import { useAnalytics } from '@segment/analytics-react-native';
 
-//need to figure out how to calculate item height, so that we are not bound by a constant item height
-//the result of the item heigsht calculation will be fed into getItemLayout
-//if THESIS_BOX_HEIGHT is changed here, we must also change the height in ThesisListContainer in ThesisBox
+//need to figure out how to calculate item height, so that we are not bound by a constant item height (defined in ThesisBox)
+//the result of the item height calculation will be fed into getItemLayout
 
 const SearchScreen = ({ navigation }) => {
+	// State Management
 	const [term, setTerm] = useState("");
 	const [getMoreResultsTerm, setGetMoreResultsTerm] = useState("");
 	const [bullResults, setBullResults] = useState([]);
@@ -48,7 +49,11 @@ const SearchScreen = ({ navigation }) => {
 	const [lastBearItemIndex, setLastBearItemIndex] = useState(0);
 	const [tempIndex, setTempIndex] = useState(0);
 
+	// Constants
 	const RECORDS_PER_PAGE = 25;
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	const flatListRef = React.useRef();
 	const dispatch = useDispatch();
@@ -106,6 +111,10 @@ const SearchScreen = ({ navigation }) => {
 				};
 				const responseData = await ThesesManager.getTheses(queryParams);
 				if (responseData) {
+					track('Theses Searched', {
+						asset_symbol: term,
+						sentiment: sent,
+					});
 					successfulResponses.push(true);
 					if (sent == "Bull") {
 						retrievedThesesArrayLengths.bull =
@@ -199,6 +208,12 @@ const SearchScreen = ({ navigation }) => {
 				};
 				responseData = await ThesesManager.getTheses(queryParams);
 				if (responseData) {
+					track('More Theses Loaded', {
+						asset_symbol: term,
+						sentiment: sentiment,
+						page: newPageNumber,
+						records_per_page: RECORDS_PER_PAGE,
+					});
 					setBullResults((oldBullTheses) => [
 						...oldBullTheses,
 						...responseData.records.theses,
@@ -221,6 +236,12 @@ const SearchScreen = ({ navigation }) => {
 				};
 				responseData = await ThesesManager.getTheses(queryParams);
 				if (responseData) {
+					track('More Theses Loaded', {
+						asset_symbol: term,
+						sentiment: sentiment,
+						page: newPageNumber,
+						records_per_page: RECORDS_PER_PAGE,
+					});
 					setBearResults((oldBearTheses) => [
 						...oldBearTheses,
 						...responseData.records.theses,
@@ -295,11 +316,11 @@ const SearchScreen = ({ navigation }) => {
 								autoCapitalize="characters"
 								autoCorrect={false}
 								onSubmitEditing={() => {
-									if(term.length > 0) {
-									setGetMoreResultsTerm(term);
-									setCurrentBullPage(1);
-									setCurrentBearPage(1);
-									getResults();
+									if (term.length > 0) {
+										setGetMoreResultsTerm(term);
+										setCurrentBullPage(1);
+										setCurrentBearPage(1);
+										getResults();
 									} else {
 										Keyboard.dismiss();
 									};
@@ -327,7 +348,7 @@ const SearchScreen = ({ navigation }) => {
 										as={<MaterialIcons name="search" />}
 									/>
 								}
-								enablesReturnKeyAutomatically={true} //this only works on iOS -> we need an Android equivalent!
+								enablesReturnKeyAutomatically={true} //this only works on iOS 
 								marginTop={3}
 								paddingVertical={0}
 							></Input>

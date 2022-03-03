@@ -13,6 +13,7 @@ import {
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -33,10 +34,14 @@ import {
 	BAD_COLOR,
 	GOOD_COLOR,
 } from "../styles/Colors";
+import { MAXIMUM_THESIS_CONTENT_CHARACTERS, MAXIMUM_THESIS_TITLE_CHARACTERS } from "../constants/ThesesConstants";
 
 const CreateThesisScreen = ({ navigation }) => {
 	// Universal State
 	const dispatch = useDispatch();
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	// Local State
 	const [content, setContent] = useState("");
@@ -108,43 +113,45 @@ const CreateThesisScreen = ({ navigation }) => {
 		Boolean(source1) ||
 		Boolean(source2) ||
 		Boolean(source3)
-		);
+	);
 
 	// Alert user they have unsaved changes
 	// https://reactnavigation.org/docs/preventing-going-back/
-	React.useEffect(
-		() =>
-			navigation.addListener('beforeRemove', (e) => {
-				if (!hasUnsavedChanges) {
-					// If we don't have unsaved changes, then we don't need to do anything
-					return;
-				}
-
-				// Prevent default behavior of leaving the screen
-				e.preventDefault();
-
-				// Prompt the user before leaving the screen
-				Alert.alert(
-					'Discard changes?',
-					'You have unsaved changes. Are you sure to discard them and leave the screen?',
-					[
-						{ text: "Don't leave", style: 'cancel', onPress: () => { } },
-						{
-							text: 'Discard',
-							style: 'destructive',
-							// If the user confirmed, then we dispatch the action we blocked earlier
-							// This will continue the action that had triggered the removal of the screen
-							onPress: () => navigation.dispatch(e.data.action),
-						},
-					]
-				);
-			}),
+	useEffect(() => navigation.addListener('beforeRemove', (e) => {
+		if (!hasUnsavedChanges) {
+			// If we don't have unsaved changes, then we don't need to do anything
+			return;
+		}
+		// Prevent default behavior of leaving the screen
+		e.preventDefault();
+		// Prompt the user before leaving the screen
+		Alert.alert(
+			'You are about to exit this screen.',
+			'Your thesis draft will not be saved. Are you sure you want to exit and discard your thesis draft?',
+			[
+				{ text: "Cancel", style: 'cancel', onPress: () => { } },
+				{
+					text: 'Discard',
+					style: 'destructive',
+					// If the user confirmed, then we dispatch the action we blocked earlier
+					// This will continue the action that had triggered the removal of the screen
+					onPress: () => navigation.dispatch(e.data.action),
+				},
+			]
+		);
+	}),
 		[navigation, hasUnsavedChanges]
 	);
-	
+
 	const handleAddRationale = async (createdThesis) => {
 		const response = await RationalesManager.addRationale(createdThesis);
 		if (response.status == 201) {
+			track('Rationale Added', {
+				author_user_id: createdThesis.user_id,
+				asset_symbol: createdThesis.asset_symbol,
+				sentiment: createdThesis.sentiment,
+				organic: false,
+			});
 			Alert.alert(
 				`Your thesis was added to your ${createdThesis.asset_symbol} Rationale Library 🎉`,
 				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
@@ -197,6 +204,10 @@ const CreateThesisScreen = ({ navigation }) => {
 		});
 
 		if (createdThesis) {
+			track('Thesis Created', {
+				asset_symbol: asset_symbol,
+				sentiment: sentiment,
+			});
 			handleAddRationale(createdThesis);
 			const createdPost = await PostsManager.createPost({
 				content: `Just wrote a thesis on #${createdThesis.asset_symbol}! ✍️`,
@@ -205,6 +216,11 @@ const CreateThesisScreen = ({ navigation }) => {
 			if (createdPost) {
 				createdPost.thesis = createdThesis;
 				dispatch(addPost(createdPost));
+				track('Post Created', {
+					asset_symbol: asset_symbol,
+					sentiment: sentiment,
+					organic: false,
+				});
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
@@ -325,7 +341,7 @@ const CreateThesisScreen = ({ navigation }) => {
 									handleChangeText({ newValue: newValue, checkTitle: true })
 								}
 								style={styles.titleInput}
-								maxLength={256}
+								maxLength={MAXIMUM_THESIS_TITLE_CHARACTERS}
 								autoCorrect={true}
 							/>
 							<AppText>Thesis Title</AppText>
@@ -337,7 +353,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								multiline={true}
 								numberOfLines={30}
 								style={styles.textArea}
-								maxLength={30000}
+								maxLength={MAXIMUM_THESIS_CONTENT_CHARACTERS}
 								value={content}
 								onChangeText={(newValue) =>
 									handleChangeText({ newValue: newValue, checkContent: true })

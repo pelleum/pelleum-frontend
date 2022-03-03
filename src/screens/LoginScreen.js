@@ -10,6 +10,7 @@ import {
 	Platform,
 	StatusBar,
 } from "react-native";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -38,6 +39,9 @@ const LoginScreen = ({ navigation }) => {
 		passwordValidity: false,
 	});
 
+	// Segment Tracking
+	const { identify } = useAnalytics();
+
 	useEffect(() => {
 		const unsubscribe = navigation.addListener("focus", () => {
 			const clearErrorMessage = () => dispatch(clearAuthError());
@@ -45,6 +49,26 @@ const LoginScreen = ({ navigation }) => {
 		});
 		return unsubscribe;
 	}, [navigation]);
+
+	const handleLogin = async (username, password) => {
+		// 1. Attempt to log in
+		const response = await UserManager.login({ username, password })
+
+		// 2. If account login was successful, identify the user
+		if (response.status == 200) {
+			identify(response.data.user_id, {
+				username: response.data.username,
+				email: response.data.email,
+				//createdAt: response.data.created_at,
+				//birthdate: response.data.birthdate,
+				//gender: response.data.gender,
+				plan: "basic",
+			});
+		} else {
+			// login was unsuccessful
+			// do not identify user
+		};
+	};
 
 	// Input Validation
 	const handleChangeText = ({
@@ -123,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
 						) : null}
 					</View>
 					<TouchableOpacity
-						onPress={() => UserManager.login({ username, password })}
+						onPress={() => handleLogin(username, password)}
 						style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
 						disabled={disableStatus}
 					>

@@ -14,6 +14,7 @@ import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
 import AppText from "../components/AppText";
 import { BAD_COLOR, LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { FEED_RECORDS_PER_PAGE } from "../constants/PostsConstants";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -33,15 +34,13 @@ const FeedScreen = ({ navigation, route }) => {
 	const [totalPages, setTotalPages] = useState(1);
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const RECORDS_PER_PAGE = 20;
-
 	const handleModalNavigate = (screenToNavigateTo) => {
 		navigation.navigate(screenToNavigateTo);
 	};
 
 	const onRefresh = async () => {
 		setRefreshing(true);
-		const queryParams = { records_per_page: RECORDS_PER_PAGE, page: 1 };
+		const queryParams = { records_per_page: FEED_RECORDS_PER_PAGE, page: 1 };
 		const postResponseData = await PostsManager.getPosts(queryParams);
 		if (postResponseData) {
 			setErrorMessage("");
@@ -65,7 +64,7 @@ const FeedScreen = ({ navigation, route }) => {
 		newPageNumber = currentPage + 1;
 		setCurrentPage(newPageNumber);
 		if (newPageNumber < totalPages) {
-			queryParams = { records_per_page: RECORDS_PER_PAGE, page: newPageNumber };
+			queryParams = { records_per_page: FEED_RECORDS_PER_PAGE, page: newPageNumber };
 			responseData = await PostsManager.getPosts(queryParams);
 			if (responseData) {
 				// Append new posts to currentPosts

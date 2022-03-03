@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 
 const pelleumAxios = axios.create({
 	baseURL: `${process.env.PELLEUM_API_BASE_URL}:${process.env.PELLEUM_API_PORT}`,
-	// baseURL: `http://192.168.1.8:8000`,
+	// baseURL: `http://192.168.1.78:8000`,
 });
 
 pelleumAxios.interceptors.request.use(

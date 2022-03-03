@@ -20,9 +20,11 @@ import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 } from "../styles/Colors";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const LinkAccount = ({ navigation }) => {
-	const [userCredential, setUserCredential] = useState("");
+	// State Management
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [sms_code, setSMSCode] = useState("");
@@ -31,13 +33,16 @@ const LinkAccount = ({ navigation }) => {
 	const [credentialsDisableStatus, setCredentialsDisableStatus] = useState(true);
 	const [smsDisableStatus, setSMSDisableStatus] = useState(true);
 	const [credentialsValidity, setCredentialsValidity] = useState({
-		userCredentialValidity: false,
+		emailValidity: false,
 		passwordValidity: false,
 	});
 
+	// Segment Tracking
+	const { track } = useAnalytics();
+
 	const onAccountLogin = async () => {
 		const response = await LinkAccountsManager.accountLogin({
-			username: userCredential,
+			username: email,
 			password: password,
 		});
 		if (response.status == 200) {
@@ -46,6 +51,9 @@ const LinkAccount = ({ navigation }) => {
 				setChallengeId(response.data.challenge.id)
 				setInstitutionLogin(true);
 			} else if (response.data.account_connection_status == "connected") {
+				track('Account Linked', {
+					institution_id: process.env.ROBINHOOD_ID,
+				});
 				await LinkAccountsManager.getLinkedAccountsStatus();
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 				navigation.navigate("Profile", { accountLinked: true });
@@ -81,6 +89,9 @@ const LinkAccount = ({ navigation }) => {
 		const response = await LinkAccountsManager.verifyAccount(requestBody);
 		if (response.status == 201) {
 			setErrorMessage("");
+			track('Account Linked', {
+				institution_id: process.env.ROBINHOOD_ID,
+			});
 			await LinkAccountsManager.getLinkedAccountsStatus();
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 			navigation.navigate("Profile", { accountLinked: true });
@@ -102,22 +113,32 @@ const LinkAccount = ({ navigation }) => {
 	}, [navigation]);
 
 	// Input Validation
+	const emailValidation = (emailText) => {
+		// Email format
+		const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+		if (emailRegex.test(emailText) === false) {
+			return false;
+		} else {
+			return true;
+		}
+	};
+
 	const handleChangeText = ({
 		newValue,
-		checkUserCredential = false,
+		checkEmail = false,
 		checkPassword = false,
 		checkSMSCode = false,
 	} = {}) => {
 		var newCredentialsValidity = credentialsValidity;
-		if (checkUserCredential) {
-			setUserCredential(newValue);
-			if (newValue.length > 0) {
+		if (checkEmail) {
+			setEmail(newValue);
+			if (emailValidation(newValue)) {
 				// user credential is valid
-				newCredentialsValidity["userCredentialValidity"] = true;
+				newCredentialsValidity["emailValidity"] = true;
 				setCredentialsValidity(newCredentialsValidity);
 			} else {
 				// user credential is NOT valid
-				newCredentialsValidity["userCredentialValidity"] = false;
+				newCredentialsValidity["emailValidity"] = false;
 				setCredentialsValidity(newCredentialsValidity);
 			}
 		}
@@ -143,7 +164,7 @@ const LinkAccount = ({ navigation }) => {
 				setSMSDisableStatus(true);
 			}
 		}
-		// If BOTH user credential and passwod are valid, enable button. Else, disbale button.
+		// If BOTH email and passwod are valid, enable button. Else, disbale button.
 		if (Object.values(credentialsValidity).every((item) => item === true)) {
 			setCredentialsDisableStatus(false);
 		} else {
@@ -171,15 +192,15 @@ const LinkAccount = ({ navigation }) => {
 									Log into your Robinhood brokerage account.
 								</AppText>
 								<TextInput
-									placeholder="Username or Email"
+									placeholder="Email"
 									color={TEXT_COLOR}
 									selectionColor={TEXT_COLOR}
 									placeholderTextColor={LIGHT_GREY_COLOR}
-									value={userCredential}
+									value={email}
 									onChangeText={(newValue) =>
 										handleChangeText({
 											newValue: newValue,
-											checkUserCredential: true,
+											checkEmail: true,
 										})
 									}
 									style={styles.input}

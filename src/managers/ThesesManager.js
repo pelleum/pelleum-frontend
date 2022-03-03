@@ -24,7 +24,7 @@ class ThesesManager {
 				store.dispatch(addReaction(item.thesis_id, reactionType));
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
-				console.log("There was an error liking a post.");
+				console.log("There was an error liking a thesis.");
 			}
 		}
 	};
@@ -55,7 +55,7 @@ class ThesesManager {
 				store.dispatch(addReaction(item.thesis_id, reactionType));
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
-				console.log("There was an error liking a post.");
+				console.log("There was an error disliking a thesis.");
 			}
 		}
 	};
@@ -70,7 +70,7 @@ class ThesesManager {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 			} else {
-				console.log("There was an error un-liking a thesis.");
+				console.log("There was an error un-disliking a thesis.");
 			}
 		}
 	};
@@ -84,9 +84,10 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
 				return authorizedResponse.data;
+			} else {
+				// need to display "an unexpected error occured"
+				console.log("There was an error obtaining the thesis.");
 			}
-			// need to display "an unexpected error occured"
-			console.log("There was an error obtaining the thesis.");
 		}
 	};
 

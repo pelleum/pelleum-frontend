@@ -19,15 +19,18 @@ import {
 	MAIN_SECONDARY_COLOR,
 	LIGHT_GREY_COLOR,
 } from "../styles/Colors";
-
-// Redux
 import { useSelector } from "react-redux";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const LinkedAccountsStatus = ({ navigation }) => {
+	// State Management
 	const [errorMessage, setErrorMessage] = useState("");
 	const { activeAccounts } = useSelector(
 		(state) => state.linkedAccountsReducer
 	);
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	const getAccountsStatus = async () => {
 		await LinkAccountsManager.getLinkedAccountsStatus();
@@ -51,6 +54,9 @@ const LinkedAccountsStatus = ({ navigation }) => {
 					onPress: async () => {
 						const response = await LinkAccountsManager.unlinkAccount();
 						if (response.status == 200) {
+							track('Account Unlinked', {
+								institution_id: process.env.ROBINHOOD_ID,
+							});
 							navigation.navigate("Profile", { onUnlink: true });
 						} else {
 							setErrorMessage(

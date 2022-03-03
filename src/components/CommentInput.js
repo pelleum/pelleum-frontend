@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, TextInput } from "react-native";
 import { LIGHT_GREY_COLOR, TEXT_COLOR } from "../styles/Colors";
+import { MAXIMUM_POST_CHARACTERS } from "../constants/PostsConstants";
 
 const CommentInput = ({
 	scrollToTop,
@@ -33,7 +34,7 @@ const CommentInput = ({
 			multiline={true}
 			numberOfLines={20}
 			style={styles.textArea}
-			maxLength={512}
+			maxLength={MAXIMUM_POST_CHARACTERS}
 			value={commentContent}
 			onChangeText={(newValue) => handleChangeText(newValue)}
 		/>

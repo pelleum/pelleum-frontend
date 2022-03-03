@@ -1,6 +1,5 @@
 import React from "react";
 import {
-	Alert,
 	Modal,
 	StyleSheet,
 	Text,
@@ -19,7 +18,6 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 			transparent={true}
 			visible={modalVisible}
 			onRequestClose={() => {
-				Alert.alert("Modal has been closed.");
 				makeModalDisappear();
 			}}
 		>

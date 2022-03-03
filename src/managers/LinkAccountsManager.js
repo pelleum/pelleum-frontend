@@ -20,13 +20,12 @@ class LinkAccountsManager {
 		}
 	};
 
-	static accountLogin = async (queryParams) => {
+	static accountLogin = async (requestBody) => {
 		const response = await pelleumClient({
 			method: "post",
 			url: `${process.env.AC_LOGIN_BASE_PATH}/${process.env.ROBINHOOD_ID}`,
-			data: queryParams,
+			data: requestBody,
 		});
-
 		return response;
 	};
 

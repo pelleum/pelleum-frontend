@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	TextInput,
@@ -6,8 +6,8 @@ import {
 	TouchableOpacity,
 	View,
 	KeyboardAvoidingView,
-	SafeAreaView
-
+	SafeAreaView,
+	Alert,
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
@@ -27,11 +27,13 @@ import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
 import * as Haptics from 'expo-haptics';
 import { useAnalytics } from '@segment/analytics-react-native';
+import { MAXIMUM_POST_CHARACTERS } from "../constants/PostsConstants";
 
 
 const CreatePostScreen = ({ navigation }) => {
 	// Universal state
 	const dispatch = useDispatch();
+
 	// Segment Tracking
 	const { track } = useAnalytics();
 
@@ -46,8 +48,6 @@ const CreatePostScreen = ({ navigation }) => {
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
 
-
-
 	const sentimentOptions = [
 		{ label: "Bull", value: "Bull" },
 		{ label: "Bear", value: "Bear" },
@@ -61,12 +61,16 @@ const CreatePostScreen = ({ navigation }) => {
 		});
 		if (createdPost) {
 			dispatch(addPost(createdPost));
+			track('Post Created', {
+				asset_symbol: asset_symbol,
+				sentiment: sentiment,
+				organic: true,
+			});
 			setContent("");
 			setAssetSymbol("");
 			setDisableStatus(true);
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 			navigation.navigate("Feed");
-			track('Post Created')
 		}
 	};
 
@@ -106,6 +110,39 @@ const CreatePostScreen = ({ navigation }) => {
 			setDisableStatus(true);
 		}
 	};
+
+	const hasUnsavedChanges = (
+		Boolean(content) ||
+		Boolean(asset_symbol)
+	);
+
+	// Alert user they have unsaved changes
+	// https://reactnavigation.org/docs/preventing-going-back/
+	useEffect(() => navigation.addListener('beforeRemove', (e) => {
+		if (!hasUnsavedChanges) {
+			// If we don't have unsaved changes, then we don't need to do anything
+			return;
+		}
+		// Prevent default behavior of leaving the screen
+		e.preventDefault();
+		// Prompt the user before leaving the screen
+		Alert.alert(
+			'You are about to exit this screen.',
+			'Your post draft will not be saved. Are you sure you want to exit and discard your post draft?',
+			[
+				{ text: "Cancel", style: 'cancel', onPress: () => { } },
+				{
+					text: 'Discard',
+					style: 'destructive',
+					// If the user confirmed, then we dispatch the action we blocked earlier
+					// This will continue the action that had triggered the removal of the screen
+					onPress: () => navigation.dispatch(e.data.action),
+				},
+			]
+		);
+	}),
+		[navigation, hasUnsavedChanges]
+	);
 
 	return (
 		<DismissKeyboard>
@@ -154,39 +191,40 @@ const CreatePostScreen = ({ navigation }) => {
 							placeholder="What's your valuable insight?"
 							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							multiline={true}
-							numberOfLines={20}
+							maxHeight={190}
+							numberOfLines={10}
 							style={styles.textArea}
-							maxLength={512}
+							maxLength={MAXIMUM_POST_CHARACTERS}
 							value={content}
 							onChangeText={(newValue) =>
 								handleChangeText({ newValue: newValue, checkContent: true })
 							}
 						/>
-						</KeyboardAvoidingView>
+					</KeyboardAvoidingView>
 
-						<View style={styles.switchSelectorContainer}>
-							<SwitchSelector
-								options={sentimentOptions}
-								initial={0}
-								onPress={(value) => {
-									if (value === sentiment) {
-										//do nothing
-									} else {
-										setSentiment(value);
-									}
-								}}
-								height={40}
-								buttonColor={sentiment == "Bull" ? GOOD_COLOR : BAD_COLOR}
-								backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-								borderColor={MAIN_DIFFERENTIATOR_COLOR}
-								selectedColor={"white"}
-								textColor={sentiment == "Bull" ? BAD_COLOR : GOOD_COLOR}
-								bold={true}
-								fontSize={16}
-								hasPadding
-							/>
-						</View>
-						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
+					<View style={styles.switchSelectorContainer}>
+						<SwitchSelector
+							options={sentimentOptions}
+							initial={0}
+							onPress={(value) => {
+								if (value === sentiment) {
+									//do nothing
+								} else {
+									setSentiment(value);
+								}
+							}}
+							height={40}
+							buttonColor={sentiment == "Bull" ? GOOD_COLOR : BAD_COLOR}
+							backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+							borderColor={MAIN_DIFFERENTIATOR_COLOR}
+							selectedColor={"white"}
+							textColor={sentiment == "Bull" ? BAD_COLOR : GOOD_COLOR}
+							bold={true}
+							fontSize={16}
+							hasPadding
+						/>
+					</View>
+					{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
 				</NativeBaseProvider>
 			</SafeAreaView>
 		</DismissKeyboard>

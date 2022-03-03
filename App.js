@@ -5,7 +5,6 @@ import { StatusBar, Platform } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-//import { createDrawerNavigator } from "@react-navigation/drawer";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
@@ -30,10 +29,12 @@ import LinkedAccountsStatus from "./src/screens/LinkedAccountsStatus";
 import RationaleScreen from "./src/screens/RationaleScreen";
 import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
+import DataPrivacyScreen from './src/screens/DataPrivacyScreen';
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 import { LIGHT_GREY_COLOR, MAIN_BACKGROUND_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "./src/styles/Colors";
+import BackButton from './src/components/BackButton';
 
 // Redux
 import { Provider } from "react-redux";
@@ -44,9 +45,8 @@ import { storeUserObject } from "./src/redux/actions/AuthActions";
 
 // Segment client
 const segmentClient = createClient({
-	writeKey: "oTZCqJQA3K2CVRfHBgghbxBF5b9BU5Oj",
+	writeKey: process.env.WRITE_KEY,
 	trackAppLifecycleEvents: true,
-	//additional config options
 });
 
 // Authentication Flow
@@ -173,6 +173,16 @@ const ProfileFlow = () => (
 			component={AuthoredPostsScreen}
 			options={{
 				title: "My Posts",
+				headerTitleAlign: 'center',
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
+			}}
+		/>
+		<ProfileStack.Screen
+			name="DataPrivacyScreen"
+			component={DataPrivacyScreen}
+			options={{
+				title: "Data Privacy",
 				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
@@ -309,6 +319,8 @@ const RootStackFlow = () => {
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
+							gestureEnabled: false,
+							headerLeft: () => <BackButton />
 						}}
 					/>
 					<RootStack.Screen
@@ -319,6 +331,8 @@ const RootStackFlow = () => {
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
+							gestureEnabled: false,	//if true, gesture uses native back navigation (we don't want that)
+							headerLeft: () => <BackButton />
 						}}
 					/>
 					<RootStack.Screen

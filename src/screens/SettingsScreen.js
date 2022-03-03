@@ -1,5 +1,5 @@
 // Import Installed Libraries
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
@@ -7,8 +7,12 @@ import AppText from "../components/AppText";
 import { useDispatch } from "react-redux";
 import { logout, dumpUserObject } from "../redux/actions/AuthActions";
 import { MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
+import HelpModal from "../components/modals/HelpModal";
 
 const SettingsScreen = ({ navigation }) => {
+	// State Management
+	const [modalVisible, setModalVisible] = useState(false);
+
 	const handleWebLink = async (webLink) => {
 		await WebBrowser.openBrowserAsync(webLink);
 	};
@@ -17,14 +21,18 @@ const SettingsScreen = ({ navigation }) => {
 	const logOut = async () => {
 		await SecureStore.deleteItemAsync("userObject");
 		dispatch(logout());
-        dispatch(dumpUserObject());
+		dispatch(dumpUserObject());
 	};
 
 	return (
 		<SafeAreaView alignItems="center" marginTop={1}>
+			<HelpModal
+				modalVisible={modalVisible}
+				makeModalDisappear={() => setModalVisible(false)}
+			/>
 			<TouchableOpacity
 				style={styles.button}
-				onPress={() => console.log("\nHelp button worked!\n")}
+				onPress={() => setModalVisible(true)}
 			>
 				<AppText style={styles.buttonText}>Help</AppText>
 			</TouchableOpacity>
@@ -48,9 +56,9 @@ const SettingsScreen = ({ navigation }) => {
 			</TouchableOpacity>
 			<TouchableOpacity
 				style={styles.button}
-				onPress={() => console.log("\nData button worked!\n")}
+				onPress={() => navigation.navigate("DataPrivacyScreen")}
 			>
-				<AppText style={styles.buttonText}>Data</AppText>
+				<AppText style={styles.buttonText}>Data Privacy</AppText>
 			</TouchableOpacity>
 			<TouchableOpacity style={styles.button} onPress={logOut}>
 				<AppText style={styles.buttonText}>Log Out</AppText>

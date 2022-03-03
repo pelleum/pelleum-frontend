@@ -13,12 +13,16 @@ import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import { TEXT_COLOR } from "../styles/Colors";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const RationaleScreen = ({ navigation, route }) => {
 	//State Management
 	const [rationaleArray, setRationaleArray] = useState([]);
-	const [errorMessage, setErrorMessage] = useState(""); // Migrate to Redux
+	const [errorMessage, setErrorMessage] = useState("");
 	const [refreshFlatlist, setRefreshFlatList] = useState(false);
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	const asset = route.params.asset ? route.params.asset : null;
 	const userId = route.params.userId ? route.params.userId : null;
@@ -45,6 +49,11 @@ const RationaleScreen = ({ navigation, route }) => {
 		const responseStatus = await RationalesManager.removeRationale(item);
 		if (responseStatus) {
 			if (responseStatus == 200) {
+				track('Rationale Removed', {
+					author_user_id: item.thesis.user_id,
+					asset_symbol: item.thesis.asset_symbol,
+					sentiment: item.thesis.sentiment,
+				});
 				const rationaleArrayCopy = rationaleArray;
 				const index = rationaleArrayCopy.findIndex(
 					(rationale) => rationale.thesis_id === item.thesis_id
