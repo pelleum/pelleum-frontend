@@ -264,6 +264,8 @@ const RootStackFlow = () => {
 		}
 	};
 
+	const getAge = dateOfBirth => Math.floor((new Date() - new Date(dateOfBirth).getTime()) / 3.15576e+10);
+
 	const validateToken = async () => {
 		const user = await UserManager.getUser();
 		if (user) {
@@ -279,7 +281,17 @@ const RootStackFlow = () => {
 				username: userObject.username,
 				userId: userObject.user_id
 			}));
-		}
+			// 5. Identify the user
+			segmentClient.identify(user.user_id, {
+				email: user.email,
+				username: user.username,
+				age: getAge(user.birthdate),
+				birthday: user.birthdate,
+				gender: user.gender,
+				createdAt: user.created_at,
+				plan: "basic",
+			});
+		};
 	};
 
 	React.useEffect(() => {

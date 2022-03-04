@@ -50,6 +50,8 @@ const LoginScreen = ({ navigation }) => {
 		return unsubscribe;
 	}, [navigation]);
 
+	const getAge = dateOfBirth => Math.floor((new Date() - new Date(dateOfBirth).getTime()) / 3.15576e+10);
+
 	const handleLogin = async (username, password) => {
 		// 1. Attempt to log in
 		const response = await UserManager.login({ username, password })
@@ -57,11 +59,12 @@ const LoginScreen = ({ navigation }) => {
 		// 2. If account login was successful, identify the user
 		if (response.status == 200) {
 			identify(response.data.user_id, {
-				username: response.data.username,
 				email: response.data.email,
-				//createdAt: response.data.created_at,
-				//birthdate: response.data.birthdate,
-				//gender: response.data.gender,
+				username: response.data.username,
+				age: getAge(response.data.birthdate),
+				birthday: response.data.birthdate,
+				gender: response.data.gender,
+				createdAt: response.data.created_at,
 				plan: "basic",
 			});
 		} else {

@@ -115,9 +115,9 @@ class UserManager {
 				console.log(
 					"There was an error retrieving the current user when attempting to restore the token."
 				);
-			}
-		}
+			};
+		};
 	};
-}
+};
 
 export default UserManager;
