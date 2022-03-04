@@ -49,17 +49,6 @@ const PostButtonPanel = ({ item, nav }) => {
 		);
 	};
 
-	// Prevent user from tapping "Like" multiple times before API response promise gets fulfilled
-	// Debounce callback
-	const likeDebounced = useDebouncedCallback(
-		// function
-		(item) => {
-			PostsManager.sendPostReaction(item);
-		},
-		// delay in ms
-		1000
-	);
-
 	return (
 		<NativeBaseProvider>
 			<HStack style={styles.buttonBox}>
@@ -79,7 +68,8 @@ const PostButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => likeDebounced(item)}
+					onPress={() => PostsManager.sendPostReaction(item)
+					}
 				>
 					<Ionicons
 						name={
@@ -94,7 +84,7 @@ const PostButtonPanel = ({ item, nav }) => {
 							(item.user_reaction_value == 1 &&
 								!locallyUnlikedPosts.includes(item.post_id)) ||
 								locallyLikedPosts.includes(item.post_id)
-								? MAIN_SECONDARY_COLOR
+								? "#f01670"
 								: LIGHT_GREY_COLOR
 						}
 					/>
