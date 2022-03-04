@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import AppText from "./AppText";
-import { LinearGradient } from "expo-linear-gradient";
 import { BAD_COLOR, GOOD_COLOR } from "../styles/Colors";
 
 export class Sentiment {
@@ -14,26 +13,16 @@ export class Sentiment {
 }
 
 const SentimentPill = ({ item, sentiment }) => {
-	let colors;
 	let style;
 
 	if (sentiment == Sentiment.Bull) {
-		colors = ["#195c01", "#195c01", "#195c01"];
 		style = styles.bullSentimentText;
 	} else {
-		colors = ["#5c0101", "#5c0101", "#5c0101"];
 		style = styles.bearSentimentText;
 	}
 
 	return (
-		// <LinearGradient
-		// 	colors={colors}
-		// 	style={styles.linearGradient}
-		// 	start={{ y: 0.0, x: 0.0 }}
-		// 	end={{ y: 1.0, x: 1.0 }}
-		// >
-			<AppText style={style}>{item.sentiment.toUpperCase()}</AppText>
-		// </LinearGradient>
+		<AppText style={style}>{item.sentiment.toUpperCase()}</AppText>
 	);
 };
 
@@ -44,7 +33,7 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		width: 70,
 		padding: 5,
-		opacity: 0.7,
+		opacity: 0.5,
 	},
 	bullSentimentText: {
 		color: GOOD_COLOR,
@@ -59,7 +48,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		overflow: "hidden",
-		opacity: 0.5,
+		opacity: 0.65,
 	},
 	bearSentimentText: {
 		color: BAD_COLOR,
@@ -74,6 +63,6 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		overflow: "hidden",
-		opacity: 0.5,
+		opacity: 0.65,
 	},
 });

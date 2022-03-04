@@ -112,7 +112,7 @@ const ProfileScreen = ({ navigation, route }) => {
 								<SimpleLineIcons
 									name="settings"
 									size={28}
-									color={MAIN_SECONDARY_COLOR}
+									color={"#666667"}
 								/>
 							</TouchableOpacity>
 							<Image
