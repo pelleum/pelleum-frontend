@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TextInput } from "react-native";
-import { LIGHT_GREY_COLOR, TEXT_COLOR } from "../styles/Colors";
+import { LIGHT_GREY_COLOR, TEXT_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 import { MAXIMUM_POST_CHARACTERS } from "../constants/PostsConstants";
 
 const CommentInput = ({
@@ -28,7 +28,7 @@ const CommentInput = ({
 		<TextInput
 			onFocus={scrollToTop}
 			color={TEXT_COLOR}
-			selectionColor={TEXT_COLOR}
+			selectionColor={MAIN_SECONDARY_COLOR}
 			placeholder="Reply with your thoughts here"
 			placeholderTextColor={LIGHT_GREY_COLOR}
 			multiline={true}

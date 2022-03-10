@@ -1,14 +1,9 @@
 import React from "react";
 import { Modal, StyleSheet, View, TouchableOpacity } from "react-native";
-import { MAIN_SECONDARY_COLOR, MAIN_DIFFERENTIATOR_COLOR } from "../../styles/Colors";
-import * as Linking from 'expo-linking';
+import { MAIN_DIFFERENTIATOR_COLOR, LIGHT_GREY_COLOR } from "../../styles/Colors";
 import AppText from "../AppText";
 
-const HelpModal = ({ modalVisible, makeModalDisappear }) => {
-
-    const handleEmailLink = (emailLink) => {
-        Linking.openURL(emailLink);
-    };
+const GenderModal = ({ modalVisible, makeModalDisappear, setGender }) => {
 
     return (
         <Modal
@@ -27,16 +22,37 @@ const HelpModal = ({ modalVisible, makeModalDisappear }) => {
             >
                 <TouchableOpacity onPress={() => { }} activeOpacity={1}>
                     <View style={styles.modalView}>
-                        <AppText style={styles.regularText}>
-                            Let us know if anything is unclear, cumbersome, lacking a must-have feature, or doesn't work ✉️
-                        </AppText>
                         <TouchableOpacity
                             onPress={() => {
                                 makeModalDisappear();
-                                handleEmailLink("mailto:support@pelleum.com")
+                                setGender("FEMALE");
                             }}
                         >
-                            <AppText style={styles.emailButtonText}>support@pelleum.com</AppText>
+                            <AppText style={styles.genderText}>Female</AppText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                makeModalDisappear();
+                                setGender("MALE");
+                            }}
+                        >
+                            <AppText style={styles.genderText}>Male</AppText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                makeModalDisappear();
+                                setGender("OTHER");
+                            }}
+                        >
+                            <AppText style={styles.genderText}>Other</AppText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                makeModalDisappear();
+                                setGender("UNDISCLOSED");
+                            }}
+                        >
+                            <AppText style={styles.genderText}>I prefer not to say</AppText>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -67,14 +83,11 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
     },
-    emailButtonText: {
+    genderText: {
         marginTop: 20,
-        color: MAIN_SECONDARY_COLOR,
-        fontSize: 16,
-    },
-    regularText: {
+        color: LIGHT_GREY_COLOR,
         fontSize: 16,
     },
 });
 
-export default HelpModal;
+export default GenderModal;

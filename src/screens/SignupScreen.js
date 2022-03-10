@@ -11,7 +11,7 @@ import {
 	StatusBar,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
-import { Ionicons, Feather, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { HStack, NativeBaseProvider, Select } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import * as WebBrowser from "expo-web-browser";
@@ -22,9 +22,9 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { clearAuthError } from "../redux/actions/AuthActions";
 import UserManager from "../managers/UserManager";
 import AppText from "../components/AppText";
+import GenderModal from "../components/modals/GenderModal";
 import {
 	TEXT_COLOR,
-	MAIN_BACKGROUND_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -40,6 +40,7 @@ const SignupScreen = ({ navigation }) => {
 	const [birthdate, setBirthdate] = useState("");
 	const [username, setUsername] = useState("");
 	const [gender, setGender] = useState("");
+	const [modalVisible, setModalVisible] = useState(false);
 	const [inputValidity, setInputValidity] = useState({
 		emailValidity: false,
 		passwordLength: false,
@@ -93,16 +94,19 @@ const SignupScreen = ({ navigation }) => {
 				birthday: response.data.birthdate,
 				gender: response.data.gender,
 				createdAt: response.data.created_at,
+				platform: Platform.OS,
 				plan: "basic",
 			});
 
 			track('Account Created', {
+				userId: response.data.user_id,
 				email: response.data.email,
 				username: response.data.username,
 				age: getAge(response.data.birthdate),
 				birthday: response.data.birthdate,
 				gender: response.data.gender,
 				createdAt: response.data.created_at,
+				platform: Platform.OS,
 				plan: "basic",
 			});
 
@@ -273,8 +277,7 @@ const SignupScreen = ({ navigation }) => {
 		}
 
 		if (checkGender) {
-			setGender(newValue);
-			if (newValue) {
+			if (gender) {
 				newInputValidity["genderValidity"] = true;
 				setInputValidity(newInputValidity);
 			} else {
@@ -300,7 +303,7 @@ const SignupScreen = ({ navigation }) => {
 							<View style={styles.inputIconContainer}>
 								<TextInput
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholder="Email"
 									maxLength={100}
 									placeholderTextColor={LIGHT_GREY_COLOR}
@@ -312,8 +315,8 @@ const SignupScreen = ({ navigation }) => {
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
-									onFocus={() => console.log("email is focused")}
-									onBlur={() => console.log("email unfocused")}
+									onFocus={() => setIsFocused("emailFocused")}
+									onBlur={() => setIsFocused("")}
 								/>
 								{emailValidation(email) ? (
 									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
@@ -322,7 +325,7 @@ const SignupScreen = ({ navigation }) => {
 							<View style={styles.inputIconContainer}>
 								<TextInput
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholder="Username"
 									maxLength={15}
 									placeholderTextColor={LIGHT_GREY_COLOR}
@@ -333,8 +336,8 @@ const SignupScreen = ({ navigation }) => {
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
-									onFocus={() => console.log("username is focused")}
-									onBlur={() => console.log("username unfocused")}
+									onFocus={() => setIsFocused("usernameFocused")}
+									onBlur={() => setIsFocused("")}
 								/>
 								{usernameValidation(username) ? (
 									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
@@ -343,7 +346,7 @@ const SignupScreen = ({ navigation }) => {
 							<View style={styles.inputIconContainer}>
 								<TextInput
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholder="Password"
 									maxLength={100}
 									placeholderTextColor={LIGHT_GREY_COLOR}
@@ -355,6 +358,8 @@ const SignupScreen = ({ navigation }) => {
 									autoCapitalize="none"
 									autoCorrect={false}
 									secureTextEntry={true}
+									onFocus={() => setIsFocused("passwordFocused")}
+									onBlur={() => setIsFocused("")}
 								/>
 								{passwordValidation({
 									passwordText: password,
@@ -366,7 +371,7 @@ const SignupScreen = ({ navigation }) => {
 							<View style={styles.inputIconContainer}>
 								<TextInputMask
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholder="MM/DD/YYYY"
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									type={"datetime"}
@@ -376,117 +381,77 @@ const SignupScreen = ({ navigation }) => {
 									onChangeText={(newValue) =>
 										handleChangeText({ newValue: newValue, checkBirthDate: true })
 									}
+									onFocus={() => setIsFocused("birthdateFocused")}
+									onBlur={() => setIsFocused("")}
 								/>
 								{dateValidation(birthdate) ? (
 									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
 								) : null}
 							</View>
-							<Select
-								placeholder="Gender"
-								color={TEXT_COLOR}
-								selectionColor={TEXT_COLOR}
-								placeholderTextColor={LIGHT_GREY_COLOR}
-								borderColor={MAIN_BACKGROUND_COLOR}
-								background={MAIN_DIFFERENTIATOR_COLOR}
-								fontSize="14"
-								height="39.5"
-								px="15"
-								borderRadius="10"
-								my="0.5"
-								selectedValue={gender}
-								onValueChange={(newValue) =>
-									handleChangeText({ newValue: newValue, checkGender: true })
-								}
-							>
-								<Select.Item label="Female" value="FEMALE" />
-								<Select.Item label="Male" value="MALE" />
-								<Select.Item label="Other" value="OTHER" />
-								<Select.Item label="I prefer not to say" value="UNDISCLOSED" />
-							</Select>
+							<View style={styles.inputIconContainer}>
+								<GenderModal
+									modalVisible={modalVisible}
+									setGender={setGender}
+									makeModalDisappear={() => {
+										setModalVisible(false)
+										handleChangeText({ checkGender: true })
+									}}
+								/>
+								<TouchableOpacity
+									style={styles.genderSelectButton}
+									onPress={() => setModalVisible(true)}
+								>
+									{gender == "" ? <AppText style={styles.genderSelectPlaceholder}>Gender</AppText> : null}
+									{gender == "FEMALE" ? <AppText style={styles.genderSelectText}>Female</AppText> : null}
+									{gender == "MALE" ? <AppText style={styles.genderSelectText}>Male</AppText> : null}
+									{gender == "OTHER" ? <AppText style={styles.genderSelectText}>Other</AppText> : null}
+									{gender == "UNDISCLOSED" ? <AppText style={styles.genderSelectText}>I prefer not to say</AppText> : null}
+								</TouchableOpacity>
+								{/* <Select
+									placeholder="Gender"
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholderTextColor={LIGHT_GREY_COLOR}
+									borderColor={MAIN_DIFFERENTIATOR_COLOR}
+									background={MAIN_DIFFERENTIATOR_COLOR}
+									fontSize="14"
+									height="100%"
+									width="90%"
+									selectedValue={gender}
+									onValueChange={(selectedGender) =>
+										handleChangeText({ newValue: selectedGender, checkGender: true })
+									}
+								>
+									<Select.Item label="Female" value="FEMALE" />
+									<Select.Item label="Male" value="MALE" />
+									<Select.Item label="Other" value="OTHER" />
+									<Select.Item label="I prefer not to say" value="UNDISCLOSED" />
+								</Select> */}
+								{gender ? (
+									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								) : null}
+							</View>
 							{errorMessage ? (
 								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
 							) : null}
 						</View>
-						{/* <View style={styles.validationMessageView}>
-							<HStack alignItems="center">
-								{!emailValidation(email) ? (
-									<Feather name="x-circle" size={24} color={BAD_COLOR} />
-								) : (
-									<Ionicons
-										name="shield-checkmark"
-										size={24}
-										color={GOOD_COLOR}
-									/>
-								)}
-								<AppText style={styles.validationMessageText}>
-									Email is valid.
-								</AppText>
-							</HStack>
-							<HStack alignItems="center">
-								{!usernameValidation(username) ? (
-									<Feather name="x-circle" size={24} color={BAD_COLOR} />
-								) : (
-									<Ionicons
-										name="shield-checkmark"
-										size={24}
-										color={GOOD_COLOR}
-									/>
-								)}
-								<AppText style={styles.validationMessageText}>
-									Username is valid.
-								</AppText>
-							</HStack>
-							<HStack alignItems="center">
-								{!passwordValidation({
-									passwordText: password,
-									checkLength: true,
-								}) ? (
-									<Feather name="x-circle" size={24} color={BAD_COLOR} />
-								) : (
-									<Ionicons
-										name="shield-checkmark"
-										size={24}
-										color={GOOD_COLOR}
-									/>
-								)}
-								<AppText style={styles.validationMessageText}>
-									Password must be at least 8 characters long.
-								</AppText>
-							</HStack>
-							<HStack>
-								{!passwordValidation({
-									passwordText: password,
-									checkCharacters: true,
-								}) ? (
-									<Feather name="x-circle" size={24} color={BAD_COLOR} />
-								) : (
-									<Ionicons
-										name="shield-checkmark"
-										size={24}
-										color={GOOD_COLOR}
-									/>
-								)}
-								<AppText style={styles.validationMessageText}>
-									Password must contain one uppercase, lowercase,
-									numerical, and special
-									character.
-								</AppText>
-							</HStack>
-							<HStack alignItems="center">
-								{!dateValidation(birthdate) ? (
-									<Feather name="x-circle" size={24} color={BAD_COLOR} />
-								) : (
-									<Ionicons
-										name="shield-checkmark"
-										size={24}
-										color={GOOD_COLOR}
-									/>
-								)}
-								<AppText style={styles.validationMessageText}>
-									Birthdate is valid, and you are at least 18 years old.
-								</AppText>
-							</HStack>
-						</View> */}
+						{isFocused ? (
+							<View style={styles.validationMessageView}>
+								{isFocused == "emailFocused" ? (
+									emailValidation(email) ? null : (
+										<AppText style={styles.validationMessageText}>Enter a valid email address.</AppText>)) : null}
+								{isFocused == "usernameFocused" ? (
+									usernameValidation(username) ? null : (
+										<AppText style={styles.validationMessageText}>You can share your asset positions with others on Pelleum, so choose a username in accordance with your preferred amount of anonymity. This can be changed later.</AppText>)) : null}
+								{isFocused == "passwordFocused" ? (
+									passwordValidation({ passwordText: password, checkCharacters: true }) ? null : (
+										<AppText style={styles.validationMessageText}>Password must be at least 8 characters long and contain at least one uppercase, one lowercase,
+											one numerical, and one special character.</AppText>)) : null}
+								{isFocused == "birthdateFocused" ? (
+									dateValidation(birthdate) ? null : (
+										<AppText style={styles.validationMessageText}>Birthdate must be valid and you must be at least 18 years old.</AppText>)) : null}
+							</View>
+						) : null}
 						<View style={styles.termsContainer}>
 							<AppText style={styles.bottomTextSmall}>By signing up, you agree to Pelleum's </AppText>
 							<HStack>
@@ -510,7 +475,7 @@ const SignupScreen = ({ navigation }) => {
 					</KeyboardAvoidingView>
 					<View style={styles.loginInsteadContainer}>
 						<AppText style={styles.bottomTextLarge}>Already have an account? </AppText>
-						<TouchableOpacity onPress={() => navigation.navigate("Login")}>
+						<TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
 							<AppText style={styles.loginInsteadButton}>Log in</AppText>
 						</TouchableOpacity>
 					</View>
@@ -570,8 +535,7 @@ const styles = StyleSheet.create({
 	errorMessage: {
 		fontSize: 16,
 		color: BAD_COLOR,
-		paddingVertical: 10,
-		marginTop: 30,
+		marginTop: 20,
 		marginHorizontal: 10,
 	},
 	titleText: {
@@ -582,11 +546,11 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	validationMessageView: {
-		marginTop: 10,
+		marginTop: 20,
 
 	},
 	validationMessageText: {
-		marginLeft: 5,
+		fontSize: 15,
 	},
 	loginInsteadContainer: {
 		marginTop: 25,
@@ -607,7 +571,7 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 	},
 	termsContainer: {
-		marginTop: 25,
+		marginTop: 20,
 		alignSelf: "center",
 	},
 	termsButton: {
@@ -635,5 +599,20 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		height: "100%",
 		width: "90%",
+	},
+	genderSelectButton: {
+		alignItems: 'flex-start',
+		justifyContent: 'center',
+		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		height: "100%",
+		width: "90%",
+	},
+	genderSelectPlaceholder: {
+		fontSize: 14,
+		color: LIGHT_GREY_COLOR,
+	},
+	genderSelectText: {
+		fontSize: 14,
+		color: TEXT_COLOR,
 	},
 });

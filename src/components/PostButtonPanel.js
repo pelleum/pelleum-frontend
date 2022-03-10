@@ -3,28 +3,62 @@ import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
 import PostsManager from "../managers/PostsManager";
-import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
-import { useDebouncedCallback } from 'use-debounce';
+import { LIGHT_GREY_COLOR } from "../styles/Colors";
+import { useAnalytics } from "@segment/analytics-react-native";
 
 // Redux
 import { useSelector } from "react-redux";
 
 const PostButtonPanel = ({ item, nav }) => {
+	// State Management
 	const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
 		(state) => state.postReactionsReducer
 	);
 
-	const onShare = async () => {
+	// Segment Tracking
+	const { track } = useAnalytics();
+
+	const onShare = async (item) => {
+		const postType = (item.is_post_comment_on || item.is_thesis_comment_on) ? "comment" : "feedPost";
+		const containsThesis = item.thesis ? true : false;
 		try {
-			const result = await Share.share({
-				message:
-					"React Native | A framework for building native apps using React",
-			});
+			const result = await Share.share(
+				{
+					message: `@${item.username} on Pelleum💥:\n\n"${item.content}"\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com`,
+				},
+				{
+					excludedActivityTypes: [
+						'com.apple.UIKit.activity.AirDrop',
+					]
+				},
+			);
 			if (result.action === Share.sharedAction) {
 				if (result.activityType) {
 					// shared with activity type of result.activityType
+					// iOS
+					track('Post Shared', {
+						authorUserId: item.user_id,
+						authorUsername: item.username,
+						assetSymbol: item.asset_symbol,
+						sentiment: item.sentiment,
+						postId: item.post_id,
+						postType: postType,
+						containsThesis: containsThesis,
+					});
 				} else {
-					// shared
+					// Shared on Android
+					// This does not take into account a user dismissing the Share modal
+					// We should only track the event if it is ACTUALLY shared
+					// Consider using https://react-native-share.github.io/react-native-share/
+					track('Post Shared', {
+						authorUserId: item.user_id,
+						authorUsername: item.username,
+						assetSymbol: item.asset_symbol,
+						sentiment: item.sentiment,
+						postId: item.post_id,
+						postType: postType,
+						containsThesis: containsThesis,
+					});
 				}
 			} else if (result.action === Share.dismissedAction) {
 				// dismissed
@@ -55,7 +89,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {
-						nav.navigate("Post", item);
+						nav.navigate("PostDetailScreen", item);
 					}}
 				>
 					<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
@@ -89,7 +123,7 @@ const PostButtonPanel = ({ item, nav }) => {
 						}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.iconButton} onPress={onShare}>
+				<TouchableOpacity style={styles.iconButton} onPress={() => onShare(item)}>
 					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 			</HStack>

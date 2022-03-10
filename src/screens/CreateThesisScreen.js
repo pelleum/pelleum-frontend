@@ -27,12 +27,10 @@ import { addPost } from "../redux/actions/PostActions";
 import * as Haptics from 'expo-haptics';
 import {
 	TEXT_COLOR,
-	CREATE_PLACEHOLDER_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 	BAD_COLOR,
-	GOOD_COLOR,
 } from "../styles/Colors";
 import { MAXIMUM_THESIS_CONTENT_CHARACTERS, MAXIMUM_THESIS_TITLE_CHARACTERS } from "../constants/ThesesConstants";
 
@@ -147,9 +145,12 @@ const CreateThesisScreen = ({ navigation }) => {
 		const response = await RationalesManager.addRationale(createdThesis);
 		if (response.status == 201) {
 			track('Rationale Added', {
-				author_user_id: createdThesis.user_id,
-				asset_symbol: createdThesis.asset_symbol,
+				authorUserId: createdThesis.user_id,
+				authorUsername: createdThesis.username,
+				thesisId: createdThesis.thesis_id,
+				assetSymbol: createdThesis.asset_symbol,
 				sentiment: createdThesis.sentiment,
+				sourcesQuantity: createdThesis.sources.length,
 				organic: false,
 			});
 			Alert.alert(
@@ -178,7 +179,7 @@ const CreateThesisScreen = ({ navigation }) => {
 					{
 						text: "Remove now",
 						onPress: async () => {
-							navigation.navigate("Rationales", {
+							navigation.navigate("RationaleScreen", {
 								thesisToAddAfterRemoval: createdThesis,
 								asset: createdThesis.asset_symbol,
 								userId: createdThesis.user_id,
@@ -205,8 +206,13 @@ const CreateThesisScreen = ({ navigation }) => {
 
 		if (createdThesis) {
 			track('Thesis Created', {
-				asset_symbol: asset_symbol,
-				sentiment: sentiment,
+				authorUserId: createdThesis.user_id,
+				authorUsername: createdThesis.username,
+				assetSymbol: createdThesis.asset_symbol,
+				thesisId: createdThesis.thesis_id,
+				sentiment: createdThesis.sentiment,
+				sourcesQuantity: createdThesis.sources.length,
+				organic: true,
 			});
 			handleAddRationale(createdThesis);
 			const createdPost = await PostsManager.createPost({
@@ -217,15 +223,20 @@ const CreateThesisScreen = ({ navigation }) => {
 				createdPost.thesis = createdThesis;
 				dispatch(addPost(createdPost));
 				track('Post Created', {
-					asset_symbol: asset_symbol,
-					sentiment: sentiment,
+					authorUserId: createdPost.user_id,
+					authorUsername: createdPost.username,
+					assetSymbol: createdPost.asset_symbol,
+					postId: createdPost.post_id,
+					sentiment: createdPost.sentiment,
+					postType: "feedPost",
+					containsThesis: true,
 					organic: false,
 				});
 				setContent("");
 				setAssetSymbol("");
 				setDisableStatus(true);
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-				navigation.navigate("Feed");
+				navigation.navigate("FeedScreen");
 			}
 		}
 	};
@@ -319,7 +330,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder="Ex: GOOGL"
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								placeholderTextColor={LIGHT_GREY_COLOR}
 								autoCapitalize="characters"
 								textTransform="uppercase"
 								autoCorrect={false}
@@ -330,12 +341,12 @@ const CreateThesisScreen = ({ navigation }) => {
 								}
 								style={styles.assetSymbolInput}
 							/>
-							<AppText>Ticker Symbol</AppText>
+							<AppText style={styles.labelText}>Ticker Symbol</AppText>
 							<TextInput
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder="Your Thesis Title"
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								placeholderTextColor={LIGHT_GREY_COLOR}
 								value={title}
 								onChangeText={(newValue) =>
 									handleChangeText({ newValue: newValue, checkTitle: true })
@@ -344,12 +355,12 @@ const CreateThesisScreen = ({ navigation }) => {
 								maxLength={MAXIMUM_THESIS_TITLE_CHARACTERS}
 								autoCorrect={true}
 							/>
-							<AppText>Thesis Title</AppText>
+							<AppText style={styles.labelText}>Thesis Title</AppText>
 							<TextInput
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								placeholderTextColor={LIGHT_GREY_COLOR}
 								multiline={true}
 								numberOfLines={30}
 								style={styles.textArea}
@@ -373,13 +384,13 @@ const CreateThesisScreen = ({ navigation }) => {
 										}
 									}}
 									height={40}
-									buttonColor={sentiment == "Bull" ? GOOD_COLOR : BAD_COLOR}
-									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+									buttonColor={sentiment === "Bull" ? "#003308" : "#330000"}
+									textColor={sentiment === "Bull" ? BAD_COLOR : MAIN_SECONDARY_COLOR}
 									borderColor={MAIN_DIFFERENTIATOR_COLOR}
+									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
 									selectedColor={"white"}
-									textColor={sentiment == "Bull" ? BAD_COLOR : GOOD_COLOR}
-									bold={true}
 									fontSize={16}
+									bold={true}
 									hasPadding
 								/>
 							</View>
@@ -410,7 +421,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 15,
 	},
 	textArea: {
-		marginTop: 10,
+		marginTop: 20,
 		borderBottomWidth: 0.5,
 		borderBottomColor: LIGHT_GREY_COLOR,
 		height: 225,
@@ -442,10 +453,10 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 	iconButton: {
-		marginLeft: 5,
+		marginLeft: 15,
 	},
 	switchSelectorContainer: {
-		width: "30%",
+		width: "40%",
 		height: 45,
 		alignSelf: "flex-start",
 		justifyContent: "center",
@@ -469,6 +480,9 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		marginBottom: 5,
 		width: "100%",
+	},
+	labelText: {
+		color: LIGHT_GREY_COLOR
 	},
 });
 

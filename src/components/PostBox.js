@@ -103,7 +103,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 			<TouchableOpacity
 				disabled={postBoxType == PostBoxType.PostDetail ? true : false}
 				onPress={() => {
-					nav.navigate("Post", item);
+					nav.navigate("PostDetailScreen", item);
 				}}
 			>
 				<Box
@@ -171,7 +171,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 							<TouchableOpacity
 								style={styles.buttonEnabled}
 								onPress={() =>
-									nav.navigate("PortfolioInsight", {
+									nav.navigate("PortfolioInsightScreen", {
 										username: item.username,
 										userId: item.user_id,
 									})

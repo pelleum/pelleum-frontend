@@ -52,7 +52,7 @@ const AuthoredPostsScreen = ({ navigation, route }) => {
 					</AppText>
 					<TouchableOpacity
 						style={styles.createPostButton}
-						onPress={() => navigation.navigate("CreatePost")}
+						onPress={() => navigation.navigate("CreatePostScreen")}
 					>
 						<AppText style={styles.buttonTextStyle}>
 							Create Post

@@ -39,7 +39,7 @@ const AuthoredThesesScreen = ({ navigation, route }) => {
 					</AppText>
 					<TouchableOpacity
 						style={styles.createThesisButton}
-						onPress={() => navigation.navigate("CreateThesis")}
+						onPress={() => navigation.navigate("CreateThesisScreen")}
 					>
 						<AppText style={styles.buttonTextStyle}>
 							Create Thesis

@@ -17,6 +17,7 @@ import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
 import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -34,6 +35,10 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [postCommentedOn, setPostCommentedOn] = useState(null);
 	const [thesisCommentedOn, setThesisCommentedOn] = useState(null);
+	//We need to set the error message
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	const detailedPost = route.params;
 
@@ -71,6 +76,16 @@ const PostDetailScreen = ({ navigation, route }) => {
 		});
 
 		if (createdComment) {
+			track('Post Created', {
+				authorUserId: createdComment.user_id,
+				authorUsername: createdComment.username,
+				assetSymbol: createdComment.asset_symbol,
+				postId: createdComment.post_id,
+				sentiment: createdComment.sentiment,
+				postType: "comment",
+				containsThesis: false,
+				organic: true,
+			});
 			dispatch(addComment(createdComment));
 			setCommentContent("");
 			setDisableStatus(true);

@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
-import { createClient, AnalyticsProvider } from '@segment/analytics-react-native';
+import { createClient, AnalyticsProvider } from "@segment/analytics-react-native";
 
 // Local Files
 import SignupScreen from "./src/screens/SignupScreen";
@@ -16,7 +16,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import FeedScreen from "./src/screens/FeedScreen";
 import ThesisDetailScreen from "./src/screens/ThesisDetailScreen";
 import SearchScreen from "./src/screens/SearchScreen";
-import EdScreen from "./src/screens/EdScreen";
+import EducationScreen from "./src/screens/EducationScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import PostDetailScreen from "./src/screens/PostDetailScreen";
@@ -24,8 +24,8 @@ import SettingsScreen from "./src/screens/SettingsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
 import CreateThesisScreen from "./src/screens/CreateThesisScreen";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
-import LinkAccount from "./src/screens/LinkAccount";
-import LinkedAccountsStatus from "./src/screens/LinkedAccountsStatus";
+import LinkAccountScreen from "./src/screens/LinkAccountScreen";
+import LinkedAccountsStatusScreen from "./src/screens/LinkedAccountsStatusScreen";
 import RationaleScreen from "./src/screens/RationaleScreen";
 import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
@@ -43,7 +43,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { refreshLibrary } from "./src/redux/actions/RationaleActions";
 import { storeUserObject } from "./src/redux/actions/AuthActions";
 
-// Segment client
+// Segment Client
 const segmentClient = createClient({
 	writeKey: process.env.WRITE_KEY,
 	trackAppLifecycleEvents: true,
@@ -54,12 +54,12 @@ const AuthStack = createNativeStackNavigator();
 const AuthFlow = () => (
 	<AuthStack.Navigator>
 		<AuthStack.Screen
-			name="Login"
+			name="LoginScreen"
 			component={LoginScreen}
 			options={{ headerShown: false }}
 		/>
 		<AuthStack.Screen
-			name="SignUp"
+			name="SignupScreen"
 			component={SignupScreen}
 			options={{ headerShown: false }}
 		/>
@@ -70,11 +70,11 @@ const AuthFlow = () => (
 const FeedStack = createNativeStackNavigator();
 const FeedFlow = () => (
 	<FeedStack.Navigator
-		initialRouteName="Feed"
+		initialRouteName="FeedScreen"
 		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<FeedStack.Screen
-			name="Feed"
+			name="FeedScreen"
 			component={FeedScreen}
 			options={{ headerShown: false }}
 		/>
@@ -85,11 +85,11 @@ const FeedFlow = () => (
 const SearchStack = createNativeStackNavigator();
 const SearchFlow = () => (
 	<SearchStack.Navigator
-		initialRouteName="Search"
+		initialRouteName="SearchScreen"
 		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<SearchStack.Screen
-			name="Search"
+			name="SearchScreen"
 			component={SearchScreen}
 			options={{ headerShown: false }}
 		/>
@@ -100,12 +100,12 @@ const SearchFlow = () => (
 const EducationStack = createNativeStackNavigator();
 const EducationFlow = () => (
 	<EducationStack.Navigator
-		initialRouteName="Education"
+		initialRouteName="EducationScreen"
 		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<EducationStack.Screen
-			name="Education"
-			component={EdScreen}
+			name="EducationScreen"
+			component={EducationScreen}
 			options={{
 				title: "Pelleum Learn",
 				headerTitleAlign: 'center',
@@ -120,16 +120,16 @@ const EducationFlow = () => (
 const ProfileStack = createNativeStackNavigator();
 const ProfileFlow = () => (
 	<ProfileStack.Navigator
-		initialRouteName="Profile"
+		initialRouteName="ProfileScreen"
 		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
 	>
 		<ProfileStack.Screen
-			name="Profile"
+			name="ProfileScreen"
 			component={ProfileScreen}
 			options={{ headerShown: false }}
 		/>
 		<ProfileStack.Screen
-			name="Settings"
+			name="SettingsScreen"
 			component={SettingsScreen}
 			options={{
 				title: "Settings",
@@ -139,8 +139,8 @@ const ProfileFlow = () => (
 			}}
 		/>
 		<ProfileStack.Screen
-			name="Link"
-			component={LinkAccount}
+			name="LinkAccountScreen"
+			component={LinkAccountScreen}
 			options={{
 				title: "Link an Account",
 				headerTitleAlign: 'center',
@@ -149,8 +149,8 @@ const ProfileFlow = () => (
 			}}
 		/>
 		<ProfileStack.Screen
-			name="LinkedStatus"
-			component={LinkedAccountsStatus}
+			name="LinkedAccountsStatusScreen"
+			component={LinkedAccountsStatusScreen}
 			options={{
 				title: "Linked Accounts",
 				headerTitleAlign: 'center',
@@ -159,7 +159,7 @@ const ProfileFlow = () => (
 			}}
 		/>
 		<ProfileStack.Screen
-			name="AuthoredTheses"
+			name="AuthoredThesesScreen"
 			component={AuthoredThesesScreen}
 			options={{
 				title: "My Theses",
@@ -169,7 +169,7 @@ const ProfileFlow = () => (
 			}}
 		/>
 		<ProfileStack.Screen
-			name="AuthoredPosts"
+			name="AuthoredPostsScreen"
 			component={AuthoredPostsScreen}
 			options={{
 				title: "My Posts",
@@ -289,6 +289,7 @@ const RootStackFlow = () => {
 				birthday: user.birthdate,
 				gender: user.gender,
 				createdAt: user.created_at,
+				platform: Platform.OS,
 				plan: "basic",
 			});
 		};
@@ -324,7 +325,7 @@ const RootStackFlow = () => {
 						}}
 					/>
 					<RootStack.Screen
-						name="CreateThesis"
+						name="CreateThesisScreen"
 						component={CreateThesisScreen}
 						options={{
 							title: "Create a Thesis",
@@ -336,7 +337,7 @@ const RootStackFlow = () => {
 						}}
 					/>
 					<RootStack.Screen
-						name="CreatePost"
+						name="CreatePostScreen"
 						component={CreatePostScreen}
 						options={{
 							title: "Create a Post",
@@ -348,7 +349,7 @@ const RootStackFlow = () => {
 						}}
 					/>
 					<RootStack.Screen
-						name="PortfolioInsight"
+						name="PortfolioInsightScreen"
 						component={PortfolioInsightScreen}
 						options={{
 							title: "Portfolio Insight",
@@ -358,7 +359,7 @@ const RootStackFlow = () => {
 						}}
 					/>
 					<RootStack.Screen
-						name="Post"
+						name="PostDetailScreen"
 						component={PostDetailScreen}
 						options={{
 							title: "Post Detail",
@@ -368,7 +369,7 @@ const RootStackFlow = () => {
 						}}
 					/>
 					<RootStack.Screen
-						name="Thesis"
+						name="ThesisDetailScreen"
 						component={ThesisDetailScreen}
 						options={{
 							title: "Thesis Detail",
@@ -378,7 +379,7 @@ const RootStackFlow = () => {
 						}}
 					/>
 					<RootStack.Screen
-						name="Rationales"
+						name="RationaleScreen"
 						component={RationaleScreen}
 						options={{
 							title: "Rationale Library",
@@ -393,11 +394,33 @@ const RootStackFlow = () => {
 	);
 };
 
+const getActiveRouteName = (state) => {
+	if (!state || typeof state.index !== 'number') {
+		return 'Unknown';
+	}
+	const route = state.routes[state.index];
+	if (route.state) {
+		return getActiveRouteName(route.state);
+	}
+	return route.name;
+};
+
 export default () => {
+	const [routeName, setRouteName] = React.useState('Unknown');
 	return (
 		<AnalyticsProvider client={segmentClient}>
 			<Provider store={store}>
-				<NavigationContainer theme={DarkTheme}>
+				<NavigationContainer
+					theme={DarkTheme}
+					onStateChange={(state) => {
+						const newRouteName = getActiveRouteName(state);
+
+						if (routeName !== newRouteName) {
+							segmentClient.screen(newRouteName);
+							setRouteName(newRouteName);
+						}
+					}}
+				>
 					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
 					<RootStackFlow />
 				</NavigationContainer>

@@ -22,7 +22,7 @@ import {
 } from "../styles/Colors";
 import { useAnalytics } from '@segment/analytics-react-native';
 
-const LinkAccount = ({ navigation }) => {
+const LinkAccountScreen = ({ navigation }) => {
 	// State Management
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -56,7 +56,7 @@ const LinkAccount = ({ navigation }) => {
 				});
 				await LinkAccountsManager.getLinkedAccountsStatus();
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-				navigation.navigate("Profile", { accountLinked: true });
+				navigation.navigate("ProfileScreen", { accountLinked: true });
 			} else {
 				setInstitutionLogin(true);
 			};
@@ -94,7 +94,7 @@ const LinkAccount = ({ navigation }) => {
 			});
 			await LinkAccountsManager.getLinkedAccountsStatus();
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-			navigation.navigate("Profile", { accountLinked: true });
+			navigation.navigate("ProfileScreen", { accountLinked: true });
 		} else {
 			if (response.data.detail.includes("Please enter a valid code.")) {
 				setErrorMessage("Invalid code. Please enter a valid code.");
@@ -194,7 +194,7 @@ const LinkAccount = ({ navigation }) => {
 								<TextInput
 									placeholder="Email"
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									value={email}
 									onChangeText={(newValue) =>
@@ -211,7 +211,7 @@ const LinkAccount = ({ navigation }) => {
 								<TextInput
 									placeholder="Password"
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									value={password}
 									onChangeText={(newValue) =>
@@ -246,7 +246,7 @@ const LinkAccount = ({ navigation }) => {
 									style={styles.input}
 									placeholder="Ex: 123456"
 									color={TEXT_COLOR}
-									selectionColor={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									onChangeText={(newValue) =>
 										handleChangeText({ newValue: newValue, checkSMSCode: true })
@@ -277,7 +277,7 @@ const LinkAccount = ({ navigation }) => {
 	);
 };
 
-export default LinkAccount;
+export default LinkAccountScreen;
 
 const styles = StyleSheet.create({
 	mainContainer: {

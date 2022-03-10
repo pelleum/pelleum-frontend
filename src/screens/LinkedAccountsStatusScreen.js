@@ -13,8 +13,6 @@ import { Entypo } from "@expo/vector-icons";
 import AppText from "../components/AppText";
 import {
 	BAD_COLOR,
-	GOOD_COLOR,
-	LINK_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,
 	LIGHT_GREY_COLOR,
@@ -22,7 +20,7 @@ import {
 import { useSelector } from "react-redux";
 import { useAnalytics } from '@segment/analytics-react-native';
 
-const LinkedAccountsStatus = ({ navigation }) => {
+const LinkedAccountsStatusScreen = ({ navigation }) => {
 	// State Management
 	const [errorMessage, setErrorMessage] = useState("");
 	const { activeAccounts } = useSelector(
@@ -57,7 +55,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 							track('Account Unlinked', {
 								institution_id: process.env.ROBINHOOD_ID,
 							});
-							navigation.navigate("Profile", { onUnlink: true });
+							navigation.navigate("ProfileScreen", { onUnlink: true });
 						} else {
 							setErrorMessage(
 								"An unexpected error occurred. Please try again later."
@@ -102,7 +100,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 				<HStack alignItems="center">
 					<TouchableOpacity
 						style={styles.relinkUnlinkButton}
-						onPress={() => navigation.navigate("Link")}
+						onPress={() => navigation.navigate("LinkAccountScreen")}
 					>
 						<AppText style={styles.linkButtonText}>Relink</AppText>
 					</TouchableOpacity>
@@ -135,7 +133,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 						</AppText>
 						<TouchableOpacity
 							style={styles.linkAccountButton}
-							onPress={() => navigation.navigate("Link")}
+							onPress={() => navigation.navigate("LinkAccountScreen")}
 						>
 							<AppText style={styles.buttonTextStyle}>
 								Link a Brokerage Account
@@ -162,7 +160,7 @@ const LinkedAccountsStatus = ({ navigation }) => {
 	);
 };
 
-export default LinkedAccountsStatus;
+export default LinkedAccountsStatusScreen;
 
 const styles = StyleSheet.create({
 	mainContainer: {
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
 	},
 	activeText: {
 		fontSize: 15,
-		color: GOOD_COLOR,
+		color: MAIN_SECONDARY_COLOR,
 		marginLeft: 10,
 	},
 	inactiveText: {
@@ -199,7 +197,7 @@ const styles = StyleSheet.create({
 	},
 	linkButtonText: {
 		fontSize: 15,
-		color: LINK_COLOR,
+		color: MAIN_SECONDARY_COLOR,
 	},
 	relinkUnlinkButton: {
 		fontSize: 15,

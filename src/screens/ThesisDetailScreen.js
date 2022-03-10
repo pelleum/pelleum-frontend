@@ -16,6 +16,7 @@ import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
 import AppText from "../components/AppText";
 import SentimentPill, { Sentiment } from "../components/SentimentPill";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -37,8 +38,10 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [error, setError] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
-
 	//We need to set the error message
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	const listRef = useRef(null);
 	const handleScrollToTop = () => {
@@ -82,6 +85,16 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		});
 
 		if (createdComment) {
+			track('Post Created', {
+				authorUserId: createdComment.user_id,
+				authorUsername: createdComment.username,
+				assetSymbol: createdComment.asset_symbol,
+				postId: createdComment.post_id,
+				sentiment: createdComment.sentiment,
+				postType: "comment",
+				containsThesis: false,
+				organic: true,
+			});
 			dispatch(addComment(createdComment));
 			setCommentContent("");
 			setDisableStatus(true);
@@ -164,7 +177,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 							<TouchableOpacity
 								style={styles.portfolioInsightButton}
 								onPress={() =>
-									navigation.navigate("PortfolioInsight", {
+									navigation.navigate("PortfolioInsightScreen", {
 										username: detailedThesis.username,
 										userId: detailedThesis.user_id,
 									})

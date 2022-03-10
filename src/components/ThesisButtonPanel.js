@@ -1,11 +1,10 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Share } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
 import RationalesManager from "../managers/RationalesManager";
 import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
-import { useDebouncedCallback } from 'use-debounce';
 import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
@@ -14,6 +13,7 @@ import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import * as SecureStore from "expo-secure-store";
 
 const ThesisButtonPanel = ({ item, nav }) => {
+	// State Management
 	const state = useSelector((state) => state.thesisReactionsReducer);
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
 
@@ -39,13 +39,71 @@ const ThesisButtonPanel = ({ item, nav }) => {
 		return JSON.parse(userObjectString);
 	};
 
+	const extractSources = (sources) => {
+		let sourceText = "";
+		for (const source of sources) { sourceText += `${source}\n` }
+		if (sources.length == 0) { return "This thesis has no linked sources😕" }
+		return sourceText;
+	};
+
+	const onShare = async (item) => {
+		const sourceText = extractSources(item.sources);
+		try {
+			const result = await Share.share(
+				{
+					message: `@${item.username} wrote the following ${item.asset_symbol} thesis on Pelleum💥:\n\n"${item.title}\n\n${item.content}"\n\nSources:\n${sourceText}\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com`,
+				},
+				{
+					excludedActivityTypes: [
+						'com.apple.UIKit.activity.AirDrop',
+					]
+				},
+			);
+			if (result.action === Share.sharedAction) {
+				if (result.activityType) {
+					// shared with activity type of result.activityType
+					// iOS
+					track('Thesis Shared', {
+						authorUserId: item.user_id,
+						authorUsername: item.username,
+						thesisId: item.thesis_id,
+						assetSymbol: item.asset_symbol,
+						sentiment: item.sentiment,
+						sourcesQuantity: item.sources.length,
+					});
+				} else {
+					// Shared on Android
+					// This does not take into account a user dismissing the Share modal
+					// We should only track the event if it is ACTUALLY shared
+					// Consider using https://react-native-share.github.io/react-native-share/
+					track('Thesis Shared', {
+						authorUserId: item.user_id,
+						authorUsername: item.username,
+						thesisId: item.thesis_id,
+						assetSymbol: item.asset_symbol,
+						sentiment: item.sentiment,
+						sourcesQuantity: item.sources.length,
+					});
+				}
+			} else if (result.action === Share.dismissedAction) {
+				// dismissed
+			}
+		} catch (error) {
+			alert(error.message);
+		}
+	};
+
 	const handleAddRationale = async (item) => {
 		const response = await RationalesManager.addRationale(item);
+		const sourcesQuantity =  item.sources ? item.sources.length : 0;
 		if (response.status == 201) {
 			track('Rationale Added', {
-				author_user_id: item.user_id,
-				asset_symbol: item.asset_symbol,
+				authorUserId: item.user_id,
+				authorUsername: item.username,
+				thesisId: item.thesis_id,
+				assetSymbol: item.asset_symbol,
 				sentiment: item.sentiment,
+				sourcesQuantity: sourcesQuantity,
 				organic: true,
 			});
 			Alert.alert(
@@ -70,7 +128,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 						text: "Remove now",
 						onPress: async () => {
 							const userObject = await getUserObject();
-							nav.navigate("Rationales", {
+							nav.navigate("RationaleScreen", {
 								thesisToAddAfterRemoval: item,
 								asset: item.asset_symbol,
 								userId: userObject.user_id,
@@ -82,31 +140,12 @@ const ThesisButtonPanel = ({ item, nav }) => {
 		}
 	};
 
-	// Prevent user from tapping "Like" or "Dislike" multiple times before API response promise gets fulfilled
-	// Debounce callback
-	const likeDebounced = useDebouncedCallback(
-		// function
-		(item) => {
-			ThesesManager.sendThesisReaction(item, ReactionType.Like)
-		},
-		// delay in ms
-		1000
-	);
-	const dislikeDebounced = useDebouncedCallback(
-		// function
-		(item) => {
-			ThesesManager.sendThesisReaction(item, ReactionType.Dislike)
-		},
-		// delay in ms
-		1000
-	);
-
 	return (
 		<NativeBaseProvider>
 			<HStack style={styles.buttonBox}>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => likeDebounced(item)}
+					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Like)}
 				>
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
@@ -116,7 +155,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => dislikeDebounced(item)}
+					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Dislike)}
 				>
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
@@ -145,9 +184,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => {
-						console.log("Share button worked.");
-					}}
+					onPress={() => onShare(item)}
 				>
 					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>

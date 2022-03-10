@@ -14,8 +14,8 @@ import { HStack, NativeBaseProvider } from "native-base";
 import {
 	MaterialCommunityIcons,
 	Ionicons,
-	SimpleLineIcons,
 	Octicons,
+	FontAwesome,
 } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import * as SecureStore from "expo-secure-store";
@@ -24,7 +24,6 @@ import AssetBox from "../components/AssetBox";
 import AppText from "../components/AppText";
 import {
 	BAD_COLOR,
-	LINK_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
@@ -73,7 +72,7 @@ const ProfileScreen = ({ navigation, route }) => {
 				},
 				{
 					text: "View Status",
-					onPress: () => navigation.navigate("LinkedStatus"),
+					onPress: () => navigation.navigate("LinkedAccountsStatusScreen"),
 				},
 			]
 		);
@@ -107,12 +106,12 @@ const ProfileScreen = ({ navigation, route }) => {
 						<View style={styles.listHeaderView}>
 							<TouchableOpacity
 								style={styles.settingsButton}
-								onPress={() => navigation.navigate("Settings")}
+								onPress={() => navigation.navigate("SettingsScreen")}
 							>
-								<SimpleLineIcons
-									name="settings"
-									size={28}
-									color={"#666667"}
+								<FontAwesome
+									name="bars"
+									size={26}
+									color={MAIN_SECONDARY_COLOR}
 								/>
 							</TouchableOpacity>
 							<Image
@@ -134,7 +133,7 @@ const ProfileScreen = ({ navigation, route }) => {
 								)}
 								<TouchableOpacity
 									style={styles.linkAccountButton}
-									onPress={() => navigation.navigate("Link")}
+									onPress={() => navigation.navigate("LinkAccountScreen")}
 								>
 									<MaterialCommunityIcons
 										name="bank-plus"
@@ -152,7 +151,7 @@ const ProfileScreen = ({ navigation, route }) => {
 								onPress={async () => {
 									const userObject = await getUserObject();
 									const userId = userObject.user_id;
-									navigation.navigate("Rationales", { userId: userId });
+									navigation.navigate("RationaleScreen", { userId: userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
@@ -171,7 +170,7 @@ const ProfileScreen = ({ navigation, route }) => {
 								onPress={async () => {
 									const userObject = await getUserObject();
 									const userId = userObject.user_id;
-									navigation.navigate("AuthoredTheses", { userId: userId });
+									navigation.navigate("AuthoredThesesScreen", { userId: userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
@@ -188,7 +187,7 @@ const ProfileScreen = ({ navigation, route }) => {
 								onPress={async () => {
 									const userObject = await getUserObject();
 									const userId = userObject.user_id;
-									navigation.navigate("AuthoredPosts", { userId: userId });
+									navigation.navigate("AuthoredPostsScreen", { userId: userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
@@ -269,7 +268,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		paddingTop: 15,
 		paddingBottom: 10,
-		color: LINK_COLOR,
+		color: MAIN_SECONDARY_COLOR,
 	},
 	headerStyle: {
 		justifyContent: "space-between",

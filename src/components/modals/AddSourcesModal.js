@@ -15,6 +15,7 @@ import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
+	GOOD_COLOR,
 } from "../../styles/Colors";
 import AppText from "../AppText";
 
@@ -95,7 +96,7 @@ const AddSourcesModal = ({
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
 										color={TEXT_COLOR}
-										selectionColor={TEXT_COLOR}
+										selectionColor={MAIN_SECONDARY_COLOR}
 										placeholder="https://www.examplesource1.com"
 										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source1}
@@ -110,14 +111,14 @@ const AddSourcesModal = ({
 										name="check"
 										size={24}
 										color={
-											sourceInputValidity["source1"] ? "green" : "transparent"
+											sourceInputValidity["source1"] ? GOOD_COLOR : "transparent"
 										}
 									/>
 								</HStack>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
 										color={TEXT_COLOR}
-										selectionColor={TEXT_COLOR}
+										selectionColor={MAIN_SECONDARY_COLOR}
 										placeholder="https://www.examplesource2.com"
 										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source2}
@@ -132,14 +133,14 @@ const AddSourcesModal = ({
 										name="check"
 										size={24}
 										color={
-											sourceInputValidity["source2"] ? "green" : "transparent"
+											sourceInputValidity["source2"] ? GOOD_COLOR : "transparent"
 										}
 									/>
 								</HStack>
 								<HStack alignItems="center" justifyContent="space-between">
 									<TextInput
 										color={TEXT_COLOR}
-										selectionColor={TEXT_COLOR}
+										selectionColor={MAIN_SECONDARY_COLOR}
 										placeholder="https://www.examplesource3.com"
 										placeholderTextColor={LIGHT_GREY_COLOR}
 										value={source3}
@@ -154,7 +155,7 @@ const AddSourcesModal = ({
 										name="check"
 										size={24}
 										color={
-											sourceInputValidity["source3"] ? "green" : "transparent"
+											sourceInputValidity["source3"] ? GOOD_COLOR : "transparent"
 										}
 									/>
 								</HStack>

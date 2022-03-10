@@ -16,7 +16,7 @@ import {
 	MAIN_DIFFERENTIATOR_COLOR,
 } from "../styles/Colors";
 
-const EdScreen = () => {
+const EducationScreen = () => {
 	const handleSourceLink = async (sourceLink) => {
 		await WebBrowser.openBrowserAsync(sourceLink);
 	};
@@ -111,7 +111,7 @@ const EdScreen = () => {
 	);
 };
 
-export default EdScreen;
+export default EducationScreen;
 
 const styles = StyleSheet.create({
 	mainContainer: {

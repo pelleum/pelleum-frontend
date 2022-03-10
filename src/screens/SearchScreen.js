@@ -23,7 +23,6 @@ import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	BAD_COLOR,
-	GOOD_COLOR,
 	MAIN_SECONDARY_COLOR,
 } from "../styles/Colors";
 import { THESIS_BOX_HEIGHT } from "../constants/ThesesConstants";
@@ -112,7 +111,7 @@ const SearchScreen = ({ navigation }) => {
 				const responseData = await ThesesManager.getTheses(queryParams);
 				if (responseData) {
 					track('Theses Searched', {
-						asset_symbol: term,
+						assetSymbol: term,
 						sentiment: sent,
 					});
 					successfulResponses.push(true);
@@ -209,10 +208,10 @@ const SearchScreen = ({ navigation }) => {
 				responseData = await ThesesManager.getTheses(queryParams);
 				if (responseData) {
 					track('More Theses Loaded', {
-						asset_symbol: term,
+						assetSymbol: term,
 						sentiment: sentiment,
 						page: newPageNumber,
-						records_per_page: RECORDS_PER_PAGE,
+						recordsPerPage: RECORDS_PER_PAGE,
 					});
 					setBullResults((oldBullTheses) => [
 						...oldBullTheses,
@@ -237,10 +236,10 @@ const SearchScreen = ({ navigation }) => {
 				responseData = await ThesesManager.getTheses(queryParams);
 				if (responseData) {
 					track('More Theses Loaded', {
-						asset_symbol: term,
+						assetSymbol: term,
 						sentiment: sentiment,
 						page: newPageNumber,
-						records_per_page: RECORDS_PER_PAGE,
+						recordsPerPage: RECORDS_PER_PAGE,
 					});
 					setBearResults((oldBearTheses) => [
 						...oldBearTheses,
@@ -292,7 +291,7 @@ const SearchScreen = ({ navigation }) => {
 			<SafeAreaView style={styles.mainContainer}>
 				<NativeBaseProvider>
 					<Center>
-						<HStack>
+						<HStack style={styles.searchBarContainer}>
 							{getMoreResultsTerm ? (
 								<TouchableOpacity
 									style={styles.backButton}
@@ -302,11 +301,18 @@ const SearchScreen = ({ navigation }) => {
 										getResults({ discoveryPage: true });
 									}}
 								>
-									<MaterialIcons
-										name="arrow-back-ios"
-										size={25}
-										color={MAIN_SECONDARY_COLOR}
-									/>
+									{Platform.OS == "ios" ? (
+										<MaterialIcons
+											name="arrow-back-ios"
+											size={25}
+											color={MAIN_SECONDARY_COLOR}
+										/>) : (
+										<MaterialIcons
+											name="arrow-back"
+											size={25}
+											color={MAIN_SECONDARY_COLOR}
+										/>
+									)}
 								</TouchableOpacity>
 							) : null}
 							<Input
@@ -326,13 +332,13 @@ const SearchScreen = ({ navigation }) => {
 									};
 								}}
 								color={TEXT_COLOR}
-								selectionColor={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
 								textTransform="uppercase"
 								placeholder="Theses by ticker symbol"
 								placeholderTextColor={LIGHT_GREY_COLOR}
 								returnKeyType="search"
 								bg="transparent"
-								width="75%"
+								width="70%"
 								marginBottom={1}
 								borderRadius="20"
 								borderColor={LIGHT_GREY_COLOR}
@@ -369,12 +375,11 @@ const SearchScreen = ({ navigation }) => {
 									}
 								}}
 								height={40}
-								buttonColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
-								borderColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
+								buttonColor={sentiment === "Bull" ? "#003308" : "#330000"}
+								textColor={sentiment === "Bull" ? BAD_COLOR : MAIN_SECONDARY_COLOR}
 								borderColor={MAIN_DIFFERENTIATOR_COLOR}
 								backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
 								selectedColor={"white"}
-								textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
 								fontSize={16}
 								bold={true}
 								hasPadding
@@ -434,7 +439,11 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		width: "80%",
 	},
+	searchBarContainer: {
+		alignItems: "center",
+	},
 	backButton: {
-		alignSelf: "center",
+		marginTop: 5,
+		marginRight: 15,
 	},
 });

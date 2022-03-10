@@ -39,7 +39,7 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 						}
 						disabled={hasRationales ? false : true}
 						onPress={() => {
-							nav.navigate("Rationales", {
+							nav.navigate("RationaleScreen", {
 								asset: item.asset_symbol,
 								userId: item.user_id,
 								disableRemoveRationale: portfolioInsightRationales

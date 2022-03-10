@@ -9,7 +9,11 @@ import AppText from "../components/AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
-import { MAXIMUM_THESIS_VISIBLE_LINES, THESIS_BOX_HEIGHT } from "../constants/ThesesConstants";
+import {
+	MAXIMUM_THESIS_CONTENT_VISIBLE_LINES,
+	MAXIMUM_THESIS_TITLE_VISIBLE_LINES,
+	THESIS_BOX_HEIGHT,
+} from "../constants/ThesesConstants";
 
 export class ThesesBoxType {
 	static Contained = new ThesesBoxType("contained");
@@ -28,7 +32,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 		<NativeBaseProvider>
 			<TouchableOpacity
 				onPress={() => {
-					nav.navigate("Thesis", item);
+					nav.navigate("ThesisDetailScreen", item);
 				}}
 			>
 				<Box
@@ -48,7 +52,11 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							<SentimentPill item={item} sentiment={Sentiment.Bear} />
 						)}
 					</HStack>
-					<AppText style={styles.thesisTitleText}>{item.title}</AppText>
+					<AppText
+						style={styles.thesisTitleText}
+						numberOfLines={MAXIMUM_THESIS_TITLE_VISIBLE_LINES}
+					>
+						{item.title}</AppText>
 					<HStack justifyContent="space-between" alignItems="center">
 						{item.asset_symbol ? (
 							<TouchableOpacity
@@ -66,7 +74,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							{dateWritten.toLocaleDateString()}
 						</AppText>
 					</HStack>
-					<AppText numberOfLines={MAXIMUM_THESIS_VISIBLE_LINES}>{item.content}...</AppText>
+					<AppText numberOfLines={MAXIMUM_THESIS_CONTENT_VISIBLE_LINES}>{item.content}</AppText>
 				</Box>
 			</TouchableOpacity>
 		</NativeBaseProvider>

@@ -16,12 +16,10 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import AppText from "../components/AppText";
 import {
 	LIGHT_GREY_COLOR,
-	CREATE_PLACEHOLDER_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,
 	TEXT_COLOR,
 	BAD_COLOR,
-	GOOD_COLOR,
 } from "../styles/Colors";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
@@ -60,17 +58,23 @@ const CreatePostScreen = ({ navigation }) => {
 			sentiment,
 		});
 		if (createdPost) {
+			const containsThesis = createdPost.thesis ? true : false;
 			dispatch(addPost(createdPost));
 			track('Post Created', {
-				asset_symbol: asset_symbol,
-				sentiment: sentiment,
+				authorUserId: createdPost.user_id,
+				authorUsername: createdPost.username,
+				assetSymbol: createdPost.asset_symbol,
+				postId: createdPost.post_id,
+				sentiment: createdPost.sentiment,
+				postType: "feedPost",
+				containsThesis: containsThesis,
 				organic: true,
 			});
 			setContent("");
 			setAssetSymbol("");
 			setDisableStatus(true);
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-			navigation.navigate("Feed");
+			navigation.navigate("FeedScreen");
 		}
 	};
 
@@ -171,9 +175,9 @@ const CreatePostScreen = ({ navigation }) => {
 						</HStack>
 						<TextInput
 							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
+							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+							placeholderTextColor={LIGHT_GREY_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -187,9 +191,9 @@ const CreatePostScreen = ({ navigation }) => {
 						<AppText>Ticker Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
+							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder="What's your valuable insight?"
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+							placeholderTextColor={LIGHT_GREY_COLOR}
 							multiline={true}
 							maxHeight={190}
 							numberOfLines={10}
@@ -214,13 +218,13 @@ const CreatePostScreen = ({ navigation }) => {
 								}
 							}}
 							height={40}
-							buttonColor={sentiment == "Bull" ? GOOD_COLOR : BAD_COLOR}
-							backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+							buttonColor={sentiment === "Bull" ? "#003308" : "#330000"}
+							textColor={sentiment === "Bull" ? BAD_COLOR : MAIN_SECONDARY_COLOR}
 							borderColor={MAIN_DIFFERENTIATOR_COLOR}
+							backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
 							selectedColor={"white"}
-							textColor={sentiment == "Bull" ? BAD_COLOR : GOOD_COLOR}
-							bold={true}
 							fontSize={16}
+							bold={true}
 							hasPadding
 						/>
 					</View>
@@ -272,7 +276,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 	},
 	switchSelectorContainer: {
-		width: "30%",
+		width: "40%",
 		height: 45,
 		alignSelf: "flex-start",
 		justifyContent: "center",

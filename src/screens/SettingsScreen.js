@@ -34,13 +34,19 @@ const SettingsScreen = ({ navigation }) => {
 				style={styles.button}
 				onPress={() => setModalVisible(true)}
 			>
-				<AppText style={styles.buttonText}>Help</AppText>
+				<AppText style={styles.buttonText}>Tell Us What Sucks</AppText>
 			</TouchableOpacity>
 			<TouchableOpacity
 				style={styles.button}
-				onPress={() => navigation.navigate("LinkedStatus")}
+				onPress={() => navigation.navigate("LinkedAccountsStatusScreen")}
 			>
 				<AppText style={styles.buttonText}>Linked Accounts</AppText>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={styles.button}
+				onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}
+			>
+				<AppText style={styles.buttonText}>Terms of Service</AppText>
 			</TouchableOpacity>
 			<TouchableOpacity
 				style={styles.button}
@@ -48,18 +54,12 @@ const SettingsScreen = ({ navigation }) => {
 			>
 				<AppText style={styles.buttonText}>Privacy Policy</AppText>
 			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}
-			>
-				<AppText style={styles.buttonText}>Terms & Conditions</AppText>
-			</TouchableOpacity>
-			<TouchableOpacity
+			{/* <TouchableOpacity
 				style={styles.button}
 				onPress={() => navigation.navigate("DataPrivacyScreen")}
 			>
 				<AppText style={styles.buttonText}>Data Privacy</AppText>
-			</TouchableOpacity>
+			</TouchableOpacity> */}
 			<TouchableOpacity style={styles.button} onPress={logOut}>
 				<AppText style={styles.buttonText}>Log Out</AppText>
 			</TouchableOpacity>

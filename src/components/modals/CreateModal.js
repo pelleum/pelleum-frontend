@@ -33,7 +33,7 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 							style={[styles.button, styles.buttonOpen]}
 							onPress={() => {
 								makeModalDisappear();
-								onNavigate("CreatePost");
+								onNavigate("CreatePostScreen");
 							}}
 						>
 							<Text style={styles.textStyle}>Post</Text>
@@ -42,7 +42,7 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 							style={[styles.button, styles.buttonOpen]}
 							onPress={() => {
 								makeModalDisappear();
-								onNavigate("CreateThesis");
+								onNavigate("CreateThesisScreen");
 							}}
 						>
 							<Text style={styles.textStyle}>Thesis</Text>

@@ -12,7 +12,7 @@ import ThesisBox from "../components/ThesisBox";
 import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import { Ionicons } from "@expo/vector-icons";
-import { TEXT_COLOR } from "../styles/Colors";
+import { TEXT_COLOR, BAD_COLOR } from "../styles/Colors";
 import { useAnalytics } from '@segment/analytics-react-native';
 
 const RationaleScreen = ({ navigation, route }) => {
@@ -47,12 +47,16 @@ const RationaleScreen = ({ navigation, route }) => {
 
 	const deleteRationale = async (item) => {
 		const responseStatus = await RationalesManager.removeRationale(item);
+		const sourcesQuantity =  item.thesis.sources ? item.thesis.sources.length : 0;
 		if (responseStatus) {
 			if (responseStatus == 200) {
 				track('Rationale Removed', {
-					author_user_id: item.thesis.user_id,
-					asset_symbol: item.thesis.asset_symbol,
+					authorUserId: item.thesis.user_id,
+					authorUsername: item.thesis.username,
+					thesisId: item.thesis.thesis_id,
+					assetSymbol: item.thesis.asset_symbol,
 					sentiment: item.thesis.sentiment,
+					sourcesQuantity: sourcesQuantity,
 				});
 				const rationaleArrayCopy = rationaleArray;
 				const index = rationaleArrayCopy.findIndex(
@@ -123,7 +127,7 @@ const RationaleScreen = ({ navigation, route }) => {
 		return (
 			<Animated.View
 				style={{
-					backgroundColor: "#cc0000",
+					backgroundColor: BAD_COLOR,
 					width: "30%",
 					justifyContent: "center",
 					alignItems: "center",

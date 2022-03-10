@@ -65,6 +65,7 @@ const LoginScreen = ({ navigation }) => {
 				birthday: response.data.birthdate,
 				gender: response.data.gender,
 				createdAt: response.data.created_at,
+				platform: Platform.OS,
 				plan: "basic",
 			});
 		} else {
@@ -120,7 +121,7 @@ const LoginScreen = ({ navigation }) => {
 					<View style={styles.inputContainer}>
 						<TextInput
 							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
+							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder="Username"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={username}
@@ -133,7 +134,7 @@ const LoginScreen = ({ navigation }) => {
 						/>
 						<TextInput
 							color={TEXT_COLOR}
-							selectionColor={TEXT_COLOR}
+							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder="Password"
 							placeholderTextColor={LIGHT_GREY_COLOR}
 							value={password}
@@ -159,7 +160,7 @@ const LoginScreen = ({ navigation }) => {
 				</KeyboardAvoidingView>
 				<View style={styles.signupInsteadContainer}>
 					<AppText style={styles.signupInsteadText}>Don't have an account?</AppText>
-					<TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+					<TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
 						<AppText style={styles.signupInsteadButton}>Sign up</AppText>
 					</TouchableOpacity>
 				</View>
