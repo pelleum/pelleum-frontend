@@ -30,6 +30,7 @@ import RationaleScreen from "./src/screens/RationaleScreen";
 import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
 import DataPrivacyScreen from './src/screens/DataPrivacyScreen';
+import SubscriptionScreen from './src/screens/SubscriptionScreen';
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
@@ -183,6 +184,16 @@ const ProfileFlow = () => (
 			component={DataPrivacyScreen}
 			options={{
 				title: "Data Privacy",
+				headerTitleAlign: 'center',
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
+			}}
+		/>
+		<ProfileStack.Screen
+			name="SubscriptionScreen"
+			component={SubscriptionScreen}
+			options={{
+				title: "Subscriptions",
 				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },

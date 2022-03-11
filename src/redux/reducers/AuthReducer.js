@@ -5,7 +5,8 @@ import {
 	LOG_OUT,
 	RESTORE_TOKEN,
     STORE_USER_OBJECT,
-    DUMP_USER_OBJECT
+    DUMP_USER_OBJECT,
+	SUBSCRIPTION_CHANGE
 } from "../actions/AuthActions";
 
 // Declare initial state
@@ -14,7 +15,8 @@ const initialState = {
 	isLogout: false,
 	hasUserToken: false,
 	errorMessage: "",
-    userObject: { username: null, userId: null }
+    userObject: { username: null, userId: null },
+	subscriptionObject: { subscriptionName: null, isActive: false }
 };
 
 function authReducer(state = initialState, action) {
@@ -43,6 +45,8 @@ function authReducer(state = initialState, action) {
             return { ...state, userObject: action.payload};
         case DUMP_USER_OBJECT:
             return { ...state, userObject: null};
+		case SUBSCRIPTION_CHANGE:
+			return { ...state, subscriptionObject: action.payload }
 		default:
 			return state;
 	}

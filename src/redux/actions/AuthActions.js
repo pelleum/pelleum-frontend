@@ -5,6 +5,7 @@ export const LOG_OUT = "LOG_OUT";
 export const RESTORE_TOKEN = "RESTORE_TOKEN";
 export const STORE_USER_OBJECT = "STORE_USER_OBJECT";
 export const DUMP_USER_OBJECT = "DUMP_USER_OBJECT";
+export const SUBSCRIPTION_CHANGE = "SUBSCRIPTION_CHANGE"
 
 export const authError = (errorMessage) => (dispatch) => {
 	dispatch({
@@ -49,3 +50,10 @@ export const dumpUserObject = () => (dispatch) => {
 		type: DUMP_USER_OBJECT,
 	});
 };
+
+export const subscriptionChange = (subscriptionObject) => (dispatch) => {
+	dispatch({
+		type: SUBSCRIPTION_CHANGE,
+		payload: subscriptionObject
+	})
+}
