@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { HStack, NativeBaseProvider, Box } from "native-base";
 import {
 	MAIN_BACKGROUND_COLOR,
 	LIGHT_GREY_COLOR,
+	LIST_SEPARATOR_COLOR,
 } from "../styles/Colors";
 import AppText from "../components/AppText";
 import commonTextStyles from "../styles/CommonText";
@@ -91,8 +92,8 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 25,
 		fontSize: 16,
 		backgroundColor: MAIN_BACKGROUND_COLOR,
-		borderBottomWidth: 0.17,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomWidth: Platform.OS === "ios" ? 0.17 : 0.29,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		overflow: "hidden",
 	},
 	thesisContainerContained: {
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
 		backgroundColor: MAIN_BACKGROUND_COLOR,
 		borderWidth: 0.3,
 		borderColor: LIGHT_GREY_COLOR,
-		borderRadius: 25,
+		borderRadius: Platform.OS === "ios" ? 25 : 14,
 		overflow: "hidden",
 	},
 	thesisTitleText: {

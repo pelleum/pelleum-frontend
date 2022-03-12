@@ -16,7 +16,7 @@ import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
-import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIST_SEPARATOR_COLOR } from "../styles/Colors";
 import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
@@ -236,72 +236,8 @@ const styles = StyleSheet.create({
 	},
 	postContainer: {
 		paddingTop: 20,
-		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
-	},
-	bullSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#c6edc5",
-		borderColor: "#1c7850",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#1c7850",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
-	bearSentimentText: {
-		textAlign: "center",
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "#edcec5",
-		borderColor: "#b02802",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#b02802",
-		fontSize: 16,
-		fontWeight: "bold",
-		overflow: "hidden",
-	},
-	usernameText: {
-		padding: 5,
-		marginBottom: 10,
-		justifyContent: "center",
-		color: "#026bd4",
-		fontSize: 16,
-	},
-	assetButton: {
-		width: 70,
-		borderWidth: 0.5,
-		backgroundColor: "white",
-		borderColor: "#026bd4",
-		borderRadius: 15,
-		padding: 5,
-		marginBottom: 10,
-		color: "#026bd4",
-		alignItems: "center",
-	},
-	assetText: {
-		color: "#026bd4",
-		fontSize: 16,
-		fontWeight: "bold",
-	},
-	topPostBox: {
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
-	contentText: {
-		fontSize: 16,
-		marginTop: 20,
-		marginHorizontal: 15,
-		marginBottom: 30,
+		borderBottomWidth: 1,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 	},
 	replyButtonEnabled: {
 		alignSelf: "flex-end",
@@ -332,17 +268,6 @@ const styles = StyleSheet.create({
 	},
 	errorText: {
 		color: BAD_COLOR,
-	},
-
-	comment: {
-		width: "100%",
-		padding: 25,
-		paddingBottom: 0,
-		fontSize: 16,
-		backgroundColor: "#ebecf0",
-		borderBottomWidth: 2,
-		borderBottomColor: "#bfc6c9",
-		overflow: "hidden",
 	},
 	deletedPost: {
 		alignSelf: "center",

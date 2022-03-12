@@ -31,6 +31,11 @@ import {
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 	BAD_COLOR,
+	BULL_SENTIMENT_BACKGROUND__COLOR,
+	BEAR_SENTIMENT_BACKGROUND__COLOR,
+	GOOD_COLOR,
+	LIST_SEPARATOR_COLOR,
+	CREATE_PLACEHOLDER_COLOR,
 } from "../styles/Colors";
 import { MAXIMUM_THESIS_CONTENT_CHARACTERS, MAXIMUM_THESIS_TITLE_CHARACTERS } from "../constants/ThesesConstants";
 
@@ -330,7 +335,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder="Ex: GOOGL"
-								placeholderTextColor={LIGHT_GREY_COLOR}
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 								autoCapitalize="characters"
 								textTransform="uppercase"
 								autoCorrect={false}
@@ -346,7 +351,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder="Your Thesis Title"
-								placeholderTextColor={LIGHT_GREY_COLOR}
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 								value={title}
 								onChangeText={(newValue) =>
 									handleChangeText({ newValue: newValue, checkTitle: true })
@@ -360,7 +365,7 @@ const CreateThesisScreen = ({ navigation }) => {
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
-								placeholderTextColor={LIGHT_GREY_COLOR}
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 								multiline={true}
 								numberOfLines={30}
 								style={styles.textArea}
@@ -384,14 +389,15 @@ const CreateThesisScreen = ({ navigation }) => {
 										}
 									}}
 									height={40}
-									buttonColor={sentiment === "Bull" ? "#003308" : "#330000"}
-									textColor={sentiment === "Bull" ? BAD_COLOR : MAIN_SECONDARY_COLOR}
+									buttonColor={sentiment === "Bull" ? BULL_SENTIMENT_BACKGROUND__COLOR : BEAR_SENTIMENT_BACKGROUND__COLOR}
+									textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
 									borderColor={MAIN_DIFFERENTIATOR_COLOR}
 									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-									selectedColor={"white"}
+									selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
 									fontSize={16}
 									bold={true}
 									hasPadding
+									style={styles.sentimentToggle}
 								/>
 							</View>
 							<TouchableOpacity
@@ -404,7 +410,7 @@ const CreateThesisScreen = ({ navigation }) => {
 									color={MAIN_SECONDARY_COLOR}
 								/>
 							</TouchableOpacity>
-							<AppText style={{ marginLeft: 20 }}>
+							<AppText style={{ color: LIGHT_GREY_COLOR,marginLeft: 20 }}>
 								{validSources.length} linked sources
 							</AppText>
 						</HStack>
@@ -423,7 +429,7 @@ const styles = StyleSheet.create({
 	textArea: {
 		marginTop: 20,
 		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		height: 225,
 		textAlignVertical: 'top',
 	},
@@ -468,7 +474,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		marginBottom: 5,
 		width: "25%",
 	},
@@ -476,13 +482,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		marginTop: 10,
 		marginBottom: 5,
 		width: "100%",
 	},
 	labelText: {
 		color: LIGHT_GREY_COLOR
+	},
+	sentimentToggle: {
+		opacity: 0.65,
 	},
 });
 

@@ -44,7 +44,7 @@ const SettingsScreen = ({ navigation }) => {
 			</TouchableOpacity>
 			<TouchableOpacity
 				style={styles.button}
-				onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}
+				onPress={() => handleWebLink("https://www.pelleum.com/terms-of-service")}
 			>
 				<AppText style={styles.buttonText}>Terms of Service</AppText>
 			</TouchableOpacity>

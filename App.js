@@ -421,7 +421,7 @@ export default () => {
 						}
 					}}
 				>
-					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
+					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : <StatusBar backgroundColor="black" />}
 					<RootStackFlow />
 				</NavigationContainer>
 			</Provider>

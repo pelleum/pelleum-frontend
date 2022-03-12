@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { VStack, HStack, NativeBaseProvider } from "native-base";
+import { VStack, NativeBaseProvider } from "native-base";
 import {
 	MAIN_DIFFERENTIATOR_COLOR,
 	MAIN_SECONDARY_COLOR,

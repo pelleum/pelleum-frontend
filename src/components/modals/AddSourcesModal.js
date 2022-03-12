@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
 	sourceInput: {
 		backgroundColor: "transparent",
 		paddingVertical: 5,
-		borderBottomWidth: 0.5,
+		borderBottomWidth: 0.3,
 		borderBottomColor: MAIN_SECONDARY_COLOR,
 		marginTop: 10,
 		marginHorizontal: 10,

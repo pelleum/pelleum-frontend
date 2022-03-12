@@ -25,7 +25,7 @@ import { setComments, addComment } from "../redux/actions/PostActions";
 // Universal Styles
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
-import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR } from "../styles/Colors";
+import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR, LIST_SEPARATOR_COLOR } from "../styles/Colors";
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// Universal State
@@ -236,16 +236,8 @@ const styles = StyleSheet.create({
 	thesisContainer: {
 		paddingVertical: 20,
 		marginBottom: 15,
-		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
-	},
-	buttonBox: {
-		paddingTop: 5,
-		alignSelf: "center",
-		alignItems: "center",
-		width: "85%",
-		flexDirection: "row",
-		justifyContent: "space-between",
+		borderBottomWidth: 1,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 	},
 	topThesisBox: {
 		width: "100%",

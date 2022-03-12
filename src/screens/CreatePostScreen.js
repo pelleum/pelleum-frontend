@@ -20,6 +20,11 @@ import {
 	MAIN_SECONDARY_COLOR,
 	TEXT_COLOR,
 	BAD_COLOR,
+	BULL_SENTIMENT_BACKGROUND__COLOR,
+	BEAR_SENTIMENT_BACKGROUND__COLOR,
+	GOOD_COLOR,
+	LIST_SEPARATOR_COLOR,
+	CREATE_PLACEHOLDER_COLOR,
 } from "../styles/Colors";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
@@ -152,8 +157,8 @@ const CreatePostScreen = ({ navigation }) => {
 		<DismissKeyboard>
 			<SafeAreaView style={styles.mainContainer}>
 				<NativeBaseProvider>
-					<KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={100}>
-						{/* <KeyboardAvoidingView width={"100%"} behavior={"padding"}> */}
+					{/* <KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={100}> */}
+						<KeyboardAvoidingView width={"100%"} behavior={"padding"}>
 						<HStack alignItems="center" justifyContent="space-between" my="15">
 							<Image
 								style={styles.image}
@@ -177,7 +182,7 @@ const CreatePostScreen = ({ navigation }) => {
 							color={TEXT_COLOR}
 							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder="Ex: GOOGL"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							autoCapitalize="characters"
 							autoCorrect={false}
 							maxLength={5}
@@ -188,12 +193,12 @@ const CreatePostScreen = ({ navigation }) => {
 							}
 							style={styles.assetSymbolInput}
 						/>
-						<AppText>Ticker Symbol</AppText>
+						<AppText style={styles.inputLabel}>Ticker Symbol</AppText>
 						<TextInput
 							color={TEXT_COLOR}
 							selectionColor={MAIN_SECONDARY_COLOR}
 							placeholder="What's your valuable insight?"
-							placeholderTextColor={LIGHT_GREY_COLOR}
+							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 							multiline={true}
 							maxHeight={190}
 							numberOfLines={10}
@@ -205,7 +210,6 @@ const CreatePostScreen = ({ navigation }) => {
 							}
 						/>
 					</KeyboardAvoidingView>
-
 					<View style={styles.switchSelectorContainer}>
 						<SwitchSelector
 							options={sentimentOptions}
@@ -218,14 +222,15 @@ const CreatePostScreen = ({ navigation }) => {
 								}
 							}}
 							height={40}
-							buttonColor={sentiment === "Bull" ? "#003308" : "#330000"}
-							textColor={sentiment === "Bull" ? BAD_COLOR : MAIN_SECONDARY_COLOR}
+							buttonColor={sentiment === "Bull" ? BULL_SENTIMENT_BACKGROUND__COLOR : BEAR_SENTIMENT_BACKGROUND__COLOR}
+							textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
 							borderColor={MAIN_DIFFERENTIATOR_COLOR}
 							backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-							selectedColor={"white"}
+							selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
 							fontSize={16}
 							bold={true}
 							hasPadding
+							style={styles.sentimentToggle}
 						/>
 					</View>
 					{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
@@ -244,7 +249,7 @@ const styles = StyleSheet.create({
 		height: 190,
 		marginTop: 20,
 		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		textAlignVertical: 'top',
 	},
 	image: {
@@ -292,10 +297,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		marginBottom: 5,
 		marginTop: 10,
 		width: "25%",
+	},
+	sentimentToggle: {
+		opacity: 0.65,
+	},
+	inputLabel: {
+		color: LIGHT_GREY_COLOR,
 	},
 });
 

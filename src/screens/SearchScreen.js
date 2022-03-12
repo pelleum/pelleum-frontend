@@ -24,6 +24,9 @@ import {
 	LIGHT_GREY_COLOR,
 	BAD_COLOR,
 	MAIN_SECONDARY_COLOR,
+	GOOD_COLOR,
+	BULL_SENTIMENT_BACKGROUND__COLOR,
+	BEAR_SENTIMENT_BACKGROUND__COLOR,
 } from "../styles/Colors";
 import { THESIS_BOX_HEIGHT } from "../constants/ThesesConstants";
 import { useAnalytics } from '@segment/analytics-react-native';
@@ -375,14 +378,15 @@ const SearchScreen = ({ navigation }) => {
 									}
 								}}
 								height={40}
-								buttonColor={sentiment === "Bull" ? "#003308" : "#330000"}
-								textColor={sentiment === "Bull" ? BAD_COLOR : MAIN_SECONDARY_COLOR}
+								buttonColor={sentiment === "Bull" ? BULL_SENTIMENT_BACKGROUND__COLOR : BEAR_SENTIMENT_BACKGROUND__COLOR}
+								textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
 								borderColor={MAIN_DIFFERENTIATOR_COLOR}
 								backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-								selectedColor={"white"}
+								selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
 								fontSize={16}
 								bold={true}
 								hasPadding
+								style={styles.sentimentToggle}
 							/>
 						</View>
 						{errorMessage ? (
@@ -445,5 +449,8 @@ const styles = StyleSheet.create({
 	backButton: {
 		marginTop: 5,
 		marginRight: 15,
+	},
+	sentimentToggle: {
+		opacity: 0.65,
 	},
 });

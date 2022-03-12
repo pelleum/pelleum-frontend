@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Platform } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 import ThesisBox, { ThesesBoxType } from "./ThesisBox";
@@ -8,6 +8,7 @@ import {
 	MAIN_BACKGROUND_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
+	LIST_SEPARATOR_COLOR,
 } from "../styles/Colors";
 import PostsManager from "../managers/PostsManager";
 import AppText from "./AppText";
@@ -208,14 +209,14 @@ const styles = StyleSheet.create({
 		paddingTop: 5,
 		fontSize: 16,
 		backgroundColor: MAIN_BACKGROUND_COLOR,
-		borderBottomWidth: 0.17,
-		borderBottomColor: LIGHT_GREY_COLOR,
+		borderBottomWidth: Platform.OS === "ios" ? 0.17 : 0.29,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
 		overflow: "hidden",
 	},
 	postCommentedOn: {
 		width: "100%",
-		borderBottomColor: LIGHT_GREY_COLOR,
-		borderBottomWidth: 0.17,
+		borderBottomColor: LIST_SEPARATOR_COLOR,
+		borderBottomWidth: Platform.OS === "ios" ? 0.17 : 0.29,
 		paddingBottom: 7,
 	},
 	timeElapsedText: {

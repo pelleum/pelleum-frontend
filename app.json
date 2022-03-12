@@ -7,8 +7,8 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,7 +18,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ernesto1034.pelleumfrontend"
+      "bundleIdentifier": "com.ernesto1034.pelleumfrontend",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +30,8 @@
       "permissions": [
         "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.ernesto1034.pelleumfrontend"
+      "package": "com.ernesto1034.pelleumfrontend",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -9,6 +9,7 @@ import {
 	TouchableOpacity,
 	Platform,
 	StatusBar,
+	Keyboard,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -212,7 +213,6 @@ const SignupScreen = ({ navigation }) => {
 		checkPassword = false,
 		checkUsername = false,
 		checkBirthDate = false,
-		checkGender = false,
 	} = {}) => {
 		var newInputValidity = inputValidity;
 
@@ -275,22 +275,14 @@ const SignupScreen = ({ navigation }) => {
 				setInputValidity(newInputValidity);
 			}
 		}
+	};
 
-		if (checkGender) {
-			if (gender) {
-				newInputValidity["genderValidity"] = true;
-				setInputValidity(newInputValidity);
-			} else {
-				newInputValidity["genderValidity"] = false;
-				setInputValidity(newInputValidity);
-			}
-		}
-
+	const checkInputValidity = () => {
 		if (Object.values(inputValidity).every((item) => item === true)) {
 			setDisableStatus(false);
 		} else {
 			setDisableStatus(true);
-		}
+		};
 	};
 
 	return (
@@ -309,9 +301,10 @@ const SignupScreen = ({ navigation }) => {
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									keyboardType="email-address"
 									value={email}
-									onChangeText={(newValue) =>
+									onChangeText={(newValue) => {
 										handleChangeText({ newValue: newValue, checkEmail: true })
-									}
+										checkInputValidity()
+									}}
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
@@ -330,9 +323,10 @@ const SignupScreen = ({ navigation }) => {
 									maxLength={15}
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									value={username}
-									onChangeText={(newValue) =>
+									onChangeText={(newValue) => {
 										handleChangeText({ newValue: newValue, checkUsername: true })
-									}
+										checkInputValidity()
+									}}
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
@@ -351,9 +345,10 @@ const SignupScreen = ({ navigation }) => {
 									maxLength={100}
 									placeholderTextColor={LIGHT_GREY_COLOR}
 									value={password}
-									onChangeText={(newValue) =>
+									onChangeText={(newValue) => {
 										handleChangeText({ newValue: newValue, checkPassword: true })
-									}
+										checkInputValidity()
+									}}
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
@@ -378,9 +373,10 @@ const SignupScreen = ({ navigation }) => {
 									style={styles.inputWithIcon}
 									options={{ format: "MM/DD/YYYY" }}
 									value={birthdate}
-									onChangeText={(newValue) =>
+									onChangeText={(newValue) => {
 										handleChangeText({ newValue: newValue, checkBirthDate: true })
-									}
+										checkInputValidity()
+									}}
 									onFocus={() => setIsFocused("birthdateFocused")}
 									onBlur={() => setIsFocused("")}
 								/>
@@ -392,14 +388,19 @@ const SignupScreen = ({ navigation }) => {
 								<GenderModal
 									modalVisible={modalVisible}
 									setGender={setGender}
+									inputValidity={inputValidity}
+									setInputValidity={setInputValidity}
 									makeModalDisappear={() => {
 										setModalVisible(false)
-										handleChangeText({ checkGender: true })
+										checkInputValidity()
 									}}
 								/>
 								<TouchableOpacity
 									style={styles.genderSelectButton}
-									onPress={() => setModalVisible(true)}
+									onPress={() => {
+										Keyboard.dismiss()
+										setModalVisible(true)
+									}}
 								>
 									{gender == "" ? <AppText style={styles.genderSelectPlaceholder}>Gender</AppText> : null}
 									{gender == "FEMALE" ? <AppText style={styles.genderSelectText}>Female</AppText> : null}
@@ -407,26 +408,6 @@ const SignupScreen = ({ navigation }) => {
 									{gender == "OTHER" ? <AppText style={styles.genderSelectText}>Other</AppText> : null}
 									{gender == "UNDISCLOSED" ? <AppText style={styles.genderSelectText}>I prefer not to say</AppText> : null}
 								</TouchableOpacity>
-								{/* <Select
-									placeholder="Gender"
-									color={TEXT_COLOR}
-									selectionColor={MAIN_SECONDARY_COLOR}
-									placeholderTextColor={LIGHT_GREY_COLOR}
-									borderColor={MAIN_DIFFERENTIATOR_COLOR}
-									background={MAIN_DIFFERENTIATOR_COLOR}
-									fontSize="14"
-									height="100%"
-									width="90%"
-									selectedValue={gender}
-									onValueChange={(selectedGender) =>
-										handleChangeText({ newValue: selectedGender, checkGender: true })
-									}
-								>
-									<Select.Item label="Female" value="FEMALE" />
-									<Select.Item label="Male" value="MALE" />
-									<Select.Item label="Other" value="OTHER" />
-									<Select.Item label="I prefer not to say" value="UNDISCLOSED" />
-								</Select> */}
 								{gender ? (
 									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
 								) : null}
@@ -455,7 +436,7 @@ const SignupScreen = ({ navigation }) => {
 						<View style={styles.termsContainer}>
 							<AppText style={styles.bottomTextSmall}>By signing up, you agree to Pelleum's </AppText>
 							<HStack>
-								<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/terms-and-conditions")}>
+								<TouchableOpacity onPress={() => handleWebLink("https://www.pelleum.com/terms-of-service")}>
 									<AppText style={styles.termsButton}>Terms of Service </AppText>
 								</TouchableOpacity>
 								<AppText style={styles.bottomTextSmall}>and </AppText>
@@ -499,14 +480,6 @@ const styles = StyleSheet.create({
 	},
 	inputContainer: {
 		width: "100%",
-	},
-	input: {
-		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
-		fontSize: 14,
-		height: 37,
-		paddingHorizontal: 15,
-		borderRadius: 10,
-		marginTop: 5,
 	},
 	buttonEnabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
@@ -578,9 +551,6 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		color: MAIN_SECONDARY_COLOR,
 	},
-
-
-
 	inputIconContainer: {
 		flexDirection: 'row',
 		justifyContent: 'flex-start',
