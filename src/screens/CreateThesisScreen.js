@@ -197,17 +197,35 @@ const CreateThesisScreen = ({ navigation }) => {
 	};
 
 	const shareButtonPressed = async () => {
-		// Executed when the 'share' button is pressed
+		// Executed when the 'Share' button is pressed
 
 		const sources = validSources;
 
-		const createdThesis = await ThesesManager.createThesis({
+		const createThesisResponse = await ThesesManager.createThesis({
 			content,
 			title,
 			asset_symbol,
 			sentiment,
 			sources,
 		});
+
+		let createdThesis;
+
+		if (createThesisResponse.status == 201) {
+			createdThesis = createThesisResponse.data;
+		} else if (createThesisResponse.status == 409) {
+			Alert.alert(
+				"You already have a thesis with this title.",
+				"You cannot create multiple theses with the same title. Please update the title of this thesis.",
+				[{ text: "OK", onPress: () => { /* do nothing */ } }]
+			);
+		} else {
+			Alert.alert(
+				"An unexpected error occured.",
+				"We apologize for the inconvenience. Your content was not shared. Please try again later.",
+				[{ text: "OK", onPress: () => { /* do nothing */ } }]
+			);
+		}
 
 		if (createdThesis) {
 			track('Thesis Created', {
@@ -410,7 +428,7 @@ const CreateThesisScreen = ({ navigation }) => {
 									color={MAIN_SECONDARY_COLOR}
 								/>
 							</TouchableOpacity>
-							<AppText style={{ color: LIGHT_GREY_COLOR,marginLeft: 20 }}>
+							<AppText style={{ color: LIGHT_GREY_COLOR, marginLeft: 20 }}>
 								{validSources.length} linked sources
 							</AppText>
 						</HStack>

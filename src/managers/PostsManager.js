@@ -58,14 +58,8 @@ class PostsManager {
 		});
 
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				return { postExists: true, post: authorizedResponse.data };
-			} else if (authorizedResponse.status == 400) {
-				return { postExists: false, post: null }
-			}
-			// need to display "an unexpected error occured"
-			console.log("There was an error obtaining the post.");
-		}
+			return authorizedResponse;
+		};
 	};
 
 	static getComments = async ({
@@ -99,6 +93,9 @@ class PostsManager {
 	// Do we even still need this function? Leaving it here just
 	// in case we switch back to frontend computation
 	static getUserLikes = async (timeRange) => {
+		// We need to grab userObject from SecureStore here because
+		// we useSelector is a hook, which can only be used inside a
+		// function component. This is a function inside a class.
 		const userObjectString = await SecureStore.getItemAsync("userObject");
 		const userObject = JSON.parse(userObjectString);
 

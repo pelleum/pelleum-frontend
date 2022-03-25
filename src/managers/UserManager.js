@@ -118,6 +118,26 @@ class UserManager {
 			};
 		};
 	};
+
+	static blockUser = async (userId) => {
+		const authorizedResponse = await pelleumClient({
+			method: "patch",
+			url: `${process.env.USER_BASE_PATH}/block/${userId}`,
+		});
+		if (authorizedResponse) {
+			return authorizedResponse;
+		};
+	};
+
+	static unblockUser = async (userId) => {
+		const authorizedResponse = await pelleumClient({
+			method: "delete",
+			url: `${process.env.USER_BASE_PATH}/block/${userId}`,
+		});
+		if (authorizedResponse) {
+			return authorizedResponse;
+		};
+	};
 };
 
 export default UserManager;

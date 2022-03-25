@@ -75,6 +75,20 @@ class ThesesManager {
 		}
 	};
 
+	static getThesisReaction = async (thesis) => {
+		const authorizedResponse = await pelleumClient({
+			method: "get",
+			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${thesis.thesis_id}`,
+		});
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				return authorizedResponse.data
+			} else {
+				console.log("There was an error retrieving a thesis reaction.");
+			}
+		}
+	}
+
 	static getThesis = async (thesis_id) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
@@ -82,12 +96,7 @@ class ThesesManager {
 		});
 
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
-				return authorizedResponse.data;
-			} else {
-				// need to display "an unexpected error occured"
-				console.log("There was an error obtaining the thesis.");
-			}
+			return authorizedResponse;
 		}
 	};
 
@@ -154,14 +163,8 @@ class ThesesManager {
 		});
 
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 201) {
-				return authorizedResponse.data;
-			} else {
-				console.log(
-					"An unexpected error occured. Your content was not shared."
-				);
-			}
-		}
+			return authorizedResponse;
+		};
 	};
 }
 export default ThesesManager;

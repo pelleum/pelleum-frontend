@@ -18,7 +18,6 @@ import {
 	FontAwesome,
 } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
-import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 import AssetBox from "../components/AssetBox";
 import AppText from "../components/AppText";
@@ -30,22 +29,16 @@ import {
 } from "../styles/Colors";
 
 const ProfileScreen = ({ navigation, route }) => {
+	// State Management
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState("");
-	const { activeAccounts } = useSelector(
-		(state) => state.linkedAccountsReducer
-	);
-
-	const getUserObject = async () => {
-		const userObjectString = await SecureStore.getItemAsync("userObject");
-		return JSON.parse(userObjectString);
-	};
+	const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
+	const { userObject } = useSelector((state) => state.authReducer);
 
 	const onRefresh = async () => {
-		const userObject = await getUserObject();
 		setUsername(userObject.username);
 		const retrievedAssets = await PortfolioManager.retrieveAssets(
-			userObject.user_id
+			userObject.userId
 		);
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
@@ -149,9 +142,7 @@ const ProfileScreen = ({ navigation, route }) => {
 							<TouchableOpacity
 								style={styles.buttonGroup}
 								onPress={async () => {
-									const userObject = await getUserObject();
-									const userId = userObject.user_id;
-									navigation.navigate("RationaleScreen", { userId: userId });
+									navigation.navigate("RationaleScreen", { userId: userObject.userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
@@ -168,9 +159,7 @@ const ProfileScreen = ({ navigation, route }) => {
 							<TouchableOpacity
 								style={styles.buttonGroup}
 								onPress={async () => {
-									const userObject = await getUserObject();
-									const userId = userObject.user_id;
-									navigation.navigate("AuthoredThesesScreen", { userId: userId });
+									navigation.navigate("AuthoredThesesScreen", { userId: userObject.userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>
@@ -185,9 +174,7 @@ const ProfileScreen = ({ navigation, route }) => {
 							<TouchableOpacity
 								style={styles.buttonGroup}
 								onPress={async () => {
-									const userObject = await getUserObject();
-									const userId = userObject.user_id;
-									navigation.navigate("AuthoredPostsScreen", { userId: userId });
+									navigation.navigate("AuthoredPostsScreen", { userId: userObject.userId });
 								}}
 							>
 								<HStack style={styles.buttonGroupTextContainer}>

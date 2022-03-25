@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, Alert, Platform } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
@@ -11,11 +11,14 @@ import {
 	LIST_SEPARATOR_COLOR,
 } from "../styles/Colors";
 import PostsManager from "../managers/PostsManager";
+import UserManager from "../managers/UserManager";
 import AppText from "./AppText";
 import commonTextStyles from "../styles/CommonText";
 import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
 import { MAXIMUM_POST_VISIBLE_LINES } from "../constants/PostsConstants";
+import ManageContentModal from "./modals/ManageContentModal";
+import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -58,9 +61,15 @@ const getTimeElapsed = (item) => {
 
 
 const PostBox = ({ postBoxType, item, nav }) => {
+	// Local State
+	const [modalVisible, setModalVisible] = useState(false);
+
 	// Universal State
 	const dispatch = useDispatch();
 	const { userObject } = useSelector((state) => state.authReducer);
+
+	// Segment Tracking
+	const { track } = useAnalytics();
 
 	// Get the time elapsed since post was created
 	elapsedTime = getTimeElapsed(item);
@@ -74,7 +83,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 		item["needsRefresh"] = true;
 	};
 
-	const alertBeforeDelete = async (item) => {
+	const deleteContent = async (item) => {
 		Alert.alert(
 			"Delete Post",
 			"Are you sure you want to delete this post?",
@@ -99,6 +108,35 @@ const PostBox = ({ postBoxType, item, nav }) => {
 		);
 	};
 
+	const blockUser = async (item) => {
+		const response = await UserManager.blockUser(item.user_id);
+		if (response.status == 201) {
+			track('User Blocked', {
+				blockedUserId: item.user_id,
+				blockedUsername: item.username,
+			});
+			Alert.alert(
+				"Success",
+				`You have successfully blocked @${item.username}. You will no longer see this user's content on Pelleum. Please pull down to refresh the screen.`,
+				[
+					{
+						text: "OK", onPress: () => { /* Do nothing */ }
+					},
+				]
+			);
+		} else {
+			Alert.alert(
+				"Error",
+				`An unexpected error occurred when attempting to block @${item.username}. Please try again later.`,
+				[
+					{
+						text: "OK", onPress: () => { /* Do nothing */ }
+					},
+				]
+			);
+		}
+	};
+
 	return (
 		<NativeBaseProvider>
 			<TouchableOpacity
@@ -120,11 +158,18 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									• {elapsedTime}
 								</AppText>
 							</HStack>
+							<ManageContentModal
+								modalVisible={modalVisible}
+								makeModalDisappear={() => setModalVisible(false)}
+								item={item}
+								userId={userObject.userId}
+								deleteContent={deleteContent}
+								blockUser={blockUser}
+							/>
 							<TouchableOpacity
-								disabled={userObject.userId == item.user_id ? false : true}
-								style={userObject.userId == item.user_id ? styles.enabledDotsButton : styles.disabledDotsButton}
+								style={styles.dotsButton}
 								onPress={() => {
-									alertBeforeDelete(item);
+									setModalVisible(true)
 								}}
 							>
 								<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
@@ -188,7 +233,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 					</VStack>
 				</Box>
 			</TouchableOpacity>
-		</NativeBaseProvider>
+		</NativeBaseProvider >
 	);
 };
 
@@ -244,16 +289,10 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 15,
 	},
-	enabledDotsButton: {
+	dotsButton: {
 		paddingVertical: 15,
 		paddingLeft: 20,
 		paddingRight: 10
-	},
-	disabledDotsButton: {
-		paddingVertical: 15,
-		paddingLeft: 20,
-		paddingRight: 10,
-		opacity: 0.3
 	},
 	commentFlagText: {
 		color: LIGHT_GREY_COLOR,

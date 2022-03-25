@@ -18,12 +18,15 @@
     "axios": "^0.25.0",
     "babel-plugin-inline-dotenv": "^1.6.0",
     "dotenv": "^16.0.0",
+    "eas-cli": "^0.48.2",
     "expo": "^43.0.3",
+    "expo-constants": "~12.1.3",
     "expo-dev-client": "~0.6.3",
     "expo-haptics": "~11.0.3",
     "expo-linear-gradient": "~10.0.3",
     "expo-linking": "~2.4.2",
     "expo-secure-store": "~11.0.3",
+    "expo-updates": "~0.10.15",
     "expo-web-browser": "^10.0.3",
     "native-base": "^3.2.2",
     "query-string": "^7.0.1",
@@ -35,14 +38,12 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-share": "^7.3.6",
-    "react-native-svg": "^12.1.1",
+    "react-native-svg": "^12.3.0",
     "react-native-switch-selector": "^2.1.4",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
-    "use-debounce": "^7.0.1",
-    "expo-updates": "~0.10.15",
-    "expo-constants": "~12.1.3"
+    "use-debounce": "^7.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0"

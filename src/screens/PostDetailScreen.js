@@ -5,7 +5,6 @@ import {
 	TouchableOpacity,
 	Keyboard,
 	FlatList,
-	RefreshControl,
 	KeyboardAvoidingView,
 } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
@@ -92,6 +91,28 @@ const PostDetailScreen = ({ navigation, route }) => {
 		}
 	};
 
+	const processRetrievedPost = (postResponse) => {
+		if (postResponse.status == 200) {
+			setPostCommentedOn(postResponse.data);
+			setThesisCommentedOn(null);
+		} else if (postResponse.status == 400) {
+			setPostCommentedOn("deleted");
+		} else if (postResponse.status == 403) {
+			setPostCommentedOn("forbidden");
+		}
+	};
+
+	const processRetrievedThesis = (thesisResponse) => {
+		if (thesisResponse.status == 200) {
+			setThesisCommentedOn(thesisResponse.data);
+			setPostCommentedOn(null);
+		} else if (thesisResponse.status == 400) {
+			setThesisCommentedOn("deleted");
+		} else if (thesisResponse.status == 403) {
+			setThesisCommentedOn("forbidden");
+		}
+	};
+
 	const onRefresh = async () => {
 		setRefreshing(true);
 		const commentsResponseData = await PostsManager.getComments({
@@ -101,27 +122,19 @@ const PostDetailScreen = ({ navigation, route }) => {
 			const response = await PostsManager.getPost(
 				detailedPost.is_post_comment_on
 			);
-			if (response.postExists) {
-				setPostCommentedOn(response.post);
-				setThesisCommentedOn(null);
-			} else {
-				setPostCommentedOn("deleted");
-			}
+			processRetrievedPost(response);
 		} else if (detailedPost.is_thesis_comment_on) {
-			const retrievedThesis = await ThesesManager.getThesis(
+			const response = await ThesesManager.getThesis(
 				detailedPost.is_thesis_comment_on
 			);
-			setThesisCommentedOn(retrievedThesis);
-			setPostCommentedOn(null);
+			processRetrievedThesis(response);
 		} else {
 			setPostCommentedOn(null);
 			setThesisCommentedOn(null);
 		}
-
 		if (commentsResponseData) {
 			dispatch(setComments(commentsResponseData.records.posts));
 		}
-
 		setRefreshing(false);
 	};
 
@@ -146,14 +159,11 @@ const PostDetailScreen = ({ navigation, route }) => {
 				data={comments}
 				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
-				refreshControl={
-					<RefreshControl
-						enabled={true}
-						colors={["#9Bd35A", "#689F38"]}
-						onRefresh={onRefresh}
-					/>
-				}
 				refreshing={refreshing}
+				onRefresh={onRefresh}
+				// Do infinate scroll in the future
+				// onEndReached={getMoreComments}
+				// onEndReachedThreshold={1}
 				ListHeaderComponent={
 					<KeyboardAvoidingView
 						style={styles.mainContainer}
@@ -161,20 +171,34 @@ const PostDetailScreen = ({ navigation, route }) => {
 						keyboardVerticalOffset={100}
 					>
 						{postCommentedOn ? (
-							postCommentedOn != "deleted" ? (
+							postCommentedOn == "deleted" ? (
+								<AppText style={styles.deletedPost}>
+									This post has been deleted.
+								</AppText>
+							) : postCommentedOn == "forbidden" ? (
+								<AppText style={styles.deletedPost}>
+									This user's account is blocked.
+								</AppText>
+							) : (
 								<PostBox
 									postBoxType={PostBoxType.PostCommentedOn}
 									item={postCommentedOn}
 									nav={navigation}
 								/>
-							) : (
-								<AppText style={styles.deletedPost}>
-									This post has been deleted.
-								</AppText>
 							)
 						) : null}
 						{thesisCommentedOn ? (
-							<ThesisBox item={thesisCommentedOn} nav={navigation} />
+							thesisCommentedOn == "deleted" ? (
+								<AppText style={styles.deletedPost}>
+									This thesis has been deleted.
+								</AppText>
+							) : thesisCommentedOn == "forbidden" ? (
+								<AppText style={styles.deletedPost}>
+									This user's account is blocked.
+								</AppText>
+							) : (
+								<ThesisBox item={thesisCommentedOn} nav={navigation} />
+							)
 						) : null}
 						{postExists ? (
 							<View>

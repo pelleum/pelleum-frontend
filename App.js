@@ -45,7 +45,7 @@ import { storeUserObject } from "./src/redux/actions/AuthActions";
 
 // Segment Client
 const segmentClient = createClient({
-	writeKey: process.env.WRITE_KEY,
+	writeKey: process.env.SEGMENT_WRITE_KEY,
 	trackAppLifecycleEvents: true,
 });
 
@@ -279,7 +279,7 @@ const RootStackFlow = () => {
 			// 4. Store *some* of the user object in universal state
 			dispatch(storeUserObject({
 				username: userObject.username,
-				userId: userObject.user_id
+				userId: userObject.user_id,
 			}));
 			// 5. Identify the user
 			segmentClient.identify(user.user_id, {
@@ -394,33 +394,11 @@ const RootStackFlow = () => {
 	);
 };
 
-const getActiveRouteName = (state) => {
-	if (!state || typeof state.index !== 'number') {
-		return 'Unknown';
-	}
-	const route = state.routes[state.index];
-	if (route.state) {
-		return getActiveRouteName(route.state);
-	}
-	return route.name;
-};
-
 export default () => {
-	const [routeName, setRouteName] = React.useState('Unknown');
 	return (
 		<AnalyticsProvider client={segmentClient}>
 			<Provider store={store}>
-				<NavigationContainer
-					theme={DarkTheme}
-					onStateChange={(state) => {
-						const newRouteName = getActiveRouteName(state);
-
-						if (routeName !== newRouteName) {
-							segmentClient.screen(newRouteName);
-							setRouteName(newRouteName);
-						}
-					}}
-				>
+				<NavigationContainer theme={DarkTheme}>
 					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : <StatusBar backgroundColor="black" />}
 					<RootStackFlow />
 				</NavigationContainer>

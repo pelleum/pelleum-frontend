@@ -38,6 +38,15 @@ This is the primary way we will conduct testing of the Pelleum mobile applicatio
 
 **Note:** You only have to create a new build if you modified or added any native modules. Otherwise, you can simply run `expo start --dev-client` and continue to use the same client.
 
+## Creating Builds with EAS CLI
+- We can specify the profile we want to build (defined in eas.json), such as `eas build --profile development --platform all`
+- If we don't specify  a profile, **the build will default to production!**
+- The `preview` profile allows us to test out the app in production-like circumstances. The main difference between `preview` and `production` is that `preview` builds are not signed for distribution to stores.
+
+## Submit App Build to App Store with EAS CLI
+- Submit the latest iOS build to Apple: `eas submit -p ios --latest`
+- Submit the latest Android build to Google: `eas submit -p android --latest`
+
 ## Useful Terminal Commands
 **Note:** The app must be running for these commands to work.
 - To open the app on the iOS Simulator, press `i` in your terminal.

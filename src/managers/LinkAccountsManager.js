@@ -30,7 +30,6 @@ class LinkAccountsManager {
 	};
 
 	static unlinkAccount = async () => {
-		//we should have a .env type file to store institution IDs
 		const response = await pelleumClient({
 			method: "delete",
 			url: `${process.env.AC_DEACTIVATE_BASE_PATH}/${process.env.ROBINHOOD_ID}`,
@@ -40,7 +39,6 @@ class LinkAccountsManager {
 	};
 
 	static verifyAccount = async (requestBody) => {
-		//we should have a .env type file to store institution IDs
 		const response = await pelleumClient({
 			method: "post",
 			url: `${process.env.AC_LOGIN_BASE_PATH}/${process.env.ROBINHOOD_ID}/verify`,

@@ -5,14 +5,30 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": ".././Google Cloud/pc-api-5418569639124338799-941-f0677f83d4f9.json"
+      },
+      "ios": {
+        "companyName": "Pelleum, Inc.",
+        "appName": "Pelleum",
+        "ascAppId": "1614359541",
+        "appleTeamId": "9D75JS2TLH"
+      }
+    }
   }
 }

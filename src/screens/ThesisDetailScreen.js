@@ -4,19 +4,23 @@ import {
 	View,
 	TouchableOpacity,
 	FlatList,
-	RefreshControl,
 	Keyboard,
 	KeyboardAvoidingView,
+	Alert,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
+import ThesisManager from "../managers/ThesesManager";
 import CommentInput from "../components/CommentInput";
 import AppText from "../components/AppText";
 import SentimentPill, { Sentiment } from "../components/SentimentPill";
 import { useAnalytics } from '@segment/analytics-react-native';
+import { Entypo } from "@expo/vector-icons";
+import ManageContentModal from "../components/modals/ManageContentModal";
+import UserManager from "../managers/UserManager";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -29,15 +33,18 @@ import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIGHT_GREY_COLOR, LIST_SEPARATOR_COLOR
 
 const ThesisDetailScreen = ({ navigation, route }) => {
 	// Universal State
-	const { comments } = useSelector((state) => state.postReducer);
 	const dispatch = useDispatch();
+	const { userObject } = useSelector((state) => state.authReducer);
+	const { comments } = useSelector((state) => state.postReducer);
 
 	// State Management
+	const [thesis, setThesis] = useState(route.params);
 	const [commentContent, setCommentContent] = useState("");
 	const [commentContentValidity, setCommentContentValidity] = useState(false);
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [error, setError] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
+	const [modalVisible, setModalVisible] = useState(false);
 	//We need to set the error message
 
 	// Segment Tracking
@@ -48,7 +55,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		listRef.current.scrollToOffset({ offset: 0, animated: false });
 	};
 
-	const detailedThesis = route.params;
+	const detailedThesis = thesis;
 	const dateWritten = new Date(detailedThesis.created_at);
 
 	const sources = detailedThesis.sources ? detailedThesis.sources : [];
@@ -103,19 +110,54 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	const onRefresh = async () => {
 		setRefreshing(true);
+		// 1. Retrieve user's thesis reaction
+		const thesisReactionData = await ThesisManager.getThesisReaction(detailedThesis);
+		if (thesisReactionData) {
+			detailedThesis["user_reaction_value"] = thesisReactionData.user_reaction_value;
+			setThesis(detailedThesis);
+		}
+		// 2. Retrieve thesis comments
 		const commentsResponseData = await PostsManager.getComments({
 			is_thesis_comment_on: detailedThesis.thesis_id,
 		});
 		if (commentsResponseData) {
 			dispatch(setComments(commentsResponseData.records.posts));
 		}
-
 		setRefreshing(false);
 	};
 
 	useEffect(() => {
 		onRefresh();
 	}, []);
+
+	const blockUser = async (item) => {
+		const response = await UserManager.blockUser(item.user_id);
+		if (response.status == 201) {
+			track('User Blocked', {
+				blockedUserId: item.user_id,
+				blockedUsername: item.username,
+			});
+			Alert.alert(
+				"Success",
+				`You have successfully blocked @${item.username}. You will no longer see this user's content on Pelleum.`,
+				[
+					{
+						text: "OK", onPress: () => { /* Do nothing */ }
+					},
+				]
+			);
+		} else {
+			Alert.alert(
+				"Error",
+				`An unexpected error occurred when attempting to block @${item.username}. Please try again later.`,
+				[
+					{
+						text: "OK", onPress: () => { /* Do nothing */ }
+					},
+				]
+			);
+		}
+	};
 
 	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Comment} item={item} nav={navigation} />);
 
@@ -129,14 +171,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				data={comments}
 				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
-				refreshControl={
-					<RefreshControl
-						enabled={true}
-						colors={["#9Bd35A", "#689F38"]}
-						onRefresh={onRefresh}
-					/>
-				}
 				refreshing={refreshing}
+				onRefresh={onRefresh}
+				// Do infinate scroll in the future
+				// onEndReached={getMoreComments}
+				// onEndReachedThreshold={1}
 				ListHeaderComponent={
 					<KeyboardAvoidingView style={styles.mainContainer} behavior='position' keyboardVerticalOffset={100}>
 						<View style={styles.thesisContainer}>
@@ -187,12 +226,30 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									View Author's Portfolio
 								</AppText>
 							</TouchableOpacity>
-							<ThesisButtonPanel item={detailedThesis} nav={navigation} />
-							<AppText style={styles.subTitle}>Thesis</AppText>
+							<ThesisButtonPanel thesis={thesis} nav={navigation} />
+							<HStack style={styles.thesisHeaderContainer}>
+								<AppText style={styles.thesisLabel}>Thesis</AppText>
+								<ManageContentModal
+									modalVisible={modalVisible}
+									makeModalDisappear={() => setModalVisible(false)}
+									item={detailedThesis}
+									userId={userObject.userId}
+									// deleteContent={deleteContent}  //need to add ability to delete theses on frontend
+									blockUser={blockUser}
+								/>
+								<TouchableOpacity
+									style={styles.dotsButton}
+									onPress={() => {
+										setModalVisible(true)
+									}}
+								>
+									<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
+								</TouchableOpacity>
+							</HStack>
 							<AppText style={styles.contentText}>
 								{detailedThesis.content}
 							</AppText>
-							<AppText style={styles.subTitle}>Sources</AppText>
+							<AppText style={styles.sourcesLabel}>Sources</AppText>
 							{sources.length > 0 ? sourcesToDisplay : <AppText>This thesis has no linked sources😕</AppText>}
 						</View>
 						<VStack>
@@ -271,11 +328,16 @@ const styles = StyleSheet.create({
 		color: MAIN_SECONDARY_COLOR,
 		marginTop: 10,
 	},
-	subTitle: {
+	sourcesLabel: {
 		fontSize: 16,
 		fontWeight: "bold",
 		marginTop: 20,
 		marginBottom: 10,
+	},
+	thesisLabel: {
+		paddingVertical: 15,
+		fontSize: 16,
+		fontWeight: "bold",
 	},
 	thesisTitle: {
 		fontSize: 25,
@@ -306,5 +368,16 @@ const styles = StyleSheet.create({
 	},
 	errorText: {
 		color: BAD_COLOR,
+	},
+	dotsButton: {
+		paddingVertical: 15,
+		paddingLeft: 20,
+		paddingRight: 10
+	},
+	thesisHeaderContainer: {
+		width: "100%",
+		alignItems: "center",
+		justifyContent: "space-between",
+		marginTop: 5,
 	},
 });

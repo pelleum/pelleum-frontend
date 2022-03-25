@@ -12,8 +12,8 @@ import {
 	Keyboard,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { HStack, NativeBaseProvider, Select } from "native-base";
+import { AntDesign } from "@expo/vector-icons";
+import { HStack, NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import * as WebBrowser from "expo-web-browser";
 import { useAnalytics } from '@segment/analytics-react-native';
@@ -49,6 +49,13 @@ const SignupScreen = ({ navigation }) => {
 		usernameValidity: false,
 		birthDateValidity: false,
 		genderValidity: false,
+	});
+	const [showValidityIcon, setShowValidityIcon] = useState({
+		emailValidityIcon: false,
+		passwordValidityIcon: false,
+		usernameValidityIcon: false,
+		birthDateValidityIcon: false,
+		genderValidityIcon: false,
 	});
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [isFocused, setIsFocused] = useState("");
@@ -154,8 +161,8 @@ const SignupScreen = ({ navigation }) => {
 	};
 
 	const usernameValidation = (usernameText) => {
-		// Only alphanumeric characters
-		let usernameRegex = /^[a-zA-Z0-9]+$/;
+		// Only allow alphanumeric characters and single underscore
+		let usernameRegex = /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/;
 		if (usernameRegex.test(usernameText) === false) {
 			return false;
 		} else {
@@ -285,6 +292,31 @@ const SignupScreen = ({ navigation }) => {
 		};
 	};
 
+	({
+		newValue,
+		checkEmail = false,
+		checkPassword = false,
+		checkUsername = false,
+		checkBirthDate = false,
+	} = {})
+
+	const handleOnFocus = ({
+		isFocusedString,
+		validityIconKey,
+	} = {}) => {
+		const newShowValidityIcon = showValidityIcon;
+		setIsFocused(isFocusedString)
+		newShowValidityIcon[validityIconKey] = false;
+		setShowValidityIcon(newShowValidityIcon)
+	};
+
+	const handleOnBlur = (validityIconKey) => {
+		const newShowValidityIcon = showValidityIcon;
+		setIsFocused("")
+		newShowValidityIcon[validityIconKey] = true;
+		setShowValidityIcon(newShowValidityIcon)
+	};
+
 	return (
 		<NativeBaseProvider>
 			<DismissKeyboard>
@@ -308,11 +340,15 @@ const SignupScreen = ({ navigation }) => {
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
-									onFocus={() => setIsFocused("emailFocused")}
-									onBlur={() => setIsFocused("")}
+									onFocus={() => handleOnFocus({ isFocusedString: "emailFocused", validityIconKey: "emailValidityIcon" })}
+									onBlur={() => handleOnBlur("emailValidityIcon")}
 								/>
-								{emailValidation(email) ? (
-									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								{showValidityIcon["emailValidityIcon"] ? (
+									emailValidation(email) ? (
+										<AntDesign style={styles.inputIcon} name="checkcircleo" size={20} color={GOOD_COLOR} />
+									) : (
+										<AntDesign style={styles.inputIcon} name="exclamationcircleo" size={20} color={BAD_COLOR} />
+									)
 								) : null}
 							</View>
 							<View style={styles.inputIconContainer}>
@@ -330,11 +366,15 @@ const SignupScreen = ({ navigation }) => {
 									style={styles.inputWithIcon}
 									autoCapitalize="none"
 									autoCorrect={false}
-									onFocus={() => setIsFocused("usernameFocused")}
-									onBlur={() => setIsFocused("")}
+									onFocus={() => handleOnFocus({ isFocusedString: "usernameFocused", validityIconKey: "usernameValidityIcon" })}
+									onBlur={() => handleOnBlur("usernameValidityIcon")}
 								/>
-								{usernameValidation(username) ? (
-									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								{showValidityIcon["usernameValidityIcon"] ? (
+									usernameValidation(username) ? (
+										<AntDesign style={styles.inputIcon} name="checkcircleo" size={20} color={GOOD_COLOR} />
+									) : (
+										<AntDesign style={styles.inputIcon} name="exclamationcircleo" size={20} color={BAD_COLOR} />
+									)
 								) : null}
 							</View>
 							<View style={styles.inputIconContainer}>
@@ -353,14 +393,19 @@ const SignupScreen = ({ navigation }) => {
 									autoCapitalize="none"
 									autoCorrect={false}
 									secureTextEntry={true}
-									onFocus={() => setIsFocused("passwordFocused")}
-									onBlur={() => setIsFocused("")}
+									onFocus={() => handleOnFocus({ isFocusedString: "passwordFocused", validityIconKey: "passwordValidityIcon" })}
+									onBlur={() => handleOnBlur("passwordValidityIcon")}
 								/>
-								{passwordValidation({
-									passwordText: password,
-									checkCharacters: true,
-								}) ? (
-									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								{showValidityIcon["passwordValidityIcon"] ? (
+									passwordValidation({
+										passwordText: password,
+										checkCharacters: true,
+										checkLength: true,
+									}) ? (
+										<AntDesign style={styles.inputIcon} name="checkcircleo" size={20} color={GOOD_COLOR} />
+									) : (
+										<AntDesign style={styles.inputIcon} name="exclamationcircleo" size={20} color={BAD_COLOR} />
+									)
 								) : null}
 							</View>
 							<View style={styles.inputIconContainer}>
@@ -375,13 +420,17 @@ const SignupScreen = ({ navigation }) => {
 									value={birthdate}
 									onChangeText={(newValue) => {
 										handleChangeText({ newValue: newValue, checkBirthDate: true })
-										checkInputValidity()
+										checkInputValidity();
 									}}
-									onFocus={() => setIsFocused("birthdateFocused")}
-									onBlur={() => setIsFocused("")}
+									onFocus={() => handleOnFocus({ isFocusedString: "birthdateFocused", validityIconKey: "birthDateValidityIcon" })}
+									onBlur={() => handleOnBlur("birthDateValidityIcon")}
 								/>
-								{dateValidation(birthdate) ? (
-									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								{showValidityIcon["birthDateValidityIcon"] ? (
+									dateValidation(birthdate) ? (
+										<AntDesign style={styles.inputIcon} name="checkcircleo" size={20} color={GOOD_COLOR} />
+									) : (
+										<AntDesign style={styles.inputIcon} name="exclamationcircleo" size={20} color={BAD_COLOR} />
+									)
 								) : null}
 							</View>
 							<View style={styles.inputIconContainer}>
@@ -391,15 +440,17 @@ const SignupScreen = ({ navigation }) => {
 									inputValidity={inputValidity}
 									setInputValidity={setInputValidity}
 									makeModalDisappear={() => {
-										setModalVisible(false)
-										checkInputValidity()
+										setModalVisible(false);
+										checkInputValidity();
+										handleOnBlur("genderValidityIcon");
 									}}
 								/>
 								<TouchableOpacity
 									style={styles.genderSelectButton}
 									onPress={() => {
-										Keyboard.dismiss()
-										setModalVisible(true)
+										Keyboard.dismiss();
+										setModalVisible(true);
+										handleOnFocus({ isFocusedString: "", validityIconKey: "genderValidityIcon" });
 									}}
 								>
 									{gender == "" ? <AppText style={styles.genderSelectPlaceholder}>Gender</AppText> : null}
@@ -408,8 +459,12 @@ const SignupScreen = ({ navigation }) => {
 									{gender == "OTHER" ? <AppText style={styles.genderSelectText}>Other</AppText> : null}
 									{gender == "UNDISCLOSED" ? <AppText style={styles.genderSelectText}>I prefer not to say</AppText> : null}
 								</TouchableOpacity>
-								{gender ? (
-									<FontAwesome5 style={styles.inputIcon} name="check" size={20} color={GOOD_COLOR} />
+								{showValidityIcon["genderValidityIcon"] ? (
+									gender ? (
+										<AntDesign style={styles.inputIcon} name="checkcircleo" size={20} color={GOOD_COLOR} />
+									) : (
+										<AntDesign style={styles.inputIcon} name="exclamationcircleo" size={20} color={BAD_COLOR} />
+									)
 								) : null}
 							</View>
 							{errorMessage ? (
@@ -419,18 +474,18 @@ const SignupScreen = ({ navigation }) => {
 						{isFocused ? (
 							<View style={styles.validationMessageView}>
 								{isFocused == "emailFocused" ? (
-									emailValidation(email) ? null : (
-										<AppText style={styles.validationMessageText}>Enter a valid email address.</AppText>)) : null}
+									<AppText style={styles.validationMessageText}>Enter a valid email address.</AppText>
+								) : null}
 								{isFocused == "usernameFocused" ? (
-									usernameValidation(username) ? null : (
-										<AppText style={styles.validationMessageText}>You can share your asset positions with others on Pelleum, so choose a username in accordance with your preferred amount of anonymity. This can be changed later.</AppText>)) : null}
+									<AppText style={styles.validationMessageText}>You can share your asset positions with others on Pelleum, so choose a username in accordance with your preferred amount of anonymity. This can be changed later.</AppText>
+								) : null}
 								{isFocused == "passwordFocused" ? (
-									passwordValidation({ passwordText: password, checkCharacters: true }) ? null : (
-										<AppText style={styles.validationMessageText}>Password must be at least 8 characters long and contain at least one uppercase, one lowercase,
-											one numerical, and one special character.</AppText>)) : null}
+									<AppText style={styles.validationMessageText}>Password must be at least 8 characters long and contain at least one uppercase, one lowercase,
+										one numerical, and one special character.</AppText>)
+									: null}
 								{isFocused == "birthdateFocused" ? (
-									dateValidation(birthdate) ? null : (
-										<AppText style={styles.validationMessageText}>Birthdate must be valid and you must be at least 18 years old.</AppText>)) : null}
+									<AppText style={styles.validationMessageText}>Birthdate must be valid and you must be at least 18 years old.</AppText>)
+									: null}
 							</View>
 						) : null}
 						<View style={styles.termsContainer}>

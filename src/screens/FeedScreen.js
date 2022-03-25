@@ -24,8 +24,8 @@ import { setPosts } from "../redux/actions/PostActions";
 
 const FeedScreen = ({ navigation, route }) => {
 	// Global State Management
-	const { posts } = useSelector((state) => state.postReducer);
 	const dispatch = useDispatch();
+	const { posts } = useSelector((state) => state.postReducer);
 
 	// Local State Management
 	const [refreshing, setRefreshing] = useState(false);
@@ -43,6 +43,7 @@ const FeedScreen = ({ navigation, route }) => {
 		const queryParams = { records_per_page: FEED_RECORDS_PER_PAGE, page: 1 };
 		const postResponseData = await PostsManager.getPosts(queryParams);
 		if (postResponseData) {
+			//1. Update state
 			setErrorMessage("");
 			dispatch(setPosts(postResponseData.records.posts));
 			setCurrentPage(1);
@@ -67,16 +68,18 @@ const FeedScreen = ({ navigation, route }) => {
 			queryParams = { records_per_page: FEED_RECORDS_PER_PAGE, page: newPageNumber };
 			responseData = await PostsManager.getPosts(queryParams);
 			if (responseData) {
-				// Append new posts to currentPosts
+				//1. Append new posts to currentPosts
 				const currentPosts = posts;
 				currentPosts.push(...responseData.records.posts);
-				// Filter out duplicate values
+				
+				//2. Filter out duplicate values
 				const uniquePostsSet = new Set();
 				uniquePosts = currentPosts.filter(function (post) {
 					const isPresentInSet = uniquePostsSet.has(post.post_id);
 					uniquePostsSet.add(post.post_id);
 					return !isPresentInSet;
 				});
+				//3. Update state
 				dispatch(setPosts(uniquePosts));
 			} else {
 				setErrorMessage(
@@ -143,7 +146,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		shadowOffset: { width: 0, height: 0 },
 		shadowColor: LIGHT_GREY_COLOR,
-		shadowRadius: 10,
+		shadowRadius: 6,
 		shadowOpacity: 0.6,
 	},
 	fabIcon: {

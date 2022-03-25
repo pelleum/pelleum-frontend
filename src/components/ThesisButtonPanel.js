@@ -10,34 +10,29 @@ import { useAnalytics } from '@segment/analytics-react-native';
 // Redux
 import { useSelector } from "react-redux";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
-import * as SecureStore from "expo-secure-store";
 
-const ThesisButtonPanel = ({ item, nav }) => {
+const ThesisButtonPanel = ({ thesis, nav }) => {
 	// State Management
 	const state = useSelector((state) => state.thesisReactionsReducer);
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
+	const { userObject } = useSelector((state) => state.authReducer);
 
 	// Segment Tracking
 	const { track } = useAnalytics();
 
 	const thesisIsLiked =
-		(item.user_reaction_value == 1 &&
-			!state.locallyUnlikedTheses.includes(item.thesis_id) &&
-			!state.locallyDislikedTheses.includes(item.thesis_id) &&
-			!state.locallyRemovedDislikedTheses.includes(item.thesis_id)) ||
-		state.locallyLikedTheses.includes(item.thesis_id);
+		(thesis.user_reaction_value == 1 &&
+			!state.locallyUnlikedTheses.includes(thesis.thesis_id) &&
+			!state.locallyDislikedTheses.includes(thesis.thesis_id) &&
+			!state.locallyRemovedDislikedTheses.includes(thesis.thesis_id)) ||
+		state.locallyLikedTheses.includes(thesis.thesis_id);
 
 	const thesisIsDisliked =
-		(item.user_reaction_value == -1 &&
-			!state.locallyRemovedDislikedTheses.includes(item.thesis_id) &&
-			!state.locallyLikedTheses.includes(item.thesis_id) &&
-			!state.locallyUnlikedTheses.includes(item.thesis_id)) ||
-		state.locallyDislikedTheses.includes(item.thesis_id);
-
-	const getUserObject = async () => {
-		const userObjectString = await SecureStore.getItemAsync("userObject");
-		return JSON.parse(userObjectString);
-	};
+		(thesis.user_reaction_value == -1 &&
+			!state.locallyRemovedDislikedTheses.includes(thesis.thesis_id) &&
+			!state.locallyLikedTheses.includes(thesis.thesis_id) &&
+			!state.locallyUnlikedTheses.includes(thesis.thesis_id)) ||
+		state.locallyDislikedTheses.includes(thesis.thesis_id);
 
 	const extractSources = (sources) => {
 		let sourceText = "";
@@ -46,12 +41,12 @@ const ThesisButtonPanel = ({ item, nav }) => {
 		return sourceText;
 	};
 
-	const onShare = async (item) => {
-		const sourceText = extractSources(item.sources);
+	const onShare = async (thesis) => {
+		const sourceText = extractSources(thesis.sources);
 		try {
 			const result = await Share.share(
 				{
-					message: `@${item.username} wrote the following ${item.asset_symbol} thesis on Pelleum💥:\n\n"${item.title}\n\n${item.content}"\n\nSources:\n${sourceText}\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com`,
+					message: `@${thesis.username} wrote the following ${thesis.asset_symbol} thesis on Pelleum💥:\n\n"${thesis.title}\n\n${thesis.content}"\n\nSources:\n${sourceText}\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com`,
 				},
 				{
 					excludedActivityTypes: [
@@ -64,12 +59,12 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					// shared with activity type of result.activityType
 					// iOS
 					track('Thesis Shared', {
-						authorUserId: item.user_id,
-						authorUsername: item.username,
-						thesisId: item.thesis_id,
-						assetSymbol: item.asset_symbol,
-						sentiment: item.sentiment,
-						sourcesQuantity: item.sources.length,
+						authorUserId: thesis.user_id,
+						authorUsername: thesis.username,
+						thesisId: thesis.thesis_id,
+						assetSymbol: thesis.asset_symbol,
+						sentiment: thesis.sentiment,
+						sourcesQuantity: thesis.sources.length,
 					});
 				} else {
 					// Shared on Android
@@ -77,12 +72,12 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					// We should only track the event if it is ACTUALLY shared
 					// Consider using https://react-native-share.github.io/react-native-share/
 					track('Thesis Shared', {
-						authorUserId: item.user_id,
-						authorUsername: item.username,
-						thesisId: item.thesis_id,
-						assetSymbol: item.asset_symbol,
-						sentiment: item.sentiment,
-						sourcesQuantity: item.sources.length,
+						authorUserId: thesis.user_id,
+						authorUsername: thesis.username,
+						thesisId: thesis.thesis_id,
+						assetSymbol: thesis.asset_symbol,
+						sentiment: thesis.sentiment,
+						sourcesQuantity: thesis.sources.length,
 					});
 				}
 			} else if (result.action === Share.dismissedAction) {
@@ -93,21 +88,21 @@ const ThesisButtonPanel = ({ item, nav }) => {
 		}
 	};
 
-	const handleAddRationale = async (item) => {
-		const response = await RationalesManager.addRationale(item);
-		const sourcesQuantity =  item.sources ? item.sources.length : 0;
+	const handleAddRationale = async (thesis) => {
+		const response = await RationalesManager.addRationale(thesis);
+		const sourcesQuantity =  thesis.sources ? thesis.sources.length : 0;
 		if (response.status == 201) {
 			track('Rationale Added', {
-				authorUserId: item.user_id,
-				authorUsername: item.username,
-				thesisId: item.thesis_id,
-				assetSymbol: item.asset_symbol,
-				sentiment: item.sentiment,
+				authorUserId: thesis.user_id,
+				authorUsername: thesis.username,
+				thesisId: thesis.thesis_id,
+				assetSymbol: thesis.asset_symbol,
+				sentiment: thesis.sentiment,
 				sourcesQuantity: sourcesQuantity,
 				organic: true,
 			});
 			Alert.alert(
-				`This thesis was added to your ${item.asset_symbol} Rationale Library 🎉`,
+				`This thesis was added to your ${thesis.asset_symbol} Rationale Library 🎉`,
 				`Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
 				[
 					{ text: "Got it!", onPress: () => {/* do nothing */ } },
@@ -115,8 +110,8 @@ const ThesisButtonPanel = ({ item, nav }) => {
 			);
 		} else if (response.status == 403) {
 			Alert.alert(
-				`${item.asset_symbol} ${item.sentiment} Rationale Limit Reached`,
-				`To keep your investment research focused, Pelleum allows a maximum of 25 ${item.sentiment} theses per asset. To add this thesis to your ${item.asset_symbol} ${item.sentiment} library, please remove one by swiping left.`,
+				`${thesis.asset_symbol} ${thesis.sentiment} Rationale Limit Reached`,
+				`To keep your investment research focused, Pelleum allows a maximum of 25 ${thesis.sentiment} theses per asset. To add this thesis to your ${thesis.asset_symbol} ${thesis.sentiment} library, please remove one by swiping left.`,
 				[
 					{
 						text: "Remove later",
@@ -127,11 +122,10 @@ const ThesisButtonPanel = ({ item, nav }) => {
 					{
 						text: "Remove now",
 						onPress: async () => {
-							const userObject = await getUserObject();
 							nav.navigate("RationaleScreen", {
-								thesisToAddAfterRemoval: item,
-								asset: item.asset_symbol,
-								userId: userObject.user_id,
+								thesisToAddAfterRemoval: thesis,
+								asset: thesis.asset_symbol,
+								userId: userObject.userId,
 							});
 						},
 					},
@@ -145,7 +139,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 			<HStack style={styles.buttonBox}>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Like)}
+					onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Like)}
 				>
 					<AntDesign
 						name={thesisIsLiked ? "like1" : "like2"}
@@ -155,7 +149,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => ThesesManager.sendThesisReaction(item, ReactionType.Dislike)}
+					onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Dislike)}
 				>
 					<AntDesign
 						name={thesisIsDisliked ? "dislike1" : "dislike2"}
@@ -166,15 +160,15 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				<TouchableOpacity
 					style={
 						rationaleLibrary.some(
-							(rationale) => rationale.thesisID === item.thesis_id
+							(rationale) => rationale.thesisID === thesis.thesis_id
 						)
 							? styles.disabledIconButton
 							: styles.iconButton
 					}
-					onPress={() => handleAddRationale(item)}
+					onPress={() => handleAddRationale(thesis)}
 					disabled={
 						rationaleLibrary.some(
-							(rationale) => rationale.thesisID === item.thesis_id
+							(rationale) => rationale.thesisID === thesis.thesis_id
 						)
 							? true
 							: false
@@ -184,7 +178,7 @@ const ThesisButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => onShare(item)}
+					onPress={() => onShare(thesis)}
 				>
 					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>

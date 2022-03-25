@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "pelleum-frontend",
+    "name": "Pelleum",
     "slug": "pelleum-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/dev-icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
@@ -18,20 +18,21 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ernesto1034.pelleumfrontend",
-      "buildNumber": "1.0.0"
+      "bundleIdentifier": "com.pelleum.dev",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/dev-adaptive-icon.png",
         "backgroundColor": "#000000"
       },
       "softwareKeyboardLayoutMode": "pan",
       "permissions": [
         "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.ernesto1034.pelleumfrontend",
-      "versionCode": 1
+      "package": "com.pelleum.dev",
+      "versionCode": 2,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
