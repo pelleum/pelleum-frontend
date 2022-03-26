@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		marginTop: 45,
+		marginTop: 35,
 	},
 	buttonDisabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		marginTop: 45,
+		marginTop: 35,
 		opacity: 0.33,
 	},
 	buttonText: {
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
 	},
 	errorMessage: {
 		fontSize: 16,
-		marginTop: 20,
+		marginTop: 30,
 		alignSelf: "center",
 		color: BAD_COLOR,
 	},

@@ -237,14 +237,16 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 									// deleteContent={deleteContent}  //need to add ability to delete theses on frontend
 									blockUser={blockUser}
 								/>
-								<TouchableOpacity
-									style={styles.dotsButton}
-									onPress={() => {
-										setModalVisible(true)
-									}}
-								>
-									<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
-								</TouchableOpacity>
+								{userObject.userId == detailedThesis.user_id ? null : (
+									<TouchableOpacity
+										style={styles.dotsButton}
+										onPress={() => {
+											setModalVisible(true)
+										}}
+									>
+										<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
+									</TouchableOpacity>
+								)}
 							</HStack>
 							<AppText style={styles.contentText}>
 								{detailedThesis.content}

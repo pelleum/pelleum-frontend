@@ -24,7 +24,7 @@ const PostButtonPanel = ({ item, nav }) => {
 		try {
 			const result = await Share.share(
 				{
-					message: `@${item.username} on Pelleum💥:\n\n"${item.content}"\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com`,
+					message: `@${item.username} on Pelleum💥:\n\n"${item.content}"\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com/download`,
 				},
 				{
 					excludedActivityTypes: [

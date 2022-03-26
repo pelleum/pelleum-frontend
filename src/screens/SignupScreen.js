@@ -467,10 +467,10 @@ const SignupScreen = ({ navigation }) => {
 									)
 								) : null}
 							</View>
-							{errorMessage ? (
-								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-							) : null}
 						</View>
+						{errorMessage ? (
+							<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+						) : null}
 						{isFocused ? (
 							<View style={styles.validationMessageView}>
 								{isFocused == "emailFocused" ? (
