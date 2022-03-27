@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pelleum",
     "slug": "pelleum-frontend",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/prod-icon.png",
     "splash": {
@@ -11,7 +11,8 @@
       "backgroundColor": "#000000"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": true,
+      "fallbackToCacheTimeout": 10000
     },
     "assetBundlePatterns": [
       "**/*"
@@ -19,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pelleum.mobile",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541"
     },
     "android": {
@@ -32,7 +33,7 @@
         "ACCESS_NETWORK_STATE"
       ],
       "package": "com.pelleum.mobile",
-      "versionCode": 2,
+      "versionCode": 3,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
     },
     "web": {

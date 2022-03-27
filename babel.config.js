@@ -5,12 +5,12 @@ module.exports = function (api) {
     env: {
       production: {
         plugins: [["inline-dotenv", {
-          path: '.env.production'
+          path: './.env.production'
         }]]
       },
       development: {
         plugins: [["inline-dotenv", {
-          path: '.env.development'
+          path: './.env.development'
         }]]
       }
     }
