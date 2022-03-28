@@ -14,9 +14,46 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "GET_ASSETS_BASE_PATH": "/public/portfolio",
+        "POSTS_BASE_PATH": "/public/posts",
+        "POST_REACTIONS_BASE_PATH": "/public/posts/reactions",
+        "GET_MANY_POSTS_PATH": "/public/posts/retrieve/many",
+        "GET_MANY_POST_REACTIONS_PATH": "/public/posts/reactions/retrieve/many",
+        "RATIONALES_BASE_PATH": "/public/theses/rationales",
+        "GET_MANY_RATIONALES_PATH": "/public/theses/rationales/retrieve/many",
+        "THESES_BASE_PATH": "/public/theses",
+        "THESES_REACTIONS_BASE_PATH": "/public/theses/reactions",
+        "GET_MANY_THESES_PATH": "/public/theses/retrieve/many",
+        "USER_BASE_PATH": "/public/users",
+        "USER_LOGIN_PATH": "/public/users/login",
+        "ROBINHOOD_ID": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
+        "AC_GET_CONNECTIONS_PATH": "/public/institutions/connections",
+        "AC_LOGIN_BASE_PATH": "/public/institutions/login",
+        "AC_DEACTIVATE_BASE_PATH": "/public/institutions"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "GET_ASSETS_BASE_PATH": "/public/portfolio",
+        "POSTS_BASE_PATH": "/public/posts",
+        "POST_REACTIONS_BASE_PATH": "/public/posts/reactions",
+        "GET_MANY_POSTS_PATH": "/public/posts/retrieve/many",
+        "GET_MANY_POST_REACTIONS_PATH": "/public/posts/reactions/retrieve/many",
+        "RATIONALES_BASE_PATH": "/public/theses/rationales",
+        "GET_MANY_RATIONALES_PATH": "/public/theses/rationales/retrieve/many",
+        "THESES_BASE_PATH": "/public/theses",
+        "THESES_REACTIONS_BASE_PATH": "/public/theses/reactions",
+        "GET_MANY_THESES_PATH": "/public/theses/retrieve/many",
+        "USER_BASE_PATH": "/public/users",
+        "USER_LOGIN_PATH": "/public/users/login",
+        "ROBINHOOD_ID": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
+        "AC_GET_CONNECTIONS_PATH": "/public/institutions/connections",
+        "AC_LOGIN_BASE_PATH": "/public/institutions/login",
+        "AC_DEACTIVATE_BASE_PATH": "/public/institutions"
+      }
+    }
   },
   "submit": {
     "production": {
