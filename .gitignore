@@ -12,6 +12,9 @@ web-build/
 # macOS
 .DS_Store
 
+# config
+eas.json
+
 # environments
 .venv/
 venv/
