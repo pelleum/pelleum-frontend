@@ -4,8 +4,6 @@ import {
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
-	Platform,
-	StatusBar,
 } from "react-native";
 
 // File imports
@@ -131,7 +129,6 @@ export default FeedScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	//Floating Action Button
 	fab: {

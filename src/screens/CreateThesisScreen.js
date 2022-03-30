@@ -382,16 +382,16 @@ const CreateThesisScreen = ({ navigation }) => {
 							<TextInput
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
+								placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. In essence, why are you buying (or not buying) this asset?"}
 								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
 								multiline={true}
 								numberOfLines={30}
 								style={styles.textArea}
 								maxLength={MAXIMUM_THESIS_CONTENT_CHARACTERS}
 								value={content}
-								onChangeText={(newValue) =>
+								onChangeText={(newValue) => {
 									handleChangeText({ newValue: newValue, checkContent: true })
-								}
+								}}
 							/>
 						</KeyboardAvoidingView>
 						<HStack style={styles.hStack} alignItems="center">

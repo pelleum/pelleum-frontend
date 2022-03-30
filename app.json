@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pelleum",
     "slug": "pelleum-frontend",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/prod-icon.png",
     "splash": {
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pelleum.mobile",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541"
     },
     "android": {
@@ -33,7 +33,7 @@
         "ACCESS_NETWORK_STATE"
       ],
       "package": "com.pelleum.mobile",
-      "versionCode": 3,
+      "versionCode": 4,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
     },
     "web": {

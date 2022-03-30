@@ -3,6 +3,7 @@ import pelleumClient from "../api/clients/PelleumClient";
 import RationalesManager from "../managers/RationalesManager";
 import LinkAccountsManager from "./LinkAccountsManager";
 import * as Haptics from "expo-haptics";
+import Config from "../../Config";
 
 // Redux
 import { store } from "../redux/Store";
@@ -19,7 +20,7 @@ class UserManager {
 		var qs = require("query-string");
 		const response = await pelleumClient({
 			method: "post",
-			url: process.env.USER_LOGIN_PATH,
+			url: Config.userLoginPath,
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			data: qs.stringify({ username, password }),
 			onLogin: true,
@@ -63,7 +64,7 @@ class UserManager {
 	static signup = async (data) => {
 		const response = await pelleumClient({
 			method: "post",
-			url: process.env.USER_BASE_PATH,
+			url: Config.userBasePath,
 			data: data,
 		});
 
@@ -105,7 +106,7 @@ class UserManager {
 	static getUser = async () => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: process.env.USER_BASE_PATH,
+			url: Config.userBasePath,
 		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -122,7 +123,7 @@ class UserManager {
 	static blockUser = async (userId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "patch",
-			url: `${process.env.USER_BASE_PATH}/block/${userId}`,
+			url: `${Config.userBasePath}/block/${userId}`,
 		});
 		if (authorizedResponse) {
 			return authorizedResponse;
@@ -132,7 +133,7 @@ class UserManager {
 	static unblockUser = async (userId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${process.env.USER_BASE_PATH}/block/${userId}`,
+			url: `${Config.userBasePath}/block/${userId}`,
 		});
 		if (authorizedResponse) {
 			return authorizedResponse;

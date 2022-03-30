@@ -8,7 +8,6 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Platform,
-	StatusBar,
 	Keyboard,
 } from "react-native";
 import { TextInputMask } from "react-native-masked-text";
@@ -477,7 +476,7 @@ const SignupScreen = ({ navigation }) => {
 									<AppText style={styles.validationMessageText}>Enter a valid email address.</AppText>
 								) : null}
 								{isFocused == "usernameFocused" ? (
-									<AppText style={styles.validationMessageText}>You can share your asset positions with others on Pelleum, so choose a username in accordance with your preferred amount of anonymity. This can be changed later.</AppText>
+									<AppText style={styles.validationMessageText}>Choose a username that does not personally identify you. This can be changed later.</AppText>
 								) : null}
 								{isFocused == "passwordFocused" ? (
 									<AppText style={styles.validationMessageText}>Password must be at least 8 characters long and contain at least one uppercase, one lowercase,
@@ -530,8 +529,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-		marginHorizontal: 30
+		marginHorizontal: 30,
 	},
 	inputContainer: {
 		width: "100%",
@@ -575,9 +573,9 @@ const styles = StyleSheet.create({
 	},
 	validationMessageView: {
 		marginTop: 20,
-
 	},
 	validationMessageText: {
+		color: "#fcba03",
 		fontSize: 15,
 	},
 	loginInsteadContainer: {
