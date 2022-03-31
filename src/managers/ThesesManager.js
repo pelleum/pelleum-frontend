@@ -6,6 +6,7 @@ import Config from "../../Config";
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { removeReaction, addReaction } from "../redux/actions/ThesisReactionsActions";
 import { store } from "../redux/Store";
+import { removeFromLibrary } from "../redux/actions/RationaleActions";
 
 class ThesesManager {
 	static getState = () => {
@@ -90,10 +91,29 @@ class ThesesManager {
 		}
 	}
 
-	static getThesis = async (thesis_id) => {
+	static deleteThesis = async (thesis) => {
+		const authorizedResponse = await pelleumClient({
+			method: "delete",
+			url: `${Config.thesesBasePath}/${thesis.thesis_id}`,
+		});
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				store.dispatch(
+					removeFromLibrary({
+						thesisID: thesis.thesis_id,
+						asset: thesis.asset_symbol,
+					})
+				);
+			};
+			return authorizedResponse;
+		}
+	};
+
+	static getThesis = async (thesisId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${Config.thesesBasePath}/${thesis_id}`,
+			url: `${Config.thesesBasePath}/${thesisId}`,
 		});
 
 		if (authorizedResponse) {
@@ -160,6 +180,18 @@ class ThesesManager {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
 			url: Config.thesesBasePath,
+			data: data,
+		});
+
+		if (authorizedResponse) {
+			return authorizedResponse;
+		};
+	};
+
+	static updateThesis = async (data, thesisId) => {
+		const authorizedResponse = await pelleumClient({
+			method: "patch",
+			url: `${Config.thesesBasePath}/${thesisId}`,
 			data: data,
 		});
 
