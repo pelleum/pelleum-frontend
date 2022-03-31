@@ -23,7 +23,7 @@
       "buildNumber": "4",
       "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "The Pelleum app gives users the option to log in with Face ID or Touch ID."
+        "NSFaceIDUsageDescription": "Pelleum gives users the option to securely log in using Face ID."
       }
     },
     "android": {

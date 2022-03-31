@@ -10,7 +10,7 @@ import {
 	Platform,
 } from "react-native";
 import { useAnalytics } from '@segment/analytics-react-native';
-// import ReactNativeBiometrics from 'react-native-biometrics';
+import ReactNativeBiometrics from 'react-native-biometrics';
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -42,30 +42,38 @@ const LoginScreen = ({ navigation }) => {
 	// Segment Tracking
 	const { identify } = useAnalytics();
 
-	// Biometrics
+	// // For users that want to use biometrics (i.e., TouchID or FaceID) to log into the app
+	// // https://github.com/SelfLender/react-native-biometrics
 	// handleBiometrics = async () => {
-	// 	const { biometryType } = await ReactNativeBiometrics.isSensorAvailable()
-	// 	if (biometryType === ReactNativeBiometrics.TouchID) {
-	// 		//ios
-	// 		//do something touch id specific
-	// 		console.log('iOS TouchID is supported.')
-	// 	} else if (biometryType === ReactNativeBiometrics.FaceID) {
-	// 		//ios
-	// 		//do something face id specific
-	// 		console.log('iOS FaceID is supported.')
-	// 	} else if (biometryType === ReactNativeBiometrics.Biometrics) {
-	// 		//android
-	// 		//do something biometrics specific
-	// 		console.log('Android Biometrics is supported.')
-	// 	} else {
-	// 		//biometrics are not supported
-	// 		//user must log in with password
-	// 		console.log('Biometrics not supported.\nLog in using your password.')
+	// 	// 1. Check if user has biometric hardware on their device
+	// 	const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable();
+
+	// 	// 2. If biometric hardware is available, handle promise based on type
+	// 	if (available) {
+	// 		if (biometryType === ReactNativeBiometrics.TouchID) {
+	// 			// a. Generate a public/private RSA 2048 key pair that will be stored in iOS Keychain
+	// 			const resultObject = await ReactNativeBiometrics.createKeys('Confirm TouchID');
+	// 			console.log("\n\niOS Public Key:\n", resultObject.publicKey);
+	// 		} else if (biometryType === ReactNativeBiometrics.FaceID) {
+	// 			// a. Generate a public/private RSA 2048 key pair that will be stored in iOS Keychain
+	// 			const resultObject = await ReactNativeBiometrics.createKeys('Confirm FaceID');
+	// 			console.log("\n\niOS Public Key:\n", resultObject.publicKey);
+	// 		} else if (biometryType === ReactNativeBiometrics.Biometrics) {
+	// 			// a. Generate a public/private RSA 2048 key pair that will be stored in iOS Keychain
+	// 			const resultObject = await ReactNativeBiometrics.createKeys('Confirm Biometrics');
+	// 			console.log("\n\nAndroid Public Key:\n", resultObject.publicKey);
+	// 		} else {
+	// 			//biometric hardware not supported
+	// 			//user must log in with password
+	// 			console.log('\n\nBiometric hardware not supported.\nLog in using your password.')
+	// 		}
 	// 	}
 	// };
 
 	// // Check if user has a biometric sensor on their device
 	// useEffect(() => {
+	// 	// const sensorResult = await ReactNativeBiometrics.isSensorAvailable();
+	// 	// console.log("\nsensorResult:\n", sensorResult)
 	// 	handleBiometrics();
 	// }, []);
 
