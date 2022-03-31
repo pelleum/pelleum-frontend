@@ -4,7 +4,6 @@ import { LIGHT_GREY_COLOR, TEXT_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Co
 import { MAXIMUM_POST_CHARACTERS } from "../constants/PostsConstants";
 
 const CommentInput = ({
-	scrollToTop,
 	commentContent,
 	commentContentValidity,
 	changeContent,
@@ -26,7 +25,6 @@ const CommentInput = ({
 
 	return (
 		<TextInput
-			onFocus={scrollToTop}
 			color={TEXT_COLOR}
 			selectionColor={MAIN_SECONDARY_COLOR}
 			placeholder="Reply with your thoughts here"
@@ -44,8 +42,10 @@ const CommentInput = ({
 const styles = StyleSheet.create({
 	textArea: {
 		marginVertical: 30,
-		maxHeight: 100,
+		height: 100,
 		textAlignVertical: 'top',
+		borderWidth: 1,
+		borderColor: "red",
 	},
 });
 

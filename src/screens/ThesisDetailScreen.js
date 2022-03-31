@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
-	FlatList,
 	Keyboard,
-	KeyboardAvoidingView,
 	Alert,
 } from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
@@ -49,11 +48,6 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	// Segment Tracking
 	const { track } = useAnalytics();
-
-	const listRef = useRef(null);
-	const handleScrollToTop = () => {
-		listRef.current.scrollToOffset({ offset: 0, animated: false });
-	};
 
 	const detailedThesis = thesis;
 	const dateWritten = new Date(detailedThesis.created_at);
@@ -163,10 +157,12 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	return (
 		<NativeBaseProvider>
-			<FlatList
-				ref={listRef}
+			<KeyboardAwareFlatList
 				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps={'handled'}
+				enableAutomaticScroll={true}
+				enableOnAndroid={true} 				  //enable Android native softwareKeyboardLayoutMode
+				extraHeight={185}					  //when keyboard comes up, scroll enough to see the Reply button
+				keyboardShouldPersistTaps={'handled'} //scroll or tap the Reply button without dismissing the keyboard first
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id}
@@ -177,7 +173,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				// onEndReached={getMoreComments}
 				// onEndReachedThreshold={1}
 				ListHeaderComponent={
-					<KeyboardAvoidingView style={styles.mainContainer} behavior='position' keyboardVerticalOffset={100}>
+					<View style={styles.mainContainer}>
 						<View style={styles.thesisContainer}>
 							<AppText style={styles.thesisTitle}>
 								{detailedThesis.title}
@@ -256,7 +252,6 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 						</View>
 						<VStack>
 							<CommentInput
-								scrollToTop={handleScrollToTop}
 								commentContent={commentContent}
 								commentContentValidity={commentContentValidity}
 								changeContent={handleChangeContent}
@@ -279,9 +274,9 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 								<AppText style={styles.errorText}>{error}</AppText>
 							) : null}
 						</VStack>
-					</KeyboardAvoidingView>
+					</View>
 				}
-			></FlatList>
+			></KeyboardAwareFlatList>
 		</NativeBaseProvider>
 	);
 };

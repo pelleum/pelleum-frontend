@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
 	Keyboard,
-	FlatList,
-	KeyboardAvoidingView,
 } from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { VStack, NativeBaseProvider } from "native-base";
 import CommentInput from "../components/CommentInput";
 import PostButtonPanel from "../components/PostButtonPanel";
@@ -45,12 +44,6 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const postExists = !deleted.some(
 		(post) => post.post_id === detailedPost.post_id
 	);
-
-	// Allows us to scroll up to the top when reply text input is focused
-	const listRef = useRef(null);
-	const handleScrollToTop = () => {
-		listRef.current.scrollToOffset({ offset: 0, animated: false });
-	};
 
 	// Might not need these separate functions?
 	const handleChangeContent = (newContent) => {
@@ -151,10 +144,12 @@ const PostDetailScreen = ({ navigation, route }) => {
 
 	return (
 		<NativeBaseProvider>
-			<FlatList
-				ref={listRef}
+			<KeyboardAwareFlatList
 				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps={'handled'}
+				enableAutomaticScroll={true}
+				enableOnAndroid={true} 				  //enable Android native softwareKeyboardLayoutMode
+				extraHeight={185}					  //when keyboard comes up, scroll enough to see the Reply button
+				keyboardShouldPersistTaps={'handled'} //scroll or tap the Reply button without dismissing the keyboard first
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id}
@@ -165,11 +160,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 				// onEndReached={getMoreComments}
 				// onEndReachedThreshold={1}
 				ListHeaderComponent={
-					<KeyboardAvoidingView
-						style={styles.mainContainer}
-						behavior="position"
-						keyboardVerticalOffset={100}
-					>
+					<View style={styles.mainContainer}>
 						{postCommentedOn ? (
 							postCommentedOn == "deleted" ? (
 								<AppText style={styles.deletedPost}>
@@ -212,7 +203,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 								<PostButtonPanel item={detailedPost} nav={navigation} />
 								<VStack>
 									<CommentInput
-										scrollToTop={handleScrollToTop}
+										// scrollToTop={handleScrollToTop}
 										commentContent={commentContent}
 										commentContentValidity={commentContentValidity}
 										changeContent={handleChangeContent}
@@ -241,17 +232,11 @@ const PostDetailScreen = ({ navigation, route }) => {
 								This post has been deleted.
 							</AppText>
 						)}
-					</KeyboardAvoidingView>
+					</View>
 				}
-			></FlatList>
+			></KeyboardAwareFlatList>
 		</NativeBaseProvider>
 	);
-};
-
-PostDetailScreen.navigationOptions = () => {
-	return {
-		headerShown: false,
-	};
 };
 
 const styles = StyleSheet.create({

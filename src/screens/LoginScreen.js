@@ -10,6 +10,7 @@ import {
 	Platform,
 } from "react-native";
 import { useAnalytics } from '@segment/analytics-react-native';
+// import ReactNativeBiometrics from 'react-native-biometrics';
 
 // Import Local Files
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -41,6 +42,35 @@ const LoginScreen = ({ navigation }) => {
 	// Segment Tracking
 	const { identify } = useAnalytics();
 
+	// Biometrics
+	// handleBiometrics = async () => {
+	// 	const { biometryType } = await ReactNativeBiometrics.isSensorAvailable()
+	// 	if (biometryType === ReactNativeBiometrics.TouchID) {
+	// 		//ios
+	// 		//do something touch id specific
+	// 		console.log('iOS TouchID is supported.')
+	// 	} else if (biometryType === ReactNativeBiometrics.FaceID) {
+	// 		//ios
+	// 		//do something face id specific
+	// 		console.log('iOS FaceID is supported.')
+	// 	} else if (biometryType === ReactNativeBiometrics.Biometrics) {
+	// 		//android
+	// 		//do something biometrics specific
+	// 		console.log('Android Biometrics is supported.')
+	// 	} else {
+	// 		//biometrics are not supported
+	// 		//user must log in with password
+	// 		console.log('Biometrics not supported.\nLog in using your password.')
+	// 	}
+	// };
+
+	// // Check if user has a biometric sensor on their device
+	// useEffect(() => {
+	// 	handleBiometrics();
+	// }, []);
+
+
+	// Clear error message whenever user nagivates between Signup and Login screens
 	useEffect(() => {
 		const unsubscribe = navigation.addListener("focus", () => {
 			const clearErrorMessage = () => dispatch(clearAuthError());

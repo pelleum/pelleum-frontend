@@ -42,6 +42,7 @@ This is the primary way we will conduct testing of the Pelleum mobile applicatio
 - We can specify the profile we want to build (defined in eas.json), such as `eas build --profile development -p all`
 - If we don't specify  a profile, **the build will default to production!**
 - The `preview` profile allows us to test out the app in production-like circumstances. The main difference between `preview` and `production` is that `preview` builds are not signed for distribution to stores.
+- To create a new Apple Provisioning Profile for internal distribution, run `eas device:create`
 
 ## Updates
 - To publish an "over-the-air" (OTA) update, run the following command along with any secret values: `<secrets> expo publish`
