@@ -19,40 +19,39 @@ import {
 } from "../../styles/Colors";
 import AppText from "../AppText";
 
+
+NUMBER_OF_SOURCES = [1, 2, 3, 4, 5, 6];
+
 const AddSourcesModal = ({
 	modalVisible,
 	makeModalDisappear,
-	source1,
-	source2,
-	source3,
+	hackValue,  // a "hack" that gets the sources state variabale to update
+	sources,
 	changeSource,
 	tallySources,
-	sourceInputValidity,
-	changeValidity,
 }) => {
-	validateWebsiteUrl = (websiteUrl) => {
-		const urlRegex =
-			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-		return urlRegex.test(websiteUrl);
-	};
+
+	// Display thesis source inputs
+	let sourceInputs = NUMBER_OF_SOURCES.map((sourceNumber, index) => (
+		<TextInput key={index}
+			color={TEXT_COLOR}
+			selectionColor={MAIN_SECONDARY_COLOR}
+			placeholder="https://www.examplesource.com"
+			placeholderTextColor={LIGHT_GREY_COLOR}
+			value={sources[index]}
+			onChangeText={(newValue) => handleChangeText(newValue, sourceNumber)}
+			style={styles.sourceInput}
+			maxLength={256}
+			keyboardType={Platform.OS === "ios" ? "url" : "default"}
+			autoCapitalize={"none"}
+			autoCorrect={false}
+		/>
+	));
+
 
 	const handleChangeText = (newValue, sourceNumber) => {
-		let newSourceInputValidity = sourceInputValidity;
-
 		changeSource(newValue, sourceNumber);
 
-		if (newValue.length < 1) {
-			newSourceInputValidity[`source${sourceNumber}`] = false;
-			changeValidity(newSourceInputValidity);
-		} else {
-			if (!validateWebsiteUrl(newValue)) {
-				newSourceInputValidity[`source${sourceNumber}`] = false;
-				changeValidity(newSourceInputValidity);
-			} else {
-				newSourceInputValidity[`source${sourceNumber}`] = true;
-				changeValidity(newSourceInputValidity);
-			}
-		}
 	};
 
 	return (
@@ -67,16 +66,10 @@ const AddSourcesModal = ({
 			<NativeBaseProvider>
 				<TouchableOpacity
 					style={styles.modalContainer}
-					onPress={() => {
-						// 1. Change non-valid sources to: ""
-						Object.entries(sourceInputValidity).forEach(([key, value]) => {
-							if (value == false) {
-								changeSource("", key);
-							}
-						});
-						// 2. Tally up valid sources
+					onPress={() => {					
+						// 1. Tally up valid sources
 						tallySources();
-						// 3. Make Modal Disapper
+						// 2. Make Modal Disapper
 						makeModalDisappear();
 					}}
 				>
@@ -93,72 +86,7 @@ const AddSourcesModal = ({
 									Sources are a great way to share some of the information that
 									led to your current thinking on investments.
 								</AppText>
-								<HStack alignItems="center" justifyContent="space-between">
-									<TextInput
-										color={TEXT_COLOR}
-										selectionColor={MAIN_SECONDARY_COLOR}
-										placeholder="https://www.examplesource1.com"
-										placeholderTextColor={LIGHT_GREY_COLOR}
-										value={source1}
-										onChangeText={(newValue) => handleChangeText(newValue, 1)}
-										style={styles.sourceInput}
-										maxLength={256}
-										keyboardType={Platform.OS === "ios" ? "url" : "default"}
-										autoCapitalize={"none"}
-										autoCorrect={false}
-									/>
-									<FontAwesome5
-										name="check"
-										size={24}
-										color={
-											sourceInputValidity["source1"] ? GOOD_COLOR : "transparent"
-										}
-									/>
-								</HStack>
-								<HStack alignItems="center" justifyContent="space-between">
-									<TextInput
-										color={TEXT_COLOR}
-										selectionColor={MAIN_SECONDARY_COLOR}
-										placeholder="https://www.examplesource2.com"
-										placeholderTextColor={LIGHT_GREY_COLOR}
-										value={source2}
-										onChangeText={(newValue) => handleChangeText(newValue, 2)}
-										style={styles.sourceInput}
-										maxLength={256}
-										keyboardType={Platform.OS === "ios" ? "url" : "default"}
-										autoCapitalize={"none"}
-										autoCorrect={false}
-									/>
-									<FontAwesome5
-										name="check"
-										size={24}
-										color={
-											sourceInputValidity["source2"] ? GOOD_COLOR : "transparent"
-										}
-									/>
-								</HStack>
-								<HStack alignItems="center" justifyContent="space-between">
-									<TextInput
-										color={TEXT_COLOR}
-										selectionColor={MAIN_SECONDARY_COLOR}
-										placeholder="https://www.examplesource3.com"
-										placeholderTextColor={LIGHT_GREY_COLOR}
-										value={source3}
-										onChangeText={(newValue) => handleChangeText(newValue, 3)}
-										style={styles.sourceInput}
-										maxLength={256}
-										keyboardType={Platform.OS === "ios" ? "url" : "default"}
-										autoCapitalize={"none"}
-										autoCorrect={false}
-									/>
-									<FontAwesome5
-										name="check"
-										size={24}
-										color={
-											sourceInputValidity["source3"] ? GOOD_COLOR : "transparent"
-										}
-									/>
-								</HStack>
+								{sourceInputs}
 							</View>
 						</TouchableOpacity>
 					</KeyboardAvoidingView>

@@ -172,11 +172,11 @@ const PostDetailScreen = ({ navigation, route }) => {
 					>
 						{postCommentedOn ? (
 							postCommentedOn == "deleted" ? (
-								<AppText style={styles.deletedPost}>
+								<AppText style={styles.nonAvailablePost}>
 									This post has been deleted.
 								</AppText>
 							) : postCommentedOn == "forbidden" ? (
-								<AppText style={styles.deletedPost}>
+								<AppText style={styles.nonAvailablePost}>
 									This user's account is blocked.
 								</AppText>
 							) : (
@@ -189,11 +189,11 @@ const PostDetailScreen = ({ navigation, route }) => {
 						) : null}
 						{thesisCommentedOn ? (
 							thesisCommentedOn == "deleted" ? (
-								<AppText style={styles.deletedPost}>
+								<AppText style={styles.nonAvailablePost}>
 									This thesis has been deleted.
 								</AppText>
 							) : thesisCommentedOn == "forbidden" ? (
-								<AppText style={styles.deletedPost}>
+								<AppText style={styles.nonAvailablePost}>
 									This user's account is blocked.
 								</AppText>
 							) : (
@@ -237,7 +237,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 								</VStack>
 							</View>
 						) : (
-							<AppText style={styles.deletedPost}>
+							<AppText style={styles.nonAvailablePost}>
 								This post has been deleted.
 							</AppText>
 						)}
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
 	errorText: {
 		color: BAD_COLOR,
 	},
-	deletedPost: {
+	nonAvailablePost: {
 		alignSelf: "center",
 		marginVertical: 15,
 	},
