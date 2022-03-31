@@ -23,7 +23,7 @@ import { useAnalytics } from '@segment/analytics-react-native';
 const LinkedAccountsStatusScreen = ({ navigation }) => {
 	// State Management
 	const [errorMessage, setErrorMessage] = useState("");
-	const { activeAccounts } = useSelector(
+	const { linkedAccounts } = useSelector(
 		(state) => state.linkedAccountsReducer
 	);
 
@@ -125,7 +125,7 @@ const LinkedAccountsStatusScreen = ({ navigation }) => {
 	return (
 		<View style={styles.mainContainer}>
 			<NativeBaseProvider>
-				{activeAccounts.length == 0 ? (
+				{linkedAccounts.length == 0 ? (
 					<View>
 						<AppText style={styles.noAccountsLinkedText}>
 							You have no linked brokerage accounts. Add your skin in the game
@@ -143,7 +143,7 @@ const LinkedAccountsStatusScreen = ({ navigation }) => {
 				) : (
 					<FlatList
 						width={"100%"}
-						data={activeAccounts}
+						data={linkedAccounts}
 						keyExtractor={(item) => item.connection_id}
 						renderItem={renderItem}
 						ListHeaderComponent={

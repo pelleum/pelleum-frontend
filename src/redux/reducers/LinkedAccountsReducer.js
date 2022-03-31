@@ -3,7 +3,7 @@ import { UPDATE_ACCOUNTS_STATUS } from "../actions/LinkedAccountsActions";
 
 // Declare initial state
 const initialState = {
-	activeAccounts: [],
+	linkedAccounts: [],
 	institutionLogin: false,
 	updatedAt: null,
 };
@@ -17,7 +17,7 @@ function linkedAccountsReducer(state = initialState, action) {
 
 			return {
 				...state,
-				activeAccounts: action.payload,
+				linkedAccounts: action.payload,
 				updatedAt: now,
 			};
 		default:

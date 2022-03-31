@@ -1,10 +1,11 @@
 import pelleumClient from "../api/clients/PelleumClient";
+import Config from "../../Config";
 
 class PortfolioManager {
 	static retrieveAssets = async (userID) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${process.env.GET_ASSETS_BASE_PATH}/${userID}`,
+			url: `${Config.getAssetsBasePath}/${userID}`,
 		});
 
 		if (authorizedResponse) {

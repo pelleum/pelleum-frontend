@@ -8,7 +8,6 @@ import {
 	TouchableOpacity,
 	SafeAreaView,
 	Platform,
-	StatusBar,
 } from "react-native";
 import { useAnalytics } from '@segment/analytics-react-native';
 
@@ -178,7 +177,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	inputContainer: {
 		width: "80%",

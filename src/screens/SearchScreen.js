@@ -6,7 +6,6 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Platform,
-	StatusBar,
 	Keyboard,
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
@@ -424,7 +423,6 @@ export default SearchScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	switchSelectorContainer: {
 		width: "85%",

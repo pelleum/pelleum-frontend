@@ -15,6 +15,7 @@ web-build/
 # config
 eas.json
 configs/
+Config.js
 
 # environments
 .venv/

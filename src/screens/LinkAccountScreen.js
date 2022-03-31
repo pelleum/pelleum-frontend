@@ -7,12 +7,14 @@ import {
 	Image,
 	TouchableOpacity,
 	SafeAreaView,
+	Text,
+	Alert,
 } from "react-native";
 import * as Haptics from 'expo-haptics';
 import DismissKeyboard from "../components/DismissKeyboard";
-import { NativeBaseProvider } from "native-base";
 import LinkAccountsManager from "../managers/LinkAccountsManager";
 import AppText from "../components/AppText";
+import * as WebBrowser from "expo-web-browser";
 import {
 	TEXT_COLOR,
 	BAD_COLOR,
@@ -40,6 +42,25 @@ const LinkAccountScreen = ({ navigation }) => {
 	// Segment Tracking
 	const { track } = useAnalytics();
 
+	const handleWebLink = async (webLink) => {
+		await WebBrowser.openBrowserAsync(webLink);
+	};
+
+	const successAlert = () => {
+		Alert.alert(
+			"You've successfully linked your Robinhood account🎉",
+			"You may receive an email or text message from Robinhood letting you know that your account was accessed by a machine in Columbus, Ohio. Don't worry. This was triggered by you when you linked your account to Pelleum.",
+			[
+				{
+					text: "Got it!",
+					onPress: () => {
+						/* do nothing */
+					},
+				},
+			]
+		);
+	};
+
 	const onAccountLogin = async () => {
 		const response = await LinkAccountsManager.accountLogin({
 			username: email,
@@ -55,7 +76,8 @@ const LinkAccountScreen = ({ navigation }) => {
 					institution_id: process.env.ROBINHOOD_ID,
 				});
 				await LinkAccountsManager.getLinkedAccountsStatus();
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				successAlert();
 				navigation.navigate("ProfileScreen", { accountLinked: true });
 			} else {
 				setInstitutionLogin(true);
@@ -93,7 +115,8 @@ const LinkAccountScreen = ({ navigation }) => {
 				institution_id: process.env.ROBINHOOD_ID,
 			});
 			await LinkAccountsManager.getLinkedAccountsStatus();
-			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+			successAlert();
 			navigation.navigate("ProfileScreen", { accountLinked: true });
 		} else {
 			if (response.data.detail.includes("Please enter a valid code.")) {
@@ -175,22 +198,17 @@ const LinkAccountScreen = ({ navigation }) => {
 	return (
 		<DismissKeyboard>
 			<SafeAreaView style={styles.mainContainer}>
-				<KeyboardAvoidingView behavior="padding">
-					<NativeBaseProvider>
-						<View style={styles.header}>
-							<Image
-								style={styles.headerImage}
-								source={require("../../assets/robinhood.png")}
-							/>
-							<AppText style={styles.headerText}>
-								Link a Robinhood account.
-							</AppText>
-						</View>
-						{institutionLogin == false ? (
-							<>
-								<AppText style={styles.instruction}>
-									Log into your Robinhood brokerage account.
-								</AppText>
+				<KeyboardAvoidingView width={"100%"} alignItems={"center"} behavior="padding">
+					<Image
+						style={styles.headerImage}
+						source={require("../../assets/robinhood.png")}
+					/>
+					<AppText style={styles.headerText}>
+						Link a Robinhood Account
+					</AppText>
+					{institutionLogin == false ? (
+						<>
+							<View style={styles.inputContainer}>
 								<TextInput
 									placeholder="Email"
 									color={TEXT_COLOR}
@@ -207,6 +225,7 @@ const LinkAccountScreen = ({ navigation }) => {
 									autoCapitalize="none"
 									autoCorrect={false}
 									keyboardType="email-address"
+									maxLength={100}
 								/>
 								<TextInput
 									placeholder="Password"
@@ -221,27 +240,30 @@ const LinkAccountScreen = ({ navigation }) => {
 									autoCapitalize="none"
 									autoCorrect={false}
 									secureTextEntry={true}
+									maxLength={100}
 								/>
-								{errorMessage ? (
-									<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-								) : null}
-								<TouchableOpacity
-									onPress={() => onAccountLogin()}
-									style={
-										credentialsDisableStatus
-											? styles.buttonDisabled
-											: styles.buttonEnabled
-									}
-									disabled={credentialsDisableStatus}
-								>
-									<AppText style={styles.buttonText}>Log In</AppText>
-								</TouchableOpacity>
-							</>
-						) : (
-							<>
-								<AppText style={styles.instruction}>
-									Enter the SMS code you received.
-								</AppText>
+							</View>
+							<AppText style={styles.instruction}>
+								Use your email to log into your Robinhood brokerage account.
+							</AppText>
+							{errorMessage ? (
+								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+							) : null}
+							<TouchableOpacity
+								onPress={() => onAccountLogin()}
+								style={
+									credentialsDisableStatus
+										? styles.buttonDisabled
+										: styles.buttonEnabled
+								}
+								disabled={credentialsDisableStatus}
+							>
+								<AppText style={styles.buttonText}>Log In</AppText>
+							</TouchableOpacity>
+						</>
+					) : (
+						<>
+							<View style={styles.inputContainer}>
 								<TextInput
 									style={styles.input}
 									placeholder="Ex: 123456"
@@ -254,26 +276,41 @@ const LinkAccountScreen = ({ navigation }) => {
 									keyboardType="number-pad"
 									maxLength={6}
 								/>
-								{errorMessage ? (
-									<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-								) : null}
-								<TouchableOpacity
-									onPress={() => onVerifyAccount(sms_code)}
-									style={
-										smsDisableStatus
-											? styles.buttonDisabled
-											: styles.buttonEnabled
-									}
-									disabled={smsDisableStatus}
-								>
-									<AppText style={styles.buttonText}>Verify Account</AppText>
-								</TouchableOpacity>
-							</>
-						)}
-					</NativeBaseProvider>
+							</View>
+							<AppText style={styles.instruction}>
+								Enter the verification code from the SMS message you received, or from the authenticator app that you use with Robinhood.
+							</AppText>
+							{errorMessage ? (
+								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+							) : null}
+							<TouchableOpacity
+								onPress={() => onVerifyAccount(sms_code)}
+								style={
+									smsDisableStatus
+										? styles.buttonDisabled
+										: styles.buttonEnabled
+								}
+								disabled={smsDisableStatus}
+							>
+								<AppText style={styles.buttonText}>Verify Account</AppText>
+							</TouchableOpacity>
+						</>
+					)}
+					<View style={styles.disclosureContainer}>
+						<AppText style={styles.disclosureText}>
+							Any data necessary to link your Robinhood account is encrypted in transit and at rest. By linking your account, you agree to Pelleum's
+							<AppText> </AppText>
+							<Text
+								style={styles.linkButtonText}
+								onPress={() => handleWebLink("https://www.pelleum.com/privacy-policy")}>
+								Privacy Policy
+							</Text>
+							.
+						</AppText>
+					</View>
 				</KeyboardAvoidingView>
 			</SafeAreaView>
-		</DismissKeyboard>
+		</DismissKeyboard >
 	);
 };
 
@@ -282,67 +319,73 @@ export default LinkAccountScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	header: {
-		flexDirection: "row",
-		alignItems: "center",
-		height: 75,
-		marginTop: 25,
-		marginBottom: 10,
 	},
 	headerImage: {
-		width: 60,
-		height: 60,
+		marginTop: 80,
+		marginBottom: 10,
+		width: 50,
+		height: 50,
 		resizeMode: "contain",
 	},
 	headerText: {
 		fontSize: 16,
 		fontWeight: "bold",
-		marginLeft: 10,
 	},
 	input: {
 		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		fontSize: 14,
+		height: 37,
 		paddingHorizontal: 15,
-		paddingVertical: 10,
 		borderRadius: 10,
 		marginTop: 5,
 	},
 	errorMessage: {
+		marginTop: 25,
+		marginBottom: 10,
 		fontSize: 16,
 		color: BAD_COLOR,
-		paddingVertical: 10,
-		marginTop: 30,
-		marginHorizontal: 10,
 	},
 	buttonEnabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
+		marginVertical: 20,
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		margin: 15,
 		justifyContent: "center",
 		alignItems: "center",
-		alignSelf: "center",
 	},
 	buttonDisabled: {
 		backgroundColor: MAIN_SECONDARY_COLOR,
+		marginVertical: 20,
 		borderRadius: 30,
 		height: 50,
 		width: 170,
-		margin: 15,
 		justifyContent: "center",
 		alignItems: "center",
 		opacity: 0.33,
-		alignSelf: "center",
 	},
 	buttonText: {
 		fontWeight: "700",
 		fontSize: 16,
 	},
+	inputContainer: {
+		width: "80%",
+		marginVertical: 20,
+	},
 	instruction: {
-		alignSelf: "center",
-		marginBottom: 10,
+		paddingHorizontal: 40,
+		fontSize: 14,
+	},
+	disclosureContainer: {
+		alignItems: "center",
+		paddingHorizontal: 40,
+	},
+	disclosureText: {
+		color: LIGHT_GREY_COLOR,
+		fontSize: 14,
+	},
+	linkButtonText: {
+		fontSize: 14,
+		color: MAIN_SECONDARY_COLOR,
 	},
 });

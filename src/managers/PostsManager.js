@@ -1,7 +1,7 @@
 import * as SecureStore from "expo-secure-store";
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
-
+import Config from "../../Config";
 import { store } from "../redux/Store";
 import { addLike, removeLike } from "../redux/actions/PostReactionsActions";
 
@@ -9,7 +9,7 @@ class PostsManager {
 	static createPost = async (data) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: process.env.POSTS_BASE_PATH,
+			url: Config.postsBasePath,
 			data: data,
 		});
 
@@ -27,7 +27,7 @@ class PostsManager {
 	static deletePost = async (postId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${process.env.POSTS_BASE_PATH}/${postId}`,
+			url: `${Config.postsBasePath}/${postId}`,
 		});
 
 		if (authorizedResponse) {
@@ -38,7 +38,7 @@ class PostsManager {
 	static getPosts = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: process.env.GET_MANY_POSTS_PATH,
+			url: Config.getManyPostsPath,
 			queryParams: queryParams,
 		});
 
@@ -54,7 +54,7 @@ class PostsManager {
 	static getPost = async (post_id) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${process.env.POSTS_BASE_PATH}/${post_id}`,
+			url: `${Config.postsBasePath}/${post_id}`,
 		});
 
 		if (authorizedResponse) {
@@ -78,7 +78,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: process.env.GET_MANY_POSTS_PATH,
+			url: Config.getManyPostsPath,
 			queryParams: params,
 		});
 
@@ -101,7 +101,7 @@ class PostsManager {
 
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: process.env.GET_MANY_POST_REACTIONS_PATH,
+			url: Config.getManyPostReactionsPath,
 			queryParams: {
 				user_id: userObject.user_id,
 				start_time: timeRange.oldestPostCreatedAt,
@@ -123,7 +123,7 @@ class PostsManager {
 		) {
 			const authorizedResponse = await pelleumClient({
 				method: "delete",
-				url: `${process.env.POST_REACTIONS_BASE_PATH}/${item.post_id}`,
+				url: `${Config.postReactionsBasePath}/${item.post_id}`,
 			});
 
 			if (authorizedResponse) {
@@ -137,7 +137,7 @@ class PostsManager {
 		} else {
 			const authorizedResponse = await pelleumClient({
 				method: "post",
-				url: `${process.env.POST_REACTIONS_BASE_PATH}/${item.post_id}`,
+				url: `${Config.postReactionsBasePath}/${item.post_id}`,
 				data: { reaction: 1 },
 			});
 			if (authorizedResponse) {
