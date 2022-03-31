@@ -1,10 +1,10 @@
 {
   "expo": {
-      "name": "Pelleum DEV",
-      "slug": "pelleum-frontend-dev",
-      "version": "1.0.1",
+      "name": "Pelleum PRE",
+      "slug": "pelleum-frontend-preview",
+      "version": "1.0.2",
       "orientation": "portrait",
-      "icon": "./assets/dev-icon.png",
+      "icon": "./assets/preview-icon.png",
       "splash": {
           "image": "./assets/splash.png",
           "resizeMode": "cover",
@@ -19,21 +19,21 @@
       ],
       "ios": {
           "supportsTablet": true,
-          "bundleIdentifier": "com.pelleum.dev",
-          "buildNumber": "3",
+          "bundleIdentifier": "com.pelleum.preview",
+          "buildNumber": "4",
           "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541"
       },
       "android": {
           "adaptiveIcon": {
-              "foregroundImage": "./assets/dev-adaptive-icon.png",
+              "foregroundImage": "./assets/preview-adaptive-icon.png",
               "backgroundColor": "#000000"
           },
           "softwareKeyboardLayoutMode": "pan",
           "permissions": [
               "ACCESS_NETWORK_STATE"
           ],
-          "package": "com.pelleum.dev",
-          "versionCode": 3,
+          "package": "com.pelleum.preview",
+          "versionCode": 4,
           "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
       },
       "web": {
