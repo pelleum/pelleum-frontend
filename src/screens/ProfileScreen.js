@@ -71,7 +71,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
 	const alreadyLinkedAlert = () => {
 		Alert.alert(
-			"Account already linked.",
+			"Account Already Linked.",
 			"Your Robinhood brokerage account is already linked. We'll let you know when Pelleum supports linking other brokerages.",
 			[
 				{

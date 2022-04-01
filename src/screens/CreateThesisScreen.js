@@ -104,11 +104,12 @@ const CreateThesisScreen = ({ navigation, route }) => {
 		setHackValue(newValue);
 	};
 
-	const hasUnsavedChanges =
+	const hasUnsavedChanges = (
 		Boolean(content) ||
 		Boolean(asset_symbol) ||
 		Boolean(title) ||
-		sources.includes(!"");
+		validSources.length > 0
+	);
 
 	// Alert user they have unsaved changes
 	// https://reactnavigation.org/docs/preventing-going-back/

@@ -45,7 +45,12 @@ const AddSourcesModal = ({
 			autoCorrect={false}
 			clearButtonMode={'while-editing'} //on ios, adds an 'x' to clear all text when editing
 			returnKeyType={'done'}
-			onSubmitEditing={() => makeModalDisappear()}
+			onSubmitEditing={() => {
+				// 1. Tally up valid sources
+				tallySources();
+				// 2. Make Modal Disapper
+				makeModalDisappear();
+			}}
 		/>
 	));
 
