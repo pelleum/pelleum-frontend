@@ -29,12 +29,6 @@ const SentimentPill = ({ item, sentiment }) => {
 export default SentimentPill;
 
 const styles = StyleSheet.create({
-	linearGradient: {
-		borderRadius: 15,
-		width: 70,
-		padding: 5,
-		opacity: 0.5,
-	},
 	bullSentimentText: {
 		color: GOOD_COLOR,
 		borderWidth: 0.5,

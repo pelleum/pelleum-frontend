@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, TouchableOpacity, Platform, View } from "react-native";
 import { HStack, NativeBaseProvider, Box } from "native-base";
 import {
 	MAIN_BACKGROUND_COLOR,
@@ -43,15 +43,26 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							: styles.thesisContainerStandAlone
 					}
 				>
-					<HStack justifyContent="space-between">
-						<AppText style={commonTextStyles.usernameText}>
-							@{item.username}
-						</AppText>
-						{item.sentiment === "Bull" ? (
-							<SentimentPill item={item} sentiment={Sentiment.Bull} />
-						) : (
-							<SentimentPill item={item} sentiment={Sentiment.Bear} />
-						)}
+					<HStack justifyContent="space-between" alignItems={"center"}>
+						<TouchableOpacity
+							style={styles.usernameButton}
+							onPress={() =>
+								nav.navigate("PortfolioInsightScreen", {
+									username: item.username,
+									userId: item.user_id,
+								})}
+						>
+							<AppText style={commonTextStyles.usernameText}>
+								@{item.username}
+							</AppText>
+						</TouchableOpacity>
+						<View>
+							{item.sentiment === "Bull" ? (
+								<SentimentPill item={item} sentiment={Sentiment.Bull} />
+							) : (
+								<SentimentPill item={item} sentiment={Sentiment.Bear} />
+							)}
+						</View>
 					</HStack>
 					<AppText
 						style={styles.thesisTitleText}
@@ -111,5 +122,8 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		fontWeight: "bold",
 		fontSize: 16,
+	},
+	usernameButton: {
+		paddingVertical: 10,
 	},
 });

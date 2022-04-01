@@ -1,9 +1,8 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject"
   },
@@ -26,12 +25,12 @@
     "expo-linear-gradient": "~10.0.3",
     "expo-linking": "~2.4.2",
     "expo-secure-store": "~11.0.3",
-    "expo-updates": "~0.10.15",
+    "expo-updates": "~0.10.13",
     "expo-web-browser": "^10.0.3",
     "native-base": "^3.2.2",
     "query-string": "^7.0.1",
-    "react": "^17.0.2",
-    "react-native": "^0.64.3",
+    "react": "17.0.1",
+    "react-native": "0.64.3",
     "react-native-gesture-handler": "^1.10.2",
     "react-native-masked-text": "~1.13.0",
     "react-native-reanimated": "^2.2.4",
@@ -43,10 +42,16 @@
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
-    "use-debounce": "^7.0.1"
+    "use-debounce": "^7.0.1",
+    "expo-splash-screen": "~0.13.5",
+    "expo-status-bar": "~1.1.0",
+    "react-dom": "17.0.1",
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0"
   },
-  "private": true
+  "private": true,
+  "name": "pelleum-frontend",
+  "version": "1.0.2"
 }
