@@ -8,8 +8,8 @@ import {
 	View,
 	Alert,
 	SafeAreaView,
-	KeyboardAvoidingView,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
@@ -84,7 +84,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 
 	// Segment Tracking
 	const { track } = useAnalytics();
-	
+
 	const countSources = () => {
 		// Executed when user exits the AddSourcesModal
 		let newValidSources = [];
@@ -126,7 +126,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 					"You are about to exit this screen.",
 					"Your thesis draft will not be saved. Are you sure you want to exit and discard your thesis draft?",
 					[
-						{ text: "Cancel", style: "cancel", onPress: () => {} },
+						{ text: "Cancel", style: "cancel", onPress: () => { } },
 						{
 							text: "Discard",
 							style: "destructive",
@@ -368,143 +368,150 @@ const CreateThesisScreen = ({ navigation, route }) => {
 	};
 
 	return (
-		<DismissKeyboard>
-			<SafeAreaView style={styles.mainContainer}>
-				<AddSourcesModal
-					modalVisible={modalVisible}
-					makeModalDisappear={() => setModalVisible(false)}
-					hackValue={hackValue}
-					sources={sources}
-					changeSource={handleChangeSource}
-					tallySources={countSources}
-				/>
-				<NativeBaseProvider>
-					<VStack>
-						<KeyboardAvoidingView
-							width={"100%"}
-							behavior={"position"}
-							keyboardVerticalOffset={30}
-						>
-							<HStack
-								alignItems="center"
-								justifyContent="space-between"
-								my="15"
-							>
-								<Image
-									style={styles.image}
-									source={require("../../assets/defaultProfileImage.png")}
-								/>
-								<TouchableOpacity
-									style={
-										disableStatus
-											? styles.shareButtonDisabled
-											: styles.shareButtonEnabled
-									}
-									disabled={disableStatus}
-									onPress={() => {
-										submitButtonPressed();
-									}}
+		<KeyboardAwareScrollView
+			showsVerticalScrollIndicator={false}
+			enableAutomaticScroll={true}
+			enableOnAndroid={true} 		          //enable Android native softwareKeyboardLayoutMode
+			extraHeight={185}					  //when keyboard comes up, scroll up
+			keyboardShouldPersistTaps={'handled'} //scroll or tap buttons without dismissing the keyboard first
+		>
+			<DismissKeyboard>
+				<SafeAreaView style={styles.mainContainer}>
+					<AddSourcesModal
+						modalVisible={modalVisible}
+						makeModalDisappear={() => setModalVisible(false)}
+						hackValue={hackValue}
+						sources={sources}
+						changeSource={handleChangeSource}
+						tallySources={countSources}
+					/>
+					<NativeBaseProvider>
+						<VStack>
+							<View width={"100%"}>
+								<HStack
+									alignItems="center"
+									justifyContent="space-between"
+									my="15"
 								>
-									{route.params ? (
-										<AppText style={styles.buttonText}>Update</AppText>
-									) : (
-										<AppText style={styles.buttonText}>Share</AppText>
-									)}
-								</TouchableOpacity>
-							</HStack>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder="Ex: GOOGL"
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-								autoCapitalize="characters"
-								textTransform="uppercase"
-								autoCorrect={false}
-								maxLength={5}
-								value={asset_symbol}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkSymbol: true })
-								}
-								style={styles.assetSymbolInput}
-							/>
-							<AppText style={styles.labelText}>Ticker Symbol</AppText>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder="Your Thesis Title"
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-								value={title}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkTitle: true })
-								}
-								style={styles.titleInput}
-								maxLength={MAXIMUM_THESIS_TITLE_CHARACTERS}
-								autoCorrect={true}
-							/>
-							<AppText style={styles.labelText}>Thesis Title</AppText>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder={
-									"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. In essence, why are you buying (or not buying) this asset?"
-								}
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-								multiline={true}
-								numberOfLines={30}
-								style={styles.textArea}
-								maxLength={MAXIMUM_THESIS_CONTENT_CHARACTERS}
-								value={content}
-								onChangeText={(newValue) => {
-									handleChangeText({ newValue: newValue, checkContent: true });
-								}}
-							/>
-						</KeyboardAvoidingView>
-						<HStack style={styles.hStack} alignItems="center">
-							<View style={styles.switchSelectorContainer}>
-								<SwitchSelector
-									options={sentimentOptions}
-									initial={sentiment == "Bull" ? 0 : 1}
-									onPress={(value) => {
-										if (value === sentiment) {
-											//do nothing
-										} else {
-											setSentiment(value);
+									<Image
+										style={styles.image}
+										source={require("../../assets/defaultProfileImage.png")}
+									/>
+									<TouchableOpacity
+										style={
+											disableStatus
+												? styles.shareButtonDisabled
+												: styles.shareButtonEnabled
 										}
-									}}
-									height={40}
-									buttonColor={
-										sentiment === "Bull"
-											? BULL_SENTIMENT_BACKGROUND__COLOR
-											: BEAR_SENTIMENT_BACKGROUND__COLOR
+										disabled={disableStatus}
+										onPress={() => {
+											submitButtonPressed();
+										}}
+									>
+										{route.params ? (
+											<AppText style={styles.buttonText}>Update</AppText>
+										) : (
+											<AppText style={styles.buttonText}>Share</AppText>
+										)}
+									</TouchableOpacity>
+								</HStack>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholder="Ex: GOOGL"
+									placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+									autoCorrect={false}
+									maxLength={5}
+									value={asset_symbol}
+									onChangeText={(newValue) =>
+										//toUpperCase has a bug on Android
+										//https://github.com/facebook/react-native/issues/27449
+										//https://github.com/facebook/react-native/issues/11068
+										//replace(/\s/g, "") forbids spaces
+										handleChangeText({ newValue: newValue.replace(/\s/g, "").toUpperCase(), checkSymbol: true })
 									}
-									textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
-									borderColor={MAIN_DIFFERENTIATOR_COLOR}
-									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-									selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
-									fontSize={16}
-									bold={true}
-									hasPadding
-									style={styles.sentimentToggle}
+									autoCapitalize="characters"
+									style={styles.assetSymbolInput}
+								/>
+								<AppText style={styles.labelText}>Ticker Symbol</AppText>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholder="Your Thesis Title"
+									placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+									value={title}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkTitle: true })
+									}
+									style={styles.titleInput}
+									maxLength={MAXIMUM_THESIS_TITLE_CHARACTERS}
+									autoCorrect={true}
+								/>
+								<AppText style={styles.labelText}>Thesis Title</AppText>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholder={
+										"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. In essence, why are you buying (or not buying) this asset?"
+									}
+									placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+									multiline={true}
+									numberOfLines={30}
+									style={styles.textArea}
+									maxLength={MAXIMUM_THESIS_CONTENT_CHARACTERS}
+									value={content}
+									onChangeText={(newValue) => {
+										handleChangeText({ newValue: newValue, checkContent: true });
+									}}
 								/>
 							</View>
-							<TouchableOpacity
-								style={styles.iconButton}
-								onPress={() => setModalVisible(true)}
-							>
-								<MaterialIcons
-									name="add-link"
-									size={40}
-									color={MAIN_SECONDARY_COLOR}
-								/>
-							</TouchableOpacity>
-							<AppText style={{ color: LIGHT_GREY_COLOR, marginLeft: 20 }}>
-								{validSources.length} linked sources
-							</AppText>
-						</HStack>
-					</VStack>
-				</NativeBaseProvider>
-			</SafeAreaView>
-		</DismissKeyboard>
+							<HStack style={styles.hStack} alignItems="center">
+								<View style={styles.switchSelectorContainer}>
+									<SwitchSelector
+										options={sentimentOptions}
+										initial={sentiment == "Bull" ? 0 : 1}
+										onPress={(value) => {
+											if (value === sentiment) {
+												//do nothing
+											} else {
+												setSentiment(value);
+											}
+										}}
+										height={40}
+										buttonColor={
+											sentiment === "Bull"
+												? BULL_SENTIMENT_BACKGROUND__COLOR
+												: BEAR_SENTIMENT_BACKGROUND__COLOR
+										}
+										textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
+										borderColor={MAIN_DIFFERENTIATOR_COLOR}
+										backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+										selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
+										fontSize={16}
+										bold={true}
+										hasPadding
+										style={styles.sentimentToggle}
+									/>
+								</View>
+								<TouchableOpacity
+									style={styles.iconButton}
+									onPress={() => setModalVisible(true)}
+								>
+									<MaterialIcons
+										name="add-link"
+										size={40}
+										color={MAIN_SECONDARY_COLOR}
+									/>
+								</TouchableOpacity>
+								<AppText style={validSources.length > 0 ? styles.sourcesText : styles.noSourcesText}>
+									{validSources.length} linked sources
+								</AppText>
+							</HStack>
+						</VStack>
+					</NativeBaseProvider>
+				</SafeAreaView>
+			</DismissKeyboard>
+		</KeyboardAwareScrollView>
 	);
 };
 
@@ -579,6 +586,14 @@ const styles = StyleSheet.create({
 	},
 	sentimentToggle: {
 		opacity: 0.65,
+	},
+	noSourcesText: {
+		color: "#fcba03",
+		marginLeft: 20,
+	},
+	sourcesText: {
+		color: MAIN_SECONDARY_COLOR,
+		marginLeft: 20,
 	},
 });
 

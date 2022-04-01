@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
-	FlatList,
 	Keyboard,
-	KeyboardAvoidingView,
 	Alert,
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import PostsManager from "../managers/PostsManager";
@@ -20,6 +19,7 @@ import { useAnalytics } from "@segment/analytics-react-native";
 import { Entypo } from "@expo/vector-icons";
 import ManageContentModal from "../components/modals/ManageContentModal";
 import UserManager from "../managers/UserManager";
+import DismissKeyboard from "../components/DismissKeyboard";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -58,11 +58,6 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	// This is necessary to get it show show updated version
 	const detailedThesis = route.params;
-
-	const listRef = useRef(null);
-	const handleScrollToTop = () => {
-		listRef.current.scrollToOffset({ offset: 0, animated: false });
-	};
 
 	const dateWritten = new Date(thesis.created_at);
 
@@ -225,10 +220,12 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	return (
 		<NativeBaseProvider>
-			<FlatList
-				ref={listRef}
+			<KeyboardAwareFlatList
 				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps={"handled"}
+				enableAutomaticScroll={true}
+				enableOnAndroid={true} 				  //enable Android native softwareKeyboardLayoutMode
+				extraHeight={185}					  //when keyboard comes up, scroll enough to see the Reply button
+				keyboardShouldPersistTaps={'handled'} //scroll or tap the Reply button without dismissing the keyboard first
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id}
@@ -239,132 +236,129 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 				// onEndReached={getMoreComments}
 				// onEndReachedThreshold={1}
 				ListHeaderComponent={
-					<KeyboardAvoidingView
-						style={styles.mainContainer}
-						behavior="position"
-						keyboardVerticalOffset={100}
-					>
-						{error ? (
-							<AppText style={styles.errorText}>{error}</AppText>
-						) : contentAvailability == "deleted" ? (
-							<AppText style={styles.nonAvailableThesis}>
-								This thesis has been deleted.
-							</AppText>
-						) : contentAvailability == "forbidden" ? (
-							<AppText style={styles.nonAvailableThesis}>
-								This user's account is blocked.
-							</AppText>
-						) : (
-							<>
-								<View style={styles.thesisContainer}>
-									<AppText style={styles.thesisTitle}>{thesis.title}</AppText>
-									<HStack justifyContent="space-between" marginBottom={5}>
+					<DismissKeyboard>
+						<View style={styles.mainContainer}>
+							{error ? (
+								<AppText style={styles.errorText}>{error}</AppText>
+							) : contentAvailability == "deleted" ? (
+								<AppText style={styles.nonAvailableThesis}>
+									This thesis has been deleted.
+								</AppText>
+							) : contentAvailability == "forbidden" ? (
+								<AppText style={styles.nonAvailableThesis}>
+									This user's account is blocked.
+								</AppText>
+							) : (
+								<>
+									<View style={styles.thesisContainer}>
+										<AppText style={styles.thesisTitle}>{thesis.title}</AppText>
+										<HStack justifyContent="space-between" marginBottom={5}>
+											<TouchableOpacity
+												style={styles.usernameButton}
+												onPress={() =>
+													navigation.navigate("PortfolioInsightScreen", {
+														username: thesis.username,
+														userId: thesis.user_id,
+													})}
+											>
+												<AppText style={commonTextStyles.usernameText}>
+													@{thesis.username}
+												</AppText>
+											</TouchableOpacity>
+											<AppText style={commonTextStyles.dateText}>
+												{dateWritten.toLocaleDateString()}
+											</AppText>
+										</HStack>
+										<HStack style={styles.topThesisBox}>
+											<TouchableOpacity
+												style={commonButtonStyles.assetButton}
+												onPress={() => {
+													console.log("Asset button worked.");
+												}}
+											>
+												<AppText style={commonButtonStyles.assetText}>
+													#{thesis.asset_symbol}
+												</AppText>
+											</TouchableOpacity>
+											{thesis.sentiment === "Bull" ? (
+												<SentimentPill item={thesis} sentiment={Sentiment.Bull} />
+											) : (
+												<SentimentPill item={thesis} sentiment={Sentiment.Bear} />
+											)}
+										</HStack>
 										<TouchableOpacity
-											style={styles.usernameButton}
+											style={styles.portfolioInsightButton}
 											onPress={() =>
 												navigation.navigate("PortfolioInsightScreen", {
 													username: thesis.username,
 													userId: thesis.user_id,
-												})}
+												})
+											}
 										>
-											<AppText style={commonTextStyles.usernameText}>
-												@{thesis.username}
+											<AppText style={styles.buttonTextStyle}>
+												View Author's Portfolio
 											</AppText>
 										</TouchableOpacity>
-										<AppText style={commonTextStyles.dateText}>
-											{dateWritten.toLocaleDateString()}
-										</AppText>
-									</HStack>
-									<HStack style={styles.topThesisBox}>
-										<TouchableOpacity
-											style={commonButtonStyles.assetButton}
-											onPress={() => {
-												console.log("Asset button worked.");
-											}}
-										>
-											<AppText style={commonButtonStyles.assetText}>
-												#{thesis.asset_symbol}
-											</AppText>
-										</TouchableOpacity>
-										{thesis.sentiment === "Bull" ? (
-											<SentimentPill item={thesis} sentiment={Sentiment.Bull} />
+										<ThesisButtonPanel thesis={thesis} nav={navigation} />
+										<HStack style={styles.thesisHeaderContainer}>
+											<AppText style={styles.thesisLabel}>Thesis</AppText>
+											<ManageContentModal
+												modalVisible={modalVisible}
+												makeModalDisappear={() => setModalVisible(false)}
+												item={thesis}
+												userId={userObject.userId}
+												deleteContent={deleteContent}
+												blockUser={blockUser}
+												editContent={editContent}
+											/>
+											<TouchableOpacity
+												style={styles.dotsButton}
+												onPress={() => {
+													setModalVisible(true);
+												}}
+											>
+												<Entypo
+													name="dots-three-horizontal"
+													size={18}
+													color={LIGHT_GREY_COLOR}
+												/>
+											</TouchableOpacity>
+										</HStack>
+										<AppText style={styles.contentText}>{thesis.content}</AppText>
+										<AppText style={styles.sourcesLabel}>Sources</AppText>
+										{sources.length > 0 ? (
+											sourcesToDisplay
 										) : (
-											<SentimentPill item={thesis} sentiment={Sentiment.Bear} />
+											<AppText>This thesis has no linked sources😕</AppText>
 										)}
-									</HStack>
-									<TouchableOpacity
-										style={styles.portfolioInsightButton}
-										onPress={() =>
-											navigation.navigate("PortfolioInsightScreen", {
-												username: thesis.username,
-												userId: thesis.user_id,
-											})
-										}
-									>
-										<AppText style={styles.buttonTextStyle}>
-											View Author's Portfolio
-										</AppText>
-									</TouchableOpacity>
-									<ThesisButtonPanel thesis={thesis} nav={navigation} />
-									<HStack style={styles.thesisHeaderContainer}>
-										<AppText style={styles.thesisLabel}>Thesis</AppText>
-										<ManageContentModal
-											modalVisible={modalVisible}
-											makeModalDisappear={() => setModalVisible(false)}
-											item={thesis}
-											userId={userObject.userId}
-											deleteContent={deleteContent}
-											blockUser={blockUser}
-											editContent={editContent}
+									</View>
+									<VStack>
+										<CommentInput
+											commentContent={commentContent}
+											commentContentValidity={commentContentValidity}
+											changeContent={handleChangeContent}
+											changeCommentContentValidity={
+												handleChangeCommentContentValidity
+											}
 										/>
 										<TouchableOpacity
-											style={styles.dotsButton}
-											onPress={() => {
-												setModalVisible(true);
-											}}
+											style={
+												disableStatus
+													? styles.replyButtonDisabled
+													: styles.replyButtonEnabled
+											}
+											onPress={() => replyButtonPressed()}
+											disabled={disableStatus}
 										>
-											<Entypo
-												name="dots-three-horizontal"
-												size={18}
-												color={LIGHT_GREY_COLOR}
-											/>
+											<AppText style={styles.buttonTextStyle}>Reply</AppText>
 										</TouchableOpacity>
-									</HStack>
-									<AppText style={styles.contentText}>{thesis.content}</AppText>
-									<AppText style={styles.sourcesLabel}>Sources</AppText>
-									{sources.length > 0 ? (
-										sourcesToDisplay
-									) : (
-										<AppText>This thesis has no linked sources😕</AppText>
-									)}
-								</View>
-								<VStack>
-									<CommentInput
-										scrollToTop={handleScrollToTop}
-										commentContent={commentContent}
-										commentContentValidity={commentContentValidity}
-										changeContent={handleChangeContent}
-										changeCommentContentValidity={
-											handleChangeCommentContentValidity
-										}
-									/>
-									<TouchableOpacity
-										style={
-											disableStatus
-												? styles.replyButtonDisabled
-												: styles.replyButtonEnabled
-										}
-										onPress={() => replyButtonPressed()}
-										disabled={disableStatus}
-									>
-										<AppText style={styles.buttonTextStyle}>Reply</AppText>
-									</TouchableOpacity>
-								</VStack>
-							</>
-						)}
-					</KeyboardAvoidingView>
+									</VStack>
+								</>
+							)}
+						</View>
+					</DismissKeyboard>
 				}
-			></FlatList>
+			></KeyboardAwareFlatList>
 		</NativeBaseProvider>
 	);
 };
@@ -377,7 +371,6 @@ const styles = StyleSheet.create({
 	},
 	thesisContainer: {
 		paddingVertical: 20,
-		marginBottom: 15,
 		borderBottomWidth: 1,
 		borderBottomColor: LIST_SEPARATOR_COLOR,
 	},

@@ -5,10 +5,10 @@ import {
 	Image,
 	TouchableOpacity,
 	View,
-	KeyboardAvoidingView,
 	SafeAreaView,
 	Alert,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { HStack, NativeBaseProvider } from "native-base";
 import SwitchSelector from "react-native-switch-selector";
 import PostsManager from "../managers/PostsManager";
@@ -154,89 +154,99 @@ const CreatePostScreen = ({ navigation }) => {
 	);
 
 	return (
-		<DismissKeyboard>
-			<SafeAreaView style={styles.mainContainer}>
-				<NativeBaseProvider>
-					{/* <KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={100}> */}
-						<KeyboardAvoidingView width={"100%"} behavior={"padding"}>
-						<HStack alignItems="center" justifyContent="space-between" my="15">
-							<Image
-								style={styles.image}
-								source={require("../../assets/defaultProfileImage.png")}
+		<KeyboardAwareScrollView
+			showsVerticalScrollIndicator={false}
+			enableAutomaticScroll={true}
+			enableOnAndroid={true} 		          //enable Android native softwareKeyboardLayoutMode
+			extraHeight={185}					  //when keyboard comes up, scroll up
+			keyboardShouldPersistTaps={'handled'} //scroll or tap buttons without dismissing the keyboard first
+		>
+			<DismissKeyboard>
+				<SafeAreaView style={styles.mainContainer}>
+					<NativeBaseProvider>
+						<View width={"100%"}>
+							<HStack alignItems="center" justifyContent="space-between" my="15">
+								<Image
+									style={styles.image}
+									source={require("../../assets/defaultProfileImage.png")}
+								/>
+								<TouchableOpacity
+									style={
+										disableStatus
+											? styles.shareButtonDisabled
+											: styles.shareButtonEnabled
+									}
+									disabled={disableStatus}
+									onPress={() => {
+										shareButtonPressed();
+									}}
+								>
+									<AppText style={styles.buttonText}>Share</AppText>
+								</TouchableOpacity>
+							</HStack>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder="Ex: GOOGL"
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								autoCorrect={false}
+								maxLength={5}
+								value={asset_symbol}
+								onChangeText={(newValue) =>
+									//toUpperCase has a bug on Android
+									//https://github.com/facebook/react-native/issues/27449
+									//https://github.com/facebook/react-native/issues/11068
+									//replace(/\s/g, "") forbids spaces
+									handleChangeText({ newValue: newValue.replace(/\s/g, "").toUpperCase(), checkSymbol: true })
+								}
+								autoCapitalize="characters"
+								style={styles.assetSymbolInput}
 							/>
-							<TouchableOpacity
-								style={
-									disableStatus
-										? styles.shareButtonDisabled
-										: styles.shareButtonEnabled
+							<AppText style={styles.inputLabel}>Ticker Symbol</AppText>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder="What's your valuable insight?"
+								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+								multiline={true}
+								maxHeight={190}
+								numberOfLines={10}
+								style={styles.textArea}
+								maxLength={MAXIMUM_POST_CHARACTERS}
+								value={content}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkContent: true })
 								}
-								disabled={disableStatus}
-								onPress={() => {
-									shareButtonPressed();
+							/>
+						</View>
+						<View style={styles.switchSelectorContainer}>
+							<SwitchSelector
+								options={sentimentOptions}
+								initial={0}
+								onPress={(value) => {
+									if (value === sentiment) {
+										//do nothing
+									} else {
+										setSentiment(value);
+									}
 								}}
-							>
-								<AppText style={styles.buttonText}>Share</AppText>
-							</TouchableOpacity>
-						</HStack>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={MAIN_SECONDARY_COLOR}
-							placeholder="Ex: GOOGL"
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-							autoCapitalize="characters"
-							autoCorrect={false}
-							maxLength={5}
-							textTransform="uppercase"
-							value={asset_symbol}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkSymbol: true })
-							}
-							style={styles.assetSymbolInput}
-						/>
-						<AppText style={styles.inputLabel}>Ticker Symbol</AppText>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={MAIN_SECONDARY_COLOR}
-							placeholder="What's your valuable insight?"
-							placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-							multiline={true}
-							maxHeight={190}
-							numberOfLines={10}
-							style={styles.textArea}
-							maxLength={MAXIMUM_POST_CHARACTERS}
-							value={content}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkContent: true })
-							}
-						/>
-					</KeyboardAvoidingView>
-					<View style={styles.switchSelectorContainer}>
-						<SwitchSelector
-							options={sentimentOptions}
-							initial={0}
-							onPress={(value) => {
-								if (value === sentiment) {
-									//do nothing
-								} else {
-									setSentiment(value);
-								}
-							}}
-							height={40}
-							buttonColor={sentiment === "Bull" ? BULL_SENTIMENT_BACKGROUND__COLOR : BEAR_SENTIMENT_BACKGROUND__COLOR}
-							textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
-							borderColor={MAIN_DIFFERENTIATOR_COLOR}
-							backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-							selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
-							fontSize={16}
-							bold={true}
-							hasPadding
-							style={styles.sentimentToggle}
-						/>
-					</View>
-					{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
-				</NativeBaseProvider>
-			</SafeAreaView>
-		</DismissKeyboard>
+								height={40}
+								buttonColor={sentiment === "Bull" ? BULL_SENTIMENT_BACKGROUND__COLOR : BEAR_SENTIMENT_BACKGROUND__COLOR}
+								textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
+								borderColor={MAIN_DIFFERENTIATOR_COLOR}
+								backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+								selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
+								fontSize={16}
+								bold={true}
+								hasPadding
+								style={styles.sentimentToggle}
+							/>
+						</View>
+						{error ? <AppText style={styles.errorText}>{error}</AppText> : null}
+					</NativeBaseProvider>
+				</SafeAreaView>
+			</DismissKeyboard>
+		</KeyboardAwareScrollView>
 	);
 };
 
@@ -294,7 +304,6 @@ const styles = StyleSheet.create({
 		color: BAD_COLOR,
 	},
 	assetSymbolInput: {
-		backgroundColor: "transparent",
 		paddingVertical: 5,
 		borderBottomWidth: 0.5,
 		borderBottomColor: LIST_SEPARATOR_COLOR,

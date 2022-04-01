@@ -99,6 +99,7 @@ const FeedScreen = ({ navigation, route }) => {
 			<FlatList
 				width={"100%"}
 				data={posts}
+				showsVerticalScrollIndicator={false}
 				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
 				refreshing={refreshing}

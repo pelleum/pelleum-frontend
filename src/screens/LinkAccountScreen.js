@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
-	KeyboardAvoidingView,
 	View,
 	TextInput,
 	Image,
@@ -10,6 +9,7 @@ import {
 	Text,
 	Alert,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as Haptics from 'expo-haptics';
 import DismissKeyboard from "../components/DismissKeyboard";
 import LinkAccountsManager from "../managers/LinkAccountsManager";
@@ -196,9 +196,15 @@ const LinkAccountScreen = ({ navigation }) => {
 	};
 
 	return (
-		<DismissKeyboard>
-			<SafeAreaView style={styles.mainContainer}>
-				<KeyboardAvoidingView width={"100%"} alignItems={"center"} behavior="padding">
+		<KeyboardAwareScrollView
+			showsVerticalScrollIndicator={false}
+			enableAutomaticScroll={true}
+			enableOnAndroid={true} 		          //enable Android native softwareKeyboardLayoutMode
+			extraHeight={275}					  //when keyboard comes up, scroll enough to see the Log In button
+			keyboardShouldPersistTaps={'handled'} //scroll or tap buttons without dismissing the keyboard first
+		>
+			<DismissKeyboard>
+				<SafeAreaView style={styles.mainContainer}>
 					<Image
 						style={styles.headerImage}
 						source={require("../../assets/robinhood.png")}
@@ -308,9 +314,9 @@ const LinkAccountScreen = ({ navigation }) => {
 							.
 						</AppText>
 					</View>
-				</KeyboardAvoidingView>
-			</SafeAreaView>
-		</DismissKeyboard >
+				</SafeAreaView>
+			</DismissKeyboard>
+		</KeyboardAwareScrollView>
 	);
 };
 
@@ -319,6 +325,7 @@ export default LinkAccountScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
+		alignItems: "center"
 	},
 	headerImage: {
 		marginTop: 80,

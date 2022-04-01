@@ -581,6 +581,7 @@ const styles = StyleSheet.create({
 	loginInsteadContainer: {
 		marginTop: 25,
 		alignSelf: "center",
+		alignItems: "center",
 		flexDirection: "row",
 	},
 	bottomTextLarge: {
@@ -594,7 +595,7 @@ const styles = StyleSheet.create({
 	loginInsteadButton: {
 		fontSize: 16,
 		color: MAIN_SECONDARY_COLOR,
-		marginLeft: 10,
+		padding: 10,
 	},
 	termsContainer: {
 		marginTop: 20,

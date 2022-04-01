@@ -319,7 +319,11 @@ const SearchScreen = ({ navigation }) => {
 							) : null}
 							<Input
 								value={term}
-								onChangeText={(newTerm) => setTerm(newTerm.replace(/\s/g, ""))} //.replace(/\s/g, '') removes spacebar
+								//toUpperCase has a bug on Android
+								//https://github.com/facebook/react-native/issues/27449
+								//https://github.com/facebook/react-native/issues/11068
+								//replace(/\s/g, "") forbids spaces
+								onChangeText={(newTerm) => setTerm(newTerm.replace(/\s/g, "").toUpperCase())}
 								maxLength={5}
 								autoCapitalize="characters"
 								autoCorrect={false}

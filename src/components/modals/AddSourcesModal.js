@@ -8,14 +8,12 @@ import {
 	Platform,
 	TouchableOpacity,
 } from "react-native";
-import { HStack, NativeBaseProvider } from "native-base";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { NativeBaseProvider } from "native-base";
 import {
 	TEXT_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
-	GOOD_COLOR,
 } from "../../styles/Colors";
 import AppText from "../AppText";
 
@@ -45,6 +43,9 @@ const AddSourcesModal = ({
 			keyboardType={Platform.OS === "ios" ? "url" : "default"}
 			autoCapitalize={"none"}
 			autoCorrect={false}
+			clearButtonMode={'while-editing'} //on ios, adds an 'x' to clear all text when editing
+			returnKeyType={'done'}
+			onSubmitEditing={() => makeModalDisappear()}
 		/>
 	));
 
@@ -66,7 +67,7 @@ const AddSourcesModal = ({
 			<NativeBaseProvider>
 				<TouchableOpacity
 					style={styles.modalContainer}
-					onPress={() => {					
+					onPress={() => {
 						// 1. Tally up valid sources
 						tallySources();
 						// 2. Make Modal Disapper
@@ -86,7 +87,9 @@ const AddSourcesModal = ({
 									Sources are a great way to share some of the information that
 									led to your current thinking on investments.
 								</AppText>
-								{sourceInputs}
+								<View width={"100%"}>
+									{sourceInputs}
+								</View>
 							</View>
 						</TouchableOpacity>
 					</KeyboardAvoidingView>
@@ -138,9 +141,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 0.3,
 		borderBottomColor: MAIN_SECONDARY_COLOR,
 		marginTop: 10,
-		marginHorizontal: 10,
 		marginBottom: 5,
-		width: "100%",
 	},
 	checkMarkHidden: {
 		opacity: 0,
