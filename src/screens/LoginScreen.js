@@ -128,6 +128,7 @@ const LoginScreen = ({ navigation }) => {
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder="Username"
+								textContentType="username"
 								placeholderTextColor={LIGHT_GREY_COLOR}
 								value={username}
 								onChangeText={(newValue) =>
@@ -141,6 +142,7 @@ const LoginScreen = ({ navigation }) => {
 								color={TEXT_COLOR}
 								selectionColor={MAIN_SECONDARY_COLOR}
 								placeholder="Password"
+								textContentType="password"
 								placeholderTextColor={LIGHT_GREY_COLOR}
 								value={password}
 								onChangeText={(newValue) =>

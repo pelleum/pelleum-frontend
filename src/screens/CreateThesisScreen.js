@@ -107,8 +107,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 	const hasUnsavedChanges = (
 		Boolean(content) ||
 		Boolean(asset_symbol) ||
-		Boolean(title) ||
-		validSources.length > 0
+		Boolean(title)
 	);
 
 	// Alert user they have unsaved changes
