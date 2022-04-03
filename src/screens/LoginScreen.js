@@ -4,12 +4,11 @@ import {
 	StyleSheet,
 	TextInput,
 	View,
-	KeyboardAvoidingView,
 	TouchableOpacity,
 	SafeAreaView,
 	Platform,
-	StatusBar,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAnalytics } from '@segment/analytics-react-native';
 
 // Import Local Files
@@ -114,58 +113,67 @@ const LoginScreen = ({ navigation }) => {
 	};
 
 	return (
-		<DismissKeyboard>
-			<SafeAreaView style={styles.container}>
-				<KeyboardAvoidingView width={"100%"} alignItems={"center"} behavior={"padding"}>
-					<AppText style={styles.titleText}>Log In</AppText>
-					<View style={styles.inputContainer}>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={MAIN_SECONDARY_COLOR}
-							placeholder="Username"
-							placeholderTextColor={LIGHT_GREY_COLOR}
-							value={username}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkUsername: true })
-							}
-							style={styles.input}
-							autoCapitalize="none"
-							autoCorrect={false}
-						/>
-						<TextInput
-							color={TEXT_COLOR}
-							selectionColor={MAIN_SECONDARY_COLOR}
-							placeholder="Password"
-							placeholderTextColor={LIGHT_GREY_COLOR}
-							value={password}
-							onChangeText={(newValue) =>
-								handleChangeText({ newValue: newValue, checkPassword: true })
-							}
-							style={styles.input}
-							autoCapitalize="none"
-							autoCorrect={false}
-							secureTextEntry={true}
-						/>
-						{errorMessage ? (
-							<AppText style={styles.errorMessage}>{errorMessage}</AppText>
-						) : null}
+		<KeyboardAwareScrollView
+			justifyContent={"center"}
+			showsVerticalScrollIndicator={false}
+			enableAutomaticScroll={true}
+			keyboardShouldPersistTaps={'handled'} //scroll or tap buttons without dismissing the keyboard first
+		>
+			<DismissKeyboard>
+				<SafeAreaView style={styles.container}>
+					<View width={"100%"} alignItems={"center"}>
+						<AppText style={styles.titleText}>Log In</AppText>
+						<View style={styles.inputContainer}>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder="Username"
+								textContentType="username"
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								value={username}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkUsername: true })
+								}
+								style={styles.input}
+								autoCapitalize="none"
+								autoCorrect={false}
+							/>
+							<TextInput
+								color={TEXT_COLOR}
+								selectionColor={MAIN_SECONDARY_COLOR}
+								placeholder="Password"
+								textContentType="password"
+								placeholderTextColor={LIGHT_GREY_COLOR}
+								value={password}
+								onChangeText={(newValue) =>
+									handleChangeText({ newValue: newValue, checkPassword: true })
+								}
+								style={styles.input}
+								autoCapitalize="none"
+								autoCorrect={false}
+								secureTextEntry={true}
+							/>
+							{errorMessage ? (
+								<AppText style={styles.errorMessage}>{errorMessage}</AppText>
+							) : null}
+						</View>
+						<TouchableOpacity
+							onPress={() => handleLogin(username, password)}
+							style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
+							disabled={disableStatus}
+						>
+							<AppText style={styles.buttonText}>Log In</AppText>
+						</TouchableOpacity>
 					</View>
-					<TouchableOpacity
-						onPress={() => handleLogin(username, password)}
-						style={disableStatus ? styles.buttonDisabled : styles.buttonEnabled}
-						disabled={disableStatus}
-					>
-						<AppText style={styles.buttonText}>Log In</AppText>
-					</TouchableOpacity>
-				</KeyboardAvoidingView>
-				<View style={styles.signupInsteadContainer}>
-					<AppText style={styles.signupInsteadText}>Don't have an account?</AppText>
-					<TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
-						<AppText style={styles.signupInsteadButton}>Sign up</AppText>
-					</TouchableOpacity>
-				</View>
-			</SafeAreaView>
-		</DismissKeyboard>
+					<View style={styles.signupInsteadContainer}>
+						<AppText style={styles.signupInsteadText}>Don't have an account?</AppText>
+						<TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
+							<AppText style={styles.signupInsteadButton}>Sign up</AppText>
+						</TouchableOpacity>
+					</View>
+				</SafeAreaView>
+			</DismissKeyboard>
+		</KeyboardAwareScrollView>
 	);
 };
 
@@ -178,7 +186,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	inputContainer: {
 		width: "80%",
@@ -224,6 +231,7 @@ const styles = StyleSheet.create({
 	signupInsteadContainer: {
 		marginTop: 75,
 		alignSelf: "center",
+		alignItems: "center",
 		flexDirection: "row",
 	},
 	signupInsteadText: {
@@ -233,7 +241,7 @@ const styles = StyleSheet.create({
 	signupInsteadButton: {
 		fontSize: 16,
 		color: MAIN_SECONDARY_COLOR,
-		marginLeft: 10,
+		padding: 10,
 	},
 	titleText: {
 		alignSelf: "center",

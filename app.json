@@ -1,47 +1,52 @@
 {
-  "expo": {
-    "name": "Pelleum",
-    "slug": "pelleum-frontend",
-    "version": "1.0.1",
-    "orientation": "portrait",
-    "icon": "./assets/prod-icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#000000"
-    },
-    "updates": {
-      "enabled": true,
-      "fallbackToCacheTimeout": 10000
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.pelleum.mobile",
-      "buildNumber": "3",
-      "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/prod-adaptive-icon.png",
-        "backgroundColor": "#000000"
-      },
-      "softwareKeyboardLayoutMode": "pan",
-      "permissions": [
-        "ACCESS_NETWORK_STATE"
-      ],
-      "package": "com.pelleum.mobile",
-      "versionCode": 3,
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "userInterfaceStyle": "automatic",
-    "androidStatusBar": {
-      "barStyle": "light-content"
+    "expo": {
+        "name": "Pelleum DEV",
+        "slug": "pelleum-frontend-dev",
+        "version": "1.0.3",
+        "orientation": "portrait",
+        "icon": "./assets/dev-icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "cover",
+            "backgroundColor": "#000000"
+        },
+        "updates": {
+            "enabled": true,
+            "fallbackToCacheTimeout": 10000
+        },
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.pelleum.dev",
+            "buildNumber": "5",
+            "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541",
+            "infoPlist": {
+                "NSFaceIDUsageDescription": "The Pelleum app gives users the option to log in with Face ID or Touch ID."
+            }
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/dev-adaptive-icon.png",
+                "backgroundColor": "#000000"
+            },
+            "softwareKeyboardLayoutMode": "pan",
+            "permissions": [
+                "ACCESS_NETWORK_STATE",
+                "USE_BIOMETRIC",
+                "USE_FINGERPRINT"
+            ],
+            "package": "com.pelleum.dev",
+            "versionCode": 5,
+            "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png"
+        },
+        "userInterfaceStyle": "automatic",
+        "androidStatusBar": {
+            "barStyle": "light-content"
+        }
     }
-  }
 }

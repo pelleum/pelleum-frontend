@@ -1,12 +1,13 @@
 import pelleumClient from "../api/clients/PelleumClient";
 import { store } from "../redux/Store";
 import { updateAccountsStatus } from "../redux/actions/LinkedAccountsActions";
+import Config from "../../Config";
 
 class LinkAccountsManager {
 	static getLinkedAccountsStatus = async () => {
 		const response = await pelleumClient({
 			method: "get",
-			url: process.env.AC_GET_CONNECTIONS_PATH,
+			url: Config.acGetConnectionsPath,
 		});
 
 		if (response.status == 200) {
@@ -23,7 +24,7 @@ class LinkAccountsManager {
 	static accountLogin = async (requestBody) => {
 		const response = await pelleumClient({
 			method: "post",
-			url: `${process.env.AC_LOGIN_BASE_PATH}/${process.env.ROBINHOOD_ID}`,
+			url: `${Config.acLoginBasePath}/${process.env.ROBINHOOD_ID}`,
 			data: requestBody,
 		});
 		return response;
@@ -32,8 +33,14 @@ class LinkAccountsManager {
 	static unlinkAccount = async () => {
 		const response = await pelleumClient({
 			method: "delete",
-			url: `${process.env.AC_DEACTIVATE_BASE_PATH}/${process.env.ROBINHOOD_ID}`,
+			url: `${Config.acDeactivateBasePath}/${process.env.ROBINHOOD_ID}`,
 		});
+
+		if (response.status == 200) {
+			store.dispatch(
+				updateAccountsStatus([])
+			);
+		}
 
 		return response;
 	};
@@ -41,7 +48,7 @@ class LinkAccountsManager {
 	static verifyAccount = async (requestBody) => {
 		const response = await pelleumClient({
 			method: "post",
-			url: `${process.env.AC_LOGIN_BASE_PATH}/${process.env.ROBINHOOD_ID}/verify`,
+			url: `${Config.acLoginBasePath}/${process.env.ROBINHOOD_ID}/verify`,
 			data: requestBody,
 		});
 		return response;

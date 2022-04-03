@@ -7,8 +7,6 @@ import {
 	TouchableOpacity,
 	Image,
 	Alert,
-	Platform,
-	StatusBar,
 } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import {
@@ -32,7 +30,7 @@ const ProfileScreen = ({ navigation, route }) => {
 	// State Management
 	const [assetList, setAssetList] = useState([]);
 	const [username, setUsername] = useState("");
-	const { activeAccounts } = useSelector((state) => state.linkedAccountsReducer);
+	const { linkedAccounts } = useSelector((state) => state.linkedAccountsReducer);
 	const { userObject } = useSelector((state) => state.authReducer);
 
 	const onRefresh = async () => {
@@ -43,16 +41,16 @@ const ProfileScreen = ({ navigation, route }) => {
 		if (retrievedAssets) {
 			setAssetList(retrievedAssets.records);
 		}
-		if (activeAccounts.length > 0) {
+		if (linkedAccounts.length > 0) {
 			{
-				activeAccounts.some((account) => account.is_active) == false
+				linkedAccounts.some((account) => account.is_active) == false
 					? await relinkAlert()
 					: null;
 			}
 		}
 	};
 
-	const relinkAlert = async () => {
+	const relinkAlert = () => {
 		Alert.alert(
 			"Linked Account Error",
 			"One (or more) of your accounts needs to be relinked to Pelleum. Please check the status of your linked account(s)",
@@ -66,6 +64,21 @@ const ProfileScreen = ({ navigation, route }) => {
 				{
 					text: "View Status",
 					onPress: () => navigation.navigate("LinkedAccountsStatusScreen"),
+				},
+			]
+		);
+	};
+
+	const alreadyLinkedAlert = () => {
+		Alert.alert(
+			"Account Already Linked.",
+			"Your Robinhood brokerage account is already linked. We'll let you know when Pelleum supports linking other brokerages.",
+			[
+				{
+					text: "Got it!",
+					onPress: () => {
+						/* do nothing */
+					},
 				},
 			]
 		);
@@ -112,12 +125,56 @@ const ProfileScreen = ({ navigation, route }) => {
 								source={require("../../assets/defaultProfileImage.png")}
 							/>
 							<AppText style={styles.usernameText}>@{username}</AppText>
-							{assetList.length == 0 ? (
-								<AppText style={styles.noBrokerageLinkedText}>
-									Put your money where your mouth is - link an account to show
-									your skin in the game!💥
-								</AppText>
-							) : null}
+							<View alignItems={"center"} paddingVertical={20}>
+								<TouchableOpacity
+									style={styles.buttonGroup}
+									onPress={async () => {
+										navigation.navigate("RationaleScreen", { userId: userObject.userId });
+									}}
+								>
+									<HStack style={styles.buttonGroupTextContainer}>
+										<Ionicons
+											name="md-file-tray-full-outline"
+											size={25}
+											color={MAIN_SECONDARY_COLOR}
+										/>
+										<AppText style={styles.buttonGroupText}>
+											Rationale Library
+										</AppText>
+									</HStack>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={styles.buttonGroup}
+									onPress={async () => {
+										navigation.navigate("AuthoredThesesScreen", { userId: userObject.userId });
+									}}
+								>
+									<HStack style={styles.buttonGroupTextContainer}>
+										<MaterialCommunityIcons
+											name="book-open-outline"
+											size={25}
+											color={MAIN_SECONDARY_COLOR}
+										/>
+										<AppText style={styles.buttonGroupText}>My Theses</AppText>
+									</HStack>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={styles.buttonGroup}
+									onPress={async () => {
+										navigation.navigate("AuthoredPostsScreen", { userId: userObject.userId });
+									}}
+								>
+									<HStack style={styles.buttonGroupTextContainer}>
+										<Octicons
+											name="note"
+											size={26}
+											color={MAIN_SECONDARY_COLOR}
+											style={styles.postIcon}
+										/>
+										<AppText style={styles.buttonGroupText}>My Posts</AppText>
+									</HStack>
+								</TouchableOpacity>
+							</View>
 							<HStack style={styles.headerStyle}>
 								{assetList.length == 0 ? (
 									<View></View>
@@ -126,7 +183,15 @@ const ProfileScreen = ({ navigation, route }) => {
 								)}
 								<TouchableOpacity
 									style={styles.linkAccountButton}
-									onPress={() => navigation.navigate("LinkAccountScreen")}
+									onPress={() => {
+										if (linkedAccounts.length > 0) {
+											linkedAccounts.some((account) => account.is_active) == true
+												? alreadyLinkedAlert()
+												: navigation.navigate("LinkAccountScreen");
+										} else {
+											navigation.navigate("LinkAccountScreen");
+										}
+									}}
 								>
 									<MaterialCommunityIcons
 										name="bank-plus"
@@ -135,58 +200,12 @@ const ProfileScreen = ({ navigation, route }) => {
 									/>
 								</TouchableOpacity>
 							</HStack>
-						</View>
-					}
-					ListFooterComponent={
-						<View alignItems={"center"} paddingVertical={20}>
-							<TouchableOpacity
-								style={styles.buttonGroup}
-								onPress={async () => {
-									navigation.navigate("RationaleScreen", { userId: userObject.userId });
-								}}
-							>
-								<HStack style={styles.buttonGroupTextContainer}>
-									<Ionicons
-										name="md-file-tray-full-outline"
-										size={25}
-										color={MAIN_SECONDARY_COLOR}
-									/>
-									<AppText style={styles.buttonGroupText}>
-										Rationale Library
-									</AppText>
-								</HStack>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.buttonGroup}
-								onPress={async () => {
-									navigation.navigate("AuthoredThesesScreen", { userId: userObject.userId });
-								}}
-							>
-								<HStack style={styles.buttonGroupTextContainer}>
-									<MaterialCommunityIcons
-										name="book-open-outline"
-										size={25}
-										color={MAIN_SECONDARY_COLOR}
-									/>
-									<AppText style={styles.buttonGroupText}>My Theses</AppText>
-								</HStack>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.buttonGroup}
-								onPress={async () => {
-									navigation.navigate("AuthoredPostsScreen", { userId: userObject.userId });
-								}}
-							>
-								<HStack style={styles.buttonGroupTextContainer}>
-									<Octicons
-										name="note"
-										size={26}
-										color={MAIN_SECONDARY_COLOR}
-										style={styles.postIcon}
-									/>
-									<AppText style={styles.buttonGroupText}>My Posts</AppText>
-								</HStack>
-							</TouchableOpacity>
+							{assetList.length == 0 ? (
+								<AppText style={styles.noBrokerageLinkedText}>
+									Put your money where your mouth is - link an account to show
+									your skin in the game!💥
+								</AppText>
+							) : null}
 						</View>
 					}
 				></FlatList>
@@ -200,7 +219,6 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	listHeaderView: {
 		margin: 13,
@@ -260,7 +278,6 @@ const styles = StyleSheet.create({
 	headerStyle: {
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginTop: 10,
 	},
 	settingsButton: {
 		alignSelf: "flex-end",
@@ -290,8 +307,7 @@ const styles = StyleSheet.create({
 	},
 	noBrokerageLinkedText: {
 		alignSelf: "center",
-		marginTop: 60,
-		//fontSize: 15,
+		marginTop: 35,
 		marginHorizontal: 20,
 	},
 });

@@ -150,10 +150,19 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				>
 					<VStack>
 						<HStack style={styles.topPostBox}>
-							<HStack>
-								<AppText style={commonTextStyles.usernameText}>
-									@{item.username}
-								</AppText>
+							<HStack alignItems={"center"}>
+								<TouchableOpacity
+									style={styles.usernameButton}
+									onPress={() =>
+										nav.navigate("PortfolioInsightScreen", {
+											username: item.username,
+											userId: item.user_id,
+										})}
+								>
+									<AppText style={commonTextStyles.usernameText}>
+										@{item.username}
+									</AppText>
+								</TouchableOpacity>
 								<AppText style={styles.timeElapsedText}>
 									• {elapsedTime}
 								</AppText>
@@ -296,5 +305,8 @@ const styles = StyleSheet.create({
 	},
 	commentFlagText: {
 		color: LIGHT_GREY_COLOR,
+	},
+	usernameButton: {
+		paddingVertical: 10,
 	},
 });

@@ -4,8 +4,6 @@ import {
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
-	Platform,
-	StatusBar,
 } from "react-native";
 
 // File imports
@@ -101,6 +99,7 @@ const FeedScreen = ({ navigation, route }) => {
 			<FlatList
 				width={"100%"}
 				data={posts}
+				showsVerticalScrollIndicator={false}
 				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
 				refreshing={refreshing}
@@ -131,7 +130,6 @@ export default FeedScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	//Floating Action Button
 	fab: {

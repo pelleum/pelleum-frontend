@@ -39,9 +39,17 @@ This is the primary way we will conduct testing of the Pelleum mobile applicatio
 **Note:** You only have to create a new build if you modified or added any native modules. Otherwise, you can simply run `expo start --dev-client` and continue to use the same client.
 
 ## Creating Builds with EAS CLI
-- We can specify the profile we want to build (defined in eas.json), such as `eas build --profile development --platform all`
+- We can specify the profile we want to build (defined in eas.json), such as `eas build --profile development -p all`
 - If we don't specify  a profile, **the build will default to production!**
 - The `preview` profile allows us to test out the app in production-like circumstances. The main difference between `preview` and `production` is that `preview` builds are not signed for distribution to stores.
+
+## Updates
+- To publish an "over-the-air" (OTA) update, run the following command along with any secret values: `<secrets> expo publish`
+- See the last 100 items in publish history: `expo publish:history --count 100`
+- See publishing history for ios: `expo publish:history --p ios`
+- See publishing history for android: `expo publish:history --p android`
+- See more details of a specific publish: `expo publish:details --publish-id <publish id>`
+- Rollback a release channel entry (only one platform at a time): `expo publish:set -c <channel name> --publish-id <publish id>`
 
 ## Submit App Build to App Store with EAS CLI
 - Submit the latest iOS build to Apple: `eas submit -p ios --latest`

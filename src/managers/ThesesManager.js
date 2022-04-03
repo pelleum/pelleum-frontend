@@ -1,10 +1,12 @@
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
+import Config from "../../Config";
 
 // Redux
 import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 import { removeReaction, addReaction } from "../redux/actions/ThesisReactionsActions";
 import { store } from "../redux/Store";
+import { removeFromLibrary } from "../redux/actions/RationaleActions";
 
 class ThesesManager {
 	static getState = () => {
@@ -16,7 +18,7 @@ class ThesesManager {
 	static likeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${Config.thesesReactionsPath}/${item.thesis_id}`,
 			data: { reaction: 1 },
 		});
 		if (authorizedResponse) {
@@ -32,7 +34,7 @@ class ThesesManager {
 	static unlikeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${Config.thesesReactionsPath}/${item.thesis_id}`,
 		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -47,7 +49,7 @@ class ThesesManager {
 	static dislikeThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${Config.thesesReactionsPath}/${item.thesis_id}`,
 			data: { reaction: -1 },
 		});
 		if (authorizedResponse) {
@@ -63,7 +65,7 @@ class ThesesManager {
 	static removeDislikeOnThesis = async (item, reactionType) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${item.thesis_id}`,
+			url: `${Config.thesesReactionsPath}/${item.thesis_id}`,
 		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -78,7 +80,7 @@ class ThesesManager {
 	static getThesisReaction = async (thesis) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${process.env.THESES_REACTIONS_BASE_PATH}/${thesis.thesis_id}`,
+			url: `${Config.thesesReactionsPath}/${thesis.thesis_id}`,
 		});
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
@@ -89,10 +91,29 @@ class ThesesManager {
 		}
 	}
 
-	static getThesis = async (thesis_id) => {
+	static deleteThesis = async (thesis) => {
+		const authorizedResponse = await pelleumClient({
+			method: "delete",
+			url: `${Config.thesesBasePath}/${thesis.thesis_id}`,
+		});
+
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				store.dispatch(
+					removeFromLibrary({
+						thesisID: thesis.thesis_id,
+						asset: thesis.asset_symbol,
+					})
+				);
+			};
+			return authorizedResponse;
+		}
+	};
+
+	static getThesis = async (thesisId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: `${process.env.THESES_BASE_PATH}/${thesis_id}`,
+			url: `${Config.thesesBasePath}/${thesisId}`,
 		});
 
 		if (authorizedResponse) {
@@ -143,7 +164,7 @@ class ThesesManager {
 	static getTheses = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: process.env.GET_MANY_THESES_PATH,
+			url: Config.getManyThesesPath,
 			queryParams: queryParams,
 		});
 		if (authorizedResponse) {
@@ -158,7 +179,19 @@ class ThesesManager {
 	static createThesis = async (data) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: process.env.THESES_BASE_PATH,
+			url: Config.thesesBasePath,
+			data: data,
+		});
+
+		if (authorizedResponse) {
+			return authorizedResponse;
+		};
+	};
+
+	static updateThesis = async (data, thesisId) => {
+		const authorizedResponse = await pelleumClient({
+			method: "patch",
+			url: `${Config.thesesBasePath}/${thesisId}`,
 			data: data,
 		});
 

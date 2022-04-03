@@ -1,5 +1,6 @@
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
+import Config from "../../Config";
 
 // Redux
 import { store } from "../redux/Store";
@@ -12,7 +13,7 @@ class RationalesManager {
 	static retrieveRationales = async (queryParams) => {
 		const authorizedResponse = await pelleumClient({
 			method: "get",
-			url: process.env.GET_MANY_RATIONALES_PATH,
+			url: Config.getManyRationalesPath,
 			queryParams: queryParams,
 		});
 
@@ -30,7 +31,7 @@ class RationalesManager {
 	static addRationale = async (thesis) => {
 		const authorizedResponse = await pelleumClient({
 			method: "post",
-			url: process.env.RATIONALES_BASE_PATH,
+			url: Config.rationalesBasePath,
 			data: { thesis_id: thesis.thesis_id },
 		});
 
@@ -53,7 +54,7 @@ class RationalesManager {
 	static removeRationale = async (rationale) => {
 		const authorizedResponse = await pelleumClient({
 			method: "delete",
-			url: `${process.env.RATIONALES_BASE_PATH}/${rationale.rationale_id}`,
+			url: `${Config.rationalesBasePath}/${rationale.rationale_id}`,
 		});
 
 		if (authorizedResponse) {

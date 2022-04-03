@@ -5,6 +5,7 @@ import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
 import PostsManager from "../managers/PostsManager";
 import { LIGHT_GREY_COLOR } from "../styles/Colors";
 import { useAnalytics } from "@segment/analytics-react-native";
+import AppText from "./AppText";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -17,6 +18,8 @@ const PostButtonPanel = ({ item, nav }) => {
 
 	// Segment Tracking
 	const { track } = useAnalytics();
+
+	let likeCount = item.like_count;
 
 	const onShare = async (item) => {
 		const postType = (item.is_post_comment_on || item.is_thesis_comment_on) ? "comment" : "feedPost";
@@ -92,7 +95,10 @@ const PostButtonPanel = ({ item, nav }) => {
 						nav.navigate("PostDetailScreen", item);
 					}}
 				>
-					<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
+					<HStack alignItems={"center"}>
+						<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
+						<AppText style={styles.countStyle}>{item.comment_count}</AppText>
+					</HStack>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -102,26 +108,35 @@ const PostButtonPanel = ({ item, nav }) => {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
-					onPress={() => PostsManager.sendPostReaction(item)
-					}
+					onPress={() => {
+						(item.user_reaction_value == 1 &&
+							!locallyUnlikedPosts.includes(item.post_id)) ||
+							locallyLikedPosts.includes(item.post_id)
+							? likeCount += 1
+							: likeCount -= 1
+						PostsManager.sendPostReaction(item);
+					}}
 				>
-					<Ionicons
-						name={
-							(item.user_reaction_value == 1 &&
-								!locallyUnlikedPosts.includes(item.post_id)) ||
-								locallyLikedPosts.includes(item.post_id)
-								? "md-heart"
-								: "md-heart-outline"
-						}
-						size={21}
-						color={
-							(item.user_reaction_value == 1 &&
-								!locallyUnlikedPosts.includes(item.post_id)) ||
-								locallyLikedPosts.includes(item.post_id)
-								? "#f01670"
-								: LIGHT_GREY_COLOR
-						}
-					/>
+					<HStack alignItems={"center"}>
+						<Ionicons
+							name={
+								(item.user_reaction_value == 1 &&
+									!locallyUnlikedPosts.includes(item.post_id)) ||
+									locallyLikedPosts.includes(item.post_id)
+									? "md-heart"
+									: "md-heart-outline"
+							}
+							size={21}
+							color={
+								(item.user_reaction_value == 1 &&
+									!locallyUnlikedPosts.includes(item.post_id)) ||
+									locallyLikedPosts.includes(item.post_id)
+									? "#f01670"
+									: LIGHT_GREY_COLOR
+							}
+						/>
+						<AppText style={styles.countStyle}>{likeCount}</AppText>
+					</HStack>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.iconButton} onPress={() => onShare(item)}>
 					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
@@ -148,5 +163,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		height: 36,
 		width: 58,
+	},
+	countStyle: {
+		color: LIGHT_GREY_COLOR,
+		marginLeft: 6,
 	},
 });

@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
 	Keyboard,
-	FlatList,
-	KeyboardAvoidingView,
 } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import CommentInput from "../components/CommentInput";
 import PostButtonPanel from "../components/PostButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
@@ -17,6 +16,7 @@ import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
 import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIST_SEPARATOR_COLOR } from "../styles/Colors";
 import { useAnalytics } from '@segment/analytics-react-native';
+import DismissKeyboard from "../components/DismissKeyboard";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -45,12 +45,6 @@ const PostDetailScreen = ({ navigation, route }) => {
 	const postExists = !deleted.some(
 		(post) => post.post_id === detailedPost.post_id
 	);
-
-	// Allows us to scroll up to the top when reply text input is focused
-	const listRef = useRef(null);
-	const handleScrollToTop = () => {
-		listRef.current.scrollToOffset({ offset: 0, animated: false });
-	};
 
 	// Might not need these separate functions?
 	const handleChangeContent = (newContent) => {
@@ -151,10 +145,12 @@ const PostDetailScreen = ({ navigation, route }) => {
 
 	return (
 		<NativeBaseProvider>
-			<FlatList
-				ref={listRef}
+			<KeyboardAwareFlatList
 				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps={'handled'}
+				enableAutomaticScroll={true}
+				enableOnAndroid={true} 				  //enable Android native softwareKeyboardLayoutMode
+				extraHeight={185}					  //when keyboard comes up, scroll enough to see the Reply button
+				keyboardShouldPersistTaps={'handled'} //scroll or tap the Reply button without dismissing the keyboard first
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id}
@@ -165,85 +161,83 @@ const PostDetailScreen = ({ navigation, route }) => {
 				// onEndReached={getMoreComments}
 				// onEndReachedThreshold={1}
 				ListHeaderComponent={
-					<KeyboardAvoidingView
-						style={styles.mainContainer}
-						behavior="position"
-						keyboardVerticalOffset={100}
-					>
-						{postCommentedOn ? (
-							postCommentedOn == "deleted" ? (
-								<AppText style={styles.deletedPost}>
-									This post has been deleted.
-								</AppText>
-							) : postCommentedOn == "forbidden" ? (
-								<AppText style={styles.deletedPost}>
-									This user's account is blocked.
-								</AppText>
-							) : (
-								<PostBox
-									postBoxType={PostBoxType.PostCommentedOn}
-									item={postCommentedOn}
-									nav={navigation}
-								/>
-							)
-						) : null}
-						{thesisCommentedOn ? (
-							thesisCommentedOn == "deleted" ? (
-								<AppText style={styles.deletedPost}>
-									This thesis has been deleted.
-								</AppText>
-							) : thesisCommentedOn == "forbidden" ? (
-								<AppText style={styles.deletedPost}>
-									This user's account is blocked.
-								</AppText>
-							) : (
-								<ThesisBox item={thesisCommentedOn} nav={navigation} />
-							)
-						) : null}
-						{postExists ? (
-							<View>
-								<View style={styles.postContainer}>
+					<DismissKeyboard>
+						<View style={styles.mainContainer}>
+							{postCommentedOn ? (
+								postCommentedOn == "deleted" ? (
+									<AppText style={styles.nonAvailablePost}>
+										This post has been deleted.
+									</AppText>
+								) : postCommentedOn == "forbidden" ? (
+									<AppText style={styles.nonAvailablePost}>
+										This user's account is blocked.
+									</AppText>
+								) : (
 									<PostBox
-										postBoxType={PostBoxType.PostDetail}
-										item={detailedPost}
+										postBoxType={PostBoxType.PostCommentedOn}
+										item={postCommentedOn}
 										nav={navigation}
 									/>
+								)
+							) : null}
+							{thesisCommentedOn ? (
+								thesisCommentedOn == "deleted" ? (
+									<AppText style={styles.nonAvailablePost}>
+										This thesis has been deleted.
+									</AppText>
+								) : thesisCommentedOn == "forbidden" ? (
+									<AppText style={styles.nonAvailablePost}>
+										This user's account is blocked.
+									</AppText>
+								) : (
+									<ThesisBox item={thesisCommentedOn} nav={navigation} />
+								)
+							) : null}
+							{postExists ? (
+								<View>
+									<View style={styles.postContainer}>
+										<PostBox
+											postBoxType={PostBoxType.PostDetail}
+											item={detailedPost}
+											nav={navigation}
+										/>
+									</View>
+									<PostButtonPanel item={detailedPost} nav={navigation} />
+									<VStack>
+										<CommentInput
+											commentContent={commentContent}
+											commentContentValidity={commentContentValidity}
+											changeContent={handleChangeContent}
+											changeCommentContentValidity={
+												handleChangeCommentContentValidity
+											}
+										/>
+										<TouchableOpacity
+											style={
+												disableStatus
+													? styles.replyButtonDisabled
+													: styles.replyButtonEnabled
+											}
+											onPress={() => replyButtonPressed()}
+											disabled={disableStatus}
+										>
+											<AppText style={styles.buttonTextStyle}>Reply</AppText>
+										</TouchableOpacity>
+										{error ? (
+											<AppText style={styles.errorText}>{error}</AppText>
+										) : null}
+									</VStack>
 								</View>
-								<PostButtonPanel item={detailedPost} nav={navigation} />
-								<VStack>
-									<CommentInput
-										scrollToTop={handleScrollToTop}
-										commentContent={commentContent}
-										commentContentValidity={commentContentValidity}
-										changeContent={handleChangeContent}
-										changeCommentContentValidity={
-											handleChangeCommentContentValidity
-										}
-									/>
-									<TouchableOpacity
-										style={
-											disableStatus
-												? styles.replyButtonDisabled
-												: styles.replyButtonEnabled
-										}
-										onPress={() => replyButtonPressed()}
-										disabled={disableStatus}
-									>
-										<AppText style={styles.buttonTextStyle}>Reply</AppText>
-									</TouchableOpacity>
-									{error ? (
-										<AppText style={styles.errorText}>{error}</AppText>
-									) : null}
-								</VStack>
-							</View>
-						) : (
-							<AppText style={styles.deletedPost}>
-								This post has been deleted.
-							</AppText>
-						)}
-					</KeyboardAvoidingView>
+							) : (
+								<AppText style={styles.nonAvailablePost}>
+									This post has been deleted.
+								</AppText>
+							)}
+						</View>
+					</DismissKeyboard>
 				}
-			></FlatList>
+			></KeyboardAwareFlatList>
+
 		</NativeBaseProvider>
 	);
 };
@@ -293,7 +287,7 @@ const styles = StyleSheet.create({
 	errorText: {
 		color: BAD_COLOR,
 	},
-	deletedPost: {
+	nonAvailablePost: {
 		alignSelf: "center",
 		marginVertical: 15,
 	},

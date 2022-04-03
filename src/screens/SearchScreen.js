@@ -6,7 +6,6 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Platform,
-	StatusBar,
 	Keyboard,
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
@@ -28,7 +27,7 @@ import {
 	BULL_SENTIMENT_BACKGROUND__COLOR,
 	BEAR_SENTIMENT_BACKGROUND__COLOR,
 } from "../styles/Colors";
-import { THESIS_BOX_HEIGHT } from "../constants/ThesesConstants";
+import { THESIS_BOX_HEIGHT, THESES_RECORDS_PER_PAGE } from "../constants/ThesesConstants";
 import { useAnalytics } from '@segment/analytics-react-native';
 
 //need to figure out how to calculate item height, so that we are not bound by a constant item height (defined in ThesisBox)
@@ -50,9 +49,6 @@ const SearchScreen = ({ navigation }) => {
 	const [lastBullItemIndex, setLastBullItemIndex] = useState(0);
 	const [lastBearItemIndex, setLastBearItemIndex] = useState(0);
 	const [tempIndex, setTempIndex] = useState(0);
-
-	// Constants
-	const RECORDS_PER_PAGE = 25;
 
 	// Segment Tracking
 	const { track } = useAnalytics();
@@ -108,7 +104,7 @@ const SearchScreen = ({ navigation }) => {
 				const queryParams = {
 					asset_symbol: term,
 					sentiment: sent,
-					records_per_page: RECORDS_PER_PAGE,
+					records_per_page: THESES_RECORDS_PER_PAGE,
 					page: 1,
 				};
 				const responseData = await ThesesManager.getTheses(queryParams);
@@ -142,7 +138,7 @@ const SearchScreen = ({ navigation }) => {
 				// Get "random", non-asset-specific assets
 				const queryParams = {
 					sentiment: sent,
-					records_per_page: RECORDS_PER_PAGE,
+					records_per_page: THESES_RECORDS_PER_PAGE,
 					page: 1,
 				};
 				const responseData = await ThesesManager.getTheses(queryParams);
@@ -205,7 +201,7 @@ const SearchScreen = ({ navigation }) => {
 				queryParams = {
 					asset_symbol: getMoreResultsTerm,
 					sentiment: sentiment,
-					records_per_page: RECORDS_PER_PAGE,
+					records_per_page: THESES_RECORDS_PER_PAGE,
 					page: newPageNumber,
 				};
 				responseData = await ThesesManager.getTheses(queryParams);
@@ -214,7 +210,7 @@ const SearchScreen = ({ navigation }) => {
 						assetSymbol: term,
 						sentiment: sentiment,
 						page: newPageNumber,
-						recordsPerPage: RECORDS_PER_PAGE,
+						recordsPerPage: THESES_RECORDS_PER_PAGE,
 					});
 					setBullResults((oldBullTheses) => [
 						...oldBullTheses,
@@ -233,7 +229,7 @@ const SearchScreen = ({ navigation }) => {
 				queryParams = {
 					asset_symbol: getMoreResultsTerm,
 					sentiment: sentiment,
-					records_per_page: RECORDS_PER_PAGE,
+					records_per_page: THESES_RECORDS_PER_PAGE,
 					page: newPageNumber,
 				};
 				responseData = await ThesesManager.getTheses(queryParams);
@@ -242,7 +238,7 @@ const SearchScreen = ({ navigation }) => {
 						assetSymbol: term,
 						sentiment: sentiment,
 						page: newPageNumber,
-						recordsPerPage: RECORDS_PER_PAGE,
+						recordsPerPage: THESES_RECORDS_PER_PAGE,
 					});
 					setBearResults((oldBearTheses) => [
 						...oldBearTheses,
@@ -320,7 +316,11 @@ const SearchScreen = ({ navigation }) => {
 							) : null}
 							<Input
 								value={term}
-								onChangeText={(newTerm) => setTerm(newTerm.replace(/\s/g, ""))} //.replace(/\s/g, '') removes spacebar
+								//toUpperCase has a bug on Android
+								//https://github.com/facebook/react-native/issues/27449
+								//https://github.com/facebook/react-native/issues/11068
+								//replace(/\s/g, "") forbids spaces
+								onChangeText={(newTerm) => setTerm(newTerm.replace(/\s/g, "").toUpperCase())}
 								maxLength={5}
 								autoCapitalize="characters"
 								autoCorrect={false}
@@ -424,7 +424,6 @@ export default SearchScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 	},
 	switchSelectorContainer: {
 		width: "85%",

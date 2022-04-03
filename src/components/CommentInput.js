@@ -1,10 +1,9 @@
 import React from "react";
-import { StyleSheet, TextInput } from "react-native";
-import { LIGHT_GREY_COLOR, TEXT_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
+import { StyleSheet, TextInput, View } from "react-native";
+import { LIGHT_GREY_COLOR, TEXT_COLOR, MAIN_SECONDARY_COLOR, LIST_SEPARATOR_COLOR } from "../styles/Colors";
 import { MAXIMUM_POST_CHARACTERS } from "../constants/PostsConstants";
 
 const CommentInput = ({
-	scrollToTop,
 	commentContent,
 	commentContentValidity,
 	changeContent,
@@ -25,27 +24,42 @@ const CommentInput = ({
 	};
 
 	return (
-		<TextInput
-			onFocus={scrollToTop}
-			color={TEXT_COLOR}
-			selectionColor={MAIN_SECONDARY_COLOR}
-			placeholder="Reply with your thoughts here"
-			placeholderTextColor={LIGHT_GREY_COLOR}
-			multiline={true}
-			numberOfLines={20}
-			style={styles.textArea}
-			maxLength={MAXIMUM_POST_CHARACTERS}
-			value={commentContent}
-			onChangeText={(newValue) => handleChangeText(newValue)}
-		/>
+		<View style={styles.inputContainer}>
+			<TextInput
+				color={TEXT_COLOR}
+				selectionColor={MAIN_SECONDARY_COLOR}
+				placeholder="Reply with your thoughts here"
+				placeholderTextColor={LIGHT_GREY_COLOR}
+				multiline={true}
+				style={styles.textArea}
+				maxLength={MAXIMUM_POST_CHARACTERS}
+				value={commentContent}
+				onChangeText={(newValue) => handleChangeText(newValue)}
+			/>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	textArea: {
-		marginVertical: 30,
-		maxHeight: 100,
-		textAlignVertical: 'top',
+		padding: 5,
+		width: "100%",
+		maxHeight: 150,
+	},
+	inputContainer: {
+		marginTop: 15,
+		flexDirection: "row",
+		alignSelf: "center",
+		alignItems: "center",
+		justifyContent: "center",
+		width: "96%",
+		marginBottom: 15,
+		borderRadius: 20,
+		borderWidth: 0.5,
+		borderColor: LIST_SEPARATOR_COLOR,
+		minHeight: 50,
+		paddingVertical: 10,
+		paddingHorizontal: 15,
 	},
 });
 

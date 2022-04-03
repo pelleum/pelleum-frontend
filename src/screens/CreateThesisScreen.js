@@ -8,12 +8,12 @@ import {
 	View,
 	Alert,
 	SafeAreaView,
-	KeyboardAvoidingView,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
-import { useAnalytics } from '@segment/analytics-react-native';
+import { useAnalytics } from "@segment/analytics-react-native";
 
 // local file imports
 import DismissKeyboard from "../components/DismissKeyboard";
@@ -24,7 +24,7 @@ import RationalesManager from "../managers/RationalesManager";
 import AppText from "../components/AppText";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
 import {
 	TEXT_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
@@ -37,119 +37,113 @@ import {
 	LIST_SEPARATOR_COLOR,
 	CREATE_PLACEHOLDER_COLOR,
 } from "../styles/Colors";
-import { MAXIMUM_THESIS_CONTENT_CHARACTERS, MAXIMUM_THESIS_TITLE_CHARACTERS } from "../constants/ThesesConstants";
+import {
+	MAXIMUM_THESIS_CONTENT_CHARACTERS,
+	MAXIMUM_THESIS_TITLE_CHARACTERS,
+} from "../constants/ThesesConstants";
 
-const CreateThesisScreen = ({ navigation }) => {
+const CreateThesisScreen = ({ navigation, route }) => {
 	// Universal State
 	const dispatch = useDispatch();
-
-	// Segment Tracking
-	const { track } = useAnalytics();
-
 	// Local State
-	const [content, setContent] = useState("");
-	const [asset_symbol, setAssetSymbol] = useState("");
-	const [title, setTitle] = useState("");
-	const [sentiment, setSentiment] = useState("Bull");
-	const [source1, setSource1] = useState("");
-	const [source2, setSource2] = useState("");
-	const [source3, setSource3] = useState("");
-	const [inputValidity, setInputValidity] = useState({
-		assetSymbolValidity: false,
-		contentValidity: false,
-		titleValidity: false,
-	});
+	// Determine whether or not this screen is being used to create
+	// or update a thesis. If it receives route params, it's used to update, else create
+	const updatingThesis = route.params ? true : false;
+	if (updatingThesis) {
+		var [content, setContent] = useState(route.params.thesis.content);
+		var [asset_symbol, setAssetSymbol] = useState(route.params.thesis.asset_symbol);
+		var [title, setTitle] = useState(route.params.thesis.title);
+		var [sentiment, setSentiment] = useState(route.params.thesis.sentiment);
+		var [sources, setSources] = useState(route.params.thesis.sources);
+		var [validSources, setValidSources] = useState(route.params.thesis.sources.filter((e) => e));
+		var [inputValidity, setInputValidity] = useState({
+			assetSymbolValidity: true,
+			contentValidity: true,
+			titleValidity: true,
+		});
+	} else {
+		var [content, setContent] = useState("");
+		var [asset_symbol, setAssetSymbol] = useState("");
+		var [title, setTitle] = useState("");
+		var [sentiment, setSentiment] = useState("Bull");
+		var [sources, setSources] = useState(["", "", "", "", "", ""]);
+		var [validSources, setValidSources] = useState([]);
+		var [inputValidity, setInputValidity] = useState({
+			assetSymbolValidity: false,
+			contentValidity: false,
+			titleValidity: false,
+		});
+	}
+	const [hackValue, setHackValue] = useState(""); // A hack that gets the sources state variable to update
 	const [disableStatus, setDisableStatus] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
-	const [sourceInputValidity, setSourceInputValidity] = useState({
-		source1: false,
-		source2: false,
-		source3: false,
-	});
-	const [validSources, setValidSources] = useState([]);
-
 	const sentimentOptions = [
 		{ label: "Bull", value: "Bull" },
 		{ label: "Bear", value: "Bear" },
 	];
 
-	const countSources = (sources) => {
+	// Segment Tracking
+	const { track } = useAnalytics();
+
+	const countSources = () => {
 		// Executed when user exits the AddSourcesModal
 		let newValidSources = [];
-
 		sources.forEach((source, i) => {
-			let sourceNumber = i + 1;
-			if (source && sourceInputValidity[`source${sourceNumber}`]) {
+			if (source) {
 				newValidSources.push(source);
 			}
 		});
 		setValidSources(newValidSources);
 	};
 
-	const handleChangeSourceInputValidity = (newSourceInputValidity) => {
-		// Executed when a source's validity is changed
-		setSourceInputValidity(newSourceInputValidity);
-	};
-
 	const handleChangeSource = (newValue, sourceNumber) => {
 		// Executed when a source is changed in the (child) Modal
-		switch (sourceNumber) {
-			case 1:
-			case "source1": // This is called a "fall-through" case
-				setSource1(newValue);
-				break;
-			case 2:
-			case "source2":
-				setSource2(newValue);
-				break;
-			case 3:
-			case "source3":
-				setSource3(newValue);
-				break;
-		}
+		const newSources = sources;
+		newSources[sourceNumber - 1] = newValue;
+		setSources(newSources);
+		setHackValue(newValue);
 	};
 
 	const hasUnsavedChanges = (
 		Boolean(content) ||
 		Boolean(asset_symbol) ||
-		Boolean(title) ||
-		Boolean(source1) ||
-		Boolean(source2) ||
-		Boolean(source3)
+		Boolean(title)
 	);
 
 	// Alert user they have unsaved changes
 	// https://reactnavigation.org/docs/preventing-going-back/
-	useEffect(() => navigation.addListener('beforeRemove', (e) => {
-		if (!hasUnsavedChanges) {
-			// If we don't have unsaved changes, then we don't need to do anything
-			return;
-		}
-		// Prevent default behavior of leaving the screen
-		e.preventDefault();
-		// Prompt the user before leaving the screen
-		Alert.alert(
-			'You are about to exit this screen.',
-			'Your thesis draft will not be saved. Are you sure you want to exit and discard your thesis draft?',
-			[
-				{ text: "Cancel", style: 'cancel', onPress: () => { } },
-				{
-					text: 'Discard',
-					style: 'destructive',
-					// If the user confirmed, then we dispatch the action we blocked earlier
-					// This will continue the action that had triggered the removal of the screen
-					onPress: () => navigation.dispatch(e.data.action),
-				},
-			]
-		);
-	}),
+	useEffect(
+		() =>
+			navigation.addListener("beforeRemove", (e) => {
+				if (!hasUnsavedChanges) {
+					// If we don't have unsaved changes, then we don't need to do anything
+					return;
+				}
+				// Prevent default behavior of leaving the screen
+				e.preventDefault();
+				// Prompt the user before leaving the screen
+				Alert.alert(
+					"You are about to exit this screen.",
+					"Your thesis draft will not be saved. Are you sure you want to exit and discard your thesis draft?",
+					[
+						{ text: "Cancel", style: "cancel", onPress: () => { } },
+						{
+							text: "Discard",
+							style: "destructive",
+							// If the user confirmed, then we dispatch the action we blocked earlier
+							// This will continue the action that had triggered the removal of the screen
+							onPress: () => navigation.dispatch(e.data.action),
+						},
+					]
+				);
+			}),
 		[navigation, hasUnsavedChanges]
 	);
 
 	const handleAddRationale = async (createdThesis) => {
 		const response = await RationalesManager.addRationale(createdThesis);
 		if (response.status == 201) {
-			track('Rationale Added', {
+			track("Rationale Added", {
 				authorUserId: createdThesis.user_id,
 				authorUsername: createdThesis.username,
 				thesisId: createdThesis.thesis_id,
@@ -196,10 +190,8 @@ const CreateThesisScreen = ({ navigation }) => {
 		}
 	};
 
-	const shareButtonPressed = async () => {
-		// Executed when the 'Share' button is pressed
 
-		const sources = validSources;
+	const createThesis = async () => {
 
 		const createThesisResponse = await ThesesManager.createThesis({
 			content,
@@ -217,18 +209,32 @@ const CreateThesisScreen = ({ navigation }) => {
 			Alert.alert(
 				"You already have a thesis with this title.",
 				"You cannot create multiple theses with the same title. Please update the title of this thesis.",
-				[{ text: "OK", onPress: () => { /* do nothing */ } }]
+				[
+					{
+						text: "OK",
+						onPress: () => {
+							/* do nothing */
+						},
+					},
+				]
 			);
 		} else {
 			Alert.alert(
 				"An unexpected error occured.",
 				"We apologize for the inconvenience. Your content was not shared. Please try again later.",
-				[{ text: "OK", onPress: () => { /* do nothing */ } }]
+				[
+					{
+						text: "OK",
+						onPress: () => {
+							/* do nothing */
+						},
+					},
+				]
 			);
 		}
 
 		if (createdThesis) {
-			track('Thesis Created', {
+			track("Thesis Created", {
 				authorUserId: createdThesis.user_id,
 				authorUsername: createdThesis.username,
 				assetSymbol: createdThesis.asset_symbol,
@@ -245,7 +251,7 @@ const CreateThesisScreen = ({ navigation }) => {
 			if (createdPost) {
 				createdPost.thesis = createdThesis;
 				dispatch(addPost(createdPost));
-				track('Post Created', {
+				track("Post Created", {
 					authorUserId: createdPost.user_id,
 					authorUsername: createdPost.username,
 					assetSymbol: createdPost.asset_symbol,
@@ -257,11 +263,60 @@ const CreateThesisScreen = ({ navigation }) => {
 				});
 				setContent("");
 				setAssetSymbol("");
+				setTitle("");
+				setSources(["", "", "", "", "", ""]);
 				setDisableStatus(true);
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 				navigation.navigate("FeedScreen");
 			}
 		}
+	}
+
+	const updateThesis = async (thesis) => {
+		const updateThesisResponse = await ThesesManager.updateThesis({
+			content,
+			title,
+			asset_symbol,
+			sentiment,
+			sources,
+		}, thesis.thesis_id);
+
+		if (updateThesisResponse.status == 200) {
+			const updatedThesis = updateThesisResponse.data;
+			setContent("");
+			setAssetSymbol("");
+			setTitle("");
+			setSources(["", "", "", "", "", ""]);
+			setDisableStatus(true);
+			navigation.navigate("ThesisDetailScreen", updatedThesis);
+		} else {
+			Alert.alert(
+				"An unexpected error occured.",
+				"We apologize for the inconvenience. Your content was not updated. Please try again later.",
+				[
+					{
+						text: "OK",
+						onPress: () => {
+							/* do nothing */
+						},
+					},
+				]
+			);
+		}
+	}
+
+
+	const submitButtonPressed = async () => {
+		// Executed when the 'Share' or 'Update' button is pressed
+
+		// Remove empty strings from sources array
+		const sources = validSources.filter((e) => e);
+
+		if (updatingThesis) {
+			await updateThesis(route.params.thesis);
+		} else {
+			await createThesis();
+		}
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 	};
 
 	const handleChangeText = ({
@@ -270,7 +325,6 @@ const CreateThesisScreen = ({ navigation }) => {
 		checkSymbol = false,
 		checkTitle = false,
 	} = {}) => {
-
 		const newInputValidity = inputValidity;
 
 		if (checkContent) {
@@ -314,128 +368,150 @@ const CreateThesisScreen = ({ navigation }) => {
 	};
 
 	return (
-		<DismissKeyboard>
-			<SafeAreaView style={styles.mainContainer}>
-				<AddSourcesModal
-					modalVisible={modalVisible}
-					makeModalDisappear={() => setModalVisible(false)}
-					source1={source1}
-					source2={source2}
-					source3={source3}
-					changeSource={handleChangeSource}
-					sourceInputValidity={sourceInputValidity}
-					changeValidity={handleChangeSourceInputValidity}
-					tallySources={() => countSources([source1, source2, source3])}
-				/>
-				<NativeBaseProvider>
-					<VStack>
-						<KeyboardAvoidingView width={"100%"} behavior={"position"} keyboardVerticalOffset={30}>
-							<HStack alignItems="center" justifyContent="space-between" my="15">
-								<Image
-									style={styles.image}
-									source={require("../../assets/defaultProfileImage.png")}
-								/>
-								<TouchableOpacity
-									style={
-										disableStatus
-											? styles.shareButtonDisabled
-											: styles.shareButtonEnabled
-									}
-									disabled={disableStatus}
-									onPress={() => {
-										shareButtonPressed();
-									}}
+		<KeyboardAwareScrollView
+			showsVerticalScrollIndicator={false}
+			enableAutomaticScroll={true}
+			enableOnAndroid={true} 		          //enable Android native softwareKeyboardLayoutMode
+			extraHeight={185}					  //when keyboard comes up, scroll up
+			keyboardShouldPersistTaps={'handled'} //scroll or tap buttons without dismissing the keyboard first
+		>
+			<DismissKeyboard>
+				<SafeAreaView style={styles.mainContainer}>
+					<AddSourcesModal
+						modalVisible={modalVisible}
+						makeModalDisappear={() => setModalVisible(false)}
+						hackValue={hackValue}
+						sources={sources}
+						changeSource={handleChangeSource}
+						tallySources={countSources}
+					/>
+					<NativeBaseProvider>
+						<VStack>
+							<View width={"100%"}>
+								<HStack
+									alignItems="center"
+									justifyContent="space-between"
+									my="15"
 								>
-									<AppText style={styles.buttonText}>Share</AppText>
-								</TouchableOpacity>
-							</HStack>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder="Ex: GOOGL"
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-								autoCapitalize="characters"
-								textTransform="uppercase"
-								autoCorrect={false}
-								maxLength={5}
-								value={asset_symbol}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkSymbol: true })
-								}
-								style={styles.assetSymbolInput}
-							/>
-							<AppText style={styles.labelText}>Ticker Symbol</AppText>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder="Your Thesis Title"
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-								value={title}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkTitle: true })
-								}
-								style={styles.titleInput}
-								maxLength={MAXIMUM_THESIS_TITLE_CHARACTERS}
-								autoCorrect={true}
-							/>
-							<AppText style={styles.labelText}>Thesis Title</AppText>
-							<TextInput
-								color={TEXT_COLOR}
-								selectionColor={MAIN_SECONDARY_COLOR}
-								placeholder={"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. Share your detailed reasoning for your investments here."}
-								placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
-								multiline={true}
-								numberOfLines={30}
-								style={styles.textArea}
-								maxLength={MAXIMUM_THESIS_CONTENT_CHARACTERS}
-								value={content}
-								onChangeText={(newValue) =>
-									handleChangeText({ newValue: newValue, checkContent: true })
-								}
-							/>
-						</KeyboardAvoidingView>
-						<HStack style={styles.hStack} alignItems="center">
-							<View style={styles.switchSelectorContainer}>
-								<SwitchSelector
-									options={sentimentOptions}
-									initial={0}
-									onPress={(value) => {
-										if (value === sentiment) {
-											//do nothing
-										} else {
-											setSentiment(value);
+									<Image
+										style={styles.image}
+										source={require("../../assets/defaultProfileImage.png")}
+									/>
+									<TouchableOpacity
+										style={
+											disableStatus
+												? styles.shareButtonDisabled
+												: styles.shareButtonEnabled
 										}
+										disabled={disableStatus}
+										onPress={() => {
+											submitButtonPressed();
+										}}
+									>
+										{route.params ? (
+											<AppText style={styles.buttonText}>Update</AppText>
+										) : (
+											<AppText style={styles.buttonText}>Share</AppText>
+										)}
+									</TouchableOpacity>
+								</HStack>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholder="Ex: GOOGL"
+									placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+									autoCorrect={false}
+									maxLength={5}
+									value={asset_symbol}
+									onChangeText={(newValue) =>
+										//toUpperCase has a bug on Android
+										//https://github.com/facebook/react-native/issues/27449
+										//https://github.com/facebook/react-native/issues/11068
+										//replace(/\s/g, "") forbids spaces
+										handleChangeText({ newValue: newValue.replace(/\s/g, "").toUpperCase(), checkSymbol: true })
+									}
+									autoCapitalize="characters"
+									style={styles.assetSymbolInput}
+								/>
+								<AppText style={styles.labelText}>Ticker Symbol</AppText>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholder="Your Thesis Title"
+									placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+									value={title}
+									onChangeText={(newValue) =>
+										handleChangeText({ newValue: newValue, checkTitle: true })
+									}
+									style={styles.titleInput}
+									maxLength={MAXIMUM_THESIS_TITLE_CHARACTERS}
+									autoCorrect={true}
+								/>
+								<AppText style={styles.labelText}>Thesis Title</AppText>
+								<TextInput
+									color={TEXT_COLOR}
+									selectionColor={MAIN_SECONDARY_COLOR}
+									placeholder={
+										"An investment thesis is a well-thought-out rationale for a particular investment or investment strategy. In essence, why are you buying (or not buying) this asset?"
+									}
+									placeholderTextColor={CREATE_PLACEHOLDER_COLOR}
+									multiline={true}
+									numberOfLines={30}
+									style={styles.textArea}
+									maxLength={MAXIMUM_THESIS_CONTENT_CHARACTERS}
+									value={content}
+									onChangeText={(newValue) => {
+										handleChangeText({ newValue: newValue, checkContent: true });
 									}}
-									height={40}
-									buttonColor={sentiment === "Bull" ? BULL_SENTIMENT_BACKGROUND__COLOR : BEAR_SENTIMENT_BACKGROUND__COLOR}
-									textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
-									borderColor={MAIN_DIFFERENTIATOR_COLOR}
-									backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
-									selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
-									fontSize={16}
-									bold={true}
-									hasPadding
-									style={styles.sentimentToggle}
 								/>
 							</View>
-							<TouchableOpacity
-								style={styles.iconButton}
-								onPress={() => setModalVisible(true)}
-							>
-								<MaterialIcons
-									name="add-link"
-									size={40}
-									color={MAIN_SECONDARY_COLOR}
-								/>
-							</TouchableOpacity>
-							<AppText style={{ color: LIGHT_GREY_COLOR, marginLeft: 20 }}>
-								{validSources.length} linked sources
-							</AppText>
-						</HStack>
-					</VStack>
-				</NativeBaseProvider>
-			</SafeAreaView>
-		</DismissKeyboard>
+							<HStack style={styles.hStack} alignItems="center">
+								<View style={styles.switchSelectorContainer}>
+									<SwitchSelector
+										options={sentimentOptions}
+										initial={sentiment == "Bull" ? 0 : 1}
+										onPress={(value) => {
+											if (value === sentiment) {
+												//do nothing
+											} else {
+												setSentiment(value);
+											}
+										}}
+										height={40}
+										buttonColor={
+											sentiment === "Bull"
+												? BULL_SENTIMENT_BACKGROUND__COLOR
+												: BEAR_SENTIMENT_BACKGROUND__COLOR
+										}
+										textColor={sentiment === "Bull" ? BAD_COLOR : GOOD_COLOR}
+										borderColor={MAIN_DIFFERENTIATOR_COLOR}
+										backgroundColor={MAIN_DIFFERENTIATOR_COLOR}
+										selectedColor={sentiment === "Bull" ? GOOD_COLOR : BAD_COLOR}
+										fontSize={16}
+										bold={true}
+										hasPadding
+										style={styles.sentimentToggle}
+									/>
+								</View>
+								<TouchableOpacity
+									style={styles.iconButton}
+									onPress={() => setModalVisible(true)}
+								>
+									<MaterialIcons
+										name="add-link"
+										size={40}
+										color={MAIN_SECONDARY_COLOR}
+									/>
+								</TouchableOpacity>
+								<AppText style={validSources.length > 0 ? styles.sourcesText : styles.noSourcesText}>
+									{validSources.length} linked sources
+								</AppText>
+							</HStack>
+						</VStack>
+					</NativeBaseProvider>
+				</SafeAreaView>
+			</DismissKeyboard>
+		</KeyboardAwareScrollView>
 	);
 };
 
@@ -449,7 +525,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 0.5,
 		borderBottomColor: LIST_SEPARATOR_COLOR,
 		height: 225,
-		textAlignVertical: 'top',
+		textAlignVertical: "top",
 	},
 	image: {
 		width: 44,
@@ -506,10 +582,18 @@ const styles = StyleSheet.create({
 		width: "100%",
 	},
 	labelText: {
-		color: LIGHT_GREY_COLOR
+		color: LIGHT_GREY_COLOR,
 	},
 	sentimentToggle: {
 		opacity: 0.65,
+	},
+	noSourcesText: {
+		color: "#fcba03",
+		marginLeft: 20,
+	},
+	sourcesText: {
+		color: MAIN_SECONDARY_COLOR,
+		marginLeft: 20,
 	},
 });
 
