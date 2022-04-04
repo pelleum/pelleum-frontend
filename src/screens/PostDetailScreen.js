@@ -129,7 +129,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 		if (commentsResponseData) {
 			dispatch(setComments(commentsResponseData.records.posts));
 		}
-		
+
 		setRefreshing(false);
 	};
 
@@ -149,6 +149,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 	return (
 		<NativeBaseProvider>
 			<KeyboardAwareFlatList
+				marginBottom={18}
 				showsVerticalScrollIndicator={false}
 				enableAutomaticScroll={true}
 				enableOnAndroid={true} //enable Android native softwareKeyboardLayoutMode
@@ -176,11 +177,13 @@ const PostDetailScreen = ({ navigation, route }) => {
 										This user's account is blocked.
 									</AppText>
 								) : (
-									<PostBox
-										postBoxType={PostBoxType.PostCommentedOn}
-										item={postCommentedOn}
-										nav={navigation}
-									/>
+									<View>
+										<PostBox
+											postBoxType={PostBoxType.PostCommentedOn}
+											item={postCommentedOn}
+											nav={navigation}
+										/>
+									</View>
 								)
 							) : null}
 							{thesisCommentedOn ? (
@@ -198,14 +201,14 @@ const PostDetailScreen = ({ navigation, route }) => {
 							) : null}
 							{postExists ? (
 								<View>
-									<View style={styles.postContainer}>
+									<View
+										style={detailedPost.is_post_comment_on ? styles.postContainerWithTopPost : null}>
 										<PostBox
 											postBoxType={PostBoxType.PostDetail}
 											item={detailedPost}
 											nav={navigation}
 										/>
 									</View>
-									<PostButtonPanel item={detailedPost} nav={navigation} />
 									<VStack>
 										<CommentInput
 											commentContent={commentContent}
@@ -252,12 +255,16 @@ PostDetailScreen.navigationOptions = () => {
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		marginHorizontal: 15,
+		flex: 1,
+		// marginHorizontal: 8,
 	},
-	postContainer: {
+	postContainerWithTopPost: {
 		paddingTop: 20,
-		borderBottomWidth: 1,
-		borderBottomColor: LIST_SEPARATOR_COLOR,
+		// borderBottomWidth: 1,
+		// borderBottomColor: LIST_SEPARATOR_COLOR,
+		marginLeft: 10,
+		borderLeftColor: LIST_SEPARATOR_COLOR,
+		borderWidth: 1
 	},
 	replyButtonEnabled: {
 		alignSelf: "flex-end",

@@ -6,11 +6,17 @@ const commonTextStyles = StyleSheet.create({
 		color: TEXT_COLOR,
 		fontSize: 16,
 		fontWeight: "bold",
+		opacity: 0.77,
 	},
 	dateText: {
 		justifyContent: "center",
 		color: LIGHT_GREY_COLOR,
-		fontSize: 16,
+		fontSize: 15,
+	},
+	timeElapsedText: {
+		color: LIGHT_GREY_COLOR,
+		fontSize: 15,
+		marginLeft: 5,
 	},
 });
 

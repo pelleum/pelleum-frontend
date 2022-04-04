@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 	},
 	usernameText: {
-		fontSize: 15,
+		fontSize: 16,
 		marginTop: 10,
 		fontWeight: "bold",
 		alignSelf: "center",

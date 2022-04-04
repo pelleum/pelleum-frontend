@@ -56,14 +56,14 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 	item["needsRefresh"] = true;
 
 	// Display nested PostBoxes for comments
-    var commentBoxes = item.replies ? (item.replies.map((reply, index) => (
-        <CommentBox
-            item={reply}
-            nav={nav}
-            commentLevel={commentLevel + 1}
-            key={index}
-        />
-    ))) : null;
+	var commentBoxes = item.replies ? (item.replies.map((reply, index) => (
+		<CommentBox
+			item={reply}
+			nav={nav}
+			commentLevel={commentLevel + 1}
+			key={index}
+		/>
+	))) : null;
 
 
 	const deleteContent = async (item) => {
@@ -135,12 +135,12 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 						commentLevel == 1
 							? styles.firstOrderComment
 							: commentLevel == 2
-							? styles.secondOrderComment
-							: commentLevel == 3
-							? styles.thirdOrderComment
-							: commentLevel == 4
-                            ? styles.fourthOrderComment
-                            : null
+								? styles.secondOrderComment
+								: commentLevel == 3
+									? styles.thirdOrderComment
+									: commentLevel == 4
+										? styles.fourthOrderComment
+										: null
 					}
 				>
 					<View>
@@ -159,7 +159,7 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 										@{item.username}
 									</AppText>
 								</TouchableOpacity>
-								<AppText style={styles.timeElapsedText}>
+								<AppText style={commonTextStyles.timeElapsedText}>
 									• {elapsedTime}
 								</AppText>
 							</HStack>
@@ -190,7 +190,9 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 						>
 							{item.content}
 						</AppText>
-						<PostButtonPanel item={item} nav={nav} />
+						<View style={styles.buttonPanelContainer}>
+							<PostButtonPanel item={item} nav={nav} />
+						</View>
 						{commentBoxes}
 					</View>
 				</Box>
@@ -202,37 +204,31 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 export default React.memo(CommentBox);
 
 const styles = StyleSheet.create({
-    firstOrderComment: {
-		marginLeft: 10,
-        borderLeftColor: LIST_SEPARATOR_COLOR,
-        borderWidth: 1
+	firstOrderComment: {
+		marginLeft: 20,
+		borderLeftColor: LIST_SEPARATOR_COLOR,
+		borderWidth: 1
 	},
 	secondOrderComment: {
 		marginLeft: 20,
-        borderLeftColor: LIST_SEPARATOR_COLOR,
-        borderWidth: 1
+		borderLeftColor: LIST_SEPARATOR_COLOR,
+		borderWidth: 1
 	},
 	thirdOrderComment: {
 		marginLeft: 20,
-        borderLeftColor: LIST_SEPARATOR_COLOR,
-        borderWidth: 1
+		borderLeftColor: LIST_SEPARATOR_COLOR,
+		borderWidth: 1
 	},
-    fourthOrderComment: {
+	fourthOrderComment: {
 		marginLeft: 20,
-        borderLeftColor: LIST_SEPARATOR_COLOR,
-        borderWidth: 1
+		borderLeftColor: LIST_SEPARATOR_COLOR,
+		borderWidth: 1
 	},
 	commentBox: {
-        marginLeft: 15,
-        marginRight: 25,
+		marginLeft: 15,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-	},
-	timeElapsedText: {
-		color: LIGHT_GREY_COLOR,
-		fontSize: 16,
-		marginLeft: 5,
 	},
 	contentText: {
 		fontSize: 16,
@@ -241,8 +237,15 @@ const styles = StyleSheet.create({
 	dotsButton: {
 		paddingVertical: 15,
 		paddingLeft: 20,
+		paddingRight: 14,
 	},
 	usernameButton: {
 		paddingVertical: 10,
 	},
+	buttonPanelContainer: {
+		width: 220,
+		alignItems: "center",
+		justifyContent: "center",
+		alignSelf: "flex-end",
+	}
 });

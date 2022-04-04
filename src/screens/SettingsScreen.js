@@ -1,6 +1,6 @@
 // Import Installed Libraries
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
+import { StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
 import AppText from "../components/AppText";
@@ -25,45 +25,47 @@ const SettingsScreen = ({ navigation }) => {
 	};
 
 	return (
-		<SafeAreaView alignItems="center" marginTop={1}>
-			<HelpModal
-				modalVisible={modalVisible}
-				makeModalDisappear={() => setModalVisible(false)}
-			/>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => setModalVisible(true)}
-			>
-				<AppText style={styles.buttonText}>Tell Us What Sucks</AppText>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => navigation.navigate("LinkedAccountsStatusScreen")}
-			>
-				<AppText style={styles.buttonText}>Linked Accounts</AppText>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => handleWebLink("https://www.pelleum.com/terms-of-service")}
-			>
-				<AppText style={styles.buttonText}>Terms of Service</AppText>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => handleWebLink("https://www.pelleum.com/privacy-policy")}
-			>
-				<AppText style={styles.buttonText}>Privacy Policy</AppText>
-			</TouchableOpacity>
-			{/* <TouchableOpacity
+		<ScrollView>
+			<SafeAreaView alignItems="center" marginTop={3}>
+				<HelpModal
+					modalVisible={modalVisible}
+					makeModalDisappear={() => setModalVisible(false)}
+				/>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => setModalVisible(true)}
+				>
+					<AppText style={styles.buttonText}>Tell Us What Sucks</AppText>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => navigation.navigate("LinkedAccountsStatusScreen")}
+				>
+					<AppText style={styles.buttonText}>Linked Accounts</AppText>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => handleWebLink("https://www.pelleum.com/terms-of-service")}
+				>
+					<AppText style={styles.buttonText}>Terms of Service</AppText>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => handleWebLink("https://www.pelleum.com/privacy-policy")}
+				>
+					<AppText style={styles.buttonText}>Privacy Policy</AppText>
+				</TouchableOpacity>
+				{/* <TouchableOpacity
 				style={styles.button}
 				onPress={() => navigation.navigate("DataPrivacyScreen")}
 			>
 				<AppText style={styles.buttonText}>Data Privacy</AppText>
 			</TouchableOpacity> */}
-			<TouchableOpacity style={styles.button} onPress={logOut}>
-				<AppText style={styles.buttonText}>Log Out</AppText>
-			</TouchableOpacity>
-		</SafeAreaView>
+				<TouchableOpacity style={styles.button} onPress={logOut}>
+					<AppText style={styles.buttonText}>Log Out</AppText>
+				</TouchableOpacity>
+			</SafeAreaView>
+		</ScrollView>
 	);
 };
 

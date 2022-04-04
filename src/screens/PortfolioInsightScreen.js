@@ -78,14 +78,15 @@ const styles = StyleSheet.create({
 		margin: 15,
 	},
 	usernameText: {
+		fontSize: 16,
 		marginTop: 10,
+		fontWeight: "bold",
 		alignSelf: "center",
 	},
 	noBrokerageLinkedText: {
 		alignSelf: "center",
 		marginTop: 30,
 		fontSize: 15,
-		fontWeight: "bold",
 	},
 	listHeaderText: {
 		fontWeight: "bold",

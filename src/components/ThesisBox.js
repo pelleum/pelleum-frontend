@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: THESIS_BOX_HEIGHT,
 		paddingVertical: 10,
-		paddingHorizontal: 25,
+		paddingHorizontal: 10,
 		fontSize: 16,
 		backgroundColor: MAIN_BACKGROUND_COLOR,
 		borderBottomWidth: Platform.OS === "ios" ? 0.17 : 0.29,

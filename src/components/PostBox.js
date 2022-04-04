@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, Alert, Platform } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Platform, View } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import PostButtonPanel from "./PostButtonPanel";
 import ThesisBox, { ThesesBoxType } from "./ThesisBox";
@@ -135,109 +135,95 @@ const PostBox = ({ postBoxType, item, nav }) => {
 
 	return (
 		<NativeBaseProvider>
-			<TouchableOpacity
-				disabled={postBoxType == PostBoxType.PostDetail ? true : false}
-				onPress={() => {
-					nav.navigate("PostDetailScreen", item);
-				}}
-			>
-				<Box
-					style={postBoxType == PostBoxType.PostCommentedOn ? styles.postCommentedOn : (postBoxType != PostBoxType.PostDetail ? styles.feedPost : null)}
+			<View style={styles.mainContainer}>
+				<TouchableOpacity
+					disabled={postBoxType == PostBoxType.PostDetail ? true : false}
+					onPress={() => {
+						nav.navigate("PostDetailScreen", item);
+					}}
 				>
-					<VStack>
-						<HStack style={styles.topPostBox}>
-							<HStack alignItems={"center"}>
-								<TouchableOpacity
-									style={styles.usernameButton}
-									onPress={() =>
-										nav.navigate("PortfolioInsightScreen", {
-											username: item.username,
-											userId: item.user_id,
-										})}
-								>
-									<AppText style={commonTextStyles.usernameText}>
-										@{item.username}
+					<Box
+						style={postBoxType == PostBoxType.PostCommentedOn ? styles.postCommentedOn : (postBoxType != PostBoxType.PostDetail ? styles.feedPost : styles.postDetail)}
+					>
+						<VStack>
+							<HStack style={styles.topPostBox}>
+								<HStack alignItems={"center"}>
+									<TouchableOpacity
+										style={styles.usernameButton}
+										onPress={() =>
+											nav.navigate("PortfolioInsightScreen", {
+												username: item.username,
+												userId: item.user_id,
+											})}
+									>
+										<AppText style={commonTextStyles.usernameText}>
+											@{item.username}
+										</AppText>
+									</TouchableOpacity>
+									<AppText style={commonTextStyles.timeElapsedText}>
+										• {elapsedTime}
 									</AppText>
-								</TouchableOpacity>
-								<AppText style={styles.timeElapsedText}>
-									• {elapsedTime}
-								</AppText>
-							</HStack>
-							<ManageContentModal
-								modalVisible={modalVisible}
-								makeModalDisappear={() => setModalVisible(false)}
-								item={item}
-								userId={userObject.userId}
-								deleteContent={deleteContent}
-								blockUser={blockUser}
-							/>
-							<TouchableOpacity
-								style={styles.dotsButton}
-								onPress={() => {
-									setModalVisible(true)
-								}}
-							>
-								<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
-							</TouchableOpacity>
-						</HStack>
-						{((item.is_post_comment_on || item.is_thesis_comment_on) && (postBoxType == PostBoxType.Feed || postBoxType == PostBoxType.PostDetail)) ? <AppText style={styles.commentFlagText}>Left a comment:</AppText> : null}
-						<HStack justifyContent="space-between" alignItems="center">
-							{item.asset_symbol ? (
+								</HStack>
+								<ManageContentModal
+									modalVisible={modalVisible}
+									makeModalDisappear={() => setModalVisible(false)}
+									item={item}
+									userId={userObject.userId}
+									deleteContent={deleteContent}
+									blockUser={blockUser}
+								/>
 								<TouchableOpacity
-									style={commonButtonStyles.assetButton}
+									style={styles.dotsButton}
 									onPress={() => {
-										console.log("Asset button worked.");
+										setModalVisible(true)
 									}}
 								>
-									<AppText style={commonButtonStyles.assetText}>
-										#{item.asset_symbol}
-									</AppText>
+									<Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />
 								</TouchableOpacity>
+							</HStack>
+							{((item.is_post_comment_on || item.is_thesis_comment_on) && (postBoxType == PostBoxType.Feed || postBoxType == PostBoxType.PostDetail)) ? <AppText style={styles.commentFlagText}>Left a comment:</AppText> : null}
+							<HStack justifyContent="space-between" alignItems="center">
+								{item.asset_symbol ? (
+									<TouchableOpacity
+										style={commonButtonStyles.assetButton}
+										onPress={() => {
+											console.log("Asset button worked.");
+										}}
+									>
+										<AppText style={commonButtonStyles.assetText}>
+											#{item.asset_symbol}
+										</AppText>
+									</TouchableOpacity>
+								) : null}
+								{item.sentiment ? (
+									item.sentiment === "Bull" ? (
+										<SentimentPill item={item} sentiment={Sentiment.Bull} />
+									) : (
+										<SentimentPill item={item} sentiment={Sentiment.Bear} />
+									)
+								) : null}
+							</HStack>
+							{postBoxType != PostBoxType.PostDetail ?
+								(<AppText
+									numberOfLines={MAXIMUM_POST_VISIBLE_LINES}
+									style={styles.contentText}>
+									{item.content}</AppText>) :
+								(<AppText
+									style={styles.contentText}>{item.content}
+								</AppText>)
+							}
+							{item.thesis ? (
+								<ThesisBox
+									item={item.thesis}
+									nav={nav}
+									thesisBoxType={ThesesBoxType.Contained}
+								/>
 							) : null}
-							{item.sentiment ? (
-								item.sentiment === "Bull" ? (
-									<SentimentPill item={item} sentiment={Sentiment.Bull} />
-								) : (
-									<SentimentPill item={item} sentiment={Sentiment.Bear} />
-								)
-							) : null}
-						</HStack>
-						{postBoxType != PostBoxType.PostDetail ?
-							(<AppText
-								numberOfLines={MAXIMUM_POST_VISIBLE_LINES}
-								style={styles.contentText}>
-								{item.content}</AppText>) :
-							(<AppText
-								style={styles.contentText}>{item.content}
-							</AppText>)
-						}
-						{item.thesis ? (
-							<ThesisBox
-								item={item.thesis}
-								nav={nav}
-								thesisBoxType={ThesesBoxType.Contained}
-							/>
-						) : null}
-						{postBoxType == PostBoxType.PostDetail ? (
-							<TouchableOpacity
-								style={styles.buttonEnabled}
-								onPress={() =>
-									nav.navigate("PortfolioInsightScreen", {
-										username: item.username,
-										userId: item.user_id,
-									})
-								}
-							>
-								<AppText style={styles.buttonTextStyle}>
-									View Author's Portfolio
-								</AppText>
-							</TouchableOpacity>
-						) : (
 							<PostButtonPanel item={item} nav={nav} />
-						)}
-					</VStack>
-				</Box>
-			</TouchableOpacity>
+						</VStack>
+					</Box>
+				</TouchableOpacity>
+			</View>
 		</NativeBaseProvider>
 	);
 };
@@ -245,6 +231,9 @@ const PostBox = ({ postBoxType, item, nav }) => {
 export default React.memo(PostBox);
 
 const styles = StyleSheet.create({
+	mainContainer: {
+		flex: 1,
+	},
 	topPostBox: {
 		width: "100%",
 		flexDirection: "row",
@@ -265,39 +254,16 @@ const styles = StyleSheet.create({
 	},
 	postCommentedOn: {
 		width: "100%",
-		borderBottomColor: LIST_SEPARATOR_COLOR,
-		borderBottomWidth: Platform.OS === "ios" ? 0.17 : 0.29,
 		paddingBottom: 7,
-	},
-	timeElapsedText: {
-		color: LIGHT_GREY_COLOR,
-		fontSize: 16,
-		marginLeft: 5,
 	},
 	contentText: {
 		fontSize: 16,
 		padding: 15,
 	},
-	buttonEnabled: {
-		alignSelf: "center",
-		borderRadius: 30,
-		padding: 11,
-		marginTop: 5,
-		marginBottom: 5,
-		width: "100%",
-		backgroundColor: MAIN_SECONDARY_COLOR,
-		elevation: 2,
-	},
-	buttonTextStyle: {
-		color: "white",
-		fontWeight: "bold",
-		textAlign: "center",
-		fontSize: 15,
-	},
 	dotsButton: {
 		paddingVertical: 15,
 		paddingLeft: 20,
-		paddingRight: 10
+		paddingRight: 10,
 	},
 	commentFlagText: {
 		color: LIGHT_GREY_COLOR,
@@ -305,4 +271,7 @@ const styles = StyleSheet.create({
 	usernameButton: {
 		paddingVertical: 10,
 	},
+	postDetail:{
+		marginLeft: 15,
+	}
 });

@@ -36,6 +36,9 @@ const FeedScreen = ({ navigation, route }) => {
 		navigation.navigate(screenToNavigateTo);
 	};
 
+	// Filter out comments from feed posts
+	// let postsWithNoComments = posts.filter(post => !(post.is_post_comment_on || post.is_thesis_comment_on));
+
 	const onRefresh = async () => {
 		setRefreshing(true);
 		const queryParams = { records_per_page: FEED_RECORDS_PER_PAGE, page: 1 };
@@ -69,7 +72,7 @@ const FeedScreen = ({ navigation, route }) => {
 				//1. Append new posts to currentPosts
 				const currentPosts = posts;
 				currentPosts.push(...responseData.records.posts);
-				
+
 				//2. Filter out duplicate values
 				const uniquePostsSet = new Set();
 				uniquePosts = currentPosts.filter(function (post) {

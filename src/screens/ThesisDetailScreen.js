@@ -61,6 +61,14 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	const dateWritten = new Date(thesis.created_at);
 
+	// When ThesisDetailScreen is focused, call onRefresh
+	useEffect(() => {
+		const unsubscribe = navigation.addListener("focus", () => {
+			onRefresh();
+		});
+		return unsubscribe;
+	}, [navigation]);
+
 	// Display thesis sources
 	const sources = thesis.sources ? thesis.sources : [];
 	let sourcesToDisplay = sources.map((source, index) => (
@@ -210,17 +218,14 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		setRefreshing(false);
 	};
 
-	useEffect(() => {
-		onRefresh();
-	}, [route]);
-
 	renderItem = ({ item }) => (
-		<CommentBox item={item} nav={navigation} commentLevel={1}/>
+		<CommentBox item={item} nav={navigation} commentLevel={1} />
 	);
 
 	return (
 		<NativeBaseProvider>
 			<KeyboardAwareFlatList
+				marginBottom={18}
 				showsVerticalScrollIndicator={false}
 				enableAutomaticScroll={true}
 				enableOnAndroid={true} 				  //enable Android native softwareKeyboardLayoutMode
@@ -252,7 +257,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 								<>
 									<View style={styles.thesisContainer}>
 										<AppText style={styles.thesisTitle}>{thesis.title}</AppText>
-										<HStack justifyContent="space-between" marginBottom={5}>
+										<HStack alignItems={"center"} justifyContent="space-between" marginBottom={5}>
 											<TouchableOpacity
 												style={styles.usernameButton}
 												onPress={() =>
@@ -367,7 +372,7 @@ export default ThesisDetailScreen;
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		marginHorizontal: 15,
+		marginHorizontal: 8,
 	},
 	thesisContainer: {
 		paddingVertical: 20,
