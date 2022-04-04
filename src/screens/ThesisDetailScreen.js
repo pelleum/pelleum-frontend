@@ -10,7 +10,7 @@ import { HStack, VStack, NativeBaseProvider } from "native-base";
 import * as WebBrowser from "expo-web-browser";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import ThesisButtonPanel from "../components/ThesisButtonPanel";
-import PostBox, { PostBoxType } from "../components/PostBox";
+import CommentBox from "../components/CommentBox";
 import PostsManager from "../managers/PostsManager";
 import CommentInput from "../components/CommentInput";
 import AppText from "../components/AppText";
@@ -215,7 +215,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	}, [route]);
 
 	renderItem = ({ item }) => (
-		<PostBox postBoxType={PostBoxType.Comment} item={item} nav={navigation} />
+		<CommentBox item={item} nav={navigation} commentLevel={1}/>
 	);
 
 	return (

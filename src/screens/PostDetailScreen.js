@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
-import {
-	StyleSheet,
-	View,
-	TouchableOpacity,
-	Keyboard,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import CommentInput from "../components/CommentInput";
 import PostButtonPanel from "../components/PostButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
+import CommentBox from "../components/CommentBox";
 import PostsManager from "../managers/PostsManager";
 import ThesesManager from "../managers/ThesesManager";
 import ThesisBox from "../components/ThesisBox";
 import AppText from "../components/AppText";
-import { MAIN_SECONDARY_COLOR, BAD_COLOR, LIST_SEPARATOR_COLOR } from "../styles/Colors";
-import { useAnalytics } from '@segment/analytics-react-native';
+import {
+	MAIN_SECONDARY_COLOR,
+	BAD_COLOR,
+	LIST_SEPARATOR_COLOR,
+} from "../styles/Colors";
+import { useAnalytics } from "@segment/analytics-react-native";
 import DismissKeyboard from "../components/DismissKeyboard";
 
 // Redux
@@ -69,7 +69,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 		});
 
 		if (createdComment) {
-			track('Post Created', {
+			track("Post Created", {
 				authorUserId: createdComment.user_id,
 				authorUsername: createdComment.username,
 				assetSymbol: createdComment.asset_symbol,
@@ -129,6 +129,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 		if (commentsResponseData) {
 			dispatch(setComments(commentsResponseData.records.posts));
 		}
+		
 		setRefreshing(false);
 	};
 
@@ -141,16 +142,18 @@ const PostDetailScreen = ({ navigation, route }) => {
 		detailedPost.needsRefresh = false;
 	}
 
-	renderItem = ({ item }) => (<PostBox postBoxType={PostBoxType.Comment} item={item} nav={navigation} />);
+	renderItem = ({ item }) => (
+		<CommentBox item={item} nav={navigation} commentLevel={1} />
+	);
 
 	return (
 		<NativeBaseProvider>
 			<KeyboardAwareFlatList
 				showsVerticalScrollIndicator={false}
 				enableAutomaticScroll={true}
-				enableOnAndroid={true} 				  //enable Android native softwareKeyboardLayoutMode
-				extraHeight={185}					  //when keyboard comes up, scroll enough to see the Reply button
-				keyboardShouldPersistTaps={'handled'} //scroll or tap the Reply button without dismissing the keyboard first
+				enableOnAndroid={true} //enable Android native softwareKeyboardLayoutMode
+				extraHeight={185} //when keyboard comes up, scroll enough to see the Reply button
+				keyboardShouldPersistTaps={"handled"} //scroll or tap the Reply button without dismissing the keyboard first
 				width={"100%"}
 				data={comments}
 				keyExtractor={(item) => item.post_id}
@@ -237,7 +240,6 @@ const PostDetailScreen = ({ navigation, route }) => {
 					</DismissKeyboard>
 				}
 			></KeyboardAwareFlatList>
-
 		</NativeBaseProvider>
 	);
 };

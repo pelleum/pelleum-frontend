@@ -27,7 +27,6 @@ import { removePost, removeAuthoredPost, removeComment } from "../redux/actions/
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
-	static Comment = new PostBoxType("comment");
 	static PostDetail = new PostBoxType("postDetail");
 	static PostCommentedOn = new PostBoxType("postCommentedOn");
 	static ThesisCommentedOn = new PostBoxType("thesisCommentedOn");
@@ -76,7 +75,6 @@ const PostBox = ({ postBoxType, item, nav }) => {
 
 	// Determine whether a refresh is needed
 	if (
-		postBoxType == PostBoxType.Comment ||
 		postBoxType == PostBoxType.PostCommentedOn ||
 		postBoxType == PostBoxType.ThesisCommentedOn
 	) {
@@ -97,8 +95,6 @@ const PostBox = ({ postBoxType, item, nav }) => {
 						if (response.status == 200) {
 							if (postBoxType.type == "userAuthored") {
 								dispatch(removeAuthoredPost(item));
-							} else if (postBoxType.type == "comment") {
-								dispatch(removeComment(item));
 							}
 							dispatch(removePost(item));
 						}
@@ -242,7 +238,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 					</VStack>
 				</Box>
 			</TouchableOpacity>
-		</NativeBaseProvider >
+		</NativeBaseProvider>
 	);
 };
 

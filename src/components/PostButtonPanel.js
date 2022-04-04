@@ -19,10 +19,11 @@ const PostButtonPanel = ({ item, nav }) => {
 	// Segment Tracking
 	const { track } = useAnalytics();
 
-	let likeCount = item.like_count;
-
 	const onShare = async (item) => {
-		const postType = (item.is_post_comment_on || item.is_thesis_comment_on) ? "comment" : "feedPost";
+		const postType =
+			item.is_post_comment_on || item.is_thesis_comment_on
+				? "comment"
+				: "feedPost";
 		const containsThesis = item.thesis ? true : false;
 		try {
 			const result = await Share.share(
@@ -30,16 +31,14 @@ const PostButtonPanel = ({ item, nav }) => {
 					message: `@${item.username} on Pelleum💥:\n\n"${item.content}"\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com/download`,
 				},
 				{
-					excludedActivityTypes: [
-						'com.apple.UIKit.activity.AirDrop',
-					]
-				},
+					excludedActivityTypes: ["com.apple.UIKit.activity.AirDrop"],
+				}
 			);
 			if (result.action === Share.sharedAction) {
 				if (result.activityType) {
 					// shared with activity type of result.activityType
 					// iOS
-					track('Post Shared', {
+					track("Post Shared", {
 						authorUserId: item.user_id,
 						authorUsername: item.username,
 						assetSymbol: item.asset_symbol,
@@ -53,7 +52,7 @@ const PostButtonPanel = ({ item, nav }) => {
 					// This does not take into account a user dismissing the Share modal
 					// We should only track the event if it is ACTUALLY shared
 					// Consider using https://react-native-share.github.io/react-native-share/
-					track('Post Shared', {
+					track("Post Shared", {
 						authorUserId: item.user_id,
 						authorUsername: item.username,
 						assetSymbol: item.asset_symbol,
@@ -97,23 +96,23 @@ const PostButtonPanel = ({ item, nav }) => {
 				>
 					<HStack alignItems={"center"}>
 						<Fontisto name="comment" size={16} color={LIGHT_GREY_COLOR} />
-						<AppText style={styles.countStyle}>{item.comment_count}</AppText>
+						{item.comment_count > 0 ? (
+							<AppText style={styles.countStyle}>{item.comment_count}</AppText>
+						) : null}
 					</HStack>
 				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.iconButton}
-					onPress={() => onRepost()}
-				>
+				<TouchableOpacity style={styles.iconButton} onPress={() => onRepost()}>
 					<EvilIcons name="retweet" size={30} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {
-						(item.user_reaction_value == 1 &&
-							!locallyUnlikedPosts.includes(item.post_id)) ||
-							locallyLikedPosts.includes(item.post_id)
-							? likeCount += 1
-							: likeCount -= 1
+						// TODO: HANDLE THIS IN REDUX
+						// (item.user_reaction_value == 1 &&
+						// 	!locallyUnlikedPosts.includes(item.post_id)) ||
+						// 	locallyLikedPosts.includes(item.post_id)
+						// 	? likeCount += 1
+						// 	: likeCount -= 1
 						PostsManager.sendPostReaction(item);
 					}}
 				>
@@ -122,7 +121,7 @@ const PostButtonPanel = ({ item, nav }) => {
 							name={
 								(item.user_reaction_value == 1 &&
 									!locallyUnlikedPosts.includes(item.post_id)) ||
-									locallyLikedPosts.includes(item.post_id)
+								locallyLikedPosts.includes(item.post_id)
 									? "md-heart"
 									: "md-heart-outline"
 							}
@@ -130,15 +129,20 @@ const PostButtonPanel = ({ item, nav }) => {
 							color={
 								(item.user_reaction_value == 1 &&
 									!locallyUnlikedPosts.includes(item.post_id)) ||
-									locallyLikedPosts.includes(item.post_id)
+								locallyLikedPosts.includes(item.post_id)
 									? "#f01670"
 									: LIGHT_GREY_COLOR
 							}
 						/>
-						<AppText style={styles.countStyle}>{likeCount}</AppText>
+						{item.like_count > 0 ? (
+							<AppText style={styles.countStyle}>{item.like_count}</AppText>
+						) : null}
 					</HStack>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.iconButton} onPress={() => onShare(item)}>
+				<TouchableOpacity
+					style={styles.iconButton}
+					onPress={() => onShare(item)}
+				>
 					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
 				</TouchableOpacity>
 			</HStack>
