@@ -417,7 +417,7 @@ const SearchScreen = ({ navigation }) => {
 								term ? getResults() : getResults({ discoveryPage: true });
 							}}
 							onEndReached={getMoreResults}
-							onEndReachedThreshold={0.1}
+							onEndReachedThreshold={0.01}
 							onViewableItemsChanged={viewableItemsRef}
 							// a threshold of X means that at least X percentage of the item's area must be visible to be considered 'visible'
 							viewabilityConfig={{ viewAreaCoveragePercentThreshold: 75 }}

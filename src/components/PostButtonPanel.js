@@ -115,7 +115,7 @@ const PostButtonPanel = ({ item, nav }) => {
 							name={
 								(item.user_reaction_value == 1 &&
 									!locallyUnlikedPosts.includes(item.post_id)) ||
-								locallyLikedPosts.includes(item.post_id)
+									locallyLikedPosts.includes(item.post_id)
 									? "md-heart"
 									: "md-heart-outline"
 							}
@@ -123,7 +123,7 @@ const PostButtonPanel = ({ item, nav }) => {
 							color={
 								(item.user_reaction_value == 1 &&
 									!locallyUnlikedPosts.includes(item.post_id)) ||
-								locallyLikedPosts.includes(item.post_id)
+									locallyLikedPosts.includes(item.post_id)
 									? "#f01670"
 									: LIGHT_GREY_COLOR
 							}
@@ -136,6 +136,10 @@ const PostButtonPanel = ({ item, nav }) => {
 							) : (
 								<AppText style={styles.countStyle}>{item.like_count}</AppText>
 							)
+						) : locallyLikedPosts.includes(item.post_id) ? (
+							<AppText style={styles.countStyle}>
+								{item.like_count + 1}
+							</AppText>
 						) : null}
 					</HStack>
 				</TouchableOpacity>
