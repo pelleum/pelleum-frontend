@@ -107,12 +107,6 @@ const PostButtonPanel = ({ item, nav }) => {
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {
-						// TODO: HANDLE THIS IN REDUX
-						// (item.user_reaction_value == 1 &&
-						// 	!locallyUnlikedPosts.includes(item.post_id)) ||
-						// 	locallyLikedPosts.includes(item.post_id)
-						// 	? likeCount += 1
-						// 	: likeCount -= 1
 						PostsManager.sendPostReaction(item);
 					}}
 				>
@@ -135,7 +129,13 @@ const PostButtonPanel = ({ item, nav }) => {
 							}
 						/>
 						{item.like_count > 0 ? (
-							<AppText style={styles.countStyle}>{item.like_count}</AppText>
+							locallyLikedPosts.includes(item.post_id) ? (
+								<AppText style={styles.countStyle}>
+									{item.like_count + 1}
+								</AppText>
+							) : (
+								<AppText style={styles.countStyle}>{item.like_count}</AppText>
+							)
 						) : null}
 					</HStack>
 				</TouchableOpacity>
