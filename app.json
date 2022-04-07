@@ -1,10 +1,10 @@
 {
     "expo": {
-        "name": "Pelleum",
-        "slug": "pelleum-frontend",
+        "name": "Pelleum DEV",
+        "slug": "pelleum-frontend-dev",
         "version": "1.0.3",
         "orientation": "portrait",
-        "icon": "./assets/prod-icon.png",
+        "icon": "./assets/dev-icon.png",
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "cover",
@@ -19,7 +19,7 @@
         ],
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.pelleum.mobile",
+            "bundleIdentifier": "com.pelleum.dev",
             "buildNumber": "5",
             "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541",
             "infoPlist": {
@@ -28,7 +28,7 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/prod-adaptive-icon.png",
+                "foregroundImage": "./assets/dev-adaptive-icon.png",
                 "backgroundColor": "#000000"
             },
             "softwareKeyboardLayoutMode": "pan",
@@ -37,7 +37,7 @@
                 "USE_BIOMETRIC",
                 "USE_FINGERPRINT"
             ],
-            "package": "com.pelleum.mobile",
+            "package": "com.pelleum.dev",
             "versionCode": 5,
             "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
         },

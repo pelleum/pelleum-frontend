@@ -14,7 +14,9 @@ import {
 	MAXIMUM_THESIS_CONTENT_VISIBLE_LINES,
 	MAXIMUM_THESIS_TITLE_VISIBLE_LINES,
 	THESIS_BOX_HEIGHT,
+	THESIS_BOX_CONTAINED_HEIGHT,
 } from "../constants/ThesesConstants";
+import * as WebBrowser from "expo-web-browser";
 
 export class ThesesBoxType {
 	static Contained = new ThesesBoxType("contained");
@@ -28,6 +30,12 @@ export class ThesesBoxType {
 // StandAlone is the default thesisBoxType
 const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 	const dateWritten = new Date(item.created_at);
+
+	const cryptoData = require('../constants/crypto-list.json');
+
+	const handleWebLink = async (webLink) => {
+		await WebBrowser.openBrowserAsync(webLink);
+	};
 
 	return (
 		<NativeBaseProvider>
@@ -74,7 +82,11 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							<TouchableOpacity
 								style={commonButtonStyles.assetButton}
 								onPress={() => {
-									console.log("Asset button worked.");
+									cryptoData.hasOwnProperty(item.asset_symbol) ? (
+										handleWebLink(cryptoData[item.asset_symbol])
+									) : (
+										handleWebLink(`https://finance.yahoo.com/quote/${item.asset_symbol}`)
+									)
 								}}
 							>
 								<AppText style={commonButtonStyles.assetText}>
@@ -87,6 +99,13 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 						</AppText>
 					</HStack>
 					<AppText numberOfLines={MAXIMUM_THESIS_CONTENT_VISIBLE_LINES}>{item.content}</AppText>
+					{thesisBoxType == ThesesBoxType.Contained ? null : (
+						<View style={styles.countsContainer}>
+							<AppText style={styles.countStyle}>Likes: {item.like_count}</AppText>
+							<AppText style={styles.countStyle}>Dislikes: {item.dislike_count}</AppText>
+							<AppText style={styles.countStyle}>Saves: {item.save_count}</AppText>
+						</View>
+					)}
 				</Box>
 			</TouchableOpacity>
 		</NativeBaseProvider>
@@ -109,7 +128,7 @@ const styles = StyleSheet.create({
 	},
 	thesisContainerContained: {
 		width: "100%",
-		height: 220,
+		height: THESIS_BOX_CONTAINED_HEIGHT,
 		padding: 10,
 		fontSize: 16,
 		backgroundColor: MAIN_BACKGROUND_COLOR,
@@ -125,5 +144,16 @@ const styles = StyleSheet.create({
 	},
 	usernameButton: {
 		paddingVertical: 10,
+	},
+	countsContainer: {
+		flexDirection: "row",
+		marginTop: 10,
+		alignSelf: "center",
+		alignItems: "center",
+		width: 280,
+		justifyContent: "space-between",
+	},
+	countStyle: {
+		color: LIGHT_GREY_COLOR,
 	},
 });

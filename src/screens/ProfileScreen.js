@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	StyleSheet,
 	View,
@@ -25,6 +25,7 @@ import {
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 } from "../styles/Colors";
+import { useScrollToTop } from "@react-navigation/native";
 
 const ProfileScreen = ({ navigation, route }) => {
 	// State Management
@@ -32,6 +33,10 @@ const ProfileScreen = ({ navigation, route }) => {
 	const [username, setUsername] = useState("");
 	const { linkedAccounts } = useSelector((state) => state.linkedAccountsReducer);
 	const { userObject } = useSelector((state) => state.authReducer);
+
+	// When bottom tab button is pressed, scroll to top
+	const ref = useRef(null);
+	useScrollToTop(ref);
 
 	const onRefresh = async () => {
 		setUsername(userObject.username);
@@ -108,6 +113,7 @@ const ProfileScreen = ({ navigation, route }) => {
 					data={assetList}
 					keyExtractor={(item) => item.asset_symbol}
 					renderItem={renderItem}
+					ref={ref}
 					ListHeaderComponent={
 						<View style={styles.listHeaderView}>
 							<TouchableOpacity

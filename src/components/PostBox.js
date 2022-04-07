@@ -18,12 +18,12 @@ import commonButtonStyles from "../styles/CommonButtons";
 import SentimentPill, { Sentiment } from "./SentimentPill";
 import { MAXIMUM_POST_VISIBLE_LINES } from "../constants/PostsConstants";
 import ManageContentModal from "./modals/ManageContentModal";
+import * as WebBrowser from "expo-web-browser";
 import { useAnalytics } from '@segment/analytics-react-native';
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import { removePost, removeAuthoredPost, removeComment } from "../redux/actions/PostActions";
-
 
 export class PostBoxType {
 	static Feed = new PostBoxType("feed");
@@ -58,7 +58,6 @@ const getTimeElapsed = (item) => {
 	}
 }
 
-
 const PostBox = ({ postBoxType, item, nav }) => {
 	// Local State
 	const [modalVisible, setModalVisible] = useState(false);
@@ -79,6 +78,12 @@ const PostBox = ({ postBoxType, item, nav }) => {
 		postBoxType == PostBoxType.ThesisCommentedOn
 	) {
 		item["needsRefresh"] = true;
+	};
+
+	const cryptoData = require('../constants/crypto-list.json');
+
+	const handleWebLink = async (webLink) => {
+		await WebBrowser.openBrowserAsync(webLink);
 	};
 
 	const deleteContent = async (item) => {
@@ -187,7 +192,11 @@ const PostBox = ({ postBoxType, item, nav }) => {
 									<TouchableOpacity
 										style={commonButtonStyles.assetButton}
 										onPress={() => {
-											console.log("Asset button worked.");
+											cryptoData.hasOwnProperty(item.asset_symbol) ? (
+												handleWebLink(cryptoData[item.asset_symbol])
+											) : (
+												handleWebLink(`https://finance.yahoo.com/quote/${item.asset_symbol}`)
+											)
 										}}
 									>
 										<AppText style={commonButtonStyles.assetText}>
@@ -271,7 +280,7 @@ const styles = StyleSheet.create({
 	usernameButton: {
 		paddingVertical: 10,
 	},
-	postDetail:{
+	postDetail: {
 		marginLeft: 15,
 	}
 });

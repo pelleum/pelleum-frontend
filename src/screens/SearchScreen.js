@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
 	StyleSheet,
 	View,
@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	Platform,
 	Keyboard,
+	ActivityIndicator
 } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
 import { Input, Icon, NativeBaseProvider, Center, HStack } from "native-base";
@@ -29,6 +30,7 @@ import {
 } from "../styles/Colors";
 import { THESIS_BOX_HEIGHT, THESES_RECORDS_PER_PAGE } from "../constants/ThesesConstants";
 import { useAnalytics } from '@segment/analytics-react-native';
+import { useScrollToTop } from '@react-navigation/native';
 
 //need to figure out how to calculate item height, so that we are not bound by a constant item height (defined in ThesisBox)
 //the result of the item height calculation will be fed into getItemLayout
@@ -40,6 +42,7 @@ const SearchScreen = ({ navigation }) => {
 	const [bullResults, setBullResults] = useState([]);
 	const [bearResults, setBearResults] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
+	const [refreshing, setRefreshing] = useState(false);
 	const [message, setMessage] = useState("");
 	const [sentiment, setSentiment] = useState("Bull");
 	const [currentBullPage, setCurrentBullPage] = useState(1);
@@ -50,11 +53,15 @@ const SearchScreen = ({ navigation }) => {
 	const [lastBearItemIndex, setLastBearItemIndex] = useState(0);
 	const [tempIndex, setTempIndex] = useState(0);
 
+	const dispatch = useDispatch();
+
 	// Segment Tracking
 	const { track } = useAnalytics();
 
-	const flatListRef = React.useRef();
-	const dispatch = useDispatch();
+	// When bottom tab button is pressed, scroll to top
+	// Also, when sentiment is toggled, scroll to last position
+	const flatListRef = useRef();
+	useScrollToTop(flatListRef);
 
 	const viewableItemsRef = useCallback(({ viewableItems }) => {
 		const lastItem = viewableItems[viewableItems.length - 1];
@@ -95,6 +102,9 @@ const SearchScreen = ({ navigation }) => {
 	};
 
 	async function getResults({ discoveryPage = false } = {}) {
+		setRefreshing(true);
+		setCurrentBullPage(1);
+		setCurrentBearPage(1);
 		// Gets results to populate the list
 		let successfulResponses = [];
 		const retrievedThesesArrayLengths = { bull: 0, bear: 0 };
@@ -188,9 +198,11 @@ const SearchScreen = ({ navigation }) => {
 				"There was an error retrieving theses. Please try again later."
 			);
 		}
+		setRefreshing(false);
 	}
 
 	const getMoreResults = async () => {
+		setRefreshing(true);
 		let newPageNumber;
 		let responseData;
 		let queryParams;
@@ -251,6 +263,7 @@ const SearchScreen = ({ navigation }) => {
 				}
 			}
 		}
+		setRefreshing(false);
 	};
 
 	useEffect(() => {
@@ -327,8 +340,6 @@ const SearchScreen = ({ navigation }) => {
 								onSubmitEditing={() => {
 									if (term.length > 0) {
 										setGetMoreResultsTerm(term);
-										setCurrentBullPage(1);
-										setCurrentBearPage(1);
 										getResults();
 									} else {
 										Keyboard.dismiss();
@@ -400,8 +411,13 @@ const SearchScreen = ({ navigation }) => {
 							data={sentiment === "Bull" ? bullResults : bearResults}
 							keyExtractor={(item) => item.thesis_id}
 							renderItem={renderItem}
+							showsVerticalScrollIndicator={false}
+							refreshing={refreshing}
+							onRefresh={() => {
+								term ? getResults() : getResults({ discoveryPage: true });
+							}}
 							onEndReached={getMoreResults}
-							onEndReachedThreshold={1}
+							onEndReachedThreshold={0.1}
 							onViewableItemsChanged={viewableItemsRef}
 							// a threshold of X means that at least X percentage of the item's area must be visible to be considered 'visible'
 							viewabilityConfig={{ viewAreaCoveragePercentThreshold: 75 }}
@@ -411,6 +427,9 @@ const SearchScreen = ({ navigation }) => {
 								index,
 							})}
 							ref={flatListRef}
+							ListFooterComponent={
+								refreshing ? <ActivityIndicator marginTop={10} /> : null
+							}
 						></FlatList>
 					</Center>
 				</NativeBaseProvider>
@@ -424,6 +443,7 @@ export default SearchScreen;
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
+		marginBottom: Platform.OS == "ios" ? 60 : 63,
 	},
 	switchSelectorContainer: {
 		width: "85%",

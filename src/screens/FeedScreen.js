@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	StyleSheet,
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
+	ActivityIndicator
 } from "react-native";
+import { useScrollToTop } from '@react-navigation/native';
 
 // File imports
 import CreateModal from "../components/modals/CreateModal";
@@ -38,6 +40,10 @@ const FeedScreen = ({ navigation, route }) => {
 
 	// Filter out comments from feed posts
 	// let postsWithNoComments = posts.filter(post => !(post.is_post_comment_on || post.is_thesis_comment_on));
+
+	// When bottom tab button is pressed, scroll to top
+	const ref = useRef(null);
+	useScrollToTop(ref);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -102,13 +108,17 @@ const FeedScreen = ({ navigation, route }) => {
 			<FlatList
 				width={"100%"}
 				data={posts}
+				ref={ref}
 				showsVerticalScrollIndicator={false}
 				keyExtractor={(item) => item.post_id}
 				renderItem={renderItem}
 				refreshing={refreshing}
 				onRefresh={onRefresh}
 				onEndReached={getMorePosts}
-				onEndReachedThreshold={1}
+				onEndReachedThreshold={0.01}
+				ListFooterComponent={
+					refreshing ? <ActivityIndicator marginTop={10} /> : null
+				}
 			></FlatList>
 			{errorMessage ? (
 				<AppText style={styles.error}>{errorMessage}</AppText>

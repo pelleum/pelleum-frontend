@@ -7,6 +7,7 @@ import {
 } from "../styles/Colors";
 import AppText from "./AppText";
 import { useSelector } from "react-redux";
+import * as WebBrowser from "expo-web-browser";
 
 const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 	const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
@@ -19,6 +20,12 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 			(rationale) => rationale.asset === item.asset_symbol
 		);
 
+	const cryptoData = require('../constants/crypto-list.json');
+
+	const handleWebLink = async (webLink) => {
+		await WebBrowser.openBrowserAsync(webLink);
+	};
+
 	return (
 		<NativeBaseProvider>
 			<View style={styles.assetTableBox}>
@@ -26,7 +33,11 @@ const AssetBox = ({ item, nav, portfolioInsightRationales = null }) => {
 					<TouchableOpacity
 						style={styles.assetButton}
 						onPress={() => {
-							console.log("Asset button worked.");
+							cryptoData.hasOwnProperty(item.asset_symbol) ? (
+								handleWebLink(cryptoData[item.asset_symbol])
+							) : (
+								handleWebLink(`https://finance.yahoo.com/quote/${item.asset_symbol}`)
+							)
 						}}
 					>
 						<AppText style={styles.assetButtonText}>

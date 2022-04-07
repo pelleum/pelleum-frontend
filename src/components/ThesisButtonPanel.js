@@ -6,6 +6,7 @@ import ThesesManager from "../managers/ThesesManager";
 import RationalesManager from "../managers/RationalesManager";
 import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 import { useAnalytics } from '@segment/analytics-react-native';
+import AppText from "./AppText";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -90,7 +91,7 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
 
 	const handleAddRationale = async (thesis) => {
 		const response = await RationalesManager.addRationale(thesis);
-		const sourcesQuantity =  thesis.sources ? thesis.sources.length : 0;
+		const sourcesQuantity = thesis.sources ? thesis.sources.length : 0;
 		if (response.status == 201) {
 			track('Rationale Added', {
 				authorUserId: thesis.user_id,
@@ -141,21 +142,31 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
 					style={styles.iconButton}
 					onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Like)}
 				>
-					<AntDesign
-						name={thesisIsLiked ? "like1" : "like2"}
-						size={20}
-						color={thesisIsLiked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
-					/>
+					<HStack alignItems={"center"}>
+						<AntDesign
+							name={thesisIsLiked ? "like1" : "like2"}
+							size={20}
+							color={thesisIsLiked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
+						/>
+						{thesis.like_count > 0 ? (
+							<AppText style={styles.countStyle}>{thesis.like_count}</AppText>
+						) : null}
+					</HStack>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Dislike)}
 				>
-					<AntDesign
-						name={thesisIsDisliked ? "dislike1" : "dislike2"}
-						size={20}
-						color={thesisIsDisliked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
-					/>
+					<HStack alignItems={"center"}>
+						<AntDesign
+							name={thesisIsDisliked ? "dislike1" : "dislike2"}
+							size={20}
+							color={thesisIsDisliked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
+						/>
+						{thesis.dislike_count > 0 ? (
+							<AppText style={styles.countStyle}>{thesis.dislike_count}</AppText>
+						) : null}
+					</HStack>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={
@@ -174,7 +185,12 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
 							: false
 					}
 				>
-					<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
+					<HStack alignItems={"center"}>
+						<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
+						{thesis.save_count > 0 ? (
+							<AppText style={styles.countStyle}>{thesis.save_count}</AppText>
+						) : null}
+					</HStack>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.iconButton}
@@ -191,20 +207,23 @@ export default ThesisButtonPanel;
 
 const styles = StyleSheet.create({
 	buttonBox: {
-		paddingTop: 5,
+		marginTop: 5,
 		alignSelf: "center",
 		alignItems: "center",
 		width: "92%",
-		flexDirection: "row",
 		justifyContent: "space-between",
 	},
 	iconButton: {
 		paddingHorizontal: 13,
-		paddingTop: 8,
+		paddingVertical: 8,
 	},
 	disabledIconButton: {
 		paddingHorizontal: 13,
-		paddingTop: 8,
+		paddingVertical: 8,
 		opacity: 0.375,
+	},
+	countStyle: {
+		color: LIGHT_GREY_COLOR,
+		marginLeft: 6,
 	},
 });

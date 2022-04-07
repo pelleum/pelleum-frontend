@@ -15,8 +15,13 @@ import {
 	LIGHT_GREY_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 } from "../styles/Colors";
+import { useScrollToTop } from '@react-navigation/native';
 
 const EducationScreen = () => {
+	// When bottom tab button is pressed, scroll to top
+	const ref = React.useRef(null);
+	useScrollToTop(ref);
+
 	const handleSourceLink = async (sourceLink) => {
 		await WebBrowser.openBrowserAsync(sourceLink);
 	};
@@ -103,6 +108,8 @@ const EducationScreen = () => {
 		<SafeAreaView style={styles.mainContainer}>
 			<FlatList
 				width={"100%"}
+				showsVerticalScrollIndicator={false}
+				ref={ref}
 				data={blogList}
 				keyExtractor={(item) => item.blog_id}
 				renderItem={renderItem}

@@ -72,13 +72,15 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	// Display thesis sources
 	const sources = thesis.sources ? thesis.sources : [];
 	let sourcesToDisplay = sources.map((source, index) => (
-		<TouchableOpacity key={index} onPress={() => handleSourceLink(source)}>
+		<TouchableOpacity key={index} onPress={() => handleWebLink(source)}>
 			<AppText style={styles.linkText}>{source}</AppText>
 		</TouchableOpacity>
 	));
 
-	const handleSourceLink = async (sourceLink) => {
-		await WebBrowser.openBrowserAsync(sourceLink);
+	const cryptoData = require('../constants/crypto-list.json');
+
+	const handleWebLink = async (webLink) => {
+		await WebBrowser.openBrowserAsync(webLink);
 	};
 
 	// Might not need these separate functions?
@@ -278,7 +280,11 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 											<TouchableOpacity
 												style={commonButtonStyles.assetButton}
 												onPress={() => {
-													console.log("Asset button worked.");
+													cryptoData.hasOwnProperty(thesis.asset_symbol) ? (
+														handleWebLink(cryptoData[thesis.asset_symbol])
+													) : (
+														handleWebLink(`https://finance.yahoo.com/quote/${thesis.asset_symbol}`)
+													)
 												}}
 											>
 												<AppText style={commonButtonStyles.assetText}>
