@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Alert, Share } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Share, View } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
@@ -137,68 +137,110 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
 
 	return (
 		<NativeBaseProvider>
-			<HStack style={styles.buttonBox}>
-				<TouchableOpacity
-					style={styles.iconButton}
-					onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Like)}
-				>
-					<HStack alignItems={"center"}>
-						<AntDesign
-							name={thesisIsLiked ? "like1" : "like2"}
-							size={20}
-							color={thesisIsLiked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
-						/>
-						{thesis.like_count > 0 ? (
-							<AppText style={styles.countStyle}>{thesis.like_count}</AppText>
-						) : null}
-					</HStack>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.iconButton}
-					onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Dislike)}
-				>
-					<HStack alignItems={"center"}>
-						<AntDesign
-							name={thesisIsDisliked ? "dislike1" : "dislike2"}
-							size={20}
-							color={thesisIsDisliked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
-						/>
-						{thesis.dislike_count > 0 ? (
-							<AppText style={styles.countStyle}>{thesis.dislike_count}</AppText>
-						) : null}
-					</HStack>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={
-						rationaleLibrary.some(
-							(rationale) => rationale.thesisID === thesis.thesis_id
-						)
-							? styles.disabledIconButton
-							: styles.iconButton
-					}
-					onPress={() => handleAddRationale(thesis)}
-					disabled={
-						rationaleLibrary.some(
-							(rationale) => rationale.thesisID === thesis.thesis_id
-						)
-							? true
-							: false
-					}
-				>
-					<HStack alignItems={"center"}>
-						<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
-						{thesis.save_count > 0 ? (
-							<AppText style={styles.countStyle}>{thesis.save_count}</AppText>
-						) : null}
-					</HStack>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.iconButton}
-					onPress={() => onShare(thesis)}
-				>
-					<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
-				</TouchableOpacity>
-			</HStack>
+			<View style={styles.mainContainer}>
+				<HStack style={styles.buttonBox}>
+					<View alignItems="center">
+						<TouchableOpacity
+							style={styles.iconButton}
+							onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Like)}
+						>
+							<HStack alignItems={"center"}>
+								<View style={styles.iconContainer}>
+									<AntDesign
+										name={thesisIsLiked ? "like1" : "like2"}
+										size={20}
+										color={thesisIsLiked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
+									/>
+								</View>
+								{thesis.like_count > 0 ? (
+									state.locallyLikedTheses.includes(thesis.thesis_id) ? (
+										<AppText style={styles.countStyle}>
+											{thesis.like_count + 1}
+										</AppText>
+									) : (
+										<AppText style={styles.countStyle}>{thesis.like_count}</AppText>
+									)
+								) : state.locallyLikedTheses.includes(thesis.thesis_id) ? (
+									<AppText style={styles.countStyle}>
+										{thesis.like_count + 1}
+									</AppText>
+								) : null}
+							</HStack>
+						</TouchableOpacity>
+						<AppText style={styles.buttonDescription}>Like</AppText>
+					</View>
+					<View alignItems="center">
+						<TouchableOpacity
+							style={styles.iconButton}
+							onPress={() => ThesesManager.sendThesisReaction(thesis, ReactionType.Dislike)}
+						>
+							<HStack alignItems={"center"}>
+								<View style={styles.iconContainer}>
+									<AntDesign
+										name={thesisIsDisliked ? "dislike1" : "dislike2"}
+										size={20}
+										color={thesisIsDisliked ? MAIN_SECONDARY_COLOR : LIGHT_GREY_COLOR}
+									/>
+								</View>
+								{thesis.dislike_count > 0 ? (
+									state.locallyDislikedTheses.includes(thesis.thesis_id) ? (
+										<AppText style={styles.countStyle}>
+											{thesis.dislike_count + 1}
+										</AppText>
+									) : (
+										<AppText style={styles.countStyle}>{thesis.dislike_count}</AppText>
+									)
+								) : state.locallyDislikedTheses.includes(thesis.thesis_id) ? (
+									<AppText style={styles.countStyle}>
+										{thesis.dislike_count + 1}
+									</AppText>
+								) : null}
+							</HStack>
+						</TouchableOpacity>
+						<AppText style={styles.buttonDescription}>Dislike</AppText>
+					</View>
+					<View alignItems="center">
+						<TouchableOpacity
+							style={
+								rationaleLibrary.some(
+									(rationale) => rationale.thesisID === thesis.thesis_id
+								)
+									? styles.disabledIconButton
+									: styles.iconButton
+							}
+							onPress={() => handleAddRationale(thesis)}
+							disabled={
+								rationaleLibrary.some(
+									(rationale) => rationale.thesisID === thesis.thesis_id
+								)
+									? true
+									: false
+							}
+						>
+							<HStack alignItems={"center"}>
+								<View style={styles.iconContainer}>
+									<MaterialIcons name="post-add" size={24} color={LIGHT_GREY_COLOR} />
+								</View>
+								{thesis.save_count > 0 ? (
+									<AppText style={styles.countStyle}>{thesis.save_count}</AppText>
+								) : null}
+							</HStack>
+						</TouchableOpacity>
+						<AppText style={styles.buttonDescription}>Save</AppText>
+					</View>
+					<View alignItems="center">
+						<TouchableOpacity
+							style={styles.iconButton}
+							onPress={() => onShare(thesis)}
+						>
+							<View style={styles.iconContainer}>
+								<FontAwesome name="send-o" size={16} color={LIGHT_GREY_COLOR} />
+							</View>
+						</TouchableOpacity>
+						<AppText style={styles.buttonDescription}>Share</AppText>
+					</View>
+				</HStack>
+			</View>
 		</NativeBaseProvider>
 	);
 };
@@ -206,18 +248,27 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
 export default ThesisButtonPanel;
 
 const styles = StyleSheet.create({
+	mainContainer: {
+		alignItems: "center",
+	},
 	buttonBox: {
 		marginTop: 5,
-		alignSelf: "center",
-		alignItems: "center",
-		width: "92%",
 		justifyContent: "space-between",
+		width: "92%",
+	},
+	iconContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 30,
+		width: 30,
 	},
 	iconButton: {
+		height: "70%",
 		paddingHorizontal: 13,
 		paddingVertical: 8,
 	},
 	disabledIconButton: {
+		height: "70%",
 		paddingHorizontal: 13,
 		paddingVertical: 8,
 		opacity: 0.375,
@@ -226,4 +277,8 @@ const styles = StyleSheet.create({
 		color: LIGHT_GREY_COLOR,
 		marginLeft: 6,
 	},
+	buttonDescription: {
+		color: LIGHT_GREY_COLOR,
+		height: "30%",
+	}
 });

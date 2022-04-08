@@ -26,5 +26,6 @@
     "ENS": "https://nomics.com/assets/ens-ethereum-name-service",
     "XAUT": "https://nomics.com/assets/xaut-tether-gold",
     "VITA": "https://nomics.com/assets/vita-vitadao",
-    "RSC": "https://nomics.com/assets/rsc3-researchcoin"
+    "RSC": "https://nomics.com/assets/rsc3-researchcoin",
+    "AR": "https://nomics.com/assets/ar-arweave"
 }
