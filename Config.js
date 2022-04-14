@@ -14,6 +14,7 @@ let Config = {
     acGetConnectionsPath: "/public/institutions/connections",
     acLoginBasePath: "/public/institutions/login",
     acDeactivateBasePath: "/public/institutions",
+    notificationsBasePath: "/public/notifications"
 };
 
 export default Config;

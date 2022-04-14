@@ -2,6 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import pelleumClient from "../api/clients/PelleumClient";
 import RationalesManager from "../managers/RationalesManager";
 import LinkAccountsManager from "./LinkAccountsManager";
+import NotificationManager from "./NotificationManager";
 import * as Haptics from "expo-haptics";
 import Config from "../../Config";
 
@@ -52,7 +53,9 @@ class UserManager {
 				);
 				store.dispatch(refreshLibrary(rationaleInfo));
 			}
-			//5. update linked brokerage accounts status
+			// 5. Get user's notifications to store in universal state
+			await NotificationManager.getNotifications();
+			// 6. update linked brokerage accounts status
 			await LinkAccountsManager.getLinkedAccountsStatus();
 		} else {
 			store.dispatch(authError(response.data.detail));

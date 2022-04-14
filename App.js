@@ -32,6 +32,7 @@ import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
 import DataPrivacyScreen from './src/screens/DataPrivacyScreen';
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
+import NotificationManager from './src/managers/NotificationManager';
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 import { LIGHT_GREY_COLOR, MAIN_BACKGROUND_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "./src/styles/Colors";
 import BackButton from './src/components/BackButton';
@@ -274,9 +275,11 @@ const RootStackFlow = () => {
 			const userObject = JSON.parse(userObjectString);
 			// 2. Get user's raionales to store in universal state
 			await getRationaleLibrary(userObject);
-			// 3. Get account linkage statues, and store them in universal state
+			// 3. Get user's notifications to store in universal state
+			await NotificationManager.getNotifications();
+			// 4. Get account linkage statues, and store them in universal state
 			await LinkAccountsManager.getLinkedAccountsStatus();
-			// 4. Store *some* of the user object in universal state
+			// 5. Store *some* of the user object in universal state
 			dispatch(storeUserObject({
 				username: userObject.username,
 				userId: userObject.user_id,
