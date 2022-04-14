@@ -30,6 +30,7 @@ import RationaleScreen from "./src/screens/RationaleScreen";
 import AuthoredThesesScreen from "./src/screens/AuthoredThesesScreen";
 import AuthoredPostsScreen from "./src/screens/AuthoredPostsScreen";
 import DataPrivacyScreen from './src/screens/DataPrivacyScreen';
+import NotificationsScreen from './src/screens/NotificationsScreen';
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
 import NotificationManager from './src/managers/NotificationManager';
@@ -109,6 +110,26 @@ const EducationFlow = () => (
 			component={EducationScreen}
 			options={{
 				title: "Pelleum Learn",
+				headerTitleAlign: 'center',
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
+			}}
+		/>
+	</EducationStack.Navigator>
+);
+
+// Notifications Flow
+const NotificationsStack = createNativeStackNavigator();
+const NotificationsFlow = () => (
+	<EducationStack.Navigator
+		initialRouteName="NotificationsScreen"
+		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
+	>
+		<EducationStack.Screen
+			name="NotificationsScreen"
+			component={NotificationsScreen}
+			options={{
+				title: "Notifications",
 				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
@@ -229,6 +250,16 @@ const AppFlow = () => (
 			options={{
 				tabBarIcon: ({ color }) => (
 					<Ionicons name="book" size={24.5} color={color} />
+				),
+				headerShown: false,
+			}}
+		/>
+		<AppTabs.Screen
+			name="NotificationsFlow"
+			component={NotificationsFlow}
+			options={{
+				tabBarIcon: ({ color }) => (
+					<Ionicons name="person-sharp" size={25} color={color} />
 				),
 				headerShown: false,
 			}}
