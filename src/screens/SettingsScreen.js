@@ -1,6 +1,6 @@
 // Import Installed Libraries
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
+import { StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
 import AppText from "../components/AppText";
@@ -37,12 +37,14 @@ const SettingsScreen = ({ navigation }) => {
 				>
 					<AppText style={styles.buttonText}>Tell Us What Sucks</AppText>
 				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.button}
-					onPress={() => navigation.navigate("LinkedAccountsStatusScreen")}
-				>
-					<AppText style={styles.buttonText}>Linked Accounts</AppText>
-				</TouchableOpacity>
+				{Platform.OS == "web" ? null : (
+					<TouchableOpacity
+						style={styles.button}
+						onPress={() => navigation.navigate("LinkedAccountsStatusScreen")}
+					>
+						<AppText style={styles.buttonText}>Linked Accounts</AppText>
+					</TouchableOpacity>
+				)}
 				<TouchableOpacity
 					style={styles.button}
 					onPress={() => handleWebLink("https://www.pelleum.com/terms-of-service")}

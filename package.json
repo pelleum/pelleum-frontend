@@ -1,5 +1,4 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -30,13 +29,14 @@
     "expo-web-browser": "^10.0.3",
     "native-base": "^3.2.2",
     "query-string": "^7.0.1",
-    "react": "^17.0.2",
-    "react-native": "^0.64.3",
-    "react-native-gesture-handler": "^1.10.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-native": "^0.66",
     "react-native-biometrics": "^2.1.4",
+    "react-native-gesture-handler": "~1.10.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-masked-text": "~1.13.0",
-    "react-native-reanimated": "^2.2.4",
+    "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-share": "^7.3.6",
@@ -45,7 +45,8 @@
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
-    "use-debounce": "^7.0.1"
+    "use-debounce": "^7.0.1",
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0"

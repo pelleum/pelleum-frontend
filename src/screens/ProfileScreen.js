@@ -1,4 +1,7 @@
+// Import Installed Libraries
 import React, { useState, useEffect, useRef } from "react";
+import { HStack, NativeBaseProvider } from "native-base";
+import { useScrollToTop } from "@react-navigation/native";
 import {
 	StyleSheet,
 	View,
@@ -8,24 +11,24 @@ import {
 	Image,
 	Alert,
 } from "react-native";
-import { HStack, NativeBaseProvider } from "native-base";
 import {
 	MaterialCommunityIcons,
 	Ionicons,
 	Octicons,
 	FontAwesome,
 } from "@expo/vector-icons";
-import PortfolioManager from "../managers/PortfolioManager";
-import { useSelector } from "react-redux";
+
+// Import Local Files
 import AssetBox from "../components/AssetBox";
 import AppText from "../components/AppText";
+import PortfolioManager from "../managers/PortfolioManager";
+import { useSelector } from "react-redux";
 import {
 	BAD_COLOR,
 	MAIN_DIFFERENTIATOR_COLOR,
 	LIGHT_GREY_COLOR,
 	MAIN_SECONDARY_COLOR,
 } from "../styles/Colors";
-import { useScrollToTop } from "@react-navigation/native";
 
 const ProfileScreen = ({ navigation, route }) => {
 	// State Management
@@ -38,6 +41,7 @@ const ProfileScreen = ({ navigation, route }) => {
 	const ref = useRef(null);
 	useScrollToTop(ref);
 
+	// Update profile data from source of truth
 	const onRefresh = async () => {
 		setUsername(userObject.username);
 		const retrievedAssets = await PortfolioManager.retrieveAssets(
@@ -55,6 +59,8 @@ const ProfileScreen = ({ navigation, route }) => {
 		}
 	};
 
+	// If the user has a linked account but isValid=false in the database
+	// This should only happen if something went wrong on our server side
 	const relinkAlert = () => {
 		Alert.alert(
 			"Linked Account Error",
@@ -74,6 +80,8 @@ const ProfileScreen = ({ navigation, route }) => {
 		);
 	};
 
+	// If user has already linked all supported accounts (for now it's just Robinhood),
+	// show them this alert instead of allowing them to navigate to the LinkAccountScreen
 	const alreadyLinkedAlert = () => {
 		Alert.alert(
 			"Account Already Linked.",
@@ -89,10 +97,12 @@ const ProfileScreen = ({ navigation, route }) => {
 		);
 	};
 
+	// Call onRefresh when ProfileScreen renders for the first time in a session
 	useEffect(() => {
 		onRefresh();
 	}, []);
 
+	// After a user links or unlinks an account, call onRefresh and reset route params
 	if (route.params) {
 		if (route.params.accountLinked) {
 			onRefresh();
@@ -103,6 +113,7 @@ const ProfileScreen = ({ navigation, route }) => {
 		}
 	}
 
+	// renderItem function for FlatList
 	renderItem = ({ item }) => <AssetBox item={item} nav={navigation} />;
 
 	return (

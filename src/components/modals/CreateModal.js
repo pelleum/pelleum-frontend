@@ -5,6 +5,7 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
+	Platform,
 } from "react-native";
 import {
 	MAIN_SECONDARY_COLOR,
@@ -27,7 +28,7 @@ const CreateModal = ({ modalVisible, makeModalDisappear, onNavigate }) => {
 					makeModalDisappear();
 				}}
 			>
-				<TouchableOpacity onPress={() => {}} activeOpacity={1}>
+				<TouchableOpacity onPress={() => { }} activeOpacity={1}>
 					<View style={styles.modalView}>
 						<TouchableOpacity
 							style={[styles.button, styles.buttonOpen]}

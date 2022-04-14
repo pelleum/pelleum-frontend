@@ -41,6 +41,7 @@ const LoginScreen = ({ navigation }) => {
 	// Segment Tracking
 	const { identify } = useAnalytics();
 
+	// Clear error message when navigating to/from LoginScreen
 	useEffect(() => {
 		const unsubscribe = navigation.addListener("focus", () => {
 			const clearErrorMessage = () => dispatch(clearAuthError());
@@ -49,8 +50,10 @@ const LoginScreen = ({ navigation }) => {
 		return unsubscribe;
 	}, [navigation]);
 
+	// Get age for Segment Identify call
 	const getAge = dateOfBirth => Math.floor((new Date() - new Date(dateOfBirth).getTime()) / 3.15576e+10);
 
+	// Triggered when Log In button is pressed
 	const handleLogin = async (username, password) => {
 		// 1. Attempt to log in
 		const response = await UserManager.login({ username, password })

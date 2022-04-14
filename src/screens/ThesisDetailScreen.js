@@ -51,13 +51,9 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [error, setError] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
-	//We need to set the error message
 
 	// Segment Tracking
 	const { track } = useAnalytics();
-
-	// This is necessary to get it show show updated version
-	const detailedThesis = route.params;
 
 	const dateWritten = new Date(thesis.created_at);
 
@@ -123,7 +119,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 
 	const editContent = async (item) => {
 		navigation.navigate("CreateThesisScreen", { "thesis": item });
-	}
+	};
 
 	const deleteContent = async (item) => {
 		Alert.alert(

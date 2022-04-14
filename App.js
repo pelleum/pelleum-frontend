@@ -247,12 +247,10 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
-
 	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 
 	const getRationaleLibrary = async (userObject) => {
-
 		const retrievedRationales = await RationalesManager.retrieveRationales({
 			user_id: userObject.user_id,
 		});
@@ -274,7 +272,7 @@ const RootStackFlow = () => {
 			const userObject = JSON.parse(userObjectString);
 			// 2. Get user's raionales to store in universal state
 			await getRationaleLibrary(userObject);
-			// 3. Get account linkage statues, and store them in universal state
+			// 3. Get account linkage status, and store them in universal state
 			await LinkAccountsManager.getLinkedAccountsStatus();
 			// 4. Store *some* of the user object in universal state
 			dispatch(storeUserObject({
@@ -328,7 +326,7 @@ const RootStackFlow = () => {
 						name="CreateThesisScreen"
 						component={CreateThesisScreen}
 						options={{
-							title: "Create a Thesis",
+							title: "Write a Thesis",
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
@@ -362,7 +360,7 @@ const RootStackFlow = () => {
 						name="PostDetailScreen"
 						component={PostDetailScreen}
 						options={{
-							title: "Post Detail",
+							title: "Pelleum",
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
@@ -372,7 +370,7 @@ const RootStackFlow = () => {
 						name="ThesisDetailScreen"
 						component={ThesisDetailScreen}
 						options={{
-							title: "Thesis Detail",
+							title: "Pelleum",
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },

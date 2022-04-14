@@ -1,4 +1,4 @@
-// installed libraries
+// Import Installed Libraries
 import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
@@ -15,13 +15,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
 import { useAnalytics } from "@segment/analytics-react-native";
 
-// local file imports
+// Import Screens
+import AppText from "../components/AppText";
 import DismissKeyboard from "../components/DismissKeyboard";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 import ThesesManager from "../managers/ThesesManager";
 import PostsManager from "../managers/PostsManager";
 import RationalesManager from "../managers/RationalesManager";
-import AppText from "../components/AppText";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
 import * as Haptics from "expo-haptics";
@@ -192,7 +192,6 @@ const CreateThesisScreen = ({ navigation, route }) => {
 
 
 	const createThesis = async () => {
-
 		const createThesisResponse = await ThesesManager.createThesis({
 			content,
 			title,
@@ -269,7 +268,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 				navigation.navigate("FeedScreen");
 			}
 		}
-	}
+	};
 
 	const updateThesis = async (thesis) => {
 		const updateThesisResponse = await ThesesManager.updateThesis({
@@ -302,7 +301,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 				]
 			);
 		}
-	}
+	};
 
 
 	const submitButtonPressed = async () => {

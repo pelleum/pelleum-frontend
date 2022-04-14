@@ -21,8 +21,11 @@ const SentimentPill = ({ item, sentiment }) => {
 		style = styles.bearSentimentText;
 	}
 
+	// Fall back to empty string before using toUpperCase() => web version trips up without this
+	const itemSentiment = item.sentiment || "";
+
 	return (
-		<AppText style={style}>{item.sentiment.toUpperCase()}</AppText>
+		<AppText style={style}>{itemSentiment.toUpperCase()}</AppText>
 	);
 };
 

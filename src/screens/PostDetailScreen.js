@@ -3,7 +3,6 @@ import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native";
 import { VStack, NativeBaseProvider } from "native-base";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import CommentInput from "../components/CommentInput";
-import PostButtonPanel from "../components/PostButtonPanel";
 import PostBox, { PostBoxType } from "../components/PostBox";
 import CommentBox from "../components/CommentBox";
 import PostsManager from "../managers/PostsManager";

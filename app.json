@@ -42,7 +42,8 @@
             "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
         },
         "web": {
-            "favicon": "./assets/favicon.png"
+            "favicon": "./assets/favicon.png",
+            "backgroundColor": "#000000"
         },
         "userInterfaceStyle": "automatic",
         "androidStatusBar": {

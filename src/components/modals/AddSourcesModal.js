@@ -18,7 +18,7 @@ import {
 import AppText from "../AppText";
 
 
-NUMBER_OF_SOURCES = [1, 2, 3, 4, 5, 6];
+const NUMBER_OF_SOURCES = [1, 2, 3, 4, 5, 6];
 
 const AddSourcesModal = ({
 	modalVisible,
