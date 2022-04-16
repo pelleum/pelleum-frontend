@@ -1,23 +1,18 @@
-import { ACKNOWLEDGE_NOTIFICATION, REFRESH_NOTIFICATIONS } from "../actions/NotificationActions";
+import { REFRESH_NOTIFICATIONS, REFRESH_NOTIFICATION_COUNT } from "../actions/NotificationActions";
 
 // Declare initial state
 const initialState = {
 	notifications: [],
-	acknowledgedNotifications: [],
+	notificationCount: 0,
 };
 
 function notificationsReducer(state = initialState, action) {
 	switch (action.type) {
-		case ACKNOWLEDGE_NOTIFICATION:
-			const updatedAcknowledgeList = [
-				...state.acknowledgedNotifications,
-				action.payload,
-			];
+		case REFRESH_NOTIFICATION_COUNT:
 			return {
 				...state,
-				acknowledgedNotifications: updatedAcknowledgeList,
+				notificationCount: action.payload,
 			};
-		
 		case REFRESH_NOTIFICATIONS:
 			return {
 				...state,

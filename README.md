@@ -12,6 +12,7 @@ This repository contains the frontend source code for the Pelleum mobile applica
 3. Run `npm install -g expo-cli` to install [Expo CLI](https://docs.expo.dev/) (You must be logged into your machine as root/administrator).
 4. Run `npm install -g eas-cli` to install [EAS CLI](https://docs.expo.dev/build/setup/) (You must be logged into your machine as root/administrator).
 5. Run `npm install` in the project directory to install all dependencies specified in the `package.json` file.
+    **If dependancy warnings appear,** run: `expo doctor --fix-dependencies`
 6. To test the application on your mobile device, install the [Expo Go](https://expo.dev/client) app. Additional configuration will be required for [full project builds that contain native code](#testing-full-builds-with-native-code).
 7. To test the application on your computer, you will have to use the [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) or the [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/) **(this will not work for full project builds that contain native code)**.
 8. Before running the app for testing, be sure that both [pelleum-api](https://github.com/pelleum/pelleum-api) and [account-connections](https://github.com/pelleum/account-connections) are running locally on your machine (see directions on how to run them in their READMEs.

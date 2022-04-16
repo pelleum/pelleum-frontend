@@ -1,10 +1,10 @@
-export const ACKNOWLEDGE_NOTIFICATION = "ACKNOWLEDGE_NOTIFICATION";
 export const REFRESH_NOTIFICATIONS = "REFRESH_NOTIFICATIONS";
+export const REFRESH_NOTIFICATION_COUNT = "REFRESH_NOTIFICATION_COUNT";
 
-export const acknowledgeNotification = (notificationId) => (dispatch) => {
+export const refreshNotificationCount = (notificationCount) => (dispatch) => {
 	dispatch({
-		type: ACKNOWLEDGE_NOTIFICATION,
-		payload: notificationId,
+		type: REFRESH_NOTIFICATION_COUNT,
+		payload: notificationCount,
 	});
 };
 

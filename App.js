@@ -1,7 +1,7 @@
 // Import Installed Libraries
 import 'expo-dev-client';
 import * as React from "react";
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar, Platform, Image } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -37,6 +37,7 @@ import NotificationManager from './src/managers/NotificationManager';
 import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 import { LIGHT_GREY_COLOR, MAIN_BACKGROUND_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "./src/styles/Colors";
 import BackButton from './src/components/BackButton';
+import NotificationBottomTabIcon from './src/components/NotificationBottomTabIcon';
 
 // Redux
 import { Provider } from "react-redux";
@@ -98,6 +99,26 @@ const SearchFlow = () => (
 	</SearchStack.Navigator>
 );
 
+// Notifications Flow
+const NotificationsStack = createNativeStackNavigator();
+const NotificationsFlow = () => (
+	<NotificationsStack.Navigator
+		initialRouteName="NotificationsScreen"
+		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
+	>
+		<NotificationsStack.Screen
+			name="NotificationsScreen"
+			component={NotificationsScreen}
+			options={{
+				title: "Notifications",
+				headerTitleAlign: 'center',
+				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+				headerTitleStyle: { color: TEXT_COLOR },
+			}}
+		/>
+	</NotificationsStack.Navigator>
+);
+
 // Education Flow
 const EducationStack = createNativeStackNavigator();
 const EducationFlow = () => (
@@ -110,26 +131,6 @@ const EducationFlow = () => (
 			component={EducationScreen}
 			options={{
 				title: "Pelleum Learn",
-				headerTitleAlign: 'center',
-				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
-				headerTitleStyle: { color: TEXT_COLOR },
-			}}
-		/>
-	</EducationStack.Navigator>
-);
-
-// Notifications Flow
-const NotificationsStack = createNativeStackNavigator();
-const NotificationsFlow = () => (
-	<EducationStack.Navigator
-		initialRouteName="NotificationsScreen"
-		screenOptions={{ headerBackTitleVisible: false, headerTintColor: MAIN_SECONDARY_COLOR }}
-	>
-		<EducationStack.Screen
-			name="NotificationsScreen"
-			component={NotificationsScreen}
-			options={{
-				title: "Notifications",
 				headerTitleAlign: 'center',
 				headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 				headerTitleStyle: { color: TEXT_COLOR },
@@ -245,21 +246,21 @@ const AppFlow = () => (
 			}}
 		/>
 		<AppTabs.Screen
-			name="EducationFlow"
-			component={EducationFlow}
+			name="NotificationsFlow"
+			component={NotificationsFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<Ionicons name="book" size={24.5} color={color} />
+					<NotificationBottomTabIcon color={color} />
 				),
 				headerShown: false,
 			}}
 		/>
 		<AppTabs.Screen
-			name="NotificationsFlow"
-			component={NotificationsFlow}
+			name="EducationFlow"
+			component={EducationFlow}
 			options={{
 				tabBarIcon: ({ color }) => (
-					<Ionicons name="person-sharp" size={25} color={color} />
+					<Ionicons name="book" size={24.5} color={color} />
 				),
 				headerShown: false,
 			}}
@@ -279,7 +280,6 @@ const AppFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
-
 	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
 	const dispatch = useDispatch();
 
@@ -362,7 +362,7 @@ const RootStackFlow = () => {
 						name="CreateThesisScreen"
 						component={CreateThesisScreen}
 						options={{
-							title: "Create a Thesis",
+							title: "Write a Thesis",
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
@@ -396,7 +396,9 @@ const RootStackFlow = () => {
 						name="PostDetailScreen"
 						component={PostDetailScreen}
 						options={{
-							title: "Post Detail",
+							headerTitle: () => (
+								<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+							),
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
@@ -406,7 +408,9 @@ const RootStackFlow = () => {
 						name="ThesisDetailScreen"
 						component={ThesisDetailScreen}
 						options={{
-							title: "Thesis Detail",
+							headerTitle: () => (
+								<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+							),
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
