@@ -150,16 +150,16 @@ const RootStackFlow = () => {
 
 
 
-			{/* <RootStack.Screen
+			<RootStack.Screen
 				name="ProfileFlow"
 				component={ProfileFlow}
 				options={{
 					headerShown: false,
 				}}
-			/> */}
+			/>
 
 
-			<RootStack.Screen
+			{/* <RootStack.Screen
 				name="PostDetailScreen"
 				component={PostDetailScreen}
 				options={{
@@ -168,7 +168,7 @@ const RootStackFlow = () => {
 					headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 					headerTitleStyle: { color: TEXT_COLOR },
 				}}
-			/>
+			/> */}
 
 
 			{/* <RootStack.Screen
