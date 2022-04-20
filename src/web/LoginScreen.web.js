@@ -117,7 +117,6 @@ const LoginScreen = ({ navigation }) => {
                 <AppText style={styles.titleText}>Log In</AppText>
                 <View style={styles.inputContainer}>
                     <TextInput
-                        color={TEXT_COLOR}
                         selectionColor={MAIN_SECONDARY_COLOR}
                         placeholder="Username"
                         textContentType="username"
@@ -131,7 +130,6 @@ const LoginScreen = ({ navigation }) => {
                         autoCorrect={false}
                     />
                     <TextInput
-                        color={TEXT_COLOR}
                         selectionColor={MAIN_SECONDARY_COLOR}
                         placeholder="Password"
                         textContentType="password"
@@ -179,6 +177,7 @@ const styles = StyleSheet.create({
         width: "80%",
     },
     input: {
+        color: TEXT_COLOR,
         backgroundColor: WEB_MAIN_DIFFERENTIATOR_COLOR,
         fontSize: 14,
         height: 37,
