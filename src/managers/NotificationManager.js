@@ -4,6 +4,7 @@ import Config from "../../Config";
 // Redux
 import { store } from "../redux/Store";
 import {
+	refreshNotificationCount,
 	refreshNotifications
 } from "../redux/actions/NotificationActions";
 
@@ -16,7 +17,16 @@ class NotificationManager {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-                store.dispatch(refreshNotifications(authorizedResponse.data));
+				const notifications = authorizedResponse.data.notifications;
+				store.dispatch(refreshNotifications(notifications));
+
+				let unacknowledgedCount = 0;
+				for (const notification of notifications) {
+					if (!notification.acknowledged) {
+						unacknowledgedCount += 1;
+					}
+				};
+				store.dispatch(refreshNotificationCount(unacknowledgedCount));
 			} else {
 				console.log(
 					"There was an error retrieving the notifications from the backend."
@@ -25,7 +35,7 @@ class NotificationManager {
 		}
 	};
 
-    static acknowledge = async (notificationId) => {
+	static acknowledge = async (notificationId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "patch",
 			url: `${Config.notificationsBasePath}/${notificationId}`,
@@ -33,7 +43,7 @@ class NotificationManager {
 
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
-				return authorizedResponse.data;
+				return;
 			} else {
 				console.log(
 					"There was an error acknowledging a notification."

@@ -6,6 +6,7 @@ import thesisReactionsReducer from "./reducers/ThesisReactionsReducer";
 import rationaleReducer from "./reducers/RationaleReducer";
 import linkedAccountsReducer from "./reducers/LinkedAccountsReducer";
 import postReducer from "./reducers/PostReducer";
+import notificationsReducer from "./reducers/NotificationsReducer";
 
 const rootReducer = combineReducers({
 	authReducer,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
 	thesisReactionsReducer,
 	rationaleReducer,
 	linkedAccountsReducer,
-    postReducer
+	postReducer,
+	notificationsReducer
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));
