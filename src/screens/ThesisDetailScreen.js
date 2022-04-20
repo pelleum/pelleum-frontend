@@ -212,18 +212,23 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		<CommentBox item={item} nav={navigation} commentLevel={1} />
 	);
 
+	let sourcesToDisplay;
 	if (!thesis) {
 		return <View></View>;
 	} else {
 		// Display thesis sources
-		let sourcesToDisplay = thesis.sources.map((source, index) => (
-			<TouchableOpacity key={index} onPress={() => handleWebLink(source)}>
-				<AppText style={styles.linkText}>{source}</AppText>
-			</TouchableOpacity>
-		));
+		if (thesis.sources) {
+			sourcesToDisplay = thesis.sources.map((source, index) => (
+				<TouchableOpacity key={index} onPress={() => handleWebLink(source)}>
+					<AppText style={styles.linkText}>{source}</AppText>
+				</TouchableOpacity>
+			));
+		} else {
+			<AppText>This thesis has no linked sources😕</AppText>
+		}
 		// Set date
 		const dateWritten = new Date(thesis.created_at);
-		
+
 		// Return JSX
 		return (
 			<NativeBaseProvider>
@@ -290,8 +295,8 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 														cryptoData.hasOwnProperty(thesis.asset_symbol)
 															? handleWebLink(cryptoData[thesis.asset_symbol])
 															: handleWebLink(
-																	`https://finance.yahoo.com/quote/${thesis.asset_symbol}`
-															  );
+																`https://finance.yahoo.com/quote/${thesis.asset_symbol}`
+															);
 													}}
 												>
 													<AppText style={commonButtonStyles.assetText}>
@@ -351,8 +356,12 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 												{thesis.content}
 											</AppText>
 											<AppText style={styles.sourcesLabel}>Sources</AppText>
-											{thesis.sources.length > 0 ? (
-												sourcesToDisplay
+											{thesis.sources ? (
+												thesis.sources.length > 0 ? (
+													sourcesToDisplay
+												) : (
+													<AppText>This thesis has no linked sources😕</AppText>
+												)
 											) : (
 												<AppText>This thesis has no linked sources😕</AppText>
 											)}

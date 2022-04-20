@@ -1,7 +1,7 @@
 // Import Installed Libraries
 import 'expo-dev-client';
 import * as React from "react";
-import { StatusBar, Platform, Image, Text } from 'react-native';
+import { StatusBar, Platform, Image } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -449,18 +449,24 @@ export default () => {
 			PostDetailScreen: 'post/:postId',
 			ThesisDetailScreen: 'thesis/:thesisId',
 			PortfolioInsightScreen: 'profile/:userId',
+			// NotFoundScreen: "*" // we need to create and import this screen
 		},
 	};
 
+	// Need to set up prefix as environment variable
+	//if (__DEV__){ prefix = "com.pelleum.dev://app" }
+	//if (preview){ prefix = "com.pelleum.preview://app" }
+	//if (prod){ prefix = "com.pelleum.mobile://app" }
+	//if the scheme is defined as "pelleum", we may just need to do "pelleum://"
 	const linking = {
-		prefixes: [Linking.createURL('/'), 'https://app.pelleum.com'],
+		prefixes: [Linking.createURL('/'), 'com.pelleum.dev://app'],
 		config: config,
-	  };
+	};
 
 	return (
 		<AnalyticsProvider client={segmentClient}>
 			<Provider store={store}>
-				<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>} theme={DarkTheme}>
+				<NavigationContainer linking={linking} fallback={<LoadingScreen />} theme={DarkTheme}>
 					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : <StatusBar backgroundColor="black" />}
 					<RootStackFlow />
 				</NavigationContainer>

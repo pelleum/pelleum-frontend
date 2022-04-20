@@ -47,8 +47,8 @@ This is the primary way we will conduct testing of the Pelleum mobile applicatio
 ## Updates
 - To publish an "over-the-air" (OTA) update, run the following command along with any secret values: `<secrets> expo publish`
 - See the last 100 items in publish history: `expo publish:history --count 100`
-- See publishing history for ios: `expo publish:history --p ios`
-- See publishing history for android: `expo publish:history --p android`
+- See publishing history for ios: `expo publish:history -p ios`
+- See publishing history for android: `expo publish:history -p android`
 - See more details of a specific publish: `expo publish:details --publish-id <publish id>`
 - Rollback a release channel entry (only one platform at a time): `expo publish:set -c <channel name> --publish-id <publish id>`
 
