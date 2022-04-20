@@ -52,9 +52,6 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 	// Get the time elapsed since post was created
 	elapsedTime = getTimeElapsed(item);
 
-	// Tell PostDetail to refresh when a comment is clicked on
-	item["needsRefresh"] = true;
-
 	// Display nested PostBoxes for comments
 	var commentBoxes = item.replies ? (item.replies.map((reply, index) => (
 		<CommentBox
@@ -127,7 +124,7 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 		<NativeBaseProvider>
 			<TouchableOpacity
 				onPress={() => {
-					nav.navigate("PostDetailScreen", item);
+					nav.navigate("PostDetailScreen", {postId: item.post_id});
 				}}
 			>
 				<Box
@@ -150,7 +147,6 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 									style={styles.usernameButton}
 									onPress={() =>
 										nav.navigate("PortfolioInsightScreen", {
-											username: item.username,
 											userId: item.user_id,
 										})
 									}

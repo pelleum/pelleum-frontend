@@ -287,7 +287,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 			setTitle("");
 			setSources(["", "", "", "", "", ""]);
 			setDisableStatus(true);
-			navigation.navigate("ThesisDetailScreen", updatedThesis);
+			navigation.navigate("ThesisDetailScreen", {thesisId: updatedThesis.thesis_id});
 		} else {
 			Alert.alert(
 				"An unexpected error occured.",

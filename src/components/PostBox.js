@@ -72,14 +72,6 @@ const PostBox = ({ postBoxType, item, nav }) => {
 	// Get the time elapsed since post was created
 	elapsedTime = getTimeElapsed(item);
 
-	// Determine whether a refresh is needed
-	if (
-		postBoxType == PostBoxType.PostCommentedOn ||
-		postBoxType == PostBoxType.ThesisCommentedOn
-	) {
-		item["needsRefresh"] = true;
-	};
-
 	const cryptoData = require('../constants/crypto-list.json');
 
 	const handleWebLink = async (webLink) => {
@@ -144,7 +136,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				<TouchableOpacity
 					disabled={postBoxType == PostBoxType.PostDetail ? true : false}
 					onPress={() => {
-						nav.navigate("PostDetailScreen", item);
+						nav.navigate("PostDetailScreen", {postId: item.post_id});
 					}}
 				>
 					<Box
@@ -157,7 +149,6 @@ const PostBox = ({ postBoxType, item, nav }) => {
 										style={styles.usernameButton}
 										onPress={() =>
 											nav.navigate("PortfolioInsightScreen", {
-												username: item.username,
 												userId: item.user_id,
 											})}
 									>

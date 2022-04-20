@@ -41,7 +41,7 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 		<NativeBaseProvider>
 			<TouchableOpacity
 				onPress={() => {
-					nav.navigate("ThesisDetailScreen", item);
+					nav.navigate("ThesisDetailScreen", {thesisId: item.thesis_id});
 				}}
 			>
 				<Box
@@ -56,7 +56,6 @@ const ThesisBox = ({ item, nav, thesisBoxType = ThesesBoxType.StandAlone }) => {
 							style={styles.usernameButton}
 							onPress={() =>
 								nav.navigate("PortfolioInsightScreen", {
-									username: item.username,
 									userId: item.user_id,
 								})}
 						>

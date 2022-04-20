@@ -123,6 +123,22 @@ class UserManager {
 		};
 	};
 
+	static getUserById = async (userId) => {
+		const authorizedResponse = await pelleumClient({
+			method: "get",
+			url: `${Config.userBasePath}/${userId}`,
+		});
+		if (authorizedResponse) {
+			if (authorizedResponse.status == 200) {
+				return authorizedResponse.data;
+			} else {
+				console.log(
+					"There was an error retrieving the user by userId."
+				);
+			};
+		};
+	};
+
 	static blockUser = async (userId) => {
 		const authorizedResponse = await pelleumClient({
 			method: "patch",

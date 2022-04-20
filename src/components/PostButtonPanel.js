@@ -91,7 +91,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {
-						nav.navigate("PostDetailScreen", item);
+						nav.navigate("PostDetailScreen", {postId: item.post_id});
 					}}
 				>
 					<HStack alignItems={"center"}>
