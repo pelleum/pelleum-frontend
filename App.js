@@ -7,10 +7,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
-import * as SecureStore from "expo-secure-store";
 import { createClient, AnalyticsProvider } from "@segment/analytics-react-native";
 
 // Local Files
+import LocalStorage from './src/storage/LocalStorage';
 import SignupScreen from "./src/screens/SignupScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import FeedScreen from "./src/screens/FeedScreen";
@@ -268,7 +268,7 @@ const RootStackFlow = () => {
 		const user = await UserManager.getUser();
 		if (user) {
 			// 1. Get user object from secure store
-			const userObjectString = await SecureStore.getItemAsync("userObject");
+			const userObjectString = await LocalStorage.getItem("userObject");
 			const userObject = JSON.parse(userObjectString);
 			// 2. Get user's raionales to store in universal state
 			await getRationaleLibrary(userObject);

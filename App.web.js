@@ -3,7 +3,7 @@ import * as React from "react";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import "react-native-gesture-handler";
-// import * as SecureStore from "expo-secure-store";
+import LocalStorage from "./src/storage/LocalStorage";
 
 // Import Screens
 import LoadingScreen from "./src/screens/LoadingScreen";
@@ -88,54 +88,53 @@ const ProfileFlow = () => (
 
 const RootStack = createNativeStackNavigator();
 const RootStackFlow = () => {
-	// // State Management
-	// const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
-	// const dispatch = useDispatch();
+	// State Management
+	const { isLoading, hasUserToken } = useSelector((state) => state.authReducer);
+	const dispatch = useDispatch();
 
-	// // Get all of the user's saved theses
-	// const getRationaleLibrary = async (userObject) => {
-	// 	const retrievedRationales = await RationalesManager.retrieveRationales({
-	// 		user_id: userObject.user_id,
-	// 	});
-	// 	if (retrievedRationales) {
-	// 		const rationaleInfo = await RationalesManager.extractRationaleInfo(
-	// 			retrievedRationales.records.rationales
-	// 		);
-	// 		dispatch(refreshLibrary(rationaleInfo));
-	// 	}
-	// };
+	// Get all of the user's saved theses
+	const getRationaleLibrary = async (userObject) => {
+		const retrievedRationales = await RationalesManager.retrieveRationales({
+			user_id: userObject.user_id,
+		});
+		if (retrievedRationales) {
+			const rationaleInfo = await RationalesManager.extractRationaleInfo(
+				retrievedRationales.records.rationales
+			);
+			dispatch(refreshLibrary(rationaleInfo));
+		}
+	};
 
-	// // Check if the user has a JWT saved on their device and if it's still valid
-	// const validateToken = async () => {
-	// 	console.log("\nWe got here.\n")
-	// 	const user = await UserManager.getUser();
-	// 	if (user) {
-	// 		// 1. Get user object from secure store
-	// 		const userObjectString = await SecureStore.getItemAsync("userObject");
-	// 		const userObject = JSON.parse(userObjectString);
-	// 		// 2. Get user's raionales to store in universal state
-	// 		await getRationaleLibrary(userObject);
-	// 		// 3. Get account linkage statues, and store them in universal state
-	// 		await LinkAccountsManager.getLinkedAccountsStatus();
-	// 		// 4. Store *some* of the user object in universal state
-	// 		dispatch(storeUserObject({
-	// 			username: userObject.username,
-	// 			userId: userObject.user_id,
-	// 		}));
-	// 	};
-	// };
+	// Check if the user has a JWT saved on their device and if it's still valid
+	const validateToken = async () => {
+		const user = await UserManager.getUser();
+		if (user) {
+			// 1. Get user object from secure store
+			const userObjectString = await LocalStorage.getItem("userObject");
+			const userObject = JSON.parse(userObjectString);
+			// 2. Get user's raionales to store in universal state
+			await getRationaleLibrary(userObject);
+			// 3. Get account linkage statues, and store them in universal state
+			await LinkAccountsManager.getLinkedAccountsStatus();
+			// 4. Store *some* of the user object in universal state
+			dispatch(storeUserObject({
+				username: userObject.username,
+				userId: userObject.user_id,
+			}));
+		};
+	};
 
-	// React.useEffect(() => {
-	// 	validateToken();
-	// }, [dispatch]);
+	React.useEffect(() => {
+		validateToken();
+	}, [dispatch]);
 
-	// if (isLoading) {
-	// 	return <LoadingScreen />;
-	// }
+	if (isLoading) {
+		return <LoadingScreen />;
+	}
 
 	return (
 		<RootStack.Navigator>
-			{/* {hasUserToken == false ? (
+			{hasUserToken == false ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen
 					name="AuthStack"
@@ -146,51 +145,51 @@ const RootStackFlow = () => {
 				/>
 			) : (
 				// User is logged in
-				<> */}
+				<>
 
 
 
-			<RootStack.Screen
-				name="ProfileFlow"
-				component={ProfileFlow}
-				options={{
-					headerShown: false,
-				}}
-			/>
+					<RootStack.Screen
+						name="ProfileFlow"
+						component={ProfileFlow}
+						options={{
+							headerShown: false,
+						}}
+					/>
 
 
-			{/* <RootStack.Screen
-				name="PostDetailScreen"
-				component={PostDetailScreen}
-				options={{
-					title: "Pelleum",
-					headerTitleAlign: 'center',
-					headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
-					headerTitleStyle: { color: TEXT_COLOR },
-				}}
-			/> */}
+					<RootStack.Screen
+						name="PostDetailScreen"
+						component={PostDetailScreen}
+						options={{
+							title: "Pelleum",
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+						}}
+					/>
 
 
-			{/* <RootStack.Screen
-				name="ThesisDetailScreen"
-				component={ThesisDetailScreen}
-				options={{
-					title: "Pelleum",
-					headerTitleAlign: 'center',
-					headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
-					headerTitleStyle: { color: TEXT_COLOR },
-				}}
-			/> */}
+					<RootStack.Screen
+						name="ThesisDetailScreen"
+						component={ThesisDetailScreen}
+						options={{
+							title: "Pelleum",
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+						}}
+					/>
 
 
-			{/* <RootStack.Screen
-				name="PortfolioInsightScreen"
-				component={PortfolioInsightScreen}
-			/> */}
+					<RootStack.Screen
+						name="PortfolioInsightScreen"
+						component={PortfolioInsightScreen}
+					/>
 
 
-			{/* </>
-			)} */}
+				</>
+			)}
 		</RootStack.Navigator>
 	);
 };

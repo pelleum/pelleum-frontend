@@ -66,10 +66,10 @@ This is the primary way we will conduct testing of the Pelleum mobile applicatio
 ## Major Libraries Used
 - [react-navigation](https://reactnavigation.org/docs/getting-started): Allows us to implement the app's navigation functionality (currently using **react-navigation v6**).
 - [axios](https://github.com/axios/axios): A promise-based HTTP Client for node.js and the browser (same codebase). We use this to make network requests to APIs.
-- [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/): Provides a way **encrypt** and securely store key–value pairs locally on the device.
+- [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/): Provides a way **encrypt** and securely store key–value pairs locally on the device (only works on iOS and Android).
+- [async-storage](https://docs.expo.dev/versions/latest/sdk/async-storage/): Provides a way to store **unencrypted** key–value pairs locally on the device. We use this primarily for web browser local storage, since there is no SecureStore does not work on web browsers.
 - [eas-cli](https://docs.expo.dev/build/setup/): Allows us to create full builds of Expo-managed React Native apps that contain native code. Refer to [this video](https://www.youtube.com/watch?v=id0Im72UN6w&ab_channel=Expo) for a detailed explanation.
 - [expo-dev-client](https://docs.expo.dev/development/getting-started/): Allows us to run and test full builds of Expo-managed React Native apps that contain native code. Refer to [this video](https://www.youtube.com/watch?v=Iw8FAUftJFU&ab_channel=eveningkid) for a detailed explanation.
-- [async-storage](https://docs.expo.dev/versions/latest/sdk/async-storage/): Provides a way to store **unencrypted** key–value pairs locally on the device.
 - [segment/analytics-react-native](https://github.com/segmentio/analytics-react-native#readme): Allows us to track how our users interact with the Pelleum app.
 - [expo-web-browser](https://docs.expo.dev/versions/latest/sdk/webbrowser/): Provides access to the system's web browser and supports handling redirects.
 - [expo-haptics](https://docs.expo.dev/versions/latest/sdk/haptics/): Allows us to provide haptic feedback when a user performs certain actions in the Pelleum app.

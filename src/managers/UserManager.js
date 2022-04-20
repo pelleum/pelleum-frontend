@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import LocalStorage from "../storage/LocalStorage";
 import pelleumClient from "../api/clients/PelleumClient";
 import RationalesManager from "../managers/RationalesManager";
 import LinkAccountsManager from "./LinkAccountsManager";
@@ -27,8 +27,8 @@ class UserManager {
 		});
 
 		if (response.status == 200) {
-			// 1. store user object in SecureStore
-			await SecureStore.setItemAsync(
+			// 1. store user object in LocalStorage
+			await LocalStorage.setItem(
 				"userObject",
 				JSON.stringify(response.data)
 			);
@@ -69,8 +69,8 @@ class UserManager {
 		});
 
 		if (response.status == 201) {
-			// 1. store user object in SecureStore
-			await SecureStore.setItemAsync(
+			// 1. store user object in LocalStorage
+			await LocalStorage.setItem(
 				"userObject",
 				JSON.stringify(response.data)
 			);
