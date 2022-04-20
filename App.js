@@ -1,13 +1,14 @@
 // Import Installed Libraries
 import 'expo-dev-client';
 import * as React from "react";
-import { StatusBar, Platform, Image } from 'react-native';
+import { StatusBar, Platform, Image, Text } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
+import * as Linking from 'expo-linking';
 import { createClient, AnalyticsProvider } from "@segment/analytics-react-native";
 
 // Local Files
@@ -433,10 +434,33 @@ const RootStackFlow = () => {
 };
 
 export default () => {
+	const config = {
+		screens: {
+			AppFlow: {
+				screens: {
+					ProfileFlow: {
+						screens: {
+							ProfileScreen: "profile"
+						}
+					},
+				},
+			},
+			CreateThesisScreen: 'thesis/create',
+			PostDetailScreen: 'post/:postId',
+			ThesisDetailScreen: 'thesis/:thesisId',
+			PortfolioInsightScreen: 'profile/:userId',
+		},
+	};
+
+	const linking = {
+		prefixes: [Linking.createURL('/'), 'https://app.pelleum.com'],
+		config: config,
+	  };
+
 	return (
 		<AnalyticsProvider client={segmentClient}>
 			<Provider store={store}>
-				<NavigationContainer theme={DarkTheme}>
+				<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>} theme={DarkTheme}>
 					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : <StatusBar backgroundColor="black" />}
 					<RootStackFlow />
 				</NavigationContainer>
