@@ -6,14 +6,14 @@ import {
     Image,
     TouchableOpacity,
     View,
-    Alert,
 } from "react-native";
-import { HStack, VStack, NativeBaseProvider } from "native-base";
+import { HStack, VStack, NativeBaseProvider, Alert } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
 // import { useAnalytics } from "@segment/analytics-react-native";
 
-// Import Screens
+// Import Local Files
+import CustomAlertModal from "../components/modals/CustomAlertModal";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 import AppText from "../components/AppText";
 import ThesesManager from "../managers/ThesesManager";
@@ -21,7 +21,6 @@ import PostsManager from "../managers/PostsManager";
 import RationalesManager from "../managers/RationalesManager";
 import { useDispatch } from "react-redux";
 import { addPost } from "../redux/actions/PostActions";
-import * as Haptics from "expo-haptics";
 import {
     TEXT_COLOR,
     MAIN_DIFFERENTIATOR_COLOR,
@@ -73,7 +72,11 @@ const CreateThesisScreen = ({ navigation, route }) => {
     }
     const [hackValue, setHackValue] = useState(""); // A hack that gets the sources state variable to update
     const [disableStatus, setDisableStatus] = useState(true);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [discardDraft, setDiscardDraft] = useState(false);
+    const [sourcesModalVisible, setSourcesModalVisible] = useState(false);
+    const [unsavedChangesModalVisible, setUnsavedChangesModalVisible] = useState(false);
+    const [duplicateTitleModalVisible, setDuplicateTitleModalVisible] = useState(false);
+    const [unexpectedErrorModalVisible, setUnexpectedErrorModalVisible] = useState(false);
     const sentimentOptions = [
         { label: "Bull", value: "Bull" },
         { label: "Bear", value: "Bear" },
@@ -116,25 +119,23 @@ const CreateThesisScreen = ({ navigation, route }) => {
                     // If we don't have unsaved changes, then we don't need to do anything
                     return;
                 }
+
                 // Prevent default behavior of leaving the screen
                 e.preventDefault();
-                // Prompt the user before leaving the screen
-                Alert.alert(
-                    "You are about to exit this screen.",
-                    "Your thesis draft will not be saved. Are you sure you want to exit and discard your thesis draft?",
-                    [
-                        { text: "Cancel", style: "cancel", onPress: () => { } },
-                        {
-                            text: "Discard",
-                            style: "destructive",
-                            // If the user confirmed, then we dispatch the action we blocked earlier
-                            // This will continue the action that had triggered the removal of the screen
-                            onPress: () => navigation.dispatch(e.data.action),
-                        },
-                    ]
-                );
+
+                //Prompt the user before leaving the screen
+                setUnsavedChangesModalVisible(true);
             }),
         [navigation, hasUnsavedChanges]
+    );
+
+    useEffect(
+        () => {
+            if (discardDraft) {
+                navigation.navigate("ProfileScreen")
+            }
+        },
+        [discardDraft]
     );
 
     const handleAddRationale = async (createdThesis) => {
@@ -149,41 +150,6 @@ const CreateThesisScreen = ({ navigation, route }) => {
             //     sourcesQuantity: createdThesis.sources.length,
             //     organic: false,
             // });
-            Alert.alert(
-                `Your thesis was added to your ${createdThesis.asset_symbol} Rationale Library 🎉`,
-                `Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
-                [
-                    {
-                        text: "Got it!",
-                        onPress: () => {
-                            /* do nothing */
-                        },
-                    },
-                ]
-            );
-        } else if (response.status == 403) {
-            Alert.alert(
-                `${createdThesis.asset_symbol} ${createdThesis.sentiment} Rationale Limit Reached`,
-                `In order to keep your investment research focused, Pelleum allows a maximum of 25 ${createdThesis.sentiment} theses per asset. To add this thesis to your ${createdThesis.asset_symbol} ${createdThesis.sentiment} library, please remove one.`,
-                [
-                    {
-                        text: "Got it!",
-                        onPress: () => {
-                            /* do nothing */
-                        },
-                    },
-                    {
-                        text: "Remove now",
-                        onPress: async () => {
-                            navigation.navigate("RationaleScreen", {
-                                thesisToAddAfterRemoval: createdThesis,
-                                asset: createdThesis.asset_symbol,
-                                userId: createdThesis.user_id,
-                            });
-                        },
-                    },
-                ]
-            );
         }
     };
 
@@ -201,31 +167,9 @@ const CreateThesisScreen = ({ navigation, route }) => {
         if (createThesisResponse.status == 201) {
             createdThesis = createThesisResponse.data;
         } else if (createThesisResponse.status == 409) {
-            Alert.alert(
-                "You already have a thesis with this title.",
-                "You cannot create multiple theses with the same title. Please update the title of this thesis.",
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            /* do nothing */
-                        },
-                    },
-                ]
-            );
+            setDuplicateTitleModalVisible(true);
         } else {
-            Alert.alert(
-                "An unexpected error occured.",
-                "We apologize for the inconvenience. Your content was not shared. Please try again later.",
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            /* do nothing */
-                        },
-                    },
-                ]
-            );
+            setUnexpectedErrorModalVisible(true);
         }
 
         if (createdThesis) {
@@ -261,7 +205,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
                 setTitle("");
                 setSources(["", "", "", "", "", ""]);
                 setDisableStatus(true);
-                navigation.navigate("FeedScreen");
+                navigation.navigate("ProfileScreen");
             }
         }
     };
@@ -282,20 +226,9 @@ const CreateThesisScreen = ({ navigation, route }) => {
             setTitle("");
             setSources(["", "", "", "", "", ""]);
             setDisableStatus(true);
-            navigation.navigate("ThesisDetailScreen", updatedThesis);
+            navigation.navigate("ProfileScreen", updatedThesis);
         } else {
-            Alert.alert(
-                "An unexpected error occured.",
-                "We apologize for the inconvenience. Your content was not updated. Please try again later.",
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            /* do nothing */
-                        },
-                    },
-                ]
-            );
+            setUnexpectedErrorModalVisible(true);
         }
     };
 
@@ -310,7 +243,6 @@ const CreateThesisScreen = ({ navigation, route }) => {
         } else {
             await createThesis();
         }
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     };
 
     const handleChangeText = ({
@@ -363,15 +295,63 @@ const CreateThesisScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.mainContainer}>
-            <AddSourcesModal
-                modalVisible={modalVisible}
-                makeModalDisappear={() => setModalVisible(false)}
-                hackValue={hackValue}
-                sources={sources}
-                changeSource={handleChangeSource}
-                tallySources={countSources}
-            />
             <NativeBaseProvider>
+                <AddSourcesModal
+                    modalVisible={sourcesModalVisible}
+                    makeModalDisappear={() => setSourcesModalVisible(false)}
+                    hackValue={hackValue}
+                    sources={sources}
+                    changeSource={handleChangeSource}
+                    tallySources={countSources}
+                />
+                <CustomAlertModal
+                    modalVisible={unsavedChangesModalVisible}
+                    makeModalDisappear={() => setUnsavedChangesModalVisible(false)}
+                    alertTitle="You are about to exit this screen."
+                    alertBody="Your thesis draft will not be saved. Are you sure you want to exit and discard your thesis draft?"
+                    numberOfButtons={2}
+                    firstButtonLabel="Cancel"
+                    firstButtonStyle="cancel"
+                    firstButtonAction={() => {
+                        //do nothing and dismiss modal
+                        setUnsavedChangesModalVisible(false);
+                    }}
+                    secondButtonLabel="Discard"
+                    secondButtonStyle="destructive"
+                    secondButtonAction={() => {
+                        setAssetSymbol("");
+                        setTitle("");
+                        setContent("");
+                        setDiscardDraft(true);
+                        setUnsavedChangesModalVisible(false);
+                    }}
+                />
+                <CustomAlertModal
+                    modalVisible={duplicateTitleModalVisible}
+                    makeModalDisappear={() => setDuplicateTitleModalVisible(false)}
+                    alertTitle="You already have a thesis with this title."
+                    alertBody="You cannot create multiple theses with the same title. Please update the title of this thesis."
+                    numberOfButtons={1}
+                    firstButtonLabel="OK"
+                    firstButtonStyle="default"
+                    firstButtonAction={() => {
+                        //do nothing and dismiss modal
+                        setDuplicateTitleModalVisible(false);
+                    }}
+                />
+                <CustomAlertModal
+                    modalVisible={unexpectedErrorModalVisible}
+                    makeModalDisappear={() => setUnexpectedErrorModalVisible(false)}
+                    alertTitle="An unexpected error occured."
+                    alertBody="We apologize for the inconvenience. Please try again later."
+                    numberOfButtons={1}
+                    firstButtonLabel="OK"
+                    firstButtonStyle="default"
+                    firstButtonAction={() => {
+                        //do nothing and dismiss modal
+                        setUnexpectedErrorModalVisible(false);
+                    }}
+                />
                 <VStack>
                     <View style={{ width: "100%" }}>
                         <HStack
@@ -473,7 +453,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
                         </View>
                         <TouchableOpacity
                             style={styles.iconButton}
-                            onPress={() => setModalVisible(true)}
+                            onPress={() => setSourcesModalVisible(true)}
                         >
                             <MaterialIcons
                                 name="add-link"
@@ -505,6 +485,7 @@ const styles = StyleSheet.create({
         borderBottomColor: LIST_SEPARATOR_COLOR,
         height: 225,
         textAlignVertical: "top",
+        outlineStyle: 'none', //removes input outline in web browsers
     },
     image: {
         width: 44,
@@ -550,6 +531,7 @@ const styles = StyleSheet.create({
         borderBottomColor: LIST_SEPARATOR_COLOR,
         marginBottom: 5,
         width: "25%",
+        outlineStyle: 'none', //removes input outline in web browsers
     },
     titleInput: {
         color: TEXT_COLOR,
@@ -559,6 +541,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 5,
         width: "100%",
+        outlineStyle: 'none', //removes input outline in web browsers
     },
     labelText: {
         color: LIGHT_GREY_COLOR,

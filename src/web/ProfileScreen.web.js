@@ -5,26 +5,18 @@ import {
     FlatList,
     TouchableOpacity,
     Image,
-    Alert,
 } from "react-native";
+import LocalStorage from "../storage/LocalStorage";
 import { HStack, NativeBaseProvider } from "native-base";
-import {
-    MaterialCommunityIcons,
-    Ionicons,
-    Octicons,
-    FontAwesome,
-} from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
-import { useSelector } from "react-redux";
 import AssetBox from "../components/AssetBox";
-import CreateModal from "../components/modals/CreateModal";
 import AppText from "../components/AppText";
 import {
     BAD_COLOR,
-    MAIN_DIFFERENTIATOR_COLOR,
+    WEB_MAIN_DIFFERENTIATOR_COLOR,
     LIGHT_GREY_COLOR,
     MAIN_SECONDARY_COLOR,
-    WEB_MAIN_DIFFERENTIATOR_COLOR
 } from "../styles/Colors";
 
 // Profile Screen Functional Component
@@ -32,136 +24,18 @@ const ProfileScreen = ({ navigation }) => {
     // State Management
     const [assetList, setAssetList] = useState([]);
     const [username, setUsername] = useState("");
-    const { linkedAccounts } = useSelector((state) => state.linkedAccountsReducer);
-    const { userObject } = useSelector((state) => state.authReducer);
 
-    // // Update profile data from source of truth
-    // const onRefresh = async () => {
-    //     setUsername(userObject.username);
-    //     const retrievedAssets = await PortfolioManager.retrieveAssets(
-    //         userObject.userId
-    //     );
-    //     if (retrievedAssets) {
-    //         setAssetList(retrievedAssets.records);
-    //     }
-    // };
-
-    //DUMMY ASSET LIST
-    const noAssets = { "records": [] };
-    const withAssets = {
-        "records": [
-            {
-                "thesis_id": null,
-                "skin_rating": null,
-                "average_buy_price": 902.2642,
-                "total_contribution": null,
-                "user_id": 4,
-                "institution_id": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
-                "name": "Tesla, Inc. Common Stock",
-                "asset_symbol": "TSLA",
-                "position_value": null,
-                "quantity": 0.371,
-                "asset_id": 28,
-                "is_up_to_date": true,
-                "update_errors": null,
-                "created_at": "2022-03-29T22:16:27.592165",
-                "updated_at": "2022-04-12T10:37:59.396332"
-            },
-            {
-                "thesis_id": null,
-                "skin_rating": null,
-                "average_buy_price": 26.1991,
-                "total_contribution": null,
-                "user_id": 4,
-                "institution_id": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
-                "name": "Palantir Technologies Inc. Class A Common Stock",
-                "asset_symbol": "PLTR",
-                "position_value": null,
-                "quantity": 7.53,
-                "asset_id": 29,
-                "is_up_to_date": true,
-                "update_errors": null,
-                "created_at": "2022-03-29T22:16:27.600261",
-                "updated_at": "2022-04-12T10:37:59.452881"
-            },
-            {
-                "thesis_id": null,
-                "skin_rating": null,
-                "average_buy_price": 16.3379,
-                "total_contribution": null,
-                "user_id": 4,
-                "institution_id": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
-                "name": "Opendoor Technologies Inc Common Stock",
-                "asset_symbol": "OPEN",
-                "position_value": null,
-                "quantity": 7.4,
-                "asset_id": 30,
-                "is_up_to_date": true,
-                "update_errors": null,
-                "created_at": "2022-03-29T22:16:27.605932",
-                "updated_at": "2022-04-12T10:37:59.495437"
-            },
-            {
-                "thesis_id": null,
-                "skin_rating": null,
-                "average_buy_price": 341.6383,
-                "total_contribution": null,
-                "user_id": 4,
-                "institution_id": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
-                "name": "Coinbase Global, Inc. Class A Common Stock",
-                "asset_symbol": "COIN",
-                "position_value": null,
-                "quantity": 0.47,
-                "asset_id": 31,
-                "is_up_to_date": true,
-                "update_errors": null,
-                "created_at": "2022-03-29T22:16:27.612184",
-                "updated_at": "2022-04-12T10:37:59.523638"
-            },
-            {
-                "thesis_id": null,
-                "skin_rating": null,
-                "average_buy_price": 30.26,
-                "total_contribution": null,
-                "user_id": 4,
-                "institution_id": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
-                "name": "Coursera, Inc.",
-                "asset_symbol": "COUR",
-                "position_value": null,
-                "quantity": 3.0,
-                "asset_id": 32,
-                "is_up_to_date": true,
-                "update_errors": null,
-                "created_at": "2022-03-29T22:16:27.619142",
-                "updated_at": "2022-04-12T10:37:59.552860"
-            },
-            {
-                "thesis_id": null,
-                "skin_rating": null,
-                "average_buy_price": 10.27,
-                "total_contribution": null,
-                "user_id": 4,
-                "institution_id": "d75e2cf4-a4ee-4869-88c3-14bfadf7c196",
-                "name": "Social Capital Hedosophia Holdings Corp. VI",
-                "asset_symbol": "IPOF",
-                "position_value": null,
-                "quantity": 1.0,
-                "asset_id": 33,
-                "is_up_to_date": true,
-                "update_errors": null,
-                "created_at": "2022-03-29T22:16:27.625619",
-                "updated_at": "2022-04-12T10:37:59.587477"
-            }
-        ]
-    };
-
-    const temp_assets = withAssets;
-    // const temp_assets = noAssets;
-
-    // TEMP onRefresh
+    // Update profile data from source of truth
     const onRefresh = async () => {
-        setAssetList(temp_assets.records);
-        setUsername("testWebUser");
+        const userObjectString = await LocalStorage.getItem("userObject");
+        const userObject = JSON.parse(userObjectString);
+        setUsername(userObject.username);
+        const retrievedAssets = await PortfolioManager.retrieveAssets(
+            userObject.userId
+        );
+        if (retrievedAssets) {
+            setAssetList(retrievedAssets.records);
+        }
     };
 
     // Call onRefresh when ProfileScreen renders for the first time in a session
@@ -263,7 +137,7 @@ const styles = StyleSheet.create({
     buttonGroup: {
         alignItems: "center",
         overflow: "hidden",
-        backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+        backgroundColor: WEB_MAIN_DIFFERENTIATOR_COLOR,
         borderRadius: 30,
         width: "65%",
         marginTop: 6,

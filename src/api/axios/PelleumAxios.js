@@ -3,7 +3,8 @@ import axios from "axios";
 import LocalStorage from "../../storage/LocalStorage";
 
 const pelleumAxios = axios.create({
-	baseURL: `${process.env.PELLEUM_API_BASE_URL}`,
+	// baseURL: `${process.env.PELLEUM_API_BASE_URL}`,
+	baseURL: "http://localhost:8000"
 });
 
 pelleumAxios.interceptors.request.use(

@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import LocalStorage from "../storage/LocalStorage";
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
@@ -129,7 +130,9 @@ class PostsManager {
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 200) {
 					store.dispatch(removeLike(item.post_id));
-					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+					Platform.OS == "ios" || Platform.OS == "android" ? (
+						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+					) : null;
 				} else {
 					console.log("There was an error un-liking a post.");
 				}
@@ -143,7 +146,9 @@ class PostsManager {
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 201) {
 					store.dispatch(addLike(item.post_id));
-					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+					Platform.OS == "ios" || Platform.OS == "android" ? (
+						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+					) : null;
 				} else {
 					console.log("There was an error liking a post.");
 				}

@@ -315,7 +315,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 		} else {
 			await createThesis();
 		}
-		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 	};
 
 	const handleChangeText = ({

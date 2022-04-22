@@ -113,7 +113,7 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View width={"100%"} alignItems={"center"}>
+            <View style={{ width: "100%", alignItems: "center" }}>
                 <AppText style={styles.titleText}>Log In</AppText>
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
         marginTop: 5,
+        outlineStyle: 'none', //removes input outline in web browsers
     },
     buttonEnabled: {
         backgroundColor: MAIN_SECONDARY_COLOR,

@@ -314,12 +314,11 @@ const SignupScreen = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <View style={styles.container}>
-                <View width={"100%"} alignItems={"center"}>
+                <View style={{ width: "100%", alignItems: "center" }}>
                     <AppText style={styles.titleText}>Welcome to Pelleum</AppText>
                     <View style={styles.inputContainer}>
                         <View style={styles.inputIconContainer}>
                             <TextInput
-                                color={TEXT_COLOR}
                                 selectionColor={MAIN_SECONDARY_COLOR}
                                 placeholder="Email"
                                 maxLength={100}
@@ -346,7 +345,6 @@ const SignupScreen = ({ navigation }) => {
                         </View>
                         <View style={styles.inputIconContainer}>
                             <TextInput
-                                color={TEXT_COLOR}
                                 selectionColor={MAIN_SECONDARY_COLOR}
                                 placeholder="Username"
                                 maxLength={15}
@@ -372,7 +370,6 @@ const SignupScreen = ({ navigation }) => {
                         </View>
                         <View style={styles.inputIconContainer}>
                             <TextInput
-                                color={TEXT_COLOR}
                                 selectionColor={MAIN_SECONDARY_COLOR}
                                 placeholder="Password"
                                 maxLength={100}
@@ -403,7 +400,6 @@ const SignupScreen = ({ navigation }) => {
                         </View>
                         <View style={styles.inputIconContainer}>
                             <TextInputMask
-                                color={TEXT_COLOR}
                                 selectionColor={MAIN_SECONDARY_COLOR}
                                 placeholder="MM/DD/YYYY"
                                 placeholderTextColor={LIGHT_GREY_COLOR}
@@ -612,10 +608,12 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
     inputWithIcon: {
+        color: TEXT_COLOR,
         backgroundColor: WEB_MAIN_DIFFERENTIATOR_COLOR,
         fontSize: 14,
         height: "100%",
         width: "90%",
+        outlineStyle: 'none', //removes input outline in web browsers
     },
     genderSelectButton: {
         alignItems: 'flex-start',
