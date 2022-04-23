@@ -1,7 +1,5 @@
-import * as SecureStore from "expo-secure-store";
-
-// Local File Imports
 import pelleumAxios from "../axios/PelleumAxios";
+import LocalStorage from "../../storage/LocalStorage";
 import { store } from "../../redux/Store";
 import { logout } from "../../redux/actions/AuthActions";
 
@@ -30,7 +28,7 @@ async function pelleumClient({
 	try {
 		response = await pelleumAxios(requestConfig);
 	} catch (err) {
-		response = err.response;
+		response = await err.response;
 	}
 
 	if (response.status == 401) {
@@ -38,7 +36,7 @@ async function pelleumClient({
 		if (onLogin) {
 			return response;
 		}
-		await SecureStore.deleteItemAsync("userObject");
+		await LocalStorage.deleteItem("userObject");
 		store.dispatch(logout());
 	} else {
 		// Authorized responses

@@ -76,7 +76,7 @@ const LinkAccountScreen = ({ navigation }) => {
 					institution_id: process.env.ROBINHOOD_ID,
 				});
 				await LinkAccountsManager.getLinkedAccountsStatus();
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 				successAlert();
 				navigation.navigate("ProfileScreen", { accountLinked: true });
 			} else {
@@ -115,7 +115,7 @@ const LinkAccountScreen = ({ navigation }) => {
 				institution_id: process.env.ROBINHOOD_ID,
 			});
 			await LinkAccountsManager.getLinkedAccountsStatus();
-			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 			successAlert();
 			navigation.navigate("ProfileScreen", { accountLinked: true });
 		} else {

@@ -1,14 +1,15 @@
 // Import Installed Libraries
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
+import LocalStorage from "../../storage/LocalStorage";
 
 const pelleumAxios = axios.create({
-	baseURL: `${process.env.PELLEUM_API_BASE_URL}`,
+	// baseURL: `${process.env.PELLEUM_API_BASE_URL}`,
+	baseURL: "http://localhost:8000"
 });
 
 pelleumAxios.interceptors.request.use(
 	async (config) => {
-		const userObjectString = await SecureStore.getItemAsync("userObject");
+		const userObjectString = await LocalStorage.getItem("userObject");
 		const userObject = JSON.parse(userObjectString);
 		if (userObject) {
 			config.headers.Authorization = `Bearer ${userObject.access_token}`;

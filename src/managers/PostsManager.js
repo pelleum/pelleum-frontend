@@ -1,4 +1,5 @@
-import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
+import LocalStorage from "../storage/LocalStorage";
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
 import Config from "../../Config";
@@ -93,10 +94,10 @@ class PostsManager {
 	// Do we even still need this function? Leaving it here just
 	// in case we switch back to frontend computation
 	static getUserLikes = async (timeRange) => {
-		// We need to grab userObject from SecureStore here because
-		// we useSelector is a hook, which can only be used inside a
+		// We need to grab userObject from LocalStorage here because
+		// seSelector is a hook, which can only be used inside a
 		// function component. This is a function inside a class.
-		const userObjectString = await SecureStore.getItemAsync("userObject");
+		const userObjectString = await LocalStorage.getItem("userObject");
 		const userObject = JSON.parse(userObjectString);
 
 		const authorizedResponse = await pelleumClient({
@@ -129,7 +130,9 @@ class PostsManager {
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 200) {
 					store.dispatch(removeLike(item.post_id));
-					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+					Platform.OS == "ios" || Platform.OS == "android" ? (
+						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+					) : null;
 				} else {
 					console.log("There was an error un-liking a post.");
 				}
@@ -143,7 +146,9 @@ class PostsManager {
 			if (authorizedResponse) {
 				if (authorizedResponse.status == 201) {
 					store.dispatch(addLike(item.post_id));
-					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+					Platform.OS == "ios" || Platform.OS == "android" ? (
+						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+					) : null;
 				} else {
 					console.log("There was an error liking a post.");
 				}

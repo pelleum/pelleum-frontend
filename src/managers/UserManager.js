@@ -1,4 +1,5 @@
-import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
+import LocalStorage from "../storage/LocalStorage";
 import pelleumClient from "../api/clients/PelleumClient";
 import RationalesManager from "../managers/RationalesManager";
 import LinkAccountsManager from "./LinkAccountsManager";
@@ -28,8 +29,8 @@ class UserManager {
 		});
 
 		if (response.status == 200) {
-			// 1. store user object in SecureStore
-			await SecureStore.setItemAsync(
+			// 1. store user object in LocalStorage
+			await LocalStorage.setItem(
 				"userObject",
 				JSON.stringify(response.data)
 			);
@@ -42,8 +43,11 @@ class UserManager {
 			);
 			// 3. dispatch login action
 			store.dispatch(login());
-			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-			// 4. retrieve rationales from backend and update rationaleLibrary
+			// 4. provide haptic feedback
+			Platform.OS == "ios" || Platform.OS == "android" ? (
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+			) : null;
+			// 5. retrieve rationales from backend and update rationaleLibrary
 			const retrievedRationales = await RationalesManager.retrieveRationales({
 				user_id: response.data.user_id,
 			});
@@ -53,9 +57,9 @@ class UserManager {
 				);
 				store.dispatch(refreshLibrary(rationaleInfo));
 			}
-			// 5. Get user's notifications to store in universal state
+			// 6. Get user's notifications to store in universal state
 			await NotificationManager.getNotifications();
-			// 6. update linked brokerage accounts status
+			// 7. update linked brokerage accounts status
 			await LinkAccountsManager.getLinkedAccountsStatus();
 		} else {
 			store.dispatch(authError(response.data.detail));
@@ -72,8 +76,8 @@ class UserManager {
 		});
 
 		if (response.status == 201) {
-			// 1. store user object in SecureStore
-			await SecureStore.setItemAsync(
+			// 1. store user object in LocalStorage
+			await LocalStorage.setItem(
 				"userObject",
 				JSON.stringify(response.data)
 			);
@@ -86,8 +90,11 @@ class UserManager {
 			);
 			// 3. dispatch login action
 			store.dispatch(login());
-			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-			// 4. retrieve rationales from backend and update rationaleLibrary
+			// 4. provide haptic feedback
+			Platform.OS == "ios" || Platform.OS == "android" ? (
+				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+			) : null;
+			// 5. retrieve rationales from backend and update rationaleLibrary
 			const retrievedRationales = await RationalesManager.retrieveRationales({
 				user_id: response.data.user_id,
 			});
@@ -97,7 +104,7 @@ class UserManager {
 				);
 				store.dispatch(refreshLibrary(rationaleInfo));
 			}
-			//5. update linked brokerage accounts status
+			//6. update linked brokerage accounts status
 			await LinkAccountsManager.getLinkedAccountsStatus();
 		} else {
 			store.dispatch(authError(response.data.detail));

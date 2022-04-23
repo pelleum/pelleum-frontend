@@ -26,7 +26,6 @@ const CommentInput = ({
 	return (
 		<View style={styles.inputContainer}>
 			<TextInput
-				color={TEXT_COLOR}
 				selectionColor={MAIN_SECONDARY_COLOR}
 				placeholder="Reply with your thoughts here"
 				placeholderTextColor={LIGHT_GREY_COLOR}
@@ -42,6 +41,7 @@ const CommentInput = ({
 
 const styles = StyleSheet.create({
 	textArea: {
+		color: TEXT_COLOR,
 		padding: 5,
 		width: "100%",
 		maxHeight: 150,

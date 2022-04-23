@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
 import Config from "../../Config";
@@ -24,7 +25,9 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
 				store.dispatch(addReaction(item.thesis_id, reactionType));
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				Platform.OS == "ios" || Platform.OS == "android" ? (
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				) : null;
 			} else {
 				console.log("There was an error liking a thesis.");
 			}
@@ -39,7 +42,9 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				Platform.OS == "ios" || Platform.OS == "android" ? (
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				) : null;
 			} else {
 				console.log("There was an error un-liking a thesis.");
 			}
@@ -55,7 +60,9 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 201) {
 				store.dispatch(addReaction(item.thesis_id, reactionType));
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				Platform.OS == "ios" || Platform.OS == "android" ? (
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				) : null;
 			} else {
 				console.log("There was an error disliking a thesis.");
 			}
@@ -70,7 +77,9 @@ class ThesesManager {
 		if (authorizedResponse) {
 			if (authorizedResponse.status == 200) {
 				store.dispatch(removeReaction(item.thesis_id, reactionType));
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				Platform.OS == "ios" || Platform.OS == "android" ? (
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				) : null;
 			} else {
 				console.log("There was an error un-disliking a thesis.");
 			}

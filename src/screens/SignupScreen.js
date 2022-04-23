@@ -283,6 +283,7 @@ const SignupScreen = ({ navigation }) => {
 		}
 	};
 
+	// Only enable button if all input fields have a valid entry
 	const checkInputValidity = () => {
 		if (Object.values(inputValidity).every((item) => item === true)) {
 			setDisableStatus(false);
@@ -291,14 +292,16 @@ const SignupScreen = ({ navigation }) => {
 		};
 	};
 
-	({
-		newValue,
-		checkEmail = false,
-		checkPassword = false,
-		checkUsername = false,
-		checkBirthDate = false,
-	} = {})
+	// Not sure what this does. We should probably delete this.
+	// ({
+	// 	newValue,
+	// 	checkEmail = false,
+	// 	checkPassword = false,
+	// 	checkUsername = false,
+	// 	checkBirthDate = false,
+	// } = {})
 
+	// Do this when an input field is focused (i.e., user taps on input)
 	const handleOnFocus = ({
 		isFocusedString,
 		validityIconKey,
@@ -309,6 +312,7 @@ const SignupScreen = ({ navigation }) => {
 		setShowValidityIcon(newShowValidityIcon)
 	};
 
+	// Do this when an input field becomes unfocused (i.e., user taps out of input)
 	const handleOnBlur = (validityIconKey) => {
 		const newShowValidityIcon = showValidityIcon;
 		setIsFocused("")

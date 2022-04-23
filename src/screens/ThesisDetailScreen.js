@@ -51,7 +51,6 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 	const [error, setError] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
-	//We need to set the error message
 
 	// Segment Tracking
 	const { track } = useAnalytics();

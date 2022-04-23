@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import pelleumClient from "../api/clients/PelleumClient";
 import * as Haptics from "expo-haptics";
 import Config from "../../Config";
@@ -43,7 +44,9 @@ class RationalesManager {
 						asset: thesis.asset_symbol,
 					})
 				);
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+				Platform.OS == "ios" || Platform.OS == "android" ? (
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				) : null;
 			} else {
 				console.log("There was an error adding the thesis to your library.");
 			}
