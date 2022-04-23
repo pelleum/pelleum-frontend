@@ -462,6 +462,8 @@ export default () => {
 		config: config,
 	};
 
+	console.log("\n\nwe are in\n\n")
+
 	return (
 		<AnalyticsProvider client={segmentClient}>
 			<Provider store={store}>
