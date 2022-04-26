@@ -43,7 +43,7 @@ const PostDetailScreen = ({ navigation, route }) => {
     // // Segment Tracking
     // const { track } = useAnalytics();
 
-    // const detailedPost = route.params;
+    const detailedPost = route.params;
 
     // Determine whether post exists (in the case of deleting while on postDetail page)
     const postExists = !deleted.some(
@@ -111,125 +111,40 @@ const PostDetailScreen = ({ navigation, route }) => {
         }
     };
 
-    // const onRefresh = async () => {
-    // 	setRefreshing(true);
-    // 	const commentsResponseData = await PostsManager.getComments({
-    // 		is_post_comment_on: detailedPost.post_id,
-    // 	});
-    // 	if (detailedPost.is_post_comment_on) {
-    // 		const response = await PostsManager.getPost(
-    // 			detailedPost.is_post_comment_on
-    // 		);
-    // 		processRetrievedPost(response);
-    // 	} else if (detailedPost.is_thesis_comment_on) {
-    // 		const response = await ThesesManager.getThesis(
-    // 			detailedPost.is_thesis_comment_on
-    // 		);
-    // 		processRetrievedThesis(response);
-    // 	} else {
-    // 		setPostCommentedOn(null);
-    // 		setThesisCommentedOn(null);
-    // 	}
-    // 	if (commentsResponseData) {
-    // 		dispatch(setComments(commentsResponseData.records.posts));
-    // 	}
+    const onRefresh = async () => {
+        setRefreshing(true);
+        const commentsResponseData = await PostsManager.getComments({
+            is_post_comment_on: detailedPost.post_id,
+        });
+        if (detailedPost.is_post_comment_on) {
+            const response = await PostsManager.getPost(
+                detailedPost.is_post_comment_on
+            );
+            processRetrievedPost(response);
+        } else if (detailedPost.is_thesis_comment_on) {
+            const response = await ThesesManager.getThesis(
+                detailedPost.is_thesis_comment_on
+            );
+            processRetrievedThesis(response);
+        } else {
+            setPostCommentedOn(null);
+            setThesisCommentedOn(null);
+        }
+        if (commentsResponseData) {
+            dispatch(setComments(commentsResponseData.records.posts));
+        }
 
-    // 	setRefreshing(false);
-    // };
+        setRefreshing(false);
+    };
 
-    // if (detailedPost.needsRefresh) {
-    //     onRefresh();
-    //     detailedPost.needsRefresh = false;
-    // }
+    if (detailedPost.needsRefresh) {
+        onRefresh();
+        detailedPost.needsRefresh = false;
+    }
 
     useEffect(() => {
         onRefresh();
     }, []);
-
-    //************************* DUMMY *************************//
-    // DUMMY POST
-    const detailedPost = {
-        "title": null,
-        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        "asset_symbol": "AAPL",
-        "sentiment": "Bear",
-        "thesis_id": null,
-        "is_post_comment_on": null,
-        "is_thesis_comment_on": null,
-        "post_id": 271,
-        "user_id": 3,
-        "username": "btcbull",
-        "created_at": "2022-04-07T20:34:09.793533",
-        "updated_at": "2022-04-07T20:34:09.793533",
-        "user_reaction_value": null,
-        "like_count": 1,
-        "comment_count": 0,
-        "replies": null,
-        "thesis": null
-    };
-
-    // DUMMY COMMENTS
-    const tempComments = {
-        "records": {
-            "posts": [
-                {
-                    "title": null,
-                    "content": "This is a comment yes yes yes yes yes yes yes yes yes yes.",
-                    "asset_symbol": null,
-                    "sentiment": null,
-                    "thesis_id": null,
-                    "is_post_comment_on": 271,
-                    "is_thesis_comment_on": null,
-                    "post_id": 13,
-                    "user_id": 4,
-                    "username": "orangetrader",
-                    "created_at": "2022-03-24T04:30:19.389821",
-                    "updated_at": "2022-03-24T04:30:19.389821",
-                    "user_reaction_value": null,
-                    "like_count": 0,
-                    "comment_count": 0,
-                    "replies": null,
-                    "thesis": null
-                },
-                {
-                    "title": null,
-                    "content": "I think you're wrong.",
-                    "asset_symbol": null,
-                    "sentiment": null,
-                    "thesis_id": null,
-                    "is_post_comment_on": 271,
-                    "is_thesis_comment_on": null,
-                    "post_id": 10,
-                    "user_id": 3,
-                    "username": "btcbull",
-                    "created_at": "2022-03-24T03:41:33.118635",
-                    "updated_at": "2022-03-24T03:41:33.118635",
-                    "user_reaction_value": null,
-                    "like_count": 0,
-                    "comment_count": 0,
-                    "replies": null,
-                    "thesis": null
-                }
-            ]
-        },
-        "meta_data": {
-            "page": 1,
-            "records_per_page": 200,
-            "total_pages": 1,
-            "total_records": 2
-        }
-    };
-
-    // TEMP onRefresh
-    const onRefresh = async () => {
-        setRefreshing(true);
-        setPostCommentedOn(detailedPost);
-        setThesisCommentedOn(null);
-        const commentsResponseData = tempComments;
-        dispatch(setComments(commentsResponseData.records.posts));
-        setRefreshing(false);
-    };
-    //************************* END DUMMY *************************//
 
     return (
         <NativeBaseProvider>

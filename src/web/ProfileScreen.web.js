@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import LocalStorage from "../storage/LocalStorage";
 import { HStack, NativeBaseProvider } from "native-base";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import PortfolioManager from "../managers/PortfolioManager";
 import AssetBox from "../components/AssetBox";
 import AppText from "../components/AppText";
@@ -24,15 +24,15 @@ const ProfileScreen = ({ navigation }) => {
     // State Management
     const [assetList, setAssetList] = useState([]);
     const [username, setUsername] = useState("");
+    const [userId, setUserId] = useState("")
 
     // Update profile data from source of truth
     const onRefresh = async () => {
         const userObjectString = await LocalStorage.getItem("userObject");
         const userObject = JSON.parse(userObjectString);
+        setUserId(userObject.user_id);
         setUsername(userObject.username);
-        const retrievedAssets = await PortfolioManager.retrieveAssets(
-            userObject.userId
-        );
+        const retrievedAssets = await PortfolioManager.retrieveAssets(userObject.user_id);
         if (retrievedAssets) {
             setAssetList(retrievedAssets.records);
         }
@@ -83,6 +83,23 @@ const ProfileScreen = ({ navigation }) => {
                                             color={MAIN_SECONDARY_COLOR}
                                         />
                                         <AppText style={styles.buttonGroupText}>Write a Thesis</AppText>
+                                    </HStack>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonGroup}
+                                    onPress={async () => {
+                                        navigation.navigate("RationaleScreen", { userId: userId });
+                                    }}
+                                >
+                                    <HStack style={styles.buttonGroupTextContainer}>
+                                        <Ionicons
+                                            name="md-file-tray-full-outline"
+                                            size={25}
+                                            color={MAIN_SECONDARY_COLOR}
+                                        />
+                                        <AppText style={styles.buttonGroupText}>
+                                            Rationale Library
+                                        </AppText>
                                     </HStack>
                                 </TouchableOpacity>
                             </View>

@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
         color: BAD_COLOR,
         fontWeight: "bold",
         fontSize: 16,
-        opacity: 0.65,
     },
     buttonShape: {
         alignItems: "center",

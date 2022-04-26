@@ -1,4 +1,4 @@
-// Import Installed Libraries
+// Installed Libraries
 import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
@@ -12,7 +12,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import SwitchSelector from "react-native-switch-selector";
 // import { useAnalytics } from "@segment/analytics-react-native";
 
-// Import Local Files
+// Local Files
 import CustomAlertModal from "../components/modals/CustomAlertModal";
 import AddSourcesModal from "../components/modals/AddSourcesModal";
 import AppText from "../components/AppText";

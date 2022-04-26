@@ -1,9 +1,10 @@
 // Import Installed Libraries
 import * as React from "react";
+import { Image } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import "react-native-gesture-handler";
-import LocalStorage from "./src/storage/LocalStorage";
+import * as Linking from 'expo-linking';
 
 // Import Screens
 import LoadingScreen from "./src/screens/LoadingScreen";
@@ -13,10 +14,12 @@ import ProfileScreen from "./src/web/ProfileScreen.web";
 import CreateThesisScreen from "./src/web/CreateThesisScreen.web";
 import ThesisDetailScreen from "./src/web/ThesisDetailScreen.web";
 import PostDetailScreen from "./src/web/PostDetailScreen.web";
-import PortfolioInsightScreen from "./src/web/PortfolioInsightScreen.web";
+import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
+import RationaleScreen from "./src/web/RationaleScreen.web";
 import SettingsScreen from "./src/screens/SettingsScreen";
 
 // Import Miscellaneous Local Files
+import LocalStorage from "./src/storage/LocalStorage";
 import BackButton from "./src/components/BackButton";
 import RationalesManager from "./src/managers/RationalesManager";
 import UserManager from "./src/managers/UserManager";
@@ -136,19 +139,56 @@ const RootStackFlow = () => {
 		<RootStack.Navigator>
 			{hasUserToken == false ? (
 				// No token found, user isn't logged in
-				<RootStack.Screen
-					name="AuthStack"
-					component={AuthFlow}
-					options={{
-						headerShown: false,
-					}}
-				/>
+				<>
+					<RootStack.Screen
+						name="AuthStack"
+						component={AuthFlow}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<RootStack.Screen
+						name="PostDetailScreen"
+						component={PostDetailScreen}
+						options={{
+							headerTitle: () => (
+								<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+							),
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+						}}
+					/>
+					<RootStack.Screen
+						name="ThesisDetailScreen"
+						component={ThesisDetailScreen}
+						options={{
+							headerTitle: () => (
+								<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+							),
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+						}}
+					/>
+					<RootStack.Screen
+						name="PortfolioInsightScreen"
+						component={PortfolioInsightScreen}
+					/>
+					<RootStack.Screen
+						name="RationaleScreen"
+						component={RationaleScreen}
+						options={{
+							title: "Rationale Library",
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+						}}
+					/>
+				</>
 			) : (
 				// User is logged in
 				<>
-
-
-
 					<RootStack.Screen
 						name="ProfileFlow"
 						component={ProfileFlow}
@@ -156,38 +196,44 @@ const RootStackFlow = () => {
 							headerShown: false,
 						}}
 					/>
-
-
 					<RootStack.Screen
 						name="PostDetailScreen"
 						component={PostDetailScreen}
 						options={{
-							title: "Pelleum",
+							headerTitle: () => (
+								<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+							),
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
-
-
 					<RootStack.Screen
 						name="ThesisDetailScreen"
 						component={ThesisDetailScreen}
 						options={{
-							title: "Pelleum",
+							headerTitle: () => (
+								<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+							),
 							headerTitleAlign: 'center',
 							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
-
-
 					<RootStack.Screen
 						name="PortfolioInsightScreen"
 						component={PortfolioInsightScreen}
 					/>
-
-
+					<RootStack.Screen
+						name="RationaleScreen"
+						component={RationaleScreen}
+						options={{
+							title: "Rationale Library",
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+						}}
+					/>
 				</>
 			)}
 		</RootStack.Navigator>
@@ -195,9 +241,37 @@ const RootStackFlow = () => {
 };
 
 export default () => {
+	const config = {
+		screens: {
+			AppFlow: {
+				screens: {
+					ProfileFlow: {
+						screens: {
+							ProfileScreen: "profile"
+						}
+					},
+				},
+			},
+			CreateThesisScreen: 'thesis/create',
+			PostDetailScreen: 'post/:postId',
+			ThesisDetailScreen: 'thesis/:thesisId',
+			PortfolioInsightScreen: 'profile/:userId',
+			// NotFoundScreen: "*" // we need to create and import this screen
+		},
+	};
+
+	// Need to set up prefix as environment variable
+	//if (__DEV__){ prefix = "com.pelleum.dev://app" }
+	//if (preview){ prefix = "com.pelleum.preview://app" }
+	//if (prod){ prefix = "com.pelleum.mobile://app" }
+	//if the scheme is defined as "pelleum", we may just need to do "pelleum://"
+	const linking = {
+		prefixes: [Linking.createURL('/'), 'com.pelleum.dev://app'],
+		config: config,
+	};
 	return (
 		<Provider store={store}>
-			<NavigationContainer theme={DarkTheme}>
+			<NavigationContainer linking={linking} fallback={<LoadingScreen />} theme={DarkTheme}>
 				<RootStackFlow />
 			</NavigationContainer>
 		</Provider>

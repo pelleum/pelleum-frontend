@@ -35,14 +35,6 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 		onRefresh();
 	}, []);
 
-	renderItem = ({ item }) => (
-		<AssetBox
-			item={item}
-			nav={navigation}
-			portfolioInsightRationales={rationales}
-		/>
-	);
-
 	if (!user) {
 		return (
 			<View></View>
@@ -54,7 +46,13 @@ const PortfolioInsightScreen = ({ navigation, route }) => {
 					<FlatList
 						data={assetList}
 						keyExtractor={(item) => item.asset_symbol}
-						renderItem={renderItem}
+						renderItem={({ item }) => (
+							<AssetBox
+								item={item}
+								nav={navigation}
+								portfolioInsightRationales={rationales}
+							/>
+						)}
 						ListHeaderComponent={
 							<View style={styles.listHeaderView}>
 								<Image
