@@ -53,7 +53,7 @@ const LinkedAccountsStatusScreen = ({ navigation }) => {
 						const response = await LinkAccountsManager.unlinkAccount();
 						if (response.status == 200) {
 							track('Account Unlinked', {
-								institution_id: process.env.ROBINHOOD_ID,
+								institution_id: process.env.REACT_APP_ROBINHOOD_ID,
 							});
 							navigation.navigate("ProfileScreen", { onUnlink: true });
 						} else {

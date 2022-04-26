@@ -73,7 +73,7 @@ const LinkAccountScreen = ({ navigation }) => {
 				setInstitutionLogin(true);
 			} else if (response.data.account_connection_status == "connected") {
 				track('Account Linked', {
-					institution_id: process.env.ROBINHOOD_ID,
+					institution_id: process.env.REACT_APP_ROBINHOOD_ID,
 				});
 				await LinkAccountsManager.getLinkedAccountsStatus();
 				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
@@ -112,7 +112,7 @@ const LinkAccountScreen = ({ navigation }) => {
 		if (response.status == 201) {
 			setErrorMessage("");
 			track('Account Linked', {
-				institution_id: process.env.ROBINHOOD_ID,
+				institution_id: process.env.REACT_APP_ROBINHOOD_ID,
 			});
 			await LinkAccountsManager.getLinkedAccountsStatus();
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)

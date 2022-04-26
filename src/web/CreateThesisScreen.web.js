@@ -226,7 +226,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
             setTitle("");
             setSources(["", "", "", "", "", ""]);
             setDisableStatus(true);
-            navigation.navigate("ProfileScreen", updatedThesis);
+            navigation.navigate("ThesisDetailScreen", { thesisId: updatedThesis.thesis_id });
         } else {
             setUnexpectedErrorModalVisible(true);
         }

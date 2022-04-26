@@ -22,11 +22,11 @@ const NotificationBox = ({ item, nav }) => {
                     onPress={async () => {
                         await NotificationManager.acknowledge(item.notification_id);
                         item.post ? (
-                            nav.navigate("PostDetailScreen", item.post)
+                            nav.navigate("PostDetailScreen", { postId: item.post.post_id })
                         ) : item.comment ? (
-                            nav.navigate("PostDetailScreen", item.comment)
+                            nav.navigate("PostDetailScreen", { postId: item.comment.post_id })
                         ) : item.thesis ? (
-                            nav.navigate("ThesisDetailScreen", item.thesis)
+                            nav.navigate("ThesisDetailScreen", { thesisId: item.thesis.thesis_id })
                         ) : null
                     }}
                 >
@@ -37,7 +37,6 @@ const NotificationBox = ({ item, nav }) => {
                                     <TouchableOpacity
                                         onPress={() =>
                                             nav.navigate("PortfolioInsightScreen", {
-                                                username: item.username,
                                                 userId: item.user_id,
                                             })}
                                     >
@@ -67,7 +66,6 @@ const NotificationBox = ({ item, nav }) => {
                                     <TouchableOpacity
                                         onPress={() =>
                                             nav.navigate("PortfolioInsightScreen", {
-                                                username: item.username,
                                                 userId: item.user_id,
                                             })}
                                     >
@@ -97,7 +95,6 @@ const NotificationBox = ({ item, nav }) => {
                                     <TouchableOpacity
                                         onPress={() =>
                                             nav.navigate("PortfolioInsightScreen", {
-                                                username: item.username,
                                                 userId: item.user_id,
                                             })}
                                     >

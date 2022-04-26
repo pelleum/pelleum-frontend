@@ -26,3 +26,4 @@ Makefile
 
 .cache/
 node_modules/
+.expo/

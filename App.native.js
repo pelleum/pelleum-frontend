@@ -49,7 +49,7 @@ import { storeUserObject } from "./src/redux/actions/AuthActions";
 
 // Segment Client
 const segmentClient = createClient({
-	writeKey: process.env.SEGMENT_WRITE_KEY,
+	writeKey: process.env.REACT_APP_SEGMENT_WRITE_KEY,
 	trackAppLifecycleEvents: true,
 });
 

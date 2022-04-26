@@ -24,7 +24,7 @@ class LinkAccountsManager {
 	static accountLogin = async (requestBody) => {
 		const response = await pelleumClient({
 			method: "post",
-			url: `${Config.acLoginBasePath}/${process.env.ROBINHOOD_ID}`,
+			url: `${Config.acLoginBasePath}/${process.env.REACT_APP_ROBINHOOD_ID}`,
 			data: requestBody,
 		});
 		return response;
@@ -33,7 +33,7 @@ class LinkAccountsManager {
 	static unlinkAccount = async () => {
 		const response = await pelleumClient({
 			method: "delete",
-			url: `${Config.acDeactivateBasePath}/${process.env.ROBINHOOD_ID}`,
+			url: `${Config.acDeactivateBasePath}/${process.env.REACT_APP_ROBINHOOD_ID}`,
 		});
 
 		if (response.status == 200) {
@@ -48,7 +48,7 @@ class LinkAccountsManager {
 	static verifyAccount = async (requestBody) => {
 		const response = await pelleumClient({
 			method: "post",
-			url: `${Config.acLoginBasePath}/${process.env.ROBINHOOD_ID}/verify`,
+			url: `${Config.acLoginBasePath}/${process.env.REACT_APP_ROBINHOOD_ID}/verify`,
 			data: requestBody,
 		});
 		return response;

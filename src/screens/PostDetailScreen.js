@@ -118,22 +118,6 @@ const PostDetailScreen = ({ navigation, route }) => {
 		const commentsResponseData = await PostsManager.getComments({
 			is_post_comment_on: route.params.postId,
 		});
-		// // 3. If the post is, itself, a comment, grab parent post or thesis
-		// if (detailedPost.is_post_comment_on) {
-		// 	const response = await PostsManager.getPost(
-		// 		detailedPost.is_post_comment_on
-		// 	);
-		// 	processRetrievedPost(response);
-		// } else if (detailedPost.is_thesis_comment_on) {
-		// 	const response = await ThesesManager.getThesis(
-		// 		detailedPost.is_thesis_comment_on
-		// 	);
-		// 	processRetrievedThesis(response);
-		// } else {
-		// 	setPostCommentedOn(null);
-		// 	setThesisCommentedOn(null);
-		// }
-		// 4. Set retrieved comments in state
 		if (commentsResponseData) {
 			dispatch(setComments(commentsResponseData.records.posts));
 		}
@@ -179,7 +163,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 	renderItem = ({ item }) => (
 		<CommentBox item={item} nav={navigation} commentLevel={1} />
 	);
-	
+
 	if (!detailedPost) {
 		return (
 			<View></View>
