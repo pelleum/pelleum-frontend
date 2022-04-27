@@ -1,7 +1,9 @@
 import pelleumAxios from "../axios/PelleumAxios";
 import LocalStorage from "../../storage/LocalStorage";
+import * as RootNavigation from "../../nav/RootNavigation";
 import { store } from "../../redux/Store";
 import { logout } from "../../redux/actions/AuthActions";
+
 
 async function pelleumClient({
 	method,
@@ -38,8 +40,11 @@ async function pelleumClient({
 		}
 		await LocalStorage.deleteItem("userObject");
 		store.dispatch(logout());
+	} else if (response.status == 404) {
+		// Resource not found
+		RootNavigation.navigate("NotFoundScreen");
 	} else {
-		// Authorized responses
+		// Responses
 		return response;
 	}
 }

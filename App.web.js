@@ -2,6 +2,7 @@
 import * as React from "react";
 import { Image } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import { navigationRef } from './src/nav/RootNavigation';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import "react-native-gesture-handler";
 import * as Linking from 'expo-linking';
@@ -17,6 +18,7 @@ import PostDetailScreen from "./src/web/PostDetailScreen.web";
 import PortfolioInsightScreen from "./src/screens/PortfolioInsightScreen";
 import RationaleScreen from "./src/web/RationaleScreen.web";
 import SettingsScreen from "./src/screens/SettingsScreen";
+import NotFoundScreen from "./src/screens/NotFoundScreen";
 
 // Import Miscellaneous Local Files
 import LocalStorage from "./src/storage/LocalStorage";
@@ -185,6 +187,10 @@ const RootStackFlow = () => {
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
+					<RootStack.Screen
+						name="NotFoundScreen"
+						component={NotFoundScreen}
+					/>
 				</>
 			) : (
 				// User is logged in
@@ -234,6 +240,10 @@ const RootStackFlow = () => {
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
+					<RootStack.Screen
+						name="NotFoundScreen"
+						component={NotFoundScreen}
+					/>
 				</>
 			)}
 		</RootStack.Navigator>
@@ -271,7 +281,7 @@ export default () => {
 	};
 	return (
 		<Provider store={store}>
-			<NavigationContainer linking={linking} fallback={<LoadingScreen />} theme={DarkTheme}>
+			<NavigationContainer ref={navigationRef} linking={linking} fallback={<LoadingScreen />} theme={DarkTheme}>
 				<RootStackFlow />
 			</NavigationContainer>
 		</Provider>

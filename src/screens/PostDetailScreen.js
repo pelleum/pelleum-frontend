@@ -113,15 +113,16 @@ const PostDetailScreen = ({ navigation, route }) => {
 		const response = await PostsManager.getPost(
 			route.params.postId
 		);
-		setDetailedPost(response.data);
-		// 2. Obtain comments on detailed post
-		const commentsResponseData = await PostsManager.getComments({
-			is_post_comment_on: route.params.postId,
-		});
-		if (commentsResponseData) {
-			dispatch(setComments(commentsResponseData.records.posts));
-		}
-
+		if (response) {
+            setDetailedPost(response.data);
+            // 2. Obtain comments on detailed post
+            const commentsResponseData = await PostsManager.getComments({
+                is_post_comment_on: route.params.postId,
+            });
+            if (commentsResponseData) {
+                dispatch(setComments(commentsResponseData.records.posts));
+            };
+        };
 		setRefreshing(false);
 	};
 

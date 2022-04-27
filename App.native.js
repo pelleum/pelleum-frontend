@@ -5,6 +5,7 @@ import { StatusBar, Platform, Image } from 'react-native';
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { navigationRef } from './src/nav/RootNavigation';
 import "react-native-gesture-handler";
 import { Ionicons, FontAwesome, Foundation } from "@expo/vector-icons";
 import * as Linking from 'expo-linking';
@@ -39,6 +40,7 @@ import LinkAccountsManager from "./src/managers/LinkAccountsManager";
 import { LIGHT_GREY_COLOR, MAIN_BACKGROUND_COLOR, MAIN_SECONDARY_COLOR, TEXT_COLOR } from "./src/styles/Colors";
 import BackButton from './src/components/BackButton';
 import NotificationBottomTabIcon from './src/components/NotificationBottomTabIcon';
+import NotFoundScreen from "./src/screens/NotFoundScreen";
 
 // Redux
 import { Provider } from "react-redux";
@@ -426,6 +428,10 @@ const RootStackFlow = () => {
 							headerTitleStyle: { color: TEXT_COLOR },
 						}}
 					/>
+					<RootStack.Screen
+						name="NotFoundScreen"
+						component={NotFoundScreen}
+					/>
 				</>
 			)}
 		</RootStack.Navigator>
@@ -465,7 +471,7 @@ export default () => {
 	return (
 		<AnalyticsProvider client={segmentClient}>
 			<Provider store={store}>
-				<NavigationContainer linking={linking} fallback={<LoadingScreen />} theme={DarkTheme}>
+				<NavigationContainer ref={navigationRef} linking={linking} fallback={<LoadingScreen />} theme={DarkTheme}>
 					{Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : <StatusBar backgroundColor="black" />}
 					<RootStackFlow />
 				</NavigationContainer>

@@ -196,16 +196,19 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 		const thesisResponse = await ThesesManager.getThesis(
 			route.params.thesisId
 		);
-		handleThesisResponse(thesisResponse);
-		// 2. Retrieve thesis comments
-		const commentsResponseData = await PostsManager.getComments({
-			is_thesis_comment_on: route.params.thesisId,
-		});
-		if (commentsResponseData) {
-			dispatch(setComments(commentsResponseData.records.posts));
-		}
+		if (thesisResponse) {
+            handleThesisResponse(thesisResponse);
+            // 2. Retrieve thesis comments
+            const commentsResponseData = await PostsManager.getComments({
+                is_thesis_comment_on: route.params.thesisId,
+            });
+            if (commentsResponseData) {
+                dispatch(setComments(commentsResponseData.records.posts));
+            }
+        }
 		setRefreshing(false);
 	};
+	
 
 	renderItem = ({ item }) => (
 		<CommentBox item={item} nav={navigation} commentLevel={1} />
