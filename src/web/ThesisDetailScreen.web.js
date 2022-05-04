@@ -5,7 +5,6 @@ import {
     View,
     TouchableOpacity,
     Keyboard,
-    Alert,
     FlatList
 } from "react-native";
 import { HStack, VStack, NativeBaseProvider } from "native-base";
@@ -14,6 +13,7 @@ import { Entypo } from "@expo/vector-icons";
 // import { useAnalytics } from "@segment/analytics-react-native";
 
 //Import Local Files
+import CustomAlertModal from "../components/modals/CustomAlertModal";
 import AppText from "../components/AppText";
 import ThesisButtonPanel from "./ThesisButtonPanel.web";
 import CommentBox from "./CommentBox.web";
@@ -52,7 +52,10 @@ const ThesisDetailScreen = ({ navigation, route }) => {
     const [disableStatus, setDisableStatus] = useState(true);
     const [error, setError] = useState("");
     const [refreshing, setRefreshing] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [manageContentModalVisible, setManageContentModalVisible] = useState(false);
+    const [blockUserModalVisible, setBlockUserModalVisible] = useState(null);
+    const [blockUserErrorModalVisible, setBlockUserErrorModalVisible] = useState(null);
+    const [deleteContentModalVisible, setDeleteContentModalVisible] = useState(false);
 
     // // Segment Tracking
     // const { track } = useAnalytics();
@@ -114,63 +117,20 @@ const ThesisDetailScreen = ({ navigation, route }) => {
         navigation.navigate("CreateThesisScreen", { thesis: item });
     };
 
-    const deleteContent = async (item) => {
-        Alert.alert(
-            "Delete Thesis",
-            "Are you sure you want to delete this thesis?",
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => {
-                        /* Do nothing */
-                    },
-                },
-                {
-                    text: "Delete",
-                    style: "destructive",
-                    onPress: async () => {
-                        const response = await ThesesManager.deleteThesis(item);
-                        if (response.status == 200) {
-                            setContentAvailability("deleted");
-                        }
-                    },
-                },
-            ]
-        );
+    const deleteContent = async () => {
+        setDeleteContentModalVisible(true);
     };
 
     const blockUser = async (item) => {
         const response = await UserManager.blockUser(item.user_id);
         if (response.status == 201) {
-            track("User Blocked", {
-                blockedUserId: item.user_id,
-                blockedUsername: item.username,
-            });
-            Alert.alert(
-                "Success",
-                `You have successfully blocked @${item.username}. You will no longer see this user's content on Pelleum.`,
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            /* Do nothing */
-                        },
-                    },
-                ]
-            );
+            // track("User Blocked", {
+            //     blockedUserId: item.user_id,
+            //     blockedUsername: item.username,
+            // });
+            setBlockUserModalVisible(true);
         } else {
-            Alert.alert(
-                "Error",
-                `An unexpected error occurred when attempting to block @${item.username}. Please try again later.`,
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            /* Do nothing */
-                        },
-                    },
-                ]
-            );
+            setBlockUserErrorModalVisible(true);
         }
     };
 
@@ -249,6 +209,54 @@ const ThesisDetailScreen = ({ navigation, route }) => {
                     // onEndReachedThreshold={1}
                     ListHeaderComponent={
                         <View style={styles.mainContainer}>
+                            <CustomAlertModal
+                                modalVisible={deleteContentModalVisible}
+                                makeModalDisappear={() => setDeleteContentModalVisible(false)}
+                                alertTitle="Delete Thesis"
+                                alertBody="Are you sure you want to delete this thesis?"
+                                numberOfButtons={2}
+                                firstButtonLabel="Cancel"
+                                firstButtonStyle="cancel"
+                                firstButtonAction={() => {
+                                    //do nothing and dismiss modal
+                                    setDeleteContentModalVisible(false);
+                                }}
+                                secondButtonLabel="Delete"
+                                secondButtonStyle="destructive"
+                                secondButtonAction={async () => {
+                                    const response = await ThesesManager.deleteThesis(thesis);
+                                    if (response.status == 204) {
+                                        setContentAvailability("deleted");
+                                    }
+                                    setDeleteContentModalVisible(false);
+                                }}
+                            />
+                            <CustomAlertModal
+                                modalVisible={blockUserModalVisible}
+                                makeModalDisappear={() => setBlockUserModalVisible(false)}
+                                alertTitle="Success"
+                                alertBody={`You have successfully blocked @${thesis.username}. You will no longer see this user's content on Pelleum. Please pull down to refresh the screen.`}
+                                numberOfButtons={1}
+                                firstButtonLabel="OK"
+                                firstButtonStyle="default"
+                                firstButtonAction={() => {
+                                    //do nothing and dismiss modal
+                                    setBlockUserModalVisible(false);
+                                }}
+                            />
+                            <CustomAlertModal
+                                modalVisible={blockUserErrorModalVisible}
+                                makeModalDisappear={() => setBlockUserErrorModalVisible(false)}
+                                alertTitle="Error"
+                                alertBody={`An unexpected error occurred when attempting to block @${thesis.username}. Please try again later.`}
+                                numberOfButtons={1}
+                                firstButtonLabel="OK"
+                                firstButtonStyle="default"
+                                firstButtonAction={() => {
+                                    //do nothing and dismiss modal
+                                    setBlockUserErrorModalVisible(false);
+                                }}
+                            />
                             {error ? (
                                 <AppText style={styles.errorText}>{error}</AppText>
                             ) : contentAvailability == "deleted" ? (
@@ -329,8 +337,8 @@ const ThesisDetailScreen = ({ navigation, route }) => {
                                         <HStack style={styles.thesisHeaderContainer}>
                                             <AppText style={styles.thesisLabel}>Thesis</AppText>
                                             <ManageContentModal
-                                                modalVisible={modalVisible}
-                                                makeModalDisappear={() => setModalVisible(false)}
+                                                modalVisible={manageContentModalVisible}
+                                                makeModalDisappear={() => setManageContentModalVisible(false)}
                                                 item={thesis}
                                                 userId={userObject.userId}
                                                 deleteContent={deleteContent}
@@ -340,7 +348,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
                                             <TouchableOpacity
                                                 style={styles.dotsButton}
                                                 onPress={() => {
-                                                    setModalVisible(true);
+                                                    setManageContentModalVisible(true);
                                                 }}
                                             >
                                                 <Entypo

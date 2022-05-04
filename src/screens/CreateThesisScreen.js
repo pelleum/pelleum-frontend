@@ -48,7 +48,10 @@ const CreateThesisScreen = ({ navigation, route }) => {
 	// Local State
 	// Determine whether or not this screen is being used to create
 	// or update a thesis. If it receives route params, it's used to update, else create
-	const updatingThesis = route.params ? true : false;
+	let updatingThesis;
+	if (route.params) {
+		updatingThesis = route.params.thesis ? true : false;
+	}
 	if (updatingThesis) {
 		var [content, setContent] = useState(route.params.thesis.content);
 		var [asset_symbol, setAssetSymbol] = useState(route.params.thesis.asset_symbol);
@@ -286,7 +289,7 @@ const CreateThesisScreen = ({ navigation, route }) => {
 			setTitle("");
 			setSources(["", "", "", "", "", ""]);
 			setDisableStatus(true);
-			navigation.navigate("ThesisDetailScreen", {thesisId: updatedThesis.thesis_id});
+			navigation.navigate("ThesisDetailScreen", { thesisId: updatedThesis.thesis_id });
 		} else {
 			Alert.alert(
 				"An unexpected error occured.",

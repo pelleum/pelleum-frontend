@@ -1,6 +1,6 @@
 // Installed Libraries
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, Alert, Platform, View } from "react-native";
+import { StyleSheet, TouchableOpacity, Platform, View } from "react-native";
 import { HStack, VStack, NativeBaseProvider, Box } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
@@ -9,6 +9,7 @@ import * as WebBrowser from "expo-web-browser";
 // Local Components
 import PostButtonPanel from "./PostButtonPanel.web";
 import ManageContentModal from "./ManageContentModal.web";
+import CustomAlertModal from "../components/modals/CustomAlertModal";
 import ThesisBox, { ThesesBoxType } from "../components/ThesisBox";
 import AppText from "../components/AppText";
 import SentimentPill, { Sentiment } from "../components/SentimentPill";
@@ -66,7 +67,12 @@ const getTimeElapsed = (item) => {
 
 const PostBox = ({ postBoxType, item, nav }) => {
     // Local State
-    const [modalVisible, setModalVisible] = useState(false);
+    const [manageContentModalVisible, setManageContentModalVisible] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [itemToBlockUser, setItemToBlockUser] = useState(null);
+    const [blockUserModalVisible, setBlockUserModalVisible] = useState(null);
+    const [blockUserErrorModalVisible, setBlockUserErrorModalVisible] = useState(null);
+    const [deleteContentModalVisible, setDeleteContentModalVisible] = useState(false);
 
     // Universal State
     const dispatch = useDispatch();
@@ -85,60 +91,96 @@ const PostBox = ({ postBoxType, item, nav }) => {
     };
 
     const deleteContent = async (item) => {
-        Alert.alert(
-            "Delete Post",
-            "Are you sure you want to delete this post?",
-            [
-                {
-                    text: "Cancel", onPress: () => { /* Do nothing */ }
-                },
-                {
-                    text: "Delete", style: 'destructive', onPress: async () => {
-                        const response = await PostsManager.deletePost(item.post_id);
-                        if (response.status == 200) {
-                            if (postBoxType.type == "userAuthored") {
-                                dispatch(removeAuthoredPost(item));
-                            }
-                            dispatch(removePost(item));
-                        }
-                    }
-                }
-            ]
-        );
+        setItemToDelete(item);
+        setDeleteContentModalVisible(true);
     };
 
     const blockUser = async (item) => {
         const response = await UserManager.blockUser(item.user_id);
         if (response.status == 201) {
-            // track('User Blocked', {
+            // track("User Blocked", {
             // 	blockedUserId: item.user_id,
             // 	blockedUsername: item.username,
             // });
-            Alert.alert(
-                "Success",
-                `You have successfully blocked @${item.username}. You will no longer see this user's content on Pelleum. Please pull down to refresh the screen.`,
-                [
-                    {
-                        text: "OK", onPress: () => { /* Do nothing */ }
-                    },
-                ]
-            );
+            setItemToBlockUser(item);
+            setBlockUserModalVisible(true);
         } else {
-            Alert.alert(
-                "Error",
-                `An unexpected error occurred when attempting to block @${item.username}. Please try again later.`,
-                [
-                    {
-                        text: "OK", onPress: () => { /* Do nothing */ }
-                    },
-                ]
-            );
+            setItemToBlockUser(item);
+            setBlockUserErrorModalVisible(true);
         }
     };
 
     return (
         <NativeBaseProvider>
             <View style={styles.mainContainer}>
+                <ManageContentModal
+                    modalVisible={manageContentModalVisible}
+                    makeModalDisappear={() => setManageContentModalVisible(false)}
+                    item={item}
+                    userId={userObject.userId}
+                    deleteContent={deleteContent}
+                    blockUser={blockUser}
+                />
+                {itemToDelete ? (
+                    <CustomAlertModal
+                        modalVisible={deleteContentModalVisible}
+                        makeModalDisappear={() => setDeleteContentModalVisible(false)}
+                        alertTitle="Delete Post"
+                        alertBody="Are you sure you want to delete this post?"
+                        numberOfButtons={2}
+                        firstButtonLabel="Cancel"
+                        firstButtonStyle="cancel"
+                        firstButtonAction={() => {
+                            //do nothing and dismiss modal
+                            setItemToDelete(null)
+                            setDeleteContentModalVisible(false);
+                        }}
+                        secondButtonLabel="Delete"
+                        secondButtonStyle="destructive"
+                        secondButtonAction={async () => {
+                            const response = await PostsManager.deletePost(itemToDelete.post_id);
+                            if (response.status == 204) {
+                                if (postBoxType.type == "userAuthored") {
+                                    dispatch(removeAuthoredPost(itemToDelete));
+                                }
+                                dispatch(removePost(itemToDelete));
+                            };
+                            setDeleteContentModalVisible(false);
+                        }}
+                    />
+                ) : null}
+                {itemToBlockUser ? (
+                    <>
+                        <CustomAlertModal
+                            modalVisible={blockUserModalVisible}
+                            makeModalDisappear={() => setBlockUserModalVisible(false)}
+                            alertTitle="Success"
+                            alertBody={`You have successfully blocked @${itemToBlockUser.username}. You will no longer see this user's content on Pelleum. Please pull down to refresh the screen.`}
+                            numberOfButtons={1}
+                            firstButtonLabel="OK"
+                            firstButtonStyle="default"
+                            firstButtonAction={() => {
+                                //do nothing and dismiss modal
+                                setItemToBlockUser(null)
+                                setBlockUserModalVisible(false);
+                            }}
+                        />
+                        <CustomAlertModal
+                            modalVisible={blockUserErrorModalVisible}
+                            makeModalDisappear={() => setBlockUserErrorModalVisible(false)}
+                            alertTitle="Error"
+                            alertBody={`An unexpected error occurred when attempting to block @${itemToBlockUser.username}. Please try again later.`}
+                            numberOfButtons={1}
+                            firstButtonLabel="OK"
+                            firstButtonStyle="default"
+                            firstButtonAction={() => {
+                                //do nothing and dismiss modal
+                                setItemToBlockUser(null)
+                                setBlockUserErrorModalVisible(false);
+                            }}
+                        />
+                    </>
+                ) : null}
                 <TouchableOpacity
                     disabled={postBoxType == PostBoxType.PostDetail ? true : false}
                     onPress={() => {
@@ -166,18 +208,10 @@ const PostBox = ({ postBoxType, item, nav }) => {
                                         • {elapsedTime}
                                     </AppText>
                                 </HStack>
-                                <ManageContentModal
-                                    modalVisible={modalVisible}
-                                    makeModalDisappear={() => setModalVisible(false)}
-                                    item={item}
-                                    userId={userObject.userId}
-                                    deleteContent={deleteContent}
-                                    blockUser={blockUser}
-                                />
                                 <TouchableOpacity
                                     style={styles.dotsButton}
                                     onPress={() => {
-                                        setModalVisible(true)
+                                        setManageContentModalVisible(true)
                                     }}
                                 >
                                     <Entypo name="dots-three-horizontal" size={18} color={LIGHT_GREY_COLOR} />

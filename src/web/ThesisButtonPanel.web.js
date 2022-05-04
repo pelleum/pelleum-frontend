@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Alert, Share, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, TouchableOpacity, Share, View } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import ThesesManager from "../managers/ThesesManager";
@@ -7,6 +7,7 @@ import RationalesManager from "../managers/RationalesManager";
 import { LIGHT_GREY_COLOR, MAIN_SECONDARY_COLOR } from "../styles/Colors";
 // import { useAnalytics } from '@segment/analytics-react-native';
 import AppText from "../components/AppText";
+import CustomAlertModal from "../components/modals/CustomAlertModal";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -14,9 +15,9 @@ import { ReactionType } from "../redux/actions/ThesisReactionsActions";
 
 const ThesisButtonPanel = ({ thesis, nav }) => {
     // State Management
+    const [addRationaleModalVisible, setAddRationaleModalVisible] = useState(false);
     const state = useSelector((state) => state.thesisReactionsReducer);
     const { rationaleLibrary } = useSelector((state) => state.rationaleReducer);
-    const { userObject } = useSelector((state) => state.authReducer);
 
     // // Segment Tracking
     // const { track } = useAnalytics();
@@ -47,7 +48,7 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
         try {
             const result = await Share.share(
                 {
-                    message: `@${thesis.username} wrote the following ${thesis.asset_symbol} thesis on Pelleum💥:\n\n"${thesis.title}\n\n${thesis.content}"\n\nSources:\n${sourceText}\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com/download`,
+                    message: `https://app.pelleum.com/thesis/${thesis.thesis_id}`,
                 },
                 {
                     excludedActivityTypes: [
@@ -55,35 +56,35 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
                     ]
                 },
             );
-            if (result.action === Share.sharedAction) {
-                // if (result.activityType) {
-                // 	// shared with activity type of result.activityType
-                // 	// iOS
-                // 	track('Thesis Shared', {
-                // 		authorUserId: thesis.user_id,
-                // 		authorUsername: thesis.username,
-                // 		thesisId: thesis.thesis_id,
-                // 		assetSymbol: thesis.asset_symbol,
-                // 		sentiment: thesis.sentiment,
-                // 		sourcesQuantity: thesis.sources.length,
-                // 	});
-                // } else {
-                // 	// Shared on Android
-                // 	// This does not take into account a user dismissing the Share modal
-                // 	// We should only track the event if it is ACTUALLY shared
-                // 	// Consider using https://react-native-share.github.io/react-native-share/
-                // 	track('Thesis Shared', {
-                // 		authorUserId: thesis.user_id,
-                // 		authorUsername: thesis.username,
-                // 		thesisId: thesis.thesis_id,
-                // 		assetSymbol: thesis.asset_symbol,
-                // 		sentiment: thesis.sentiment,
-                // 		sourcesQuantity: thesis.sources.length,
-                // 	});
-                // }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
-            }
+            // if (result.action === Share.sharedAction) {
+            //     if (result.activityType) {
+            //         // shared with activity type of result.activityType
+            //         // iOS
+            //         track('Thesis Shared', {
+            //             authorUserId: thesis.user_id,
+            //             authorUsername: thesis.username,
+            //             thesisId: thesis.thesis_id,
+            //             assetSymbol: thesis.asset_symbol,
+            //             sentiment: thesis.sentiment,
+            //             sourcesQuantity: thesis.sources.length,
+            //         });
+            //     } else {
+            //         // Shared on Android
+            //         // This does not take into account a user dismissing the Share modal
+            //         // We should only track the event if it is ACTUALLY shared
+            //         // Consider using https://react-native-share.github.io/react-native-share/
+            //         track('Thesis Shared', {
+            //             authorUserId: thesis.user_id,
+            //             authorUsername: thesis.username,
+            //             thesisId: thesis.thesis_id,
+            //             assetSymbol: thesis.asset_symbol,
+            //             sentiment: thesis.sentiment,
+            //             sourcesQuantity: thesis.sources.length,
+            //         });
+            //     }
+            // } else if (result.action === Share.dismissedAction) {
+            //     // dismissed
+            // }
         } catch (error) {
             alert(error.message);
         }
@@ -102,42 +103,28 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
             // 	sourcesQuantity: sourcesQuantity,
             // 	organic: true,
             // });
-            Alert.alert(
-                `This thesis was added to your ${thesis.asset_symbol} Rationale Library 🎉`,
-                `Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂`,
-                [
-                    { text: "Got it!", onPress: () => {/* do nothing */ } },
-                ]
-            );
+            setAddRationaleModalVisible(true);
         } else if (response.status == 403) {
-            Alert.alert(
-                `${thesis.asset_symbol} ${thesis.sentiment} Rationale Limit Reached`,
-                `To keep your investment research focused, Pelleum allows a maximum of 25 ${thesis.sentiment} theses per asset. To add this thesis to your ${thesis.asset_symbol} ${thesis.sentiment} library, please remove one by swiping left.`,
-                [
-                    {
-                        text: "Remove later",
-                        onPress: () => {
-                            /* do nothing */
-                        },
-                    },
-                    {
-                        text: "Remove now",
-                        onPress: async () => {
-                            nav.navigate("RationaleScreen", {
-                                thesisToAddAfterRemoval: thesis,
-                                asset: thesis.asset_symbol,
-                                userId: userObject.userId,
-                            });
-                        },
-                    },
-                ]
-            );
+            //need to remove the limit 
         }
     };
 
     return (
         <NativeBaseProvider>
             <View style={styles.mainContainer}>
+                <CustomAlertModal
+                    modalVisible={addRationaleModalVisible}
+                    makeModalDisappear={() => setAddRationaleModalVisible(false)}
+                    alertTitle="This thesis was added to your Rationale Library 🎉"
+                    alertBody="Use your Rationale Library, accessible in your profile, to keep track of your investment reasoning. You can remove theses anytime by swiping left🙂"
+                    numberOfButtons={1}
+                    firstButtonLabel="Got it!"
+                    firstButtonStyle="default"
+                    firstButtonAction={() => {
+                        //do nothing and dismiss modal
+                        setAddRationaleModalVisible(false);
+                    }}
+                />
                 <HStack style={styles.buttonBox}>
                     <View alignItems="center">
                         <TouchableOpacity

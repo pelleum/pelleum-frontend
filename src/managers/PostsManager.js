@@ -128,7 +128,7 @@ class PostsManager {
 			});
 
 			if (authorizedResponse) {
-				if (authorizedResponse.status == 200) {
+				if (authorizedResponse.status == 204) {
 					store.dispatch(removeLike(item.post_id));
 					Platform.OS == "ios" || Platform.OS == "android" ? (
 						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)

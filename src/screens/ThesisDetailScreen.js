@@ -128,7 +128,7 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 					style: "destructive",
 					onPress: async () => {
 						const response = await ThesesManager.deleteThesis(item);
-						if (response.status == 200) {
+						if (response.status == 204) {
 							setContentAvailability("deleted");
 						}
 					},
@@ -197,18 +197,18 @@ const ThesisDetailScreen = ({ navigation, route }) => {
 			route.params.thesisId
 		);
 		if (thesisResponse) {
-            handleThesisResponse(thesisResponse);
-            // 2. Retrieve thesis comments
-            const commentsResponseData = await PostsManager.getComments({
-                is_thesis_comment_on: route.params.thesisId,
-            });
-            if (commentsResponseData) {
-                dispatch(setComments(commentsResponseData.records.posts));
-            }
-        }
+			handleThesisResponse(thesisResponse);
+			// 2. Retrieve thesis comments
+			const commentsResponseData = await PostsManager.getComments({
+				is_thesis_comment_on: route.params.thesisId,
+			});
+			if (commentsResponseData) {
+				dispatch(setComments(commentsResponseData.records.posts));
+			}
+		}
 		setRefreshing(false);
 	};
-	
+
 
 	renderItem = ({ item }) => (
 		<CommentBox item={item} nav={navigation} commentLevel={1} />

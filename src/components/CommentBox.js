@@ -76,7 +76,7 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 				style: "destructive",
 				onPress: async () => {
 					const response = await PostsManager.deletePost(item.post_id);
-					if (response.status == 200) {
+					if (response.status == 204) {
 						dispatch(removeComment(item));
 						dispatch(removePost(item));
 					}
@@ -124,7 +124,7 @@ const CommentBox = ({ item, nav, commentLevel }) => {
 		<NativeBaseProvider>
 			<TouchableOpacity
 				onPress={() => {
-					nav.navigate("PostDetailScreen", {postId: item.post_id});
+					nav.navigate("PostDetailScreen", { postId: item.post_id });
 				}}
 			>
 				<Box

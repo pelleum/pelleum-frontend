@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
 import { HStack, NativeBaseProvider } from "native-base";
 import { EvilIcons, Fontisto, Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -6,12 +6,14 @@ import PostsManager from "../managers/PostsManager";
 import { LIGHT_GREY_COLOR } from "../styles/Colors";
 // import { useAnalytics } from "@segment/analytics-react-native";
 import AppText from "../components/AppText";
+import CustomAlertModal from "../components/modals/CustomAlertModal";
 
 // Redux
 import { useSelector } from "react-redux";
 
 const PostButtonPanel = ({ item, nav }) => {
     // State Management
+    const [comingSoonModalVisible, setComingSoonModalVisible] = useState(false);
     const { locallyLikedPosts, locallyUnlikedPosts } = useSelector(
         (state) => state.postReactionsReducer
     );
@@ -28,65 +30,63 @@ const PostButtonPanel = ({ item, nav }) => {
         try {
             const result = await Share.share(
                 {
-                    message: `@${item.username} on Pelleum💥:\n\n"${item.content}"\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com/download`,
+                    message: `https://app.pelleum.com/post/${item.post_id}`,
                 },
                 {
                     excludedActivityTypes: ["com.apple.UIKit.activity.AirDrop"],
                 }
             );
-            if (result.action === Share.sharedAction) {
-                // if (result.activityType) {
-                // 	// shared with activity type of result.activityType
-                // 	// iOS
-                // 	track("Post Shared", {
-                // 		authorUserId: item.user_id,
-                // 		authorUsername: item.username,
-                // 		assetSymbol: item.asset_symbol,
-                // 		sentiment: item.sentiment,
-                // 		postId: item.post_id,
-                // 		postType: postType,
-                // 		containsThesis: containsThesis,
-                // 	});
-                // } else {
-                // 	// Shared on Android
-                // 	// This does not take into account a user dismissing the Share modal
-                // 	// We should only track the event if it is ACTUALLY shared
-                // 	// Consider using https://react-native-share.github.io/react-native-share/
-                // 	track("Post Shared", {
-                // 		authorUserId: item.user_id,
-                // 		authorUsername: item.username,
-                // 		assetSymbol: item.asset_symbol,
-                // 		sentiment: item.sentiment,
-                // 		postId: item.post_id,
-                // 		postType: postType,
-                // 		containsThesis: containsThesis,
-                // 	});
-                // }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
-            }
+            // if (result.action === Share.sharedAction) {
+            //     if (result.activityType) {
+            //         // shared with activity type of result.activityType
+            //         // iOS
+            //         track("Post Shared", {
+            //             authorUserId: item.user_id,
+            //             authorUsername: item.username,
+            //             assetSymbol: item.asset_symbol,
+            //             sentiment: item.sentiment,
+            //             postId: item.post_id,
+            //             postType: postType,
+            //             containsThesis: containsThesis,
+            //         });
+            //     } else {
+            //         // Shared on Android
+            //         // This does not take into account a user dismissing the Share modal
+            //         // We should only track the event if it is ACTUALLY shared
+            //         // Consider using https://react-native-share.github.io/react-native-share/
+            //         track("Post Shared", {
+            //             authorUserId: item.user_id,
+            //             authorUsername: item.username,
+            //             assetSymbol: item.asset_symbol,
+            //             sentiment: item.sentiment,
+            //             postId: item.post_id,
+            //             postType: postType,
+            //             containsThesis: containsThesis,
+            //         });
+            //     }
+            // } else if (result.action === Share.dismissedAction) {
+            //     // dismissed
+            // }
         } catch (error) {
             alert(error.message);
         }
     };
 
-    const onRepost = async () => {
-        Alert.alert(
-            `Coming soon!`,
-            `We are still developing the Repost feature. We'll let you know when it's ready!`,
-            [
-                {
-                    text: "Got it!",
-                    onPress: () => {
-                        /* do nothing */
-                    },
-                },
-            ]
-        );
-    };
-
     return (
         <NativeBaseProvider>
+            <CustomAlertModal
+                modalVisible={comingSoonModalVisible}
+                makeModalDisappear={() => setComingSoonModalVisible(false)}
+                alertTitle="Coming soon!"
+                alertBody="We are still developing the Repost feature. We'll let you know when it's ready!"
+                numberOfButtons={1}
+                firstButtonLabel="Got it!"
+                firstButtonStyle="default"
+                firstButtonAction={() => {
+                    //do nothing and dismiss modal
+                    setComingSoonModalVisible(false);
+                }}
+            />
             <HStack style={styles.buttonBox}>
                 <TouchableOpacity
                     style={styles.iconButton}
@@ -101,7 +101,7 @@ const PostButtonPanel = ({ item, nav }) => {
                         ) : null}
                     </HStack>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={() => onRepost()}>
+                <TouchableOpacity style={styles.iconButton} onPress={() => setComingSoonModalVisible(true)}>
                     <EvilIcons name="retweet" size={30} color={LIGHT_GREY_COLOR} />
                 </TouchableOpacity>
                 <TouchableOpacity

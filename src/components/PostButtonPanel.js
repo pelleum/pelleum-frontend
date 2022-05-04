@@ -28,7 +28,7 @@ const PostButtonPanel = ({ item, nav }) => {
 		try {
 			const result = await Share.share(
 				{
-					message: `@${item.username} on Pelleum💥:\n\n"${item.content}"\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com/download`,
+					message: `https://app.pelleum.com/post/${item.post_id}`,
 				},
 				{
 					excludedActivityTypes: ["com.apple.UIKit.activity.AirDrop"],
@@ -91,7 +91,7 @@ const PostButtonPanel = ({ item, nav }) => {
 				<TouchableOpacity
 					style={styles.iconButton}
 					onPress={() => {
-						nav.navigate("PostDetailScreen", {postId: item.post_id});
+						nav.navigate("PostDetailScreen", { postId: item.post_id });
 					}}
 				>
 					<HStack alignItems={"center"}>

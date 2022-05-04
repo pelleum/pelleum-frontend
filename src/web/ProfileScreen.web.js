@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     Image,
 } from "react-native";
+import { useLinkTo } from '@react-navigation/native';
 import LocalStorage from "../storage/LocalStorage";
 import { HStack, NativeBaseProvider } from "native-base";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
@@ -25,6 +26,9 @@ const ProfileScreen = ({ navigation }) => {
     const [assetList, setAssetList] = useState([]);
     const [username, setUsername] = useState("");
     const [userId, setUserId] = useState("")
+
+    // handle link navigation
+    const linkTo = useLinkTo();
 
     // Update profile data from source of truth
     const onRefresh = async () => {
@@ -56,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
                         <View style={styles.listHeaderView}>
                             <TouchableOpacity
                                 style={styles.settingsButton}
-                                onPress={() => navigation.navigate("SettingsScreen")}
+                                onPress={() => linkTo("/settings")}
                             >
                                 <FontAwesome
                                     name="bars"
@@ -72,9 +76,7 @@ const ProfileScreen = ({ navigation }) => {
                             <View style={{ alignItems: "center", paddingVertical: 20 }}>
                                 <TouchableOpacity
                                     style={styles.buttonGroup}
-                                    onPress={async () => {
-                                        navigation.navigate("CreateThesisScreen");
-                                    }}
+                                    onPress={() => linkTo("/create-thesis")}
                                 >
                                     <HStack style={styles.buttonGroupTextContainer}>
                                         <FontAwesome
@@ -87,9 +89,7 @@ const ProfileScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.buttonGroup}
-                                    onPress={async () => {
-                                        navigation.navigate("RationaleScreen", { userId: userId });
-                                    }}
+                                    onPress={() => linkTo(`/rationales/${userId}`)}
                                 >
                                     <HStack style={styles.buttonGroupTextContainer}>
                                         <Ionicons

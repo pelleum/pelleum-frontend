@@ -47,9 +47,9 @@ const RationaleScreen = ({ navigation, route }) => {
 
 	const deleteRationale = async (item) => {
 		const responseStatus = await RationalesManager.removeRationale(item);
-		const sourcesQuantity =  item.thesis.sources ? item.thesis.sources.length : 0;
+		const sourcesQuantity = item.thesis.sources ? item.thesis.sources.length : 0;
 		if (responseStatus) {
-			if (responseStatus == 200) {
+			if (responseStatus == 204) {
 				track('Rationale Removed', {
 					authorUserId: item.thesis.user_id,
 					authorUsername: item.thesis.username,

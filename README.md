@@ -56,6 +56,11 @@ This is the primary way we will conduct testing of the Pelleum mobile applicatio
 - Submit the latest iOS build to Apple: `eas submit -p ios --latest`
 - Submit the latest Android build to Google: `eas submit -p android --latest`
 
+## Web Version ##
+- To create a new web-build with cleared cache, run `expo build:web -c`
+- To deploy a staging web version, run `netlify deploy`
+- To deploy a production web version, run `netlify deploy --prod`
+
 ## Useful Terminal Commands
 **Note:** The app must be running for these commands to work.
 - To open the app on the iOS Simulator, press `i` in your terminal.

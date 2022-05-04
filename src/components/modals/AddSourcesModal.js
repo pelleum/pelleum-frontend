@@ -32,13 +32,22 @@ const AddSourcesModal = ({
 	// Display thesis source inputs
 	let sourceInputs = NUMBER_OF_SOURCES.map((sourceNumber, index) => (
 		<TextInput key={index}
-			color={TEXT_COLOR}
 			selectionColor={MAIN_SECONDARY_COLOR}
 			placeholder="https://www.examplesource.com"
 			placeholderTextColor={LIGHT_GREY_COLOR}
 			value={sources[index]}
 			onChangeText={(newValue) => handleChangeText(newValue, sourceNumber)}
-			style={styles.sourceInput}
+			style={Platform.OS == "web" ?
+				{
+					color: TEXT_COLOR,
+					paddingVertical: 5,
+					borderBottomWidth: 0.3,
+					borderBottomColor: MAIN_SECONDARY_COLOR,
+					marginTop: 10,
+					marginBottom: 5,
+					outlineStyle: 'none', //removes input outline in web browsers
+				}
+				: styles.sourceInput}
 			maxLength={256}
 			keyboardType={Platform.OS === "ios" ? "url" : "default"}
 			autoCapitalize={"none"}
@@ -92,7 +101,7 @@ const AddSourcesModal = ({
 									Sources are a great way to share some of the information that
 									led to your current thinking on investments.
 								</AppText>
-								<View width={"100%"}>
+								<View style={{ width: "100%" }}>
 									{sourceInputs}
 								</View>
 							</View>
@@ -141,7 +150,7 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	sourceInput: {
-		backgroundColor: "transparent",
+		color: TEXT_COLOR,
 		paddingVertical: 5,
 		borderBottomWidth: 0.3,
 		borderBottomColor: MAIN_SECONDARY_COLOR,

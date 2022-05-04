@@ -1,11 +1,11 @@
 {
     "expo": {
-        "name": "Pelleum DEV",
-        "slug": "pelleum-frontend-dev",
+        "name": "Pelleum",
+        "slug": "pelleum-frontend",
         "scheme": "pelleum",
         "version": "1.0.4",
         "orientation": "portrait",
-        "icon": "./assets/dev-icon.png",
+        "icon": "./assets/prod-icon.png",
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "cover",
@@ -20,16 +20,16 @@
         ],
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.pelleum.dev",
+            "bundleIdentifier": "com.pelleum.mobile",
             "buildNumber": "6",
             "appStoreUrl": "https://apps.apple.com/us/app/pelleum/id1614359541",
             "infoPlist": {
-                "NSFaceIDUsageDescription": "The Pelleum app gives users the option to log in with Face ID or Touch ID."
+                "NSFaceIDUsageDescription": "Pelleum gives users the option to securely log in with Face ID or Touch ID."
             }
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/dev-adaptive-icon.png",
+                "foregroundImage": "./assets/prod-adaptive-icon.png",
                 "backgroundColor": "#000000"
             },
             "softwareKeyboardLayoutMode": "pan",
@@ -38,13 +38,12 @@
                 "USE_BIOMETRIC",
                 "USE_FINGERPRINT"
             ],
-            "package": "com.pelleum.dev",
+            "package": "com.pelleum.mobile",
             "versionCode": 6,
             "playStoreUrl": "https://play.google.com/store/apps/details?id=com.pelleum.mobile"
         },
         "web": {
-            "favicon": "./assets/favicon.png",
-            "backgroundColor": "#000000"
+            "favicon": "./assets/favicon.png"
         },
         "userInterfaceStyle": "automatic",
         "androidStatusBar": {

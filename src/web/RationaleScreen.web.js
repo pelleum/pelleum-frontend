@@ -56,7 +56,7 @@ const RationaleScreen = ({ navigation, route }) => {
         const responseStatus = await RationalesManager.removeRationale(item);
         const sourcesQuantity = item.thesis.sources ? item.thesis.sources.length : 0;
         if (responseStatus) {
-            if (responseStatus == 200) {
+            if (responseStatus == 204) {
                 // track('Rationale Removed', {
                 // 	authorUserId: item.thesis.user_id,
                 // 	authorUsername: item.thesis.username,
@@ -141,6 +141,7 @@ const RationaleScreen = ({ navigation, route }) => {
                     firstButtonStyle="cancel"
                     firstButtonAction={() => {
                         //do nothing and dismiss modal
+                        setItemToDelete(null);
                         setDeleteRationaleModalVisible(false);
                     }}
                     secondButtonLabel="Delete"
@@ -157,7 +158,7 @@ const RationaleScreen = ({ navigation, route }) => {
                     makeModalDisappear={() => setUpdatedLibraryModalVisible(false)}
                     alertTitle="Rationale Library Updated 🎉"
                     alertBody={`A new ${rationaleUpdatedThesis.asset_symbol} ${rationaleUpdatedThesis.sentiment} thesis was added to your library!\n\n“${rationaleUpdatedThesis.title}”🙂`}
-                    numberOfButtons={2}
+                    numberOfButtons={1}
                     firstButtonLabel="Got it!"
                     firstButtonStyle="default"
                     firstButtonAction={() => {

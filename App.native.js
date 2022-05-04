@@ -1,8 +1,8 @@
 // Import Installed Libraries
 import 'expo-dev-client';
 import * as React from "react";
-import { StatusBar, Platform, Image } from 'react-native';
-import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import { StatusBar, Platform, Image, Text } from 'react-native';
+import { NavigationContainer, DarkTheme, Link } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { navigationRef } from './src/nav/RootNavigation';
@@ -344,7 +344,7 @@ const RootStackFlow = () => {
 			{hasUserToken == false ? (
 				// No token found, user isn't logged in
 				<RootStack.Screen
-					name="AuthStack"
+					name="AuthFlow"
 					component={AuthFlow}
 					options={{
 						headerShown: false,
@@ -354,7 +354,7 @@ const RootStackFlow = () => {
 				// User is logged in
 				<>
 					<RootStack.Screen
-						name="AppTabs"
+						name="AppFlow"
 						component={AppFlow}
 						options={{
 							headerShown: false,
@@ -431,6 +431,21 @@ const RootStackFlow = () => {
 					<RootStack.Screen
 						name="NotFoundScreen"
 						component={NotFoundScreen}
+						options={{
+							headerTitle: () => (
+								<Link
+									style={{ width: 35, height: 35 }}
+									to={"/feed"}
+								>
+									<Image style={{ width: 35, height: 35, marginBottom: 5, }} source={require("./assets/transparent-bg-logo.png")} />
+								</Link>
+							),
+							headerTitleAlign: 'center',
+							headerStyle: { backgroundColor: MAIN_BACKGROUND_COLOR },
+							headerTitleStyle: { color: TEXT_COLOR },
+							gestureEnabled: false,
+							headerLeft: () => <Text></Text>,
+						}}
 					/>
 				</>
 			)}
@@ -439,32 +454,64 @@ const RootStackFlow = () => {
 };
 
 export default () => {
+	//This structure should match the structure of the RootStack
 	const config = {
 		screens: {
+			AuthFlow: {
+				screens: {
+					LoginScreen: "login",
+					SignupScreen: "signup",
+				},
+			},
 			AppFlow: {
 				screens: {
+					FeedFlow: {
+						screens: {
+							FeedScreen: "feed",
+						},
+					},
+					SearchFlow: {
+						screens: {
+							SearchScreen: "search",
+						},
+					},
+					NotificationsFlow: {
+						screens: {
+							NotificationsScreen: "notifications",
+						},
+					},
+					EducationFlow: {
+						screens: {
+							EducationScreen: "education",
+						},
+					},
 					ProfileFlow: {
 						screens: {
-							ProfileScreen: "profile"
-						}
+							ProfileScreen: "profile",
+							SettingsScreen: "settings",
+							LinkAccountScreen: "link-account",
+							LinkedAccountsStatusScreen: "linked-account-status",
+							AuthoredThesesScreen: "theses/:userId",
+							AuthoredPostsScreen: "posts/:userId",
+							// DataPrivacyScreen: "dataprivacy"  //we are not rendering this screen for now
+						},
 					},
 				},
 			},
-			CreateThesisScreen: 'thesis/create',
-			PostDetailScreen: 'post/:postId',
-			ThesisDetailScreen: 'thesis/:thesisId',
-			PortfolioInsightScreen: 'profile/:userId',
-			// NotFoundScreen: "*" // we need to create and import this screen
+			CreateThesisScreen: "create-thesis",
+			CreatePostScreen: "create-post",
+			PostDetailScreen: "post/:postId",
+			ThesisDetailScreen: "thesis/:thesisId",
+			PortfolioInsightScreen: "user/:userId",
+			RationaleScreen: "rationales/:userId/:assetSymbol?/:disableRemoveRationale?", // ? denotes optional param
+			NotFoundScreen: "*",
 		},
 	};
 
-	// Need to set up prefix as environment variable
-	//if (__DEV__){ prefix = "com.pelleum.dev://app" }
-	//if (preview){ prefix = "com.pelleum.preview://app" }
-	//if (prod){ prefix = "com.pelleum.mobile://app" }
-	//if the scheme is defined as "pelleum", we may just need to do "pelleum://"
+	//https://reactnavigation.org/docs/configuring-links#prefixes
+	//Note that the prefix option is not supported on Web
 	const linking = {
-		prefixes: [Linking.createURL('/'), 'com.pelleum.dev://app'],
+		prefixes: [Linking.createURL('/')],
 		config: config,
 	};
 

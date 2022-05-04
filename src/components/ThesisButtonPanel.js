@@ -47,7 +47,7 @@ const ThesisButtonPanel = ({ thesis, nav }) => {
 		try {
 			const result = await Share.share(
 				{
-					message: `@${thesis.username} wrote the following ${thesis.asset_symbol} thesis on Pelleum💥:\n\n"${thesis.title}\n\n${thesis.content}"\n\nSources:\n${sourceText}\n\nPut your money where your mouth is — join Pelleum today:\nhttps://www.pelleum.com/download`,
+					message: `https://app.pelleum.com/thesis/${thesis.thesis_id}`,
 				},
 				{
 					excludedActivityTypes: [

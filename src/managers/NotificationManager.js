@@ -42,7 +42,7 @@ class NotificationManager {
 		});
 
 		if (authorizedResponse) {
-			if (authorizedResponse.status == 200) {
+			if (authorizedResponse.status == 204) {
 				return;
 			} else {
 				console.log(

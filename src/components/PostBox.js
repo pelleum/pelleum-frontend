@@ -89,7 +89,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				{
 					text: "Delete", style: 'destructive', onPress: async () => {
 						const response = await PostsManager.deletePost(item.post_id);
-						if (response.status == 200) {
+						if (response.status == 204) {
 							if (postBoxType.type == "userAuthored") {
 								dispatch(removeAuthoredPost(item));
 							}
@@ -136,7 +136,7 @@ const PostBox = ({ postBoxType, item, nav }) => {
 				<TouchableOpacity
 					disabled={postBoxType == PostBoxType.PostDetail ? true : false}
 					onPress={() => {
-						nav.navigate("PostDetailScreen", {postId: item.post_id});
+						nav.navigate("PostDetailScreen", { postId: item.post_id });
 					}}
 				>
 					<Box

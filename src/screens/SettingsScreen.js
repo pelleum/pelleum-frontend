@@ -6,7 +6,7 @@ import LocalStorage from "../storage/LocalStorage";
 import AppText from "../components/AppText";
 import { useDispatch } from "react-redux";
 import { logout, dumpUserObject } from "../redux/actions/AuthActions";
-import { MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
+import { MAIN_DIFFERENTIATOR_COLOR, WEB_MAIN_DIFFERENTIATOR_COLOR } from "../styles/Colors";
 import HelpModal from "../components/modals/HelpModal";
 
 const SettingsScreen = ({ navigation }) => {
@@ -76,7 +76,7 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
 	button: {
 		alignItems: "center",
-		backgroundColor: MAIN_DIFFERENTIATOR_COLOR,
+		backgroundColor: Platform.OS == "web" ? WEB_MAIN_DIFFERENTIATOR_COLOR : MAIN_DIFFERENTIATOR_COLOR,
 		borderRadius: 30,
 		width: "85%",
 		paddingVertical: 6,
